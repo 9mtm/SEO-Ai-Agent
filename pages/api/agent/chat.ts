@@ -114,7 +114,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         // 6. Hook into the stream to save the Assistant's response
-        const stream = OpenAIStream(response, {
+        const stream = OpenAIStream(response as any, {
             onCompletion: async (completion) => {
                 if (userId && targetSessionId) { // Changed condition to use targetSessionId
                     await ChatMessage.create({

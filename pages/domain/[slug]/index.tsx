@@ -74,7 +74,7 @@ const SingleDomain: NextPage = () => {
                   : <div className='w-full lg:h-[100px]'></div>
                }
                <KeywordsTable
-                  isLoading={keywordsLoading}
+                  isPending={keywordsLoading}
                   domain={activDomain}
                   keywords={theKeywords}
                   showAddModal={showAddKeywords}

@@ -6,7 +6,7 @@ import { useChat } from 'ai/react';
 import ReactMarkdown from 'react-markdown';
 import DomainHeader from '../../../../components/domains/DomainHeader';
 
-const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSessionId }) => {
+const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSessionId }: any) => {
     const router = useRouter();
     const [sessions, setSessions] = useState(initialSessions || []);
     const [currentSessionId, setCurrentSessionId] = useState(initialSessionId);
@@ -50,7 +50,7 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
         router.push(`/domain/agent/${domain.slug}`, undefined, { shallow: true });
     };
 
-    const handleSwitchSession = async (sessionId) => {
+    const handleSwitchSession = async (sessionId: any) => {
         if (isLoading) return;
         setCurrentSessionId(sessionId);
 
@@ -77,7 +77,7 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
                 <title>{`Seo Agent - ${domain?.domain}`}</title>
             </Head>
             <div className="flex-none">
-                <DomainHeader domain={domain} />
+                <DomainHeader domain={domain} domains={[]} showAddModal={() => {}} showSettingsModal={() => {}} exportCsv={() => {}} />
             </div>
 
             <div className="flex flex-1 overflow-hidden bg-white">
@@ -92,7 +92,7 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
                         </button>
                     </div>
                     <div className="flex-1 overflow-y-auto styled-scrollbar">
-                        {sessions.map(s => (
+                        {sessions.map((s: any) => (
                             <div
                                 key={s.id}
                                 onClick={() => handleSwitchSession(s.id)}
@@ -161,7 +161,7 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
     );
 };
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps = async (context: any) => {
     const { getDomain } = await import('../../../../utils/domains');
     const db = (await import('../../../../database/database')).default;
     const ChatMessage = (await import('../../../../database/models/chatMessage')).default;
@@ -185,8 +185,8 @@ export const getServerSideProps = async (context) => {
         } catch (e) { }
     }
 
-    let initialMessages = [];
-    let initialSessions = [];
+    let initialMessages: any[] = [];
+    let initialSessions: any[] = [];
     let initialSessionId = context.query.sessionId ? parseInt(context.query.sessionId as string) : null;
 
     if (userId) {

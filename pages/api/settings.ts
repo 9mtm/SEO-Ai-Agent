@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Cryptr from 'cryptr';
-import getConfig from 'next/config';
 import verifyUser from '../../utils/verifyUser';
 import allScrapers from '../../scrapers/index';
 import User from '../../database/models/user';
@@ -31,8 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 const getSettings = async (req: NextApiRequest, res: NextApiResponse<SettingsGetResponse>, userId?: number, isLegacy?: boolean) => {
    const settings = await getAppSettings(userId, isLegacy);
    if (settings) {
-      const { publicRuntimeConfig } = getConfig();
-      const version = publicRuntimeConfig?.version;
+      const version = process.env.APP_VERSION;
       return res.status(200).json({ settings: { ...settings, version } });
    }
    return res.status(400).json({ error: 'Error Loading Settings!' });

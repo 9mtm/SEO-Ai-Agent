@@ -69,7 +69,7 @@ const InsightPage: NextPage = () => {
                   : <div className='w-full lg:h-[100px]'></div>
                }
                <SCInsight
-                  isLoading={false}
+                  isPending={false}
                   domain={activDomain}
                   insight={theInsight}
                   isConsoleIntegrated={scConnected || domainHasScAPI}

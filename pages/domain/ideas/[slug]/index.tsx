@@ -67,7 +67,7 @@ const DiscoverPage: NextPage = () => {
                   />
                ) : <div className='w-full lg:h-[100px]'></div>}
                <KeywordIdeasTable
-                  isLoading={isLoadingIdeas}
+                  isPending={isLoadingIdeas}
                   noIdeasDatabase={errorLoadingIdeas}
                   domain={activDomain}
                   keywords={keywordIdeas}

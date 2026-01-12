@@ -113,7 +113,7 @@ const DiscoverPage: NextPage = () => {
                   : <div className='w-full lg:h-[100px]'></div>
                }
                <SCKeywordsTable
-                  isLoading={keywordsLoading || isFetching}
+                  isPending={keywordsLoading || isFetching}
                   domain={activDomain}
                   keywords={theKeywordsGrouped}
                   isConsoleIntegrated={scConnected || domainHasScAPI}

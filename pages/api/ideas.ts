@@ -81,7 +81,7 @@ const updateKeywordIdeas = async (req: NextApiRequest, res: NextApiResponse<keyw
                low_top_of_page_bid: 0,
                high_top_of_page_bid: 0,
             }));
-            return res.status(200).json({ keywords: mappedKeywords });
+            return res.status(200).json({ keywords: mappedKeywords as any });
          } else {
             console.log('[API] Local SLM returned no results, falling back to Google Ads...');
          }
