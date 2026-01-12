@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // Save userId in temporary cookie for callback
   const cookies = new Cookies(req, res);
-  cookies.set('oauth_user_id', userId.toString(), {
+  cookies.set('oauth_connecting_user', userId.toString(), {
     httpOnly: true,
     maxAge: 600000, // 10 minutes
     sameSite: 'lax',
@@ -29,11 +29,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     redirect_uri: redirectUri,
     response_type: 'code',
     scope: [
-      'https://www.googleapis.com/auth/webmasters.readonly', // Search Console
+      'https://www.googleapis.com/auth/webmasters', // Search Console (Full Access)
       'https://www.googleapis.com/auth/adwords', // Google Ads
     ].join(' '),
     access_type: 'offline', // Get refresh token
     prompt: 'consent', // Force consent to get refresh token
+    state: 'connect_flow', // Indicate this is a connection flow, not login
   })}`;
 
   res.redirect(authUrl);

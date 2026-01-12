@@ -62,16 +62,6 @@ const Domains: NextPage = () => {
       }
    }, [domainsData]);
 
-   useEffect(() => {
-      if (router.query.success === 'google_connected') {
-         toast.success('Google Account Connected Successfully!');
-         // Remove params
-         const { pathname, query } = router;
-         delete query.success;
-         router.replace({ pathname, query }, undefined, { shallow: true });
-      }
-   }, [router.query]);
-
    const manuallyUpdateThumb = async (domain: string) => {
       if (domain) {
          const domainThumb = await fetchDomainScreenshot(domain, true);

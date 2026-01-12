@@ -3,7 +3,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { toast, Toaster } from 'react-hot-toast';
-import { Settings as SettingsIcon, Bell, Plug, Save, Loader2 } from 'lucide-react';
+import { Settings as SettingsIcon, Bell, Plug, Save, Loader2, CheckCircle, Download, X } from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { useFetchSettings, useUpdateSettings } from '../../services/settings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export const defaultSettings: SettingsType = {
    scraper_type: 'none',
@@ -37,6 +38,9 @@ const SettingsPage: NextPage = () => {
    const router = useRouter();
    const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
    const [settings, setSettings] = useState<SettingsType>(defaultSettings);
+   const [loadingSites, setLoadingSites] = useState(false);
+   const [sites, setSites] = useState<{ siteUrl: string; permissionLevel: string }[]>([]);
+   const [showSitesModal, setShowSitesModal] = useState(false);
    const { data: appSettings, isPending } = useFetchSettings();
    const { mutate: updateMutate, isPending: isUpdating } = useUpdateSettings(() => {
       toast.success('Settings updated successfully!');
@@ -47,6 +51,16 @@ const SettingsPage: NextPage = () => {
          setSettings(appSettings.settings);
       }
    }, [appSettings]);
+
+   useEffect(() => {
+      if (router.query.success === 'google_connected') {
+         toast.success('Google Account Connected Successfully!');
+         // Remove params
+         const { pathname, query } = router;
+         delete query.success;
+         router.replace({ pathname, query }, undefined, { shallow: true });
+      }
+   }, [router.query]);
 
    const updateSettings = (key: string, value: string | number | boolean) => {
       setSettings({ ...settings, [key]: value });
@@ -78,6 +92,53 @@ const SettingsPage: NextPage = () => {
       }
    };
 
+   const disconnectGoogle = async () => {
+      if (confirm('Are you sure you want to disconnect your Google Account?')) {
+         try {
+            await fetch('/api/auth/google/disconnect', { method: 'POST' });
+            window.location.reload();
+         } catch (e) {
+            toast.error('Failed to disconnect');
+         }
+      }
+   };
+
+   const fetchSites = async () => {
+      setLoadingSites(true);
+      try {
+         const res = await fetch('/api/gsc/sites');
+         const data = await res.json();
+         if (data.sites) {
+            setSites(data.sites);
+            setShowSitesModal(true);
+         } else {
+            toast.error('No sites found or error fetching sites.');
+         }
+      } catch (e) {
+         toast.error('Error fetching sites');
+      } finally {
+         setLoadingSites(false);
+      }
+   };
+
+   const importSite = async (siteUrl: string) => {
+      try {
+         const res = await fetch('/api/domains', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ domains: [siteUrl] })
+         });
+         if (res.ok) {
+            toast.success(`Imported ${siteUrl}`);
+            router.push('/domains');
+         } else {
+            toast.error('Failed to import site');
+         }
+      } catch (e) {
+         toast.error('Error importing site');
+      }
+   };
+
    const translations = {
       en: {
          title: 'Settings',
@@ -86,7 +147,16 @@ const SettingsPage: NextPage = () => {
          notifications: 'Notifications',
          integrations: 'Integrations',
          save: 'Save Changes',
-         saving: 'Saving...'
+         saving: 'Saving...',
+         googleConnected: 'Connected to Google',
+         disconnect: 'Disconnect',
+         importSites: 'Import Verified Sites',
+         importingSites: 'Loading Sites...',
+         connectGoogle: 'Connect Google Account',
+         sitesModalTitle: 'Import Sites from Google Search Console',
+         noSites: 'No verified sites found',
+         import: 'Import',
+         close: 'Close'
       },
       de: {
          title: 'Einstellungen',
@@ -95,7 +165,16 @@ const SettingsPage: NextPage = () => {
          notifications: 'Benachrichtigungen',
          integrations: 'Integrationen',
          save: 'Änderungen speichern',
-         saving: 'Wird gespeichert...'
+         saving: 'Wird gespeichert...',
+         googleConnected: 'Mit Google verbunden',
+         disconnect: 'Trennen',
+         importSites: 'Verifizierte Websites importieren',
+         importingSites: 'Websites werden geladen...',
+         connectGoogle: 'Google-Konto verbinden',
+         sitesModalTitle: 'Websites aus Google Search Console importieren',
+         noSites: 'Keine verifizierten Websites gefunden',
+         import: 'Importieren',
+         close: 'Schließen'
       }
    };
 
@@ -321,53 +400,66 @@ const SettingsPage: NextPage = () => {
                         <CardDescription>Connect your Google Search Console account</CardDescription>
                      </CardHeader>
                      <CardContent className="space-y-6">
-                        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                           <p className="text-sm text-blue-800">
-                              You can connect your Google account or use a service account for Google Search Console integration.
-                           </p>
-                        </div>
-
-                        <div>
-                           <Button
-                              onClick={() => window.location.href = '/api/auth/google/authorize'}
-                              variant="outline"
-                              className="w-full"
-                           >
-                              <Plug className="mr-2 h-4 w-4" />
-                              Connect Google Account
-                           </Button>
-                        </div>
-
-                        <div className="relative">
-                           <div className="absolute inset-0 flex items-center">
-                              <span className="w-full border-t" />
+                        {settings.google_connected ? (
+                           <>
+                              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                 <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center text-green-700 font-semibold gap-2">
+                                       <CheckCircle className="h-5 w-5" />
+                                       {t.googleConnected}
+                                    </div>
+                                    <Button
+                                       onClick={disconnectGoogle}
+                                       variant="destructive"
+                                       size="sm"
+                                    >
+                                       {t.disconnect}
+                                    </Button>
+                                 </div>
+                                 <Button
+                                    onClick={fetchSites}
+                                    disabled={loadingSites}
+                                    className="w-full gap-2"
+                                 >
+                                    {loadingSites ? (
+                                       <>
+                                          <Loader2 className="h-4 w-4 animate-spin" />
+                                          {t.importingSites}
+                                       </>
+                                    ) : (
+                                       <>
+                                          <Download className="h-4 w-4" />
+                                          {t.importSites}
+                                       </>
+                                    )}
+                                 </Button>
+                              </div>
+                              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                 <p className="text-sm text-yellow-800 mb-2">
+                                    <strong>Important Notes:</strong>
+                                 </p>
+                                 <ul className="text-sm text-yellow-800 list-disc list-inside space-y-1">
+                                    <li>Only sites where you are the <strong>Owner</strong> in Google Search Console will appear and work properly.</li>
+                                    <li>If a site has permission errors, check that you have Owner access (not just User) in Google Search Console.</li>
+                                    <li>If you recently changed permissions, try disconnecting and reconnecting your Google account.</li>
+                                 </ul>
+                              </div>
+                           </>
+                        ) : (
+                           <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
+                              <p className="text-sm text-blue-800 mb-4">
+                                 Connect your Google account to automatically import your verified sites and access Search Console data.
+                              </p>
+                              <Button
+                                 onClick={() => window.location.href = '/api/auth/google/authorize'}
+                                 variant="outline"
+                                 className="gap-2"
+                              >
+                                 <Plug className="h-4 w-4" />
+                                 {t.connectGoogle}
+                              </Button>
                            </div>
-                           <div className="relative flex justify-center text-xs uppercase">
-                              <span className="bg-white px-2 text-muted-foreground">Or use service account</span>
-                           </div>
-                        </div>
-
-                        <div className="space-y-2">
-                           <Label htmlFor="search_console_client_email">Client Email</Label>
-                           <Input
-                              id="search_console_client_email"
-                              type="email"
-                              value={settings.search_console_client_email}
-                              onChange={(e) => updateSettings('search_console_client_email', e.target.value)}
-                              placeholder="service-account@project.iam.gserviceaccount.com"
-                           />
-                        </div>
-
-                        <div className="space-y-2">
-                           <Label htmlFor="search_console_private_key">Private Key</Label>
-                           <Textarea
-                              id="search_console_private_key"
-                              value={settings.search_console_private_key}
-                              onChange={(e) => updateSettings('search_console_private_key', e.target.value)}
-                              placeholder="-----BEGIN PRIVATE KEY-----"
-                              rows={5}
-                           />
-                        </div>
+                        )}
                      </CardContent>
                   </Card>
                </TabsContent>
@@ -395,6 +487,48 @@ const SettingsPage: NextPage = () => {
                </Button>
             </div>
          </div>
+
+         {/* Sites Import Dialog */}
+         <Dialog open={showSitesModal} onOpenChange={setShowSitesModal}>
+            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+               <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                     <Download className="h-5 w-5" />
+                     {t.sitesModalTitle}
+                  </DialogTitle>
+                  <DialogDescription>
+                     Select sites to import into your dashboard
+                  </DialogDescription>
+               </DialogHeader>
+               <div className="space-y-2 mt-4">
+                  {sites.length === 0 ? (
+                     <div className="text-center py-8 text-muted-foreground">
+                        {t.noSites}
+                     </div>
+                  ) : (
+                     sites.map((site) => (
+                        <div
+                           key={site.siteUrl}
+                           className="flex items-center justify-between p-4 border rounded-lg hover:bg-neutral-50 transition-colors"
+                        >
+                           <div className="flex-1 mr-4">
+                              <p className="font-medium text-sm truncate">{site.siteUrl}</p>
+                              <p className="text-xs text-muted-foreground">{site.permissionLevel}</p>
+                           </div>
+                           <Button
+                              onClick={() => importSite(site.siteUrl)}
+                              size="sm"
+                              className="gap-2"
+                           >
+                              <Download className="h-3 w-3" />
+                              {t.import}
+                           </Button>
+                        </div>
+                     ))
+                  )}
+               </div>
+            </DialogContent>
+         </Dialog>
 
          <Toaster position='bottom-center' />
       </DashboardLayout>

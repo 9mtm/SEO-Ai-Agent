@@ -31,16 +31,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const data = await response.json();
         const sites = data.siteEntry || [];
 
-        // Filter to only Verified sites (permissionLevel: 'siteOwner' or similar usually implies verification)
-        // or just return all and let frontend decide.
-        // Usually users want to see sites they have access to.
+        console.log('[GSC Sites] Total sites from Google:', sites.length);
+        console.log('[GSC Sites] All sites with permissions:', JSON.stringify(sites, null, 2));
 
-        const formattedSites = sites.map((site: any) => ({
+        // Filter to only sites where user is Owner
+        // Only owners have full permissions to access Search Console data
+        const ownerSites = sites.filter((site: any) =>
+            site.permissionLevel === 'siteOwner' ||
+            site.permissionLevel === 'siteUnverifiedUser' // Sometimes this also works
+        );
+
+        console.log('[GSC Sites] Owner sites after filter:', ownerSites.length);
+
+        const formattedSites = ownerSites.map((site: any) => ({
             siteUrl: site.siteUrl,
             permissionLevel: site.permissionLevel
         }));
 
-        return res.status(200).json({ sites: formattedSites });
+        return res.status(200).json({
+            sites: formattedSites,
+            totalSites: sites.length,
+            ownerSites: ownerSites.length
+        });
 
     } catch (error) {
         console.error('Error fetching GSC sites:', error);

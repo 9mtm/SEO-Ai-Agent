@@ -24,7 +24,8 @@
       "Bash(timeout 240 npm run build:*)",
       "Bash(npx @next/codemod@latest new-link:*)",
       "Bash(pnpm dlx shadcn@latest add:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(npx shadcn@latest add:*)"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"
