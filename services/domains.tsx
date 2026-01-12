@@ -109,15 +109,15 @@ export function useUpdateDomain(onSuccess:Function) {
    const queryClient = useQueryClient();
    return useMutation({
       mutationFn: async ({ domainSettings, domain }: UpdatePayload) => {
-      const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
-      const fetchOpts = { method: 'PUT', headers, body: JSON.stringify(domainSettings) };
-      const res = await fetch(`${window.location.origin}/api/domains?domain=${domain.domain}`, fetchOpts);
-      const responseObj = await res.json();
-      if (res.status >= 400 && res.status < 600) {
-         throw new Error(responseObj?.error || 'Bad response from server');
-      }
-      return responseObj;
-   }, {
+         const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
+         const fetchOpts = { method: 'PUT', headers, body: JSON.stringify(domainSettings) };
+         const res = await fetch(`${window.location.origin}/api/domains?domain=${domain.domain}`, fetchOpts);
+         const responseObj = await res.json();
+         if (res.status >= 400 && res.status < 600) {
+            throw new Error(responseObj?.error || 'Bad response from server');
+         }
+         return responseObj;
+      },
       onSuccess: async () => {
          console.log('Settings Updated!!!');
          toast('Settings Updated!', { icon: '✔️' });
@@ -135,12 +135,12 @@ export function useDeleteDomain(onSuccess:Function) {
    const queryClient = useQueryClient();
    return useMutation({
       mutationFn: async (domain:DomainType) => {
-      const res = await fetch(`${window.location.origin}/api/domains?domain=${domain.domain}`, { method: 'DELETE' });
-      if (res.status >= 400 && res.status < 600) {
-         throw new Error('Bad response from server');
-      }
-      return res.json();
-   }, {
+         const res = await fetch(`${window.location.origin}/api/domains?domain=${domain.domain}`, { method: 'DELETE' });
+         if (res.status >= 400 && res.status < 600) {
+            throw new Error('Bad response from server');
+         }
+         return res.json();
+      },
       onSuccess: async () => {
          toast('Domain Removed Successfully!', { icon: '✔️' });
          onSuccess();

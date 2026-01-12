@@ -5,14 +5,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 export function useTestAdwordsIntegration(onSuccess?: Function) {
    return useMutation({
       mutationFn: async (payload:{developer_token:string, account_id:string}) => {
-      const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
+         const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
       const fetchOpts = { method: 'POST', headers, body: JSON.stringify({ ...payload }) };
       const res = await fetch(`${window.location.origin}/api/adwords`, fetchOpts);
       if (res.status >= 400 && res.status < 600) {
          throw new Error('Bad response from server');
       }
       return res.json();
-   }, {
+   },
       onSuccess: async (data) => {
          console.log('Ideas Added:', data);
          toast('Google Ads has been integrated successfully!', { icon: '✔️' });
@@ -57,14 +57,14 @@ export function useMutateKeywordIdeas(router:NextRouter, onSuccess?: Function) {
    const domainSlug = router.pathname === '/research' ? 'research' : router.query.slug as string;
    return useMutation({
       mutationFn: async (data:Record<string, any>) => {
-      const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
+         const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
       const fetchOpts = { method: 'POST', headers, body: JSON.stringify({ ...data }) };
       const res = await fetch(`${window.location.origin}/api/ideas`, fetchOpts);
       if (res.status >= 400 && res.status < 600) {
          throw new Error('Bad response from server');
       }
       return res.json();
-   }, {
+   },
       onSuccess: async (data) => {
          console.log('Ideas Added:', data);
          toast('Keyword Ideas Loaded Successfully!', { icon: '✔️' });
@@ -85,14 +85,14 @@ export function useMutateFavKeywordIdeas(router:NextRouter, onSuccess?: Function
    const domainSlug = router.pathname === '/research' ? 'research' : router.query.slug as string;
    return useMutation({
       mutationFn: async (payload:Record<string, any>) => {
-      const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
+         const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
       const fetchOpts = { method: 'PUT', headers, body: JSON.stringify({ ...payload }) };
       const res = await fetch(`${window.location.origin}/api/ideas`, fetchOpts);
       if (res.status >= 400 && res.status < 600) {
          throw new Error('Bad response from server');
       }
       return res.json();
-   }, {
+   },
       onSuccess: async (data) => {
          console.log('Ideas Added:', data);
          // toast('Keyword Updated!', { icon: '✔️' });
@@ -111,7 +111,7 @@ export function useMutateFavKeywordIdeas(router:NextRouter, onSuccess?: Function
 export function useMutateKeywordsVolume(onSuccess?: Function) {
    return useMutation({
       mutationFn: async (data:Record<string, any>) => {
-      const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
+         const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
       const fetchOpts = { method: 'POST', headers, body: JSON.stringify({ ...data }) };
       const res = await fetch(`${window.location.origin}/api/volume`, fetchOpts);
       if (res.status >= 400 && res.status < 600) {
@@ -119,7 +119,7 @@ export function useMutateKeywordsVolume(onSuccess?: Function) {
          throw new Error(errorData?.error ? errorData.error : 'Bad response from server');
       }
       return res.json();
-   }, {
+   },
       onSuccess: async (data) => {
          toast('Keyword Volume Data Loaded Successfully! Reloading Page...', { icon: '✔️' });
          if (onSuccess) {

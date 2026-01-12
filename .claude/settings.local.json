@@ -17,7 +17,9 @@
       "Bash(node:*)",
       "Bash(while read file)",
       "Bash(do if grep -q \"\\\\bisLoading\\\\b\" \"$file\")",
-      "Bash(then node -e \" const fs = require\\(''fs''\\); try { let content = fs.readFileSync\\(''$file'', ''utf8''\\); // Don''t replace in comments or strings content = content.replace\\(/\\(\\\\s\\)isLoading\\(\\\\s*[,:\\\\\\)]\\)/g, ''$1isPending$2''\\); content = content.replace\\(/\\(\\\\{[\\\\s\\\\n]*\\)isLoading\\(\\\\s*[,\\\\}]\\)/g, ''$1isPending$2''\\); content = content.replace\\(/\\\\!isLoading/g, ''!isPending''\\); fs.writeFileSync\\(''$file'', content\\); console.log\\(''✅ $file''\\); } catch\\(e\\) {} \" fi done)"
+      "Bash(then node -e \" const fs = require\\(''fs''\\); try { let content = fs.readFileSync\\(''$file'', ''utf8''\\); // Don''t replace in comments or strings content = content.replace\\(/\\(\\\\s\\)isLoading\\(\\\\s*[,:\\\\\\)]\\)/g, ''$1isPending$2''\\); content = content.replace\\(/\\(\\\\{[\\\\s\\\\n]*\\)isLoading\\(\\\\s*[,\\\\}]\\)/g, ''$1isPending$2''\\); content = content.replace\\(/\\\\!isLoading/g, ''!isPending''\\); fs.writeFileSync\\(''$file'', content\\); console.log\\(''✅ $file''\\); } catch\\(e\\) {} \" fi done)",
+      "Bash(git commit:*)",
+      "Bash(npm run dev:*)"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"
