@@ -8,7 +8,7 @@ class Setting extends Model {
     @PrimaryKey
     @Unique
     @Column({ type: DataType.STRING, allowNull: false })
-    key!: string;
+    declare key: string;
 
     @Column({ type: DataType.TEXT, allowNull: true })
     value?: string;

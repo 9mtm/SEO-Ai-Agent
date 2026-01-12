@@ -27,7 +27,7 @@ const DiscoverPage: NextPage = () => {
    const { data: appSettings } = useFetchSettings();
    const { data: domainsData } = useFetchDomains(router);
    const scConnected = !!(appSettings && (appSettings?.settings?.search_console_integrated || appSettings?.settings?.google_connected));
-   const { data: keywordsData, isLoading: keywordsLoading, isFetching } = useFetchSCKeywords(router, !!(domainsData?.domains?.length) && scConnected);
+   const { data: keywordsData, isPending: keywordsLoading, isFetching } = useFetchSCKeywords(router, !!(domainsData?.domains?.length) && scConnected);
 
    const theDomains: DomainType[] = (domainsData && domainsData.domains) || [];
    const theKeywords: SearchAnalyticsItem[] = useMemo(() => {

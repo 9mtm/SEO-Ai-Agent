@@ -31,7 +31,7 @@ const DiscoverPage: NextPage = () => {
    const adwordsConnected = !!(appSettings && (appSettings?.settings?.adwords_refresh_token || appSettings?.settings?.google_connected)
       && (appSettings?.settings?.adwords_developer_token || appSettings?.settings?.google_connected) || appSettings?.settings?.google_connected);
    const searchConsoleConnected = !!(appSettings && (appSettings?.settings?.search_console_integrated || appSettings?.settings?.google_connected));
-   const { data: keywordIdeasData, isLoading: isLoadingIdeas, isError: errorLoadingIdeas } = useFetchKeywordIdeas(router, adwordsConnected);
+   const { data: keywordIdeasData, isPending: isLoadingIdeas, isError: errorLoadingIdeas } = useFetchKeywordIdeas(router, adwordsConnected);
    const theDomains: DomainType[] = (domainsData && domainsData.domains) || [];
    const keywordIdeas: IdeaKeyword[] = keywordIdeasData?.data?.keywords || [];
    const favorites: IdeaKeyword[] = keywordIdeasData?.data?.favorites || [];

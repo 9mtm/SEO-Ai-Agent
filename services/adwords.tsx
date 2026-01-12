@@ -1,9 +1,10 @@
 import { NextRouter } from 'next/router';
 import toast from 'react-hot-toast';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useTestAdwordsIntegration(onSuccess?: Function) {
-   return useMutation(async (payload:{developer_token:string, account_id:string}) => {
+   return useMutation({
+      mutationFn: async (payload:{developer_token:string, account_id:string}) => {
       const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
       const fetchOpts = { method: 'POST', headers, body: JSON.stringify({ ...payload }) };
       const res = await fetch(`${window.location.origin}/api/adwords`, fetchOpts);
@@ -43,13 +44,19 @@ export function useFetchKeywordIdeas(router: NextRouter, adwordsConnected = fals
    const isResearch = router.pathname === '/research';
    const domainSlug = isResearch ? 'research' : (router.query.slug as string);
    const enabled = !!(adwordsConnected && domainSlug);
-   return useQuery(`keywordIdeas-${domainSlug}`, () => domainSlug && fetchAdwordsKeywordIdeas(router, domainSlug), { enabled, retry: false });
+   return useQuery({
+      queryKey: [`keywordIdeas-${domainSlug}`],
+      queryFn: () => domainSlug && fetchAdwordsKeywordIdeas(router, domainSlug),
+      enabled,
+      retry: false,
+   });
 }
 
 export function useMutateKeywordIdeas(router:NextRouter, onSuccess?: Function) {
    const queryClient = useQueryClient();
    const domainSlug = router.pathname === '/research' ? 'research' : router.query.slug as string;
-   return useMutation(async (data:Record<string, any>) => {
+   return useMutation({
+      mutationFn: async (data:Record<string, any>) => {
       const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
       const fetchOpts = { method: 'POST', headers, body: JSON.stringify({ ...data }) };
       const res = await fetch(`${window.location.origin}/api/ideas`, fetchOpts);
@@ -64,7 +71,7 @@ export function useMutateKeywordIdeas(router:NextRouter, onSuccess?: Function) {
          if (onSuccess) {
             onSuccess(false);
          }
-         queryClient.invalidateQueries([`keywordIdeas-${domainSlug}`]);
+         queryClient.invalidateQueries({ queryKey: [`keywordIdeas-${domainSlug}`] });
       },
       onError: (error) => {
          console.log('Error Loading Keyword Ideas!!!', error);
@@ -76,7 +83,8 @@ export function useMutateKeywordIdeas(router:NextRouter, onSuccess?: Function) {
 export function useMutateFavKeywordIdeas(router:NextRouter, onSuccess?: Function) {
    const queryClient = useQueryClient();
    const domainSlug = router.pathname === '/research' ? 'research' : router.query.slug as string;
-   return useMutation(async (payload:Record<string, any>) => {
+   return useMutation({
+      mutationFn: async (payload:Record<string, any>) => {
       const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
       const fetchOpts = { method: 'PUT', headers, body: JSON.stringify({ ...payload }) };
       const res = await fetch(`${window.location.origin}/api/ideas`, fetchOpts);
@@ -91,7 +99,7 @@ export function useMutateFavKeywordIdeas(router:NextRouter, onSuccess?: Function
          if (onSuccess) {
             onSuccess(false);
          }
-         queryClient.invalidateQueries([`keywordIdeas-${domainSlug}`]);
+         queryClient.invalidateQueries({ queryKey: [`keywordIdeas-${domainSlug}`] });
       },
       onError: (error) => {
          console.log('Error Favorating Keywords', error);
@@ -101,7 +109,8 @@ export function useMutateFavKeywordIdeas(router:NextRouter, onSuccess?: Function
 }
 
 export function useMutateKeywordsVolume(onSuccess?: Function) {
-   return useMutation(async (data:Record<string, any>) => {
+   return useMutation({
+      mutationFn: async (data:Record<string, any>) => {
       const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
       const fetchOpts = { method: 'POST', headers, body: JSON.stringify({ ...data }) };
       const res = await fetch(`${window.location.origin}/api/volume`, fetchOpts);

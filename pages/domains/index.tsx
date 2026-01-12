@@ -21,8 +21,8 @@ const Domains: NextPage = () => {
    const [showSettings, setShowSettings] = useState(false);
    const [showAddDomain, setShowAddDomain] = useState(false);
    const [domainThumbs, setDomainThumbs] = useState<thumbImages>({});
-   const { data: appSettingsData, isLoading: isAppSettingsLoading } = useFetchSettings();
-   const { data: domainsData, isLoading } = useFetchDomains(router, true);
+   const { data: appSettingsData, isPending: isAppSettingsLoading } = useFetchSettings();
+   const { data: domainsData, isPending } = useFetchDomains(router, true);
    const { data: migrationStatus } = useCheckMigrationStatus();
 
    const appSettings: SettingsType = appSettingsData?.settings || {};
@@ -137,12 +137,12 @@ const Domains: NextPage = () => {
                   // isConsoleIntegrated={false}
                   />;
                })}
-               {isLoading && (
+               {isPending && (
                   <div className='noDomains mt-4 p-5 py-12 rounded border text-center bg-white text-sm'>
                      <Icon type="loading" /> Loading Domains...
                   </div>
                )}
-               {!isLoading && domainsData && domainsData.domains && domainsData.domains.length === 0 && (
+               {!isPending && domainsData && domainsData.domains && domainsData.domains.length === 0 && (
                   <div className='noDomains mt-4 p-5 py-12 rounded border text-center bg-white text-sm'>
                      No Domains Found. Add a Domain to get started!
                   </div>

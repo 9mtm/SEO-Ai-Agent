@@ -18,7 +18,7 @@ import { defaultSettings } from '../settings/Settings';
 type KeywordsTableProps = {
    domain: DomainType | null,
    keywords: KeywordType[],
-   isLoading: boolean,
+   isPending: boolean,
    showAddModal: boolean,
    setShowAddModal: Function,
    isConsoleIntegrated: boolean,
@@ -27,7 +27,7 @@ type KeywordsTableProps = {
 
 const KeywordsTable = (props: KeywordsTableProps) => {
    const titleColumnRef = useRef(null);
-   const { keywords = [], isLoading = true, isConsoleIntegrated = false, settings } = props;
+   const { keywords = [], isPending = true, isConsoleIntegrated = false, settings } = props;
    const showSCData = isConsoleIntegrated;
    const [device, setDevice] = useState<string>('desktop');
    const [selectedKeywords, setSelectedKeywords] = useState<number[]>([]);
@@ -60,7 +60,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
    }, [titleColumnRef]);
 
    const tableColumns = settings?.keywordsColumns || ['Best', 'History', 'Volume', 'Search Console'];
-   const { mutate: updateMutate, isLoading: isUpdatingSettings } = useUpdateSettings(() => console.log(''));
+   const { mutate: updateMutate, isPending: isUpdatingSettings } = useUpdateSettings(() => console.log(''));
 
    const scDataObject: { [k: string]: string } = {
       threeDays: 'Last Three Days',
@@ -315,10 +315,10 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                            {Row}
                         </List>
                      )}
-                     {!isLoading && processedKeywords[device].length === 0 && (
+                     {!isPending && processedKeywords[device].length === 0 && (
                         <p className=' p-9 pt-[10%] text-center text-gray-500'>No Keywords Added for this Device Type.</p>
                      )}
-                     {isLoading && (
+                     {isPending && (
                         <p className=' p-9 pt-[10%] text-center text-gray-500'>Loading Keywords...</p>
                      )}
                   </div>

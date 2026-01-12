@@ -8,10 +8,10 @@ class FailedJob extends Model {
     @PrimaryKey
     @AutoIncrement
     @Column({ type: DataType.INTEGER, allowNull: false })
-    id!: number;
+    declare id: number;
 
     @Column({ type: DataType.TEXT, allowNull: false })
-    payload!: string; // The keyword or data that failed
+    declare payload: string; // The keyword or data that failed
 }
 
 export default FailedJob;

@@ -24,7 +24,7 @@ const SingleDomain: NextPage = () => {
    const [showDomainSettings, setShowDomainSettings] = useState(false);
    const [showSettings, setShowSettings] = useState(false);
    const [keywordSPollInterval, setKeywordSPollInterval] = useState<undefined | number>(undefined);
-   const { data: appSettingsData, isLoading: isAppSettingsLoading } = useFetchSettings();
+   const { data: appSettingsData, isPending: isAppSettingsLoading } = useFetchSettings();
    const { data: domainsData } = useFetchDomains(router);
    const appSettings: SettingsType = appSettingsData?.settings || {};
    const { scraper_type = '', available_scapers = [] } = appSettings;

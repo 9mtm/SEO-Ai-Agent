@@ -8,11 +8,11 @@ import InsightStats from './InsightStats';
 type SCInsightProps = {
    domain: DomainType | null,
    insight: InsightDataType,
-   isLoading: boolean,
+   isPending: boolean,
    isConsoleIntegrated: boolean,
 }
 
-const SCInsight = ({ insight, isLoading = true, isConsoleIntegrated = true, domain }: SCInsightProps) => {
+const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, domain }: SCInsightProps) => {
    const [activeTab, setActiveTab] = useState<string>('stats');
    const [sortBy, setSortBy] = useState<string>('clicks');
 
@@ -181,7 +181,7 @@ const SCInsight = ({ insight, isLoading = true, isConsoleIntegrated = true, doma
                            },
                         )
                      }
-                     {isConsoleIntegrated && isLoading && (
+                     {isConsoleIntegrated && isPending && (
                         <p className=' p-9 pt-[10%] text-center text-gray-500'>Loading Insight...</p>
                      )}
                      {!isConsoleIntegrated && (

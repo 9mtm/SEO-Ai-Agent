@@ -14,7 +14,7 @@ import { formattedNum } from '../../utils/client/helpers';
 type SCKeywordsTableProps = {
    domain: DomainType | null,
    keywords: SearchAnalyticsItem[],
-   isLoading: boolean,
+   isPending: boolean,
    isConsoleIntegrated: boolean,
 }
 
@@ -24,7 +24,7 @@ type SCCountryDataType = {
    visits: number
 }
 
-const SCKeywordsTable = ({ domain, keywords = [], isLoading = true, isConsoleIntegrated = true }: SCKeywordsTableProps) => {
+const SCKeywordsTable = ({ domain, keywords = [], isPending = true, isConsoleIntegrated = true }: SCKeywordsTableProps) => {
    const router = useRouter();
    const [device, setDevice] = useState<string>('desktop');
    const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
@@ -226,7 +226,7 @@ const SCKeywordsTable = ({ domain, keywords = [], isLoading = true, isConsoleInt
                      </span>
                   </div>
                   <div className='domKeywords_keywords border-gray-200 min-h-[55vh] relative' data-domain={domain?.domain}>
-                     {!isLoading && finalKeywords[device] && finalKeywords[device].length > 0 && (
+                     {!isPending && finalKeywords[device] && finalKeywords[device].length > 0 && (
                         <List
                            innerElementType="div"
                            itemData={finalKeywords[device]}
@@ -239,7 +239,7 @@ const SCKeywordsTable = ({ domain, keywords = [], isLoading = true, isConsoleInt
                            {Row}
                         </List>
                      )}
-                     {!isLoading && finalKeywords[device] && finalKeywords[device].length > 0 && (
+                     {!isPending && finalKeywords[device] && finalKeywords[device].length > 0 && (
                         <div className={`domKeywords_head hidden lg:flex p-3 px-6 bg-[#FCFCFF]
                            text-gray-600 justify-between items-center font-semibold border-y`}>
                            <span className='domKeywords_head_keyword flex-1 basis-20 w-auto font-semibold'>
@@ -257,12 +257,12 @@ const SCKeywordsTable = ({ domain, keywords = [], isLoading = true, isConsoleInt
                            </span>
                         </div>
                      )}
-                     {isConsoleIntegrated && !isLoading && finalKeywords[device].length === 0 && (
+                     {isConsoleIntegrated && !isPending && finalKeywords[device].length === 0 && (
                         <p className=' p-9 pt-[10%] text-center text-gray-500'>
                            Could Not fetch Keyword Data for this Domain from Google Search Console.
                         </p>
                      )}
-                     {isConsoleIntegrated && isLoading && (
+                     {isConsoleIntegrated && isPending && (
                         <p className=' p-9 pt-[10%] text-center text-gray-500'>Loading Keywords...</p>
                      )}
                      {!isConsoleIntegrated && (

@@ -8,13 +8,13 @@ import ChatSession from './chatSession';
 })
 class ChatMessage extends Model {
     @Column({ type: DataType.TEXT, allowNull: false })
-    content!: string;
+    declare content: string;
 
     @Column({ type: DataType.ENUM('user', 'assistant', 'system'), allowNull: false })
-    role!: string;
+    declare role: string;
 
     @Column({ type: DataType.STRING, allowNull: false })
-    domain!: string;
+    declare domain: string;
 
     @ForeignKey(() => User)
     @Column({ type: DataType.INTEGER, allowNull: true })

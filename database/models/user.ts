@@ -18,23 +18,23 @@ class User extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column({ type: DataType.INTEGER, allowNull: false })
-  id!: number;
+  declare id: number;
 
   @Unique
   @Column({ type: DataType.STRING, allowNull: false })
-  email!: string;
+  declare email: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  password!: string;
+  declare password: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  name!: string;
+  declare name: string;
 
   @Column({ type: DataType.STRING, allowNull: true })
   company?: string;
 
   @Column({ type: DataType.ENUM('free', 'pro', 'enterprise'), allowNull: false, defaultValue: 'free' })
-  subscription_plan!: string;
+  declare subscription_plan: string;
 
   @Column({ type: DataType.TEXT, allowNull: true })
   google_access_token?: string;
@@ -62,19 +62,19 @@ class User extends Model {
   proxy_list?: string;
 
   @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: true })
-  is_active!: boolean;
+  declare is_active: boolean;
 
   @Column({ type: DataType.DATE, allowNull: true })
   last_login?: Date;
 
   @Column({ type: DataType.DATE, allowNull: false })
-  createdAt!: Date;
+  declare createdAt: Date;
 
   @Column({ type: DataType.DATE, allowNull: false })
-  updatedAt!: Date;
+  declare updatedAt: Date;
 
   @HasMany(() => Domain)
-  domains!: Domain[];
+  declare domains: Domain[];
 }
 
 export default User;

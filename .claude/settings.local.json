@@ -8,7 +8,19 @@
       "Bash(node -e \"const fs = require\\(''fs''\\); const path = require\\(''path''\\); const file = path.join\\(process.cwd\\(\\), ''pages'', ''api'', ''clearfailed.ts''\\); let content = fs.readFileSync\\(file, ''utf8''\\); content = content.replace\\(''const authorized = verifyUser\\(req, res\\);'', ''const verifyResult = verifyUser\\(req, res\\);''\\).replace\\(\"\"if \\(authorized !== ''authorized''\\) {\"\", ''if \\(!verifyResult.authorized\\) {''\\).replace\\(''return res.status\\(401\\).json\\({ error: authorized }\\);'', \"\"return res.status\\(401\\).json\\({ error: ''Unauthorized'' }\\);\"\"\\); fs.writeFileSync\\(file, content, ''utf8''\\); console.log\\(''clearfailed.ts updated''\\);\")",
       "Bash(git rm:*)",
       "Bash(git add:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git checkout:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(timeout /t 15)",
+      "Bash(npm cache clean:*)",
+      "Bash(node:*)",
+      "Bash(while read file)",
+      "Bash(do if grep -q \"\\\\bisLoading\\\\b\" \"$file\")",
+      "Bash(then node -e \" const fs = require\\(''fs''\\); try { let content = fs.readFileSync\\(''$file'', ''utf8''\\); // Don''t replace in comments or strings content = content.replace\\(/\\(\\\\s\\)isLoading\\(\\\\s*[,:\\\\\\)]\\)/g, ''$1isPending$2''\\); content = content.replace\\(/\\(\\\\{[\\\\s\\\\n]*\\)isLoading\\(\\\\s*[,\\\\}]\\)/g, ''$1isPending$2''\\); content = content.replace\\(/\\\\!isLoading/g, ''!isPending''\\); fs.writeFileSync\\(''$file'', content\\); console.log\\(''✅ $file''\\); } catch\\(e\\) {} \" fi done)"
+    ],
+    "additionalDirectories": [
+      "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"
     ]
   }
 }

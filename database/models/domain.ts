@@ -9,49 +9,49 @@ import User from './user';
 class Domain extends Model {
   @PrimaryKey
   @Column({ type: DataType.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true })
-  ID!: number;
+  declare ID: number;
 
   @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER, allowNull: false })
-  user_id!: number;
+  declare user_id: number;
 
   @Unique
   @Column({ type: DataType.STRING, allowNull: false, defaultValue: true, unique: true })
-  domain!: string;
+  declare domain: string;
 
   @Unique
   @Column({ type: DataType.STRING, allowNull: false, defaultValue: true, unique: true })
-  slug!: string;
+  declare slug: string;
 
   @Column({ type: DataType.INTEGER, allowNull: false, defaultValue: 0 })
-  keywordCount!: number;
+  declare keywordCount: number;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  lastUpdated!: string;
+  declare lastUpdated: string;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  added!: string;
+  declare added: string;
 
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: JSON.stringify([]) })
-  tags!: string;
+  declare tags: string;
 
   @Column({ type: DataType.BOOLEAN, allowNull: true, defaultValue: true })
-  notification!: boolean;
+  declare notification: boolean;
 
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: 'daily' })
-  notification_interval!: string;
+  declare notification_interval: string;
 
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: '' })
-  notification_emails!: string;
+  declare notification_emails: string;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  search_console!: string;
+  declare search_console: string;
 
   @Column({ type: DataType.JSON, allowNull: true })
   search_console_data?: any;
 
   @BelongsTo(() => User)
-  user!: User;
+  declare user: User;
 }
 
 export default Domain;

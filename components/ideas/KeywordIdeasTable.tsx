@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useState, useMemo } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import { useAddKeywords } from '../../services/keywords';
 import Icon from '../common/Icon';
@@ -20,14 +20,14 @@ type IdeasKeywordsTableProps = {
    keywords: IdeaKeyword[],
    favorites: IdeaKeyword[],
    noIdeasDatabase: boolean,
-   isLoading: boolean,
+   isPending: boolean,
    showFavorites: boolean,
    setShowFavorites: Function,
    isAdwordsIntegrated: boolean,
 }
 
 const IdeasKeywordsTable = ({
-   domain, keywords = [], favorites = [], isLoading = true, isAdwordsIntegrated = true, setShowFavorites,
+   domain, keywords = [], favorites = [], isPending = true, isAdwordsIntegrated = true, setShowFavorites,
    showFavorites = false, noIdeasDatabase = false }: IdeasKeywordsTableProps) => {
    const router = useRouter();
    const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
@@ -38,11 +38,16 @@ const IdeasKeywordsTable = ({
    const [addKeywordDevice, setAddKeywordDevice] = useState<'desktop'|'mobile'>('desktop');
    const [addKeywordDomain, setAddKeywordDomain] = useState('');
    const { mutate: addKeywords } = useAddKeywords(() => { if (domain && domain.slug) router.push(`/domain/${domain.slug}`); });
-   const { mutate: faveKeyword, isLoading: isFaving } = useMutateFavKeywordIdeas(router);
+   const { mutate: faveKeyword, isPending: isFaving } = useMutateFavKeywordIdeas(router);
    const [isMobile] = useIsMobile();
    const isResearchPage = router.pathname === '/research';
 
-   const { data: domainsData } = useQuery('domains', () => fetchDomains(router, false), { enabled: selectedKeywords.length > 0, retry: false });
+   const { data: domainsData } = useQuery({
+      queryKey: ['domains'],
+      queryFn: () => fetchDomains(router, false),
+      enabled: selectedKeywords.length > 0,
+      retry: false,
+   });
    const theDomains: DomainType[] = (domainsData && domainsData.domains) || [];
 
    useWindowResize(() => setListHeight(window.innerHeight - (isMobile ? 200 : 400)));
@@ -200,7 +205,7 @@ const IdeasKeywordsTable = ({
                      <span className='domKeywords_head_competition flex-1 text-center'>Competition</span>
                   </div>
                   <div className='domKeywords_keywords border-gray-200 min-h-[55vh] relative' data-domain={domain?.domain}>
-                     {!isLoading && finalKeywords && finalKeywords.length > 0 && (
+                     {!isPending && finalKeywords && finalKeywords.length > 0 && (
                         <List
                         innerElementType="div"
                         itemData={finalKeywords}
@@ -214,15 +219,15 @@ const IdeasKeywordsTable = ({
                         </List>
                      )}
 
-                     {isAdwordsIntegrated && isLoading && (
+                     {isAdwordsIntegrated && isPending && (
                         <p className=' p-9 pt-[10%] text-center text-gray-500'>Loading Keywords Ideas...</p>
                      )}
-                     {isAdwordsIntegrated && noIdeasDatabase && !isLoading && (
+                     {isAdwordsIntegrated && noIdeasDatabase && !isPending && (
                         <p className=' p-9 pt-[10%] text-center text-gray-500'>
                            {'No keyword Ideas has been generated for this domain yet. Click the "Load Ideas" button to generate keyword ideas.'}
                         </p>
                      )}
-                     {isAdwordsIntegrated && !isLoading && finalKeywords.length === 0 && !noIdeasDatabase && (
+                     {isAdwordsIntegrated && !isPending && finalKeywords.length === 0 && !noIdeasDatabase && (
                         <p className=' p-9 pt-[10%] text-center text-gray-500'>
                            {'No Keyword Ideas found. Please try generating Keyword Ideas again by clicking the "Load Ideas" button.'}
                         </p>
