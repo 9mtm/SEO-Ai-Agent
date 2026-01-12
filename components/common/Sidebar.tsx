@@ -24,7 +24,7 @@ const Sidebar = ({ domains, showAddModal }: SidebarProps) => {
                {domains.map((d) => <li
                   key={d.domain}
                   className={'my-2.5 leading-10'}>
-                  <Link href={`/domain/${d.slug}`} passHref={true}>
+                  <Link legacyBehavior href={`/domain/${d.slug}`} >
                      <a className={`block cursor-pointer px-4 text-ellipsis max-w-[215px] overflow-hidden whitespace-nowrap rounded
                                         rounded-r-none ${((`/domain/${d.slug}` === router.asPath || `/domain/console/${d.slug}` === router.asPath
                            || `/domain/insight/${d.slug}` === router.asPath || `/domain/ideas/${d.slug}` === router.asPath)

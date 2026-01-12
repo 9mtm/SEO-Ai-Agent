@@ -52,14 +52,14 @@ const DomainHeader = (
          <div className='flex w-full justify-between mt-4 lg:mt-0'>
             <ul className=' max-w-[270px] overflow-auto flex items-end text-sm relative top-[2px] lg:max-w-none'>
                <li className={`${tabStyle} ${router.pathname === '/domain/[slug]' ? 'bg-white border border-b-0 font-semibold' : ''}`}>
-                  <Link href={`/domain/${domain.slug}`} passHref={true}>
+                  <Link legacyBehavior href={`/domain/${domain.slug}`} >
                      <a className='px-4 py-2 inline-block'><Icon type="tracking" color='#999' classes='hidden lg:inline-block' />
                         <span className='text-xs lg:text-sm lg:ml-2'>Tracking</span>
                      </a>
                   </Link>
                </li>
                <li className={`${tabStyle} ${router.pathname === '/domain/console/[slug]' ? 'bg-white border border-b-0 font-semibold' : ''}`}>
-                  <Link href={`/domain/console/${domain.slug}`} passHref={true}>
+                  <Link legacyBehavior href={`/domain/console/${domain.slug}`} >
                      <a className='px-4 py-2 inline-block'><Icon type="google" size={13} classes='hidden lg:inline-block' />
                         <span className='text-xs lg:text-sm lg:ml-2'>Discover</span>
                         <Icon type='help' size={14} color="#aaa" classes="ml-2 hidden lg:inline-block" title='Discover Keywords you already Rank For' />
@@ -67,7 +67,7 @@ const DomainHeader = (
                   </Link>
                </li>
                <li className={`${tabStyle} ${router.pathname === '/domain/insight/[slug]' ? 'bg-white border border-b-0 font-semibold' : ''}`}>
-                  <Link href={`/domain/insight/${domain.slug}`} passHref={true}>
+                  <Link legacyBehavior href={`/domain/insight/${domain.slug}`} >
                      <a className='px-4 py-2 inline-block'><Icon type="google" size={13} classes='hidden lg:inline-block' />
                         <span className='text-xs lg:text-sm lg:ml-2'>Insight</span>
                         <Icon type='help' size={14} color="#aaa" classes="ml-2 hidden lg:inline-block" title='Insight for Google Search Console Data' />
@@ -76,7 +76,7 @@ const DomainHeader = (
                </li>
 
                {/* <li className={`${tabStyle} ${router.pathname === '/domain/ideas/[slug]' ? 'bg-white border border-b-0 font-semibold' : ''}`}>
-               <Link href={`/domain/ideas/${domain.slug}`} passHref={true}>
+               <Link legacyBehavior href={`/domain/ideas/${domain.slug}`} >
                   <a className='px-4 py-2 inline-block'><Icon type="adwords" size={13} classes='hidden lg:inline-block' />
                      <span className='text-xs lg:text-sm lg:ml-2'>Ideas</span>
                      <Icon
@@ -90,7 +90,7 @@ const DomainHeader = (
                </Link>
             </li> */}
                <li className={`${tabStyle} ${router.pathname === '/domain/agent/[slug]' ? 'bg-white border border-b-0 font-semibold' : ''}`}>
-                  <Link href={`/domain/agent/${domain.slug}`} passHref={true}>
+                  <Link legacyBehavior href={`/domain/agent/${domain.slug}`} >
                      <a className='px-4 py-2 inline-block'><Icon type="console" size={13} classes='hidden lg:inline-block' />
                         <span className='text-xs lg:text-sm lg:ml-2'>Seo Agent</span>
                         <Icon
