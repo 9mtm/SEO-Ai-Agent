@@ -1,0 +1,57 @@
+import { Table, Model, Column, DataType, PrimaryKey, Unique, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import User from './user';
+
+@Table({
+  timestamps: false,
+  tableName: 'domain',
+})
+
+class Domain extends Model {
+  @PrimaryKey
+  @Column({ type: DataType.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true })
+  ID!: number;
+
+  @ForeignKey(() => User)
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  user_id!: number;
+
+  @Unique
+  @Column({ type: DataType.STRING, allowNull: false, defaultValue: true, unique: true })
+  domain!: string;
+
+  @Unique
+  @Column({ type: DataType.STRING, allowNull: false, defaultValue: true, unique: true })
+  slug!: string;
+
+  @Column({ type: DataType.INTEGER, allowNull: false, defaultValue: 0 })
+  keywordCount!: number;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  lastUpdated!: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  added!: string;
+
+  @Column({ type: DataType.STRING, allowNull: true, defaultValue: JSON.stringify([]) })
+  tags!: string;
+
+  @Column({ type: DataType.BOOLEAN, allowNull: true, defaultValue: true })
+  notification!: boolean;
+
+  @Column({ type: DataType.STRING, allowNull: true, defaultValue: 'daily' })
+  notification_interval!: string;
+
+  @Column({ type: DataType.STRING, allowNull: true, defaultValue: '' })
+  notification_emails!: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  search_console!: string;
+
+  @Column({ type: DataType.JSON, allowNull: true })
+  search_console_data?: any;
+
+  @BelongsTo(() => User)
+  user!: User;
+}
+
+export default Domain;

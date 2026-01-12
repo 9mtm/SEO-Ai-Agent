@@ -1,0 +1,34 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+/.swc/
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+next-env.d.ts
+
+
+#todo
+TODO
+
+
+.venv
+*.gguf
+
+# AI Models (Large Files)
+/models/*
+!models/README.md
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.pth
