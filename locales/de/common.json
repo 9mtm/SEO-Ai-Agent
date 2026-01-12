@@ -1,0 +1,45 @@
+{
+  "landing": {
+    "title": "SEO AI Agent",
+    "subtitle": "Ihre professionelle SEO-Tracking-Lösung",
+    "description": "Verfolgen Sie Ihre Keywords, überwachen Sie Rankings und lassen Sie Ihr Geschäft mit unseren leistungsstarken SEO-Tools wachsen.",
+    "cta": "Jetzt starten",
+    "features": {
+      "tracking": "Keyword-Tracking",
+      "analytics": "Erweiterte Analytik",
+      "reports": "Detaillierte Berichte"
+    }
+  },
+  "auth": {
+    "login": "Anmelden",
+    "signInWith": "Anmelden mit {{provider}}",
+    "logout": "Abmelden",
+    "welcome": "Willkommen zurück!",
+    "loginDescription": "Melden Sie sich an, um auf Ihr Dashboard zuzugreifen"
+  },
+  "onboarding": {
+    "welcome": "Willkommen beim SEO AI Agent",
+    "step1": "Erzählen Sie uns von Ihrem Unternehmen",
+    "step2": "Verbinden Sie Ihr Google-Konto",
+    "step3": "Fügen Sie Ihre Domains hinzu",
+    "skip": "Überspringen",
+    "next": "Weiter",
+    "finish": "Fertig"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "domains": "Domains",
+    "keywords": "Keywords",
+    "settings": "Einstellungen",
+    "addDomain": "Domain hinzufügen",
+    "noDomains": "Keine Domains gefunden. Fügen Sie eine Domain hinzu, um loszulegen!"
+  },
+  "common": {
+    "loading": "Wird geladen...",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "search": "Suchen"
+  }
+}

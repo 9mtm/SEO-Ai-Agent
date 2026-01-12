@@ -1,0 +1,153 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import db from '../../database/database';
+import verifyUser from '../../utils/verifyUser';
+import {
+   KeywordIdeasDatabase, getAdwordsCredentials, getAdwordsKeywordIdeas, getLocalKeywordIdeas, updateLocalKeywordIdeas,
+} from '../../utils/adwords';
+
+type keywordsIdeasUpdateResp = {
+   keywords: IdeaKeyword[],
+   error?: string | null,
+}
+
+type keywordsIdeasGetResp = {
+   data: KeywordIdeasDatabase | null,
+   error?: string | null,
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+   await db.sync();
+   const verifyResult = verifyUser(req, res);
+   if (!verifyResult.authorized) {
+      return res.status(401).json({ error: 'Unauthorized' });
+   }
+   if (req.method === 'GET') {
+      return getKeywordIdeas(req, res);
+   }
+   if (req.method === 'POST') {
+      return updateKeywordIdeas(req, res);
+   }
+   if (req.method === 'PUT') {
+      return favoriteKeywords(req, res);
+   }
+   return res.status(502).json({ error: 'Unrecognized Route.' });
+}
+
+const getKeywordIdeas = async (req: NextApiRequest, res: NextApiResponse<keywordsIdeasGetResp>) => {
+   try {
+      const domain = req.query.domain as string;
+      if (domain) {
+         const keywordsDatabase = await getLocalKeywordIdeas(domain);
+         // console.log('keywords :', keywordsDatabase);
+         if (keywordsDatabase) {
+            return res.status(200).json({ data: keywordsDatabase });
+         }
+      }
+      return res.status(400).json({ data: null, error: 'Error Loading Keyword Ideas.' });
+   } catch (error) {
+      console.log('[ERROR] Fetching Keyword Ideas: ', error);
+      return res.status(400).json({ data: null, error: 'Error Loading Keyword Ideas.' });
+   }
+};
+
+const updateKeywordIdeas = async (req: NextApiRequest, res: NextApiResponse<keywordsIdeasUpdateResp>) => {
+   const errMsg = 'Error Fetching Keywords. Please try again!';
+   const { keywords = [], country = 'US', language = '1000', domain = '', seedSCKeywords, seedCurrentKeywords, seedType } = req.body;
+
+   if (!country || !language) {
+      return res.status(400).json({ keywords: [], error: 'Error Fetching Keywords. Please Provide a Country and Language' });
+   }
+   if (seedType === 'custom' && (keywords.length === 0 && !seedSCKeywords && !seedCurrentKeywords)) {
+      return res.status(400).json({ keywords: [], error: 'Error Fetching Keywords. Please Provide one of these: keywords, url or domain' });
+   }
+   try {
+      const Domain = (await import('../../database/models/domain')).default;
+      const foundDomain = await Domain.findOne({ where: { domain } });
+      const userId = foundDomain?.user_id;
+
+      // 1. Try Local SLM (AI) First
+      if (process.env.SLM_API_URL) {
+         console.log('[API] Using Local SLM for keyword ideas...');
+         // @ts-ignore
+         const { getSLMKeywordIdeas } = await import('../../utils/slm');
+         const slmKeywords = await getSLMKeywordIdeas({ keywords, domain, country, language });
+
+         if (slmKeywords && slmKeywords.length > 0) {
+            // Map SLM result to expected format (min/max range)
+            const mappedKeywords = slmKeywords.map(k => ({
+               text: k.text,
+               competition: k.competition,
+               monthly_search_volume: k.monthly_search_volume,
+               low_top_of_page_bid: 0,
+               high_top_of_page_bid: 0,
+            }));
+            return res.status(200).json({ keywords: mappedKeywords as any });
+         } else {
+            console.log('[API] Local SLM returned no results, falling back to Google Ads...');
+         }
+      }
+
+      // 2. Fallback to Google Ads
+      const adwordsCreds = await getAdwordsCredentials(userId);
+      // const { client_id, client_secret, developer_token, account_id, refresh_token } = adwordsCreds || {};
+
+      console.log('[DEBUG] Ideas API - Creds found:', adwordsCreds ? 'YES' : 'NO');
+      if (adwordsCreds) {
+         // @ts-ignore
+         const hasAuth = adwordsCreds.access_token || (adwordsCreds.refresh_token && adwordsCreds.client_id);
+         console.log('[DEBUG] Ideas API - Has Auth:', hasAuth ? 'YES' : 'NO');
+
+         if (hasAuth && adwordsCreds.developer_token) {
+            const ideaOptions = { country, language, keywords, domain, seedSCKeywords, seedCurrentKeywords, seedType };
+            const keywordIdeas = await getAdwordsKeywordIdeas(adwordsCreds, ideaOptions);
+            if (keywordIdeas && Array.isArray(keywordIdeas) && keywordIdeas.length > 0) {
+               // Note: logic was > 1, changed to > 0 to allow single result
+               return res.status(200).json({ keywords: keywordIdeas });
+            } else {
+               console.log('[DEBUG] No keywords returned from getAdwordsKeywordIdeas');
+            }
+         } else {
+            console.log('[DEBUG] Missing necessary auth tokens or developer token.');
+         }
+      } else {
+         console.log('[DEBUG] No Adwords Credentials retrieved.');
+      }
+      return res.status(400).json({ keywords: [], error: errMsg });
+   } catch (error) {
+      console.log('[ERROR] Fetching Keyword Ideas: ', error);
+      return res.status(400).json({ keywords: [], error: errMsg });
+   }
+};
+
+const favoriteKeywords = async (req: NextApiRequest, res: NextApiResponse<keywordsIdeasUpdateResp>) => {
+   const errMsg = 'Error Favorating Keyword Idea. Please try again!';
+   const { keywordID = '', domain = '' } = req.body;
+
+   if (!keywordID || !domain) {
+      return res.status(400).json({ keywords: [], error: 'Missing Necessary data. Please provide both keywordID and domain values.' });
+   }
+
+   try {
+      const keywordsDatabase = await getLocalKeywordIdeas(domain);
+      if (keywordsDatabase && keywordsDatabase.keywords) {
+         const theKeyword = keywordsDatabase.keywords.find((kw) => kw.uid === keywordID);
+         const existingKeywords = keywordsDatabase.favorites || [];
+         const newFavorites = [...existingKeywords];
+         const existingKeywordIndex = newFavorites.findIndex((kw) => kw.uid === keywordID);
+         if (existingKeywordIndex > -1) {
+            newFavorites.splice(existingKeywordIndex, 1);
+         } else if (theKeyword) newFavorites.push(theKeyword);
+
+         const updated = await updateLocalKeywordIdeas(domain, { favorites: newFavorites });
+
+         if (updated) {
+            return res.status(200).json({ keywords: newFavorites, error: '' });
+         }
+      }
+
+      return res.status(400).json({ keywords: [], error: errMsg });
+   } catch (error) {
+      console.log('[ERROR] Favorating Keyword Idea: ', error);
+      return res.status(400).json({ keywords: [], error: errMsg });
+   }
+};

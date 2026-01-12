@@ -124,7 +124,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         await user.update({ last_login: new Date() });
 
-        return res.redirect('/domains');
+        return res.redirect('/');
       }
     }
 

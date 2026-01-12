@@ -4,23 +4,23 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { CSSTransition } from 'react-transition-group';
 import toast, { Toaster } from 'react-hot-toast';
-import TopBar from '../../components/common/TopBar';
+import { Globe, Search, TrendingUp, Plus, Loader2, AlertCircle } from 'lucide-react';
+import DashboardLayout from '../../components/layout/DashboardLayout';
 import AddDomain from '../../components/domains/AddDomain';
-import Settings from '../../components/settings/Settings';
 import { useCheckMigrationStatus, useFetchSettings } from '../../services/settings';
 import { fetchDomainScreenshot, useFetchDomains } from '../../services/domains';
 import DomainItem from '../../components/domains/DomainItem';
-import Icon from '../../components/common/Icon';
-import Footer from '../../components/common/Footer';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 type thumbImages = { [domain: string]: string }
 
 const Domains: NextPage = () => {
    const router = useRouter();
-   // const [noScrapprtError, setNoScrapprtError] = useState(false);
-   const [showSettings, setShowSettings] = useState(false);
    const [showAddDomain, setShowAddDomain] = useState(false);
    const [domainThumbs, setDomainThumbs] = useState<thumbImages>({});
+   const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
    const { data: appSettingsData, isPending: isAppSettingsLoading } = useFetchSettings();
    const { data: domainsData, isPending } = useFetchDomains(router, true);
    const { data: migrationStatus } = useCheckMigrationStatus();
@@ -63,14 +63,10 @@ const Domains: NextPage = () => {
    }, [domainsData]);
 
    useEffect(() => {
-      if (router.query.settings) {
-         setShowSettings(true);
-      }
       if (router.query.success === 'google_connected') {
          toast.success('Google Account Connected Successfully!');
          // Remove params
          const { pathname, query } = router;
-         delete query.settings;
          delete query.success;
          router.replace({ pathname, query }, undefined, { shallow: true });
       }
@@ -88,77 +84,152 @@ const Domains: NextPage = () => {
       }
    };
 
-   return (
-      <div data-testid="domains" className="Domain flex flex-col min-h-screen">
-         {((!scraper_type || (scraper_type === 'none')) && !isAppSettingsLoading) && (
-            <div className=' p-3 bg-red-600 text-white text-sm text-center'>
-               A Scrapper/Proxy has not been set up Yet. Open Settings to set it up and start using the app.
-            </div>
-         )}
-         {migrationStatus?.hasMigrations && (
-            <div className=' p-3 bg-black text-white text-sm text-center'>
-               You need to Update your database. Stop SEO Ai Agent and run this command to update your database:
-               <code className=' bg-gray-700 px-2 py-0 ml-1'>npm run db:migrate</code>
-            </div>
-         )}
-         <Head>
-            <title>Domains - Dpro</title>
-         </Head>
-         <TopBar showSettings={() => setShowSettings(true)} showAddModal={() => setShowAddDomain(true)} />
+   const translations = {
+      en: {
+         title: 'Domains',
+         totalDomains: 'Total Domains',
+         totalKeywords: 'Total Keywords',
+         avgPosition: 'Avg. Position',
+         addDomain: 'Add Domain',
+         noDomains: 'No Domains Found',
+         noDomainsDesc: 'Add a domain to get started with SEO tracking',
+         loading: 'Loading Domains...',
+         scraperWarning: 'A Scrapper/Proxy has not been set up yet. Open Settings to set it up.',
+         dbMigration: 'You need to update your database. Stop SEO AI Agent and run:',
+      },
+      de: {
+         title: 'Domains',
+         totalDomains: 'Domains insgesamt',
+         totalKeywords: 'Keywords insgesamt',
+         avgPosition: 'Ø Position',
+         addDomain: 'Domain hinzufügen',
+         noDomains: 'Keine Domains gefunden',
+         noDomainsDesc: 'Fügen Sie eine Domain hinzu, um mit dem SEO-Tracking zu beginnen',
+         loading: 'Domains werden geladen...',
+         scraperWarning: 'Ein Scrapper/Proxy wurde noch nicht eingerichtet. Öffnen Sie die Einstellungen.',
+         dbMigration: 'Sie müssen Ihre Datenbank aktualisieren. Stoppen Sie SEO AI Agent und führen Sie aus:',
+      }
+   };
 
-         <div className="flex flex-col w-full max-w-5xl mx-auto p-6 lg:mt-24 lg:p-0">
-            <div className='flex justify-between mb-2 items-center'>
-               <div className=' text-sm text-gray-600'>
-                  {domainsData?.domains?.length || 0} Domains <span className=' text-gray-300 ml-1 mr-1'>|</span> {totalKeywords} keywords
-               </div>
-               <div>
-                  <button
-                     data-testid="addDomainButton"
-                     className={'ml-2 inline-block py-2 text-blue-700 font-bold text-sm'}
-                     onClick={() => setShowAddDomain(true)}>
-                     <span
-                        className={'text-center leading-4 mr-2 inline-block rounded-full '
-                           + 'w-7 h-7 pt-1 bg-blue-700 text-white font-bold text-lg'}>
-                        +
-                     </span>
-                     <i className=' not-italic hidden lg:inline-block'>Add Domain</i>
-                  </button>
+   const t = translations[selectedLang];
+
+   return (
+      <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang}>
+         <Head>
+            <title>{t.title} - SEO AI Agent</title>
+         </Head>
+
+         {/* Warnings */}
+         {((!scraper_type || (scraper_type === 'none')) && !isAppSettingsLoading) && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+               <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+               <div className="flex-1">
+                  <p className="text-sm text-red-800 font-medium">{t.scraperWarning}</p>
                </div>
             </div>
-            <div className='flex w-full flex-col mb-8'>
-               {domainsData?.domains && domainsData.domains.map((domain: DomainType) => {
-                  return <DomainItem
-                     key={domain.ID}
-                     domain={domain}
-                     selected={false}
-                     isConsoleIntegrated={!!(appSettings && appSettings.search_console_integrated) || !!domainSCAPiObj[domain.ID]}
-                     thumb={domainThumbs[domain.domain]}
-                     updateThumb={manuallyUpdateThumb}
-                  // isConsoleIntegrated={false}
-                  />;
-               })}
-               {isPending && (
-                  <div className='noDomains mt-4 p-5 py-12 rounded border text-center bg-white text-sm'>
-                     <Icon type="loading" /> Loading Domains...
-                  </div>
-               )}
-               {!isPending && domainsData && domainsData.domains && domainsData.domains.length === 0 && (
-                  <div className='noDomains mt-4 p-5 py-12 rounded border text-center bg-white text-sm'>
-                     No Domains Found. Add a Domain to get started!
-                  </div>
-               )}
+         )}
+
+         {migrationStatus?.hasMigrations && (
+            <div className="mb-6 p-4 bg-neutral-900 text-white rounded-lg">
+               <p className="text-sm mb-2">{t.dbMigration}</p>
+               <code className="bg-neutral-800 px-3 py-1.5 rounded text-sm">npm run db:migrate</code>
             </div>
+         )}
+
+         {/* Stats Cards */}
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <Card>
+               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">{t.totalDomains}</CardTitle>
+                  <Globe className="h-4 w-4 text-muted-foreground" />
+               </CardHeader>
+               <CardContent>
+                  <div className="text-2xl font-bold">{domainsData?.domains?.length || 0}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Active domains tracked</p>
+               </CardContent>
+            </Card>
+
+            <Card>
+               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">{t.totalKeywords}</CardTitle>
+                  <Search className="h-4 w-4 text-muted-foreground" />
+               </CardHeader>
+               <CardContent>
+                  <div className="text-2xl font-bold">{totalKeywords}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Keywords monitored</p>
+               </CardContent>
+            </Card>
+
+            <Card>
+               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">{t.avgPosition}</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+               </CardHeader>
+               <CardContent>
+                  <div className="text-2xl font-bold">--</div>
+                  <p className="text-xs text-muted-foreground mt-1">Overall ranking</p>
+               </CardContent>
+            </Card>
          </div>
 
+         {/* Header */}
+         <div className="flex items-center justify-between mb-6">
+            <div>
+               <h1 className="text-2xl font-bold text-neutral-900">Your Domains</h1>
+               <p className="text-sm text-neutral-600 mt-1">
+                  Manage and track your domains performance
+               </p>
+            </div>
+            <Button onClick={() => setShowAddDomain(true)} className="gap-2">
+               <Plus className="h-4 w-4" />
+               {t.addDomain}
+            </Button>
+         </div>
+
+         {/* Domains List */}
+         <div className="space-y-4">
+            {domainsData?.domains && domainsData.domains.map((domain: DomainType) => (
+               <DomainItem
+                  key={domain.ID}
+                  domain={domain}
+                  selected={false}
+                  isConsoleIntegrated={!!(appSettings && appSettings.search_console_integrated) || !!domainSCAPiObj[domain.ID]}
+                  thumb={domainThumbs[domain.domain]}
+                  updateThumb={manuallyUpdateThumb}
+               />
+            ))}
+
+            {isPending && (
+               <Card>
+                  <CardContent className="flex items-center justify-center py-12">
+                     <Loader2 className="h-6 w-6 animate-spin text-blue-600 mr-2" />
+                     <span className="text-sm text-neutral-600">{t.loading}</span>
+                  </CardContent>
+               </Card>
+            )}
+
+            {!isPending && domainsData && domainsData.domains && domainsData.domains.length === 0 && (
+               <Card>
+                  <CardContent className="flex flex-col items-center justify-center py-12">
+                     <Globe className="h-12 w-12 text-neutral-300 mb-4" />
+                     <h3 className="text-lg font-semibold text-neutral-900 mb-2">{t.noDomains}</h3>
+                     <p className="text-sm text-neutral-600 mb-6">{t.noDomainsDesc}</p>
+                     <Button onClick={() => setShowAddDomain(true)} className="gap-2">
+                        <Plus className="h-4 w-4" />
+                        {t.addDomain}
+                     </Button>
+                  </CardContent>
+               </Card>
+            )}
+         </div>
+
+         {/* Modals */}
          <CSSTransition in={showAddDomain} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
             <AddDomain closeModal={() => setShowAddDomain(false)} domains={domainsData?.domains || []} />
          </CSSTransition>
-         <CSSTransition in={showSettings} timeout={300} classNames="settings_anim" unmountOnExit mountOnEnter>
-            <Settings closeSettings={() => setShowSettings(false)} />
-         </CSSTransition>
-         <Footer currentVersion={appSettings?.version ? appSettings.version : ''} />
+
          <Toaster position='bottom-center' containerClassName="react_toaster" />
-      </div>
+      </DashboardLayout>
    );
 };
 
