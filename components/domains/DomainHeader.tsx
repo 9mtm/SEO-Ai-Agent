@@ -52,26 +52,26 @@ const DomainHeader = (
          <div className='flex w-full justify-between mt-4 lg:mt-0'>
             <ul className=' max-w-[270px] overflow-auto flex items-end text-sm relative top-[2px] lg:max-w-none'>
                <li className={`${tabStyle} ${router.pathname === '/domain/[slug]' ? 'bg-white border border-b-0 font-semibold' : ''}`}>
-                  <Link legacyBehavior href={`/domain/${domain.slug}`} >
-                     <a className='px-4 py-2 inline-block'><Icon type="tracking" color='#999' classes='hidden lg:inline-block' />
-                        <span className='text-xs lg:text-sm lg:ml-2'>Tracking</span>
-                     </a>
+                  <Link href={`/domain/${domain.slug}`} className='px-4 py-2 inline-block' >
+                     <Icon type="tracking" color='#999' classes='hidden lg:inline-block' />
+                     <span className='text-xs lg:text-sm lg:ml-2'>Tracking</span>
+
                   </Link>
                </li>
                <li className={`${tabStyle} ${router.pathname === '/domain/console/[slug]' ? 'bg-white border border-b-0 font-semibold' : ''}`}>
-                  <Link legacyBehavior href={`/domain/console/${domain.slug}`} >
-                     <a className='px-4 py-2 inline-block'><Icon type="google" size={13} classes='hidden lg:inline-block' />
-                        <span className='text-xs lg:text-sm lg:ml-2'>Discover</span>
-                        <Icon type='help' size={14} color="#aaa" classes="ml-2 hidden lg:inline-block" title='Discover Keywords you already Rank For' />
-                     </a>
+                  <Link href={`/domain/console/${domain.slug}`} className='px-4 py-2 inline-block' >
+                     <Icon type="google" size={13} classes='hidden lg:inline-block' />
+                     <span className='text-xs lg:text-sm lg:ml-2'>Discover</span>
+                     <Icon type='help' size={14} color="#aaa" classes="ml-2 hidden lg:inline-block" title='Discover Keywords you already Rank For' />
+
                   </Link>
                </li>
                <li className={`${tabStyle} ${router.pathname === '/domain/insight/[slug]' ? 'bg-white border border-b-0 font-semibold' : ''}`}>
-                  <Link legacyBehavior href={`/domain/insight/${domain.slug}`} >
-                     <a className='px-4 py-2 inline-block'><Icon type="google" size={13} classes='hidden lg:inline-block' />
-                        <span className='text-xs lg:text-sm lg:ml-2'>Insight</span>
-                        <Icon type='help' size={14} color="#aaa" classes="ml-2 hidden lg:inline-block" title='Insight for Google Search Console Data' />
-                     </a>
+                  <Link href={`/domain/insight/${domain.slug}`} className='px-4 py-2 inline-block' >
+                     <Icon type="google" size={13} classes='hidden lg:inline-block' />
+                     <span className='text-xs lg:text-sm lg:ml-2'>Insight</span>
+                     <Icon type='help' size={14} color="#aaa" classes="ml-2 hidden lg:inline-block" title='Insight for Google Search Console Data' />
+
                   </Link>
                </li>
 
@@ -90,17 +90,17 @@ const DomainHeader = (
                </Link>
             </li> */}
                <li className={`${tabStyle} ${router.pathname === '/domain/agent/[slug]' ? 'bg-white border border-b-0 font-semibold' : ''}`}>
-                  <Link legacyBehavior href={`/domain/agent/${domain.slug}`} >
-                     <a className='px-4 py-2 inline-block'><Icon type="console" size={13} classes='hidden lg:inline-block' />
-                        <span className='text-xs lg:text-sm lg:ml-2'>Seo Agent</span>
-                        <Icon
-                           type='help'
-                           size={14}
-                           color="#aaa"
-                           classes="ml-2 hidden lg:inline-block"
-                           title='Chat with your Local SEO AI Agent'
-                        />
-                     </a>
+                  <Link href={`/domain/agent/${domain.slug}`} className='px-4 py-2 inline-block' >
+                     <Icon type="console" size={13} classes='hidden lg:inline-block' />
+                     <span className='text-xs lg:text-sm lg:ml-2'>Seo Agent</span>
+                     <Icon
+                        type='help'
+                        size={14}
+                        color="#aaa"
+                        classes="ml-2 hidden lg:inline-block"
+                        title='Chat with your Local SEO AI Agent'
+                     />
+
                   </Link>
                </li>
             </ul>

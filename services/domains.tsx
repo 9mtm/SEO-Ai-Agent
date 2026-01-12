@@ -1,3 +1,4 @@
+import React from 'react';
 import { useRouter, NextRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -67,11 +68,17 @@ export function useFetchDomains(router: NextRouter, withStats:boolean = false) {
 }
 
 export function useFetchDomain(router: NextRouter, domainName:string, onSuccess: Function) {
-   return useQuery({ queryKey: ['domain'], queryFn: () => fetchDomain(router, domainName),
-      onSuccess: async (data) => {
-         console.log('Domain Loaded!!!', data.domain);
-         onSuccess(data.domain);
-      } });
+   const result = useQuery({ queryKey: ['domain'], queryFn: () => fetchDomain(router, domainName) });
+
+   // Handle onSuccess in useEffect instead
+   React.useEffect(() => {
+      if (result.data) {
+         console.log('Domain Loaded!!!', result.data.domain);
+         onSuccess(result.data.domain);
+      }
+   }, [result.data, onSuccess]);
+
+   return result;
 }
 
 export function useAddDomain(onSuccess:Function) {

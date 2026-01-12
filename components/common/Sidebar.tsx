@@ -24,17 +24,17 @@ const Sidebar = ({ domains, showAddModal }: SidebarProps) => {
                {domains.map((d) => <li
                   key={d.domain}
                   className={'my-2.5 leading-10'}>
-                  <Link legacyBehavior href={`/domain/${d.slug}`} >
-                     <a className={`block cursor-pointer px-4 text-ellipsis max-w-[215px] overflow-hidden whitespace-nowrap rounded
-                                        rounded-r-none ${((`/domain/${d.slug}` === router.asPath || `/domain/console/${d.slug}` === router.asPath
-                           || `/domain/insight/${d.slug}` === router.asPath || `/domain/ideas/${d.slug}` === router.asPath)
-                           ? 'bg-white text-zinc-800 border border-r-0' : 'text-zinc-500')}`}>
-                        <img
-                           className={' inline-block mr-1'}
-                           src={`https://www.google.com/s2/favicons?domain=${d.domain}&sz=16`} alt={d.domain}
-                        />
-                        {d.domain}
-                     </a>
+                  <Link href={`/domain/${d.slug}`} className={`block cursor-pointer px-4 text-ellipsis max-w-[215px] overflow-hidden whitespace-nowrap rounded
+                                     rounded-r-none ${((`/domain/${d.slug}` === router.asPath || `/domain/console/${d.slug}` === router.asPath
+                        || `/domain/insight/${d.slug}` === router.asPath || `/domain/ideas/${d.slug}` === router.asPath)
+                        ? 'bg-white text-zinc-800 border border-r-0' : 'text-zinc-500')}`} >
+
+                     <img
+                        className={' inline-block mr-1'}
+                        src={`https://www.google.com/s2/favicons?domain=${d.domain}&sz=16`} alt={d.domain}
+                     />
+                     {d.domain}
+
                   </Link>
                </li>)
                }
