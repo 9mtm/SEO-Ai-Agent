@@ -9,9 +9,9 @@ jest.mock('next/router', () => ({
 
 describe('TopBar Component', () => {
    it('renders without crashing', async () => {
-       render(<TopBar showSettings={jest.fn} showAddModal={jest.fn} />);
-       expect(
-           await screen.findByText('SerpBear'),
-       ).toBeInTheDocument();
+      render(<TopBar showSettings={jest.fn} showAddModal={jest.fn} />);
+      expect(
+         await screen.findByText('SEO Ai Agent'),
+      ).toBeInTheDocument();
    });
 });

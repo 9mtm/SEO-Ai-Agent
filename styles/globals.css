@@ -217,13 +217,13 @@ body {
    width: 100%;
 }
 
-.domain_selector .selected > span:nth-child(1),
-.insight_selector .selected > span:nth-child(1) {
+.domain_selector .selected>span:nth-child(1),
+.insight_selector .selected>span:nth-child(1) {
    width: 100%;
 }
 
-.dom_sc_stats > div::after,
-.dom_stats > div::after {
+.dom_sc_stats>div::after,
+.dom_stats>div::after {
    content: "";
    width: 1px;
    height: 35px;
@@ -232,15 +232,16 @@ body {
    right: 0;
 }
 
-.dom_sc_stats > div:nth-child(3)::after {
+.dom_sc_stats>div:nth-child(3)::after {
    display: none;
 }
 
-.dom_stats > div:nth-child(2)::after {
+.dom_stats>div:nth-child(2)::after {
    display: none;
 }
 
 @media (min-width: 1024px) {
+
    /* Domain Header Button Tooltips */
    .domheader_action_button:hover i {
       visibility: visible;
@@ -287,32 +288,34 @@ body {
    }
 }
 
-.idea_competiton{
+.idea_competiton {
    color: #0000008c;
 }
 
-.idea_competiton--LOW span:last-child{
+.idea_competiton--LOW span:last-child {
    background-color: #ccf5ee;
    color: #39a895;
 }
-.idea_competiton--MEDIUM span:last-child{
+
+.idea_competiton--MEDIUM span:last-child {
    color: #6e5d1f;
    background-color: #F6F0D8;
 }
 
-.idea_competiton--HIGH span:last-child{
+.idea_competiton--HIGH span:last-child {
    color: #ae513c;
    background-color: #f9ded7;
 }
 
-@media screen and (max-width: 760px){
-   .keyword_best:before{
+@media screen and (max-width: 760px) {
+   .keyword_best:before {
       content: "Best: ";
    }
 }
 
 
 /* Disable LastPass Icon for Secret Field */
-[autocomplete="off"] + div[data-lastpass-icon-root="true"], [autocomplete="off"] + div[data-lastpass-infield="true"] {
+[autocomplete="off"]+div[data-lastpass-icon-root="true"],
+[autocomplete="off"]+div[data-lastpass-infield="true"] {
    display: none;
 }

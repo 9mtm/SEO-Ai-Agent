@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import { useFetchChangelog } from '../../services/misc';
-import ChangeLog from '../settings/Changelog';
+
 
 interface FooterProps {
    currentVersion: string

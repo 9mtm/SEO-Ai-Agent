@@ -6,16 +6,16 @@ import { Toaster } from 'react-hot-toast';
 import Icon from '../components/common/Icon';
 
 const Home: NextPage = () => {
-   const router = useRouter();
-   useEffect(() => {
-      if (router) router.push('/domains');
-   }, [router]);
+  const router = useRouter();
+  useEffect(() => {
+    if (router) router.push('/domains');
+  }, [router]);
 
   return (
     <div>
       <Head>
-        <title>SerpBear</title>
-        <meta name="description" content="SerpBear Google Keyword Position Tracking App" />
+        <title>SEO Ai Agent</title>
+        <meta name="description" content="SEO Ai Agent Google Keyword Position Tracking App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

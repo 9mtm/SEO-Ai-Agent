@@ -21,7 +21,8 @@
       "Bash(git commit:*)",
       "Bash(npm run dev:*)",
       "Bash(timeout 180 npm run build:*)",
-      "Bash(timeout 240 npm run build:*)"
+      "Bash(timeout 240 npm run build:*)",
+      "Bash(npx @next/codemod@latest new-link:*)"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"

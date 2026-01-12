@@ -136,9 +136,7 @@ const AdWordsSettings = ({ settings, settingsError, updateSettings, performUpdat
                   </div>
                </div>
             </div>
-            <p className='mb-4 text-xs'>
-               Relevant Documentation: <a target='_blank' rel='noreferrer' href='https://docs.serpbear.com/miscellaneous/integrate-google-ads' className=' underline text-blue-600'>Integrate Google Ads</a>.
-            </p>
+
          </div>
       </div>
    );

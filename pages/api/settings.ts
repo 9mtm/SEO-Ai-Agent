@@ -103,7 +103,7 @@ const updateSettings = async (req: NextApiRequest, res: NextApiResponse<Settings
 };
 
 export const getAppSettings = async (userId?: number, isLegacy?: boolean): Promise<SettingsType> => {
-   const screenshotAPIKey = process.env.SCREENSHOT_API || '69408-serpbear';
+
    try {
       const settingsRow = await Setting.findByPk('app_config');
       const settingsRaw = settingsRow ? settingsRow.value : null;
@@ -162,7 +162,7 @@ export const getAppSettings = async (userId?: number, isLegacy?: boolean): Promi
                || !!(search_console_client_email && search_console_private_key),
             available_scapers: allScrapers.map((scraper) => ({ label: scraper.name, value: scraper.id, allowsCity: !!scraper.allowsCity })),
             failed_queue: failedQueue, // Now populated from FailedJob table
-            screenshot_key: screenshotAPIKey,
+            screenshot_key: '',
             adwords_client_id,
             adwords_client_secret,
             adwords_developer_token,
@@ -180,13 +180,13 @@ export const getAppSettings = async (userId?: number, isLegacy?: boolean): Promi
          notification_interval: 'never',
          notification_email: '',
          notification_email_from: '',
-         notification_email_from_name: 'SerpBear',
+         notification_email_from_name: 'SEO Ai Agent',
          smtp_server: '',
          smtp_port: '',
          smtp_username: '',
          smtp_password: '',
          scrape_retry: false,
-         screenshot_key: screenshotAPIKey,
+         screenshot_key: '',
          search_console: true,
          search_console_client_email: '',
          search_console_private_key: '',

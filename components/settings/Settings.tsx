@@ -28,17 +28,17 @@ export const defaultSettings: SettingsType = {
    smtp_username: '',
    smtp_password: '',
    notification_email_from: '',
-   notification_email_from_name: 'SerpBear',
+   notification_email_from_name: 'SEO Ai Agent',
    search_console: true,
    search_console_client_email: '',
    search_console_private_key: '',
    keywordsColumns: ['Best', 'History', 'Volume', 'Search Console'],
 };
 
-const Settings = ({ closeSettings }:SettingsProps) => {
+const Settings = ({ closeSettings }: SettingsProps) => {
    const [currentTab, setCurrentTab] = useState<string>('scraper');
    const [settings, setSettings] = useState<SettingsType>(defaultSettings);
-   const [settingsError, setSettingsError] = useState<SettingsError|null>(null);
+   const [settingsError, setSettingsError] = useState<SettingsError | null>(null);
    const { mutate: updateMutate, isPending: isUpdating } = useUpdateSettings(() => console.log(''));
    const { data: appSettings, isPending } = useFetchSettings();
    useOnKey('Escape', closeSettings);
@@ -49,28 +49,28 @@ const Settings = ({ closeSettings }:SettingsProps) => {
       }
    }, [appSettings]);
 
-   const closeOnBGClick = (e:React.SyntheticEvent) => {
+   const closeOnBGClick = (e: React.SyntheticEvent) => {
       e.stopPropagation();
       e.nativeEvent.stopImmediatePropagation();
       if (e.target === e.currentTarget) { closeSettings(); }
    };
 
-   const updateSettings = (key: string, value:string|number|boolean) => {
+   const updateSettings = (key: string, value: string | number | boolean) => {
       setSettings({ ...settings, [key]: value });
    };
 
    const performUpdate = () => {
-      let error: null|SettingsError = null;
+      let error: null | SettingsError = null;
       const { notification_interval, notification_email, notification_email_from, scraper_type, smtp_port, smtp_server, scaping_api } = settings;
       if (notification_interval !== 'never') {
          if (!settings.notification_email) {
             error = { type: 'no_email', msg: 'Insert a Valid Email address' };
          }
          if (notification_email && (!smtp_port || !smtp_server || !notification_email_from)) {
-               let type = 'no_smtp_from';
-               if (!smtp_port) { type = 'no_smtp_port'; }
-               if (!smtp_server) { type = 'no_smtp_server'; }
-               error = { type, msg: 'Insert SMTP Server details that will be used to send the emails.' };
+            let type = 'no_smtp_from';
+            if (!smtp_port) { type = 'no_smtp_port'; }
+            if (!smtp_server) { type = 'no_smtp_server'; }
+            error = { type, msg: 'Insert SMTP Server details that will be used to send the emails.' };
          }
       }
 
@@ -96,62 +96,62 @@ const Settings = ({ closeSettings }:SettingsProps) => {
    const tabStyleActive = 'bg-white text-blue-600 border-slate-200';
 
    return (
-       <div className="settings fixed w-full h-screen top-0 left-0 z-50" onClick={closeOnBGClick}>
-            <div className="absolute w-full max-w-md bg-white customShadow top-0 right-0 h-screen" data-loading={isPending} >
-               {isPending && <div className='absolute flex content-center items-center h-full'><Icon type="loading" size={24} /></div>}
-               <div className='settings__header px-5 py-4 text-slate-500'>
-                  <h3 className=' text-black text-lg font-bold'>Settings</h3>
-                  <button
+      <div className="settings fixed w-full h-screen top-0 left-0 z-50" onClick={closeOnBGClick}>
+         <div className="absolute w-full max-w-md bg-white customShadow top-0 right-0 h-screen" data-loading={isPending} >
+            {isPending && <div className='absolute flex content-center items-center h-full'><Icon type="loading" size={24} /></div>}
+            <div className='settings__header px-5 py-4 text-slate-500'>
+               <h3 className=' text-black text-lg font-bold'>Settings</h3>
+               <button
                   className=' absolute top-2 right-2 p-2 px- text-gray-400 hover:text-gray-700 transition-all hover:rotate-90'
                   onClick={() => closeSettings()}>
-                     <Icon type='close' size={24} />
-                  </button>
-               </div>
-               <div className='border border-slate-200 px-3 py-4 pb-0 border-l-0 border-r-0 bg-[#f8f9ff]'>
-                  <ul>
-                     <li
+                  <Icon type='close' size={24} />
+               </button>
+            </div>
+            <div className='border border-slate-200 px-3 py-4 pb-0 border-l-0 border-r-0 bg-[#f8f9ff]'>
+               <ul>
+                  <li
                      className={`${tabStyle} ${currentTab === 'scraper' ? tabStyleActive : 'border-transparent '}`}
                      onClick={() => setCurrentTab('scraper')}>
-                       <Icon type='scraper' /> Scraper
-                     </li>
-                     <li
+                     <Icon type='scraper' /> Scraper
+                  </li>
+                  <li
                      className={`${tabStyle} ${currentTab === 'notification' ? tabStyleActive : 'border-transparent'}`}
                      onClick={() => setCurrentTab('notification')}>
-                        <Icon type='email' /> Notification
-                     </li>
-                     <li
+                     <Icon type='email' /> Notification
+                  </li>
+                  <li
                      className={`${tabStyle} ${currentTab === 'integrations' ? tabStyleActive : 'border-transparent'}`}
                      onClick={() => setCurrentTab('integrations')}>
-                       <Icon type='integration' size={14} /> Integrations
-                     </li>
-                  </ul>
-               </div>
-               {currentTab === 'scraper' && settings && (
-                  <ScraperSettings settings={settings} updateSettings={updateSettings} settingsError={settingsError} />
-               )}
+                     <Icon type='integration' size={14} /> Integrations
+                  </li>
+               </ul>
+            </div>
+            {currentTab === 'scraper' && settings && (
+               <ScraperSettings settings={settings} updateSettings={updateSettings} settingsError={settingsError} />
+            )}
 
-               {currentTab === 'notification' && settings && (
-                  <NotificationSettings settings={settings} updateSettings={updateSettings} settingsError={settingsError} />
-               )}
-               {currentTab === 'integrations' && settings && (
-                  <IntegrationSettings
+            {currentTab === 'notification' && settings && (
+               <NotificationSettings settings={settings} updateSettings={updateSettings} settingsError={settingsError} />
+            )}
+            {currentTab === 'integrations' && settings && (
+               <IntegrationSettings
                   settings={settings}
                   updateSettings={updateSettings}
                   settingsError={settingsError}
                   performUpdate={performUpdate}
                   closeSettings={closeSettings}
-                   />
-               )}
-               <div className=' border-t-[1px] border-gray-200 p-2 px-3'>
-                  <button
+               />
+            )}
+            <div className=' border-t-[1px] border-gray-200 p-2 px-3'>
+               <button
                   onClick={() => performUpdate()}
                   className=' py-3 px-5 w-full rounded cursor-pointer bg-blue-700 text-white font-semibold text-sm'>
                   {isUpdating && <Icon type="loading" size={14} />} Update Settings
-                  </button>
-               </div>
+               </button>
             </div>
-            <Toaster position='bottom-center' containerClassName="react_toaster" />
-       </div>
+         </div>
+         <Toaster position='bottom-center' containerClassName="react_toaster" />
+      </div>
    );
 };
 

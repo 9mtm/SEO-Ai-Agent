@@ -50,17 +50,17 @@ const Domains: NextPage = () => {
    }, [domainsData]);
 
    useEffect(() => {
-      if (domainsData?.domains && domainsData.domains.length > 0 && appSettings.screenshot_key) {
+      if (domainsData?.domains && domainsData.domains.length > 0) {
          domainsData.domains.forEach(async (domain: DomainType) => {
             if (domain.domain) {
-               const domainThumb = await fetchDomainScreenshot(domain.domain, appSettings.screenshot_key || '');
+               const domainThumb = await fetchDomainScreenshot(domain.domain);
                if (domainThumb) {
                   setDomainThumbs((currentThumbs) => ({ ...currentThumbs, [domain.domain]: domainThumb }));
                }
             }
          });
       }
-   }, [domainsData, appSettings.screenshot_key]);
+   }, [domainsData]);
 
    useEffect(() => {
       if (router.query.settings) {
@@ -77,8 +77,8 @@ const Domains: NextPage = () => {
    }, [router.query]);
 
    const manuallyUpdateThumb = async (domain: string) => {
-      if (domain && appSettings.screenshot_key) {
-         const domainThumb = await fetchDomainScreenshot(domain, appSettings.screenshot_key, true);
+      if (domain) {
+         const domainThumb = await fetchDomainScreenshot(domain, true);
          if (domainThumb) {
             toast(`${domain} Screenshot Updated Successfully!`, { icon: '✔️' });
             setDomainThumbs((currentThumbs) => ({ ...currentThumbs, [domain]: domainThumb }));
@@ -97,7 +97,7 @@ const Domains: NextPage = () => {
          )}
          {migrationStatus?.hasMigrations && (
             <div className=' p-3 bg-black text-white text-sm text-center'>
-               You need to Update your database. Stop Serpbear and run this command to update your database:
+               You need to Update your database. Stop SEO Ai Agent and run this command to update your database:
                <code className=' bg-gray-700 px-2 py-0 ml-1'>npm run db:migrate</code>
             </div>
          )}

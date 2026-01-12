@@ -9,7 +9,7 @@ import { getAppSettings } from './settings';
 
 type NotifyResponse = {
    success?: boolean
-   error?: string|null,
+   error?: string | null,
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -62,11 +62,11 @@ const sendNotificationEmail = async (domain: Domain, settings: SettingsType) => 
       smtp_password = '',
       notification_email = '',
       notification_email_from = '',
-      notification_email_from_name = 'SerpBear',
-     } = settings;
+      notification_email_from_name = 'SEO Ai Agent',
+   } = settings;
 
-   const fromEmail = `${notification_email_from_name} <${notification_email_from || 'no-reply@serpbear.com'}>`;
-   const mailerSettings:any = { host: smtp_server, port: parseInt(smtp_port, 10) };
+   const fromEmail = `${notification_email_from_name} <${notification_email_from || 'no-reply@seo-ai-agent.com'}>`;
+   const mailerSettings: any = { host: smtp_server, port: parseInt(smtp_port, 10) };
    if (smtp_username || smtp_password) {
       mailerSettings.auth = {};
       if (smtp_username) mailerSettings.auth.user = smtp_username;
@@ -75,7 +75,7 @@ const sendNotificationEmail = async (domain: Domain, settings: SettingsType) => 
    const transporter = nodeMailer.createTransport(mailerSettings);
    const domainName = domain.domain;
    const query = { where: { domain: domainName } };
-   const domainKeywords:Keyword[] = await Keyword.findAll(query);
+   const domainKeywords: Keyword[] = await Keyword.findAll(query);
    const keywordsArray = domainKeywords.map((el) => el.get({ plain: true }));
    const keywords: KeywordType[] = parseKeywords(keywordsArray);
    const emailHTML = await generateEmail(domainName, keywords, settings);
@@ -84,5 +84,5 @@ const sendNotificationEmail = async (domain: Domain, settings: SettingsType) => 
       to: domain.notification_emails || notification_email,
       subject: `[${domainName}] Keyword Positions Update`,
       html: emailHTML,
-   }).catch((err:any) => console.log('[ERROR] Sending Notification Email for', domainName, err?.response || err));
+   }).catch((err: any) => console.log('[ERROR] Sending Notification Email for', domainName, err?.response || err));
 };
