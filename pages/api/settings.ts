@@ -131,10 +131,14 @@ export const getAppSettings = async (userId?: number, isLegacy?: boolean): Promi
          if (userId && !isLegacy) {
             const user = await User.findByPk(userId);
             if (user) {
-               scraper_type = user.scraper_type || 'none';
-               scaping_api = user.scraper_api_key ? cryptr.decrypt(user.scraper_api_key) : '';
-               proxy = user.proxy_list || '';
+               scraper_type = user.scraper_type || settings.scraper_type || 'none';
+               scaping_api = user.scraper_api_key ? cryptr.decrypt(user.scraper_api_key) : (settings.scaping_api ? cryptr.decrypt(settings.scaping_api) : '');
+               proxy = user.proxy_list || settings.proxy || '';
                google_connected = !!(user.google_refresh_token || user.google_access_token);
+
+               // Fallback for Google connection might not be safe/desired globally, but scraper settings are.
+               // If user explicitly has scraper_type set to 'none' (and not null), they might WANT none. 
+               // But assuming 'undefined' or null means fallback.
             }
          } else {
             // Legacy mode: read from settings.json (now settings DB JSON)
