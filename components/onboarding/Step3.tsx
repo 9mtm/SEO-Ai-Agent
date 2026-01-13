@@ -10,9 +10,12 @@ const Step3 = ({ onNext, onBack }: Step3Props) => {
     const [competitors, setCompetitors] = useState<string[]>(['']);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const MAX_COMPETITORS = 3;
 
     const handleAddCompetitor = () => {
-        setCompetitors([...competitors, '']);
+        if (competitors.length < MAX_COMPETITORS) {
+            setCompetitors([...competitors, '']);
+        }
     };
 
     const handleRemoveCompetitor = (index: number) => {
@@ -111,10 +114,11 @@ const Step3 = ({ onNext, onBack }: Step3Props) => {
                 <button
                     type="button"
                     onClick={handleAddCompetitor}
-                    className="flex items-center text-blue-600 hover:text-blue-700 text-sm font-medium"
+                    disabled={competitors.length >= MAX_COMPETITORS}
+                    className="flex items-center text-blue-600 hover:text-blue-700 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <Plus size={16} className="mr-1" />
-                    Add
+                    Add {competitors.length >= MAX_COMPETITORS && '(Max 3 reached)'}
                 </button>
 
                 {error && <p className="text-red-500 text-sm">{error}</p>}

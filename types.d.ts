@@ -18,6 +18,12 @@ type DomainType = {
    search_console?: string,
    ideas_settings?: string,
    user_id?: number,
+   business_name?: string,
+   niche?: string,
+   description?: string,
+   language?: string,
+   blog_url?: string,
+   competitors?: string[],
 }
 
 type KeywordHistory = {
@@ -44,6 +50,7 @@ type KeywordType = {
    scData?: KeywordSCData,
    uid?: string
    city?: string
+   competitor_positions?: Record<string, number>,
 }
 
 type KeywordLastResult = {

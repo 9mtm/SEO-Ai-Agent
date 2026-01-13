@@ -76,6 +76,9 @@ class Keyword extends Model {
   @Column({ type: DataType.STRING, allowNull: true })
   declare settings: string;
 
+  @Column({ type: DataType.JSON, allowNull: true })
+  declare competitor_positions?: Record<string, number>;
+
   @BelongsTo(() => User)
   declare user: User;
 }

@@ -27,6 +27,7 @@ const DomainHeader = (
    const isConsole = router.pathname === '/domain/console/[slug]';
    const isInsight = router.pathname === '/domain/insight/[slug]';
    const isIdeas = router.pathname === '/domain/ideas/[slug]';
+   const isCompetitors = router.pathname === '/domain/[slug]/competitors';
 
    const daysName = (dayKey: string) => dayKey.replace('three', '3').replace('seven', '7').replace('thirty', '30').replace('Days', ' Days');
    const buttonStyle = 'leading-6 inline-block px-2 py-2 text-gray-500 hover:text-gray-700';
@@ -57,6 +58,12 @@ const DomainHeader = (
                      <Icon type="tracking" color='#999' classes='hidden lg:inline-block' />
                      <span className='text-xs lg:text-sm lg:ml-2'>Tracking</span>
 
+                  </Link>
+               </li>
+               <li className={`${tabStyle} ${router.pathname === '/domain/[slug]/competitors' ? 'bg-white border border-b-0 font-semibold' : ''}`}>
+                  <Link href={`/domain/${domain.slug}/competitors`} className='px-4 py-2 inline-block' >
+                     <Icon type="users" color='#999' classes='hidden lg:inline-block' />
+                     <span className='text-xs lg:text-sm lg:ml-2'>Competitors</span>
                   </Link>
                </li>
                <li className={`${tabStyle} ${router.pathname === '/domain/console/[slug]' ? 'bg-white border border-b-0 font-semibold' : ''}`}>
@@ -115,7 +122,7 @@ const DomainHeader = (
                   className={`hidden w-40 ml-[-70px] lg:block absolute mt-10 bg-white border border-gray-100 z-40 rounded 
             lg:z-auto lg:relative lg:mt-0 lg:border-0 lg:w-auto lg:bg-transparent`}
                   style={{ display: showOptions ? 'block' : undefined }}>
-                  {!isInsight && (
+                  {!isInsight && !isCompetitors && (
                      <button
                         className={`domheader_action_button relative ${buttonStyle}`}
                         aria-pressed="false"
@@ -123,12 +130,20 @@ const DomainHeader = (
                         <Icon type='download' size={20} /><i className={`${buttonLabelStyle}`}>Export as csv</i>
                      </button>
                   )}
-                  {!isConsole && !isInsight && !isIdeas && (
+                  {!isConsole && !isInsight && !isIdeas && !isCompetitors && (
                      <button
                         className={`domheader_action_button relative ${buttonStyle} lg:ml-3`}
                         aria-pressed="false"
                         onClick={() => refreshMutate({ ids: [], domain: domain.domain })}>
                         <Icon type='reload' size={14} /><i className={`${buttonLabelStyle}`}>Reload All Serps</i>
+                     </button>
+                  )}
+                  {isCompetitors && (
+                     <button
+                        className={`domheader_action_button relative ${buttonStyle} lg:ml-3`}
+                        aria-pressed="false"
+                        onClick={() => exportCsv()}>
+                        <Icon type='reload' size={14} /><i className={`${buttonLabelStyle}`}>Reload Competitors</i>
                      </button>
                   )}
                   <button
