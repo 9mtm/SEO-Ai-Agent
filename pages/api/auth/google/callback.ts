@@ -68,8 +68,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Clean up cookie
       cookies.set('oauth_connecting_user', '', { maxAge: 0 });
 
-      // Redirect to Site Import/Settings
-      return res.redirect('/domains?settings=true&success=google_connected');
+      // Redirect to Settings page
+      return res.redirect('/settings?success=google_connected');
     }
 
     // ---------------------------------------------------------
@@ -124,7 +124,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         await user.update({ last_login: new Date() });
 
-        return res.redirect('/');
+        return res.redirect('/domains');
       }
     }
 

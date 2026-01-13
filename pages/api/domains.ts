@@ -115,7 +115,8 @@ const addDomain = async (
             existingDomains = await Domain.findAll({ where: { user_id: 1 } }); // Legacy default
          }
 
-         domains.forEach((domainStr: string) => {
+         // Process domains sequentially to handle async operations
+         for (const domainStr of domains) {
             const rawDomain = domainStr.trim();
             const normalizedInput = normalizeDomain(rawDomain);
 
@@ -123,10 +124,18 @@ const addDomain = async (
             const exists = existingDomains.find(d => normalizeDomain(d.domain) === normalizedInput);
 
             if (exists) {
-               console.log(`[INFO] Domain ${rawDomain} already exists as ${exists.domain}. Skipping creation.`);
+               console.log(`[INFO] Domain ${rawDomain} already exists as ${exists.domain}.`);
+
+               // IMPORTANT: Update user_id if different (user is claiming ownership)
+               if (userId && !isLegacy && exists.user_id !== userId) {
+                  console.log(`[INFO] Updating user_id for ${exists.domain} from ${exists.user_id} to ${userId}`);
+                  await exists.update({ user_id: userId });
+                  console.log(`[INFO] Successfully updated user_id for ${exists.domain}`);
+               }
+
                // Add to returned list so frontend sees it
                existingDomainsReturned.push(exists.get({ plain: true }));
-               return;
+               continue;
             }
 
             const domainData: any = {
@@ -145,7 +154,7 @@ const addDomain = async (
             }
 
             domainsToAdd.push(domainData);
-         });
+         }
 
          let newDomains: Domain[] = [];
          if (domainsToAdd.length > 0) {

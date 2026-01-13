@@ -9,29 +9,29 @@ import User from './user';
 class Keyword extends Model {
   @PrimaryKey
   @Column({ type: DataType.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true })
-  ID!: number;
+  declare ID: number;
 
   @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER, allowNull: false })
-  user_id!: number;
+  declare user_id: number;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  keyword!: string;
+  declare keyword: string;
 
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: 'desktop' })
-  device!: string;
+  declare device: string;
 
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: 'US' })
-  country!: string;
+  declare country: string;
 
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: '' })
-  city!: string;
+  declare city: string;
 
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: '' })
-  latlong!: string;
+  declare latlong: string;
 
   @Column({ type: DataType.STRING, allowNull: false, defaultValue: '{}' })
-  domain!: string;
+  declare domain: string;
 
   // @ForeignKey(() => Domain)
   // @Column({ allowNull: false })
@@ -41,43 +41,43 @@ class Keyword extends Model {
   // domain!: Domain;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  lastUpdated!: string;
+  declare lastUpdated: string;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  added!: string;
+  declare added: string;
 
   @Column({ type: DataType.INTEGER, allowNull: false, defaultValue: 0 })
-  position!: number;
+  declare position: number;
 
   @Column({ type: DataType.TEXT, allowNull: true, defaultValue: JSON.stringify([]) })
-  history!: string;
+  declare history: string;
 
   @Column({ type: DataType.INTEGER, allowNull: false, defaultValue: 0 })
-  volume!: number;
+  declare volume: number;
 
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: JSON.stringify([]) })
-  url!: string;
+  declare url: string;
 
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: JSON.stringify([]) })
-  tags!: string;
+  declare tags: string;
 
   @Column({ type: DataType.TEXT, allowNull: true, defaultValue: JSON.stringify([]) })
-  lastResult!: string;
+  declare lastResult: string;
 
   @Column({ type: DataType.BOOLEAN, allowNull: true, defaultValue: true })
-  sticky!: boolean;
+  declare sticky: boolean;
 
   @Column({ type: DataType.BOOLEAN, allowNull: true, defaultValue: false })
-  updating!: boolean;
+  declare updating: boolean;
 
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: 'false' })
-  lastUpdateError!: string;
+  declare lastUpdateError: string;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  settings!: string;
+  declare settings: string;
 
   @BelongsTo(() => User)
-  user!: User;
+  declare user: User;
 }
 
 export default Keyword;

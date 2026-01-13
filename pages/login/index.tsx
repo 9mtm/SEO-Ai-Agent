@@ -1,34 +1,78 @@
-/* eslint-disable @next/next/no-img-element */
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import Icon from '../../components/common/Icon';
+import { BarChart3, Mail, Lock, AlertCircle, Loader2, Chrome } from 'lucide-react';
 
 type LoginError = {
-   type: string,
-   msg: string,
-}
+   type: string;
+   msg: string;
+};
 
 const Login: NextPage = () => {
    const [error, setError] = useState<LoginError | null>(null);
    const [username, setUsername] = useState<string>('');
    const [password, setPassword] = useState<string>('');
+   const [isLoading, setIsLoading] = useState(false);
+   const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
    const router = useRouter();
 
+   const translations = {
+      en: {
+         title: 'Sign In',
+         welcome: 'Welcome back!',
+         description: 'Sign in to access your dashboard',
+         username: 'Username',
+         password: 'Password',
+         loginBtn: 'Sign In',
+         googleBtn: 'Continue with Google',
+         or: 'OR',
+         backToHome: 'Back to Home',
+         errors: {
+            emptyFields: 'Please enter your username and password',
+            emptyUsername: 'Please enter your username',
+            emptyPassword: 'Please enter your password',
+            serverError: 'Could not login, the server is not responsive'
+         }
+      },
+      de: {
+         title: 'Anmelden',
+         welcome: 'Willkommen zurück!',
+         description: 'Melden Sie sich an, um auf Ihr Dashboard zuzugreifen',
+         username: 'Benutzername',
+         password: 'Passwort',
+         loginBtn: 'Anmelden',
+         googleBtn: 'Mit Google fortfahren',
+         or: 'ODER',
+         backToHome: 'Zurück zur Startseite',
+         errors: {
+            emptyFields: 'Bitte geben Sie Ihren Benutzernamen und Ihr Passwort ein',
+            emptyUsername: 'Bitte geben Sie Ihren Benutzernamen ein',
+            emptyPassword: 'Bitte geben Sie Ihr Passwort ein',
+            serverError: 'Anmeldung nicht möglich, der Server antwortet nicht'
+         }
+      }
+   };
+
+   const t = translations[selectedLang];
+
    const loginuser = async () => {
+      setIsLoading(true);
       let loginError: LoginError | null = null;
+
       if (!username || !password) {
          if (!username && !password) {
-            loginError = { type: 'empty_username_password', msg: 'Please Insert Your App Username & Password to login.' };
+            loginError = { type: 'empty_username_password', msg: t.errors.emptyFields };
          }
          if (!username && password) {
-            loginError = { type: 'empty_username', msg: 'Please Insert Your App Username' };
+            loginError = { type: 'empty_username', msg: t.errors.emptyUsername };
          }
          if (!password && username) {
-            loginError = { type: 'empty_password', msg: 'Please Insert Your App Password' };
+            loginError = { type: 'empty_password', msg: t.errors.emptyPassword };
          }
          setError(loginError);
+         setIsLoading(false);
          setTimeout(() => { setError(null); }, 3000);
       } else {
          try {
@@ -36,7 +80,7 @@ const Login: NextPage = () => {
             const fetchOpts = { method: 'POST', headers: header, body: JSON.stringify({ username, password }) };
             const fetchRoute = `${window.location.origin}/api/login`;
             const res = await fetch(fetchRoute, fetchOpts).then((result) => result.json());
-            // console.log(res);
+
             if (!res.success) {
                let errorType = '';
                if (res.error && res.error.toLowerCase().includes('username')) {
@@ -46,85 +90,152 @@ const Login: NextPage = () => {
                   errorType = 'incorrect_password';
                }
                setError({ type: errorType, msg: res.error });
+               setIsLoading(false);
                setTimeout(() => { setError(null); }, 3000);
             } else {
-               router.push('/');
+               router.push('/domains');
             }
          } catch (fetchError) {
-            setError({ type: 'unknown', msg: 'Could not login, Ther Server is not responsive.' });
+            setError({ type: 'unknown', msg: t.errors.serverError });
+            setIsLoading(false);
             setTimeout(() => { setError(null); }, 3000);
          }
       }
    };
 
-   const labelStyle = 'mb-2 font-semibold inline-block text-sm text-gray-700';
-   // eslint-disable-next-line max-len
-   const inputStyle = 'w-full p-2 border border-gray-200 rounded mb-3 focus:outline-none focus:border-blue-200';
-   const errorBorderStyle = 'border-red-400 focus:border-red-400';
+   const handleKeyPress = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+         loginuser();
+      }
+   };
+
    return (
-      <div className={'Login'}>
+      <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-neutral-100 flex items-center justify-center p-4">
          <Head>
-            <title>Login - Dpro</title>
+            <title>{t.title} - SEO AI Agent</title>
+            <meta name="description" content="Sign in to SEO AI Agent" />
          </Head>
-         <div className='flex items-center justify-center w-full h-screen'>
-            <div className='w-80 mt-[-300px]'>
-               <h3 className="py-7 text-2xl font-bold text-blue-700 text-center">
-                  <img src="/dpro_logo.png" alt="Dpro" className="inline-block h-8 mr-2" />
-                  <span className="text-blue-700">Dpro</span>
-               </h3>
-               <div className='relative bg-[white] rounded-md text-sm border p-5'>
-                  <div className="settings__section__input mb-5">
-                     <label className={labelStyle}>Username</label>
+
+         {/* Language Selector */}
+         <div className="absolute top-4 right-4">
+            <select
+               value={selectedLang}
+               onChange={(e) => setSelectedLang(e.target.value as 'en' | 'de')}
+               className="px-3 py-2 bg-white border border-neutral-200 rounded-lg text-sm font-medium text-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+            >
+               <option value="en">English</option>
+               <option value="de">Deutsch</option>
+            </select>
+         </div>
+
+         <div className="w-full max-w-md">
+            {/* Logo and Title */}
+            <div className="text-center mb-8">
+               <Link href="/" className="inline-flex items-center space-x-2 mb-6 group">
+                  <BarChart3 className="h-10 w-10 text-blue-600 group-hover:scale-110 transition-transform" />
+                  <span className="text-2xl font-bold text-neutral-900">SEO AI Agent</span>
+               </Link>
+               <h1 className="text-3xl font-bold text-neutral-900 mb-2">{t.welcome}</h1>
+               <p className="text-neutral-600">{t.description}</p>
+            </div>
+
+            {/* Login Card */}
+            <div className="bg-white rounded-2xl shadow-xl border border-neutral-200 p-8">
+               {/* Google Login */}
+               <a
+                  href="/api/auth/google/login"
+                  className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white border-2 border-neutral-200 rounded-xl font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all shadow-sm hover:shadow-md group"
+               >
+                  <Chrome className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  {t.googleBtn}
+               </a>
+
+               {/* Divider */}
+               <div className="flex items-center my-6">
+                  <div className="flex-grow border-t border-neutral-200"></div>
+                  <span className="flex-shrink-0 mx-4 text-neutral-400 text-sm font-medium">{t.or}</span>
+                  <div className="flex-grow border-t border-neutral-200"></div>
+               </div>
+
+               {/* Username Input */}
+               <div className="mb-4">
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                     {t.username}
+                  </label>
+                  <div className="relative">
+                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400" />
                      <input
-                        className={`
-                           ${inputStyle} 
-                           ${error && error.type.includes('username') ? errorBorderStyle : ''} 
-                        `}
                         type="text"
                         value={username}
-                        onChange={(event) => setUsername(event.target.value)}
+                        onChange={(e) => setUsername(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        className={`w-full pl-11 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${
+                           error && error.type.includes('username')
+                              ? 'border-red-400 focus:ring-red-200 focus:border-red-400'
+                              : 'border-neutral-200 focus:ring-blue-200 focus:border-blue-400'
+                        }`}
+                        placeholder={t.username}
                      />
                   </div>
-                  <div className="settings__section__input mb-5">
-                     <label className={labelStyle}>Password</label>
+               </div>
+
+               {/* Password Input */}
+               <div className="mb-6">
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                     {t.password}
+                  </label>
+                  <div className="relative">
+                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400" />
                      <input
-                        className={`
-                           ${inputStyle} 
-                           ${error && error.type.includes('password') ? errorBorderStyle : ''} 
-                        `}
                         type="password"
                         value={password}
-                        onChange={(event) => setPassword(event.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        className={`w-full pl-11 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${
+                           error && error.type.includes('password')
+                              ? 'border-red-400 focus:ring-red-200 focus:border-red-400'
+                              : 'border-neutral-200 focus:ring-blue-200 focus:border-blue-400'
+                        }`}
+                        placeholder={t.password}
                      />
                   </div>
-                  <button
-                     onClick={() => loginuser()}
-                     className={'py-3 px-5 w-full rounded cursor-pointer bg-blue-700 text-white font-semibold text-sm'}>
-                     Login
-                  </button>
-                  <div className="flex items-center my-4">
-                     <div className="flex-grow border-t border-gray-200"></div>
-                     <span className="flex-shrink-0 mx-4 text-gray-400 text-xs">OR</span>
-                     <div className="flex-grow border-t border-gray-200"></div>
+               </div>
+
+               {/* Error Message */}
+               {error && error.msg && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+                     <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                     <p className="text-sm text-red-700">{error.msg}</p>
                   </div>
-                  <a
-                     href="/api/auth/google/login"
-                     className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 mb-3"
+               )}
+
+               {/* Login Button */}
+               <button
+                  onClick={loginuser}
+                  disabled={isLoading}
+                  className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+               >
+                  {isLoading ? (
+                     <>
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                        <span>Loading...</span>
+                     </>
+                  ) : (
+                     t.loginBtn
+                  )}
+               </button>
+
+               {/* Back to Home */}
+               <div className="mt-6 text-center">
+                  <Link
+                     href="/"
+                     className="text-sm text-neutral-600 hover:text-neutral-900 font-medium transition-colors"
                   >
-                     <Icon type="google" size={18} />
-                     <span className="ml-2">Sign in with Google</span>
-                  </a>
-                  {error && error.msg
-                     && <div
-                        className={'absolute w-full bottom-[-100px] ml-[-20px] rounded text-center '
-                           + 'p-3 bg-red-100 text-red-600 text-sm font-semibold'}>
-                        {error.msg}
-                     </div>
-                  }
+                     ← {t.backToHome}
+                  </Link>
                </div>
             </div>
          </div>
-
       </div>
    );
 };

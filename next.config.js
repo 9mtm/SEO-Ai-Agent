@@ -3,14 +3,23 @@ const { version } = require('./package.json');
 
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: false,
   output: 'standalone',
-  publicRuntimeConfig: {
-    version,
+  env: {
+    APP_VERSION: version,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
+  // ✅ تحسين الصور
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
+  // ✅ تحسين الأداء
+  compress: true,
+  poweredByHeader: false,
 };
 
 module.exports = nextConfig;

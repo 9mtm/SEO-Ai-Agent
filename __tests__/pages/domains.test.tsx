@@ -22,17 +22,17 @@ describe('Domains Page', () => {
    const queryClient = new QueryClient();
    it('Renders without crashing', async () => {
       render(
-          <QueryClientProvider client={queryClient}>
-              <Domains />
-          </QueryClientProvider>,
+         <QueryClientProvider client={queryClient}>
+            <Domains />
+         </QueryClientProvider>,
       );
       expect(screen.getByTestId('domains')).toBeInTheDocument();
    });
    it('Renders the Domain Component', async () => {
       const { container } = render(
-          <QueryClientProvider client={queryClient}>
-              <Domains />
-          </QueryClientProvider>,
+         <QueryClientProvider client={queryClient}>
+            <Domains />
+         </QueryClientProvider>,
       );
       expect(container.querySelector('.domItem')).toBeInTheDocument();
    });
@@ -44,6 +44,6 @@ describe('Domains Page', () => {
    });
    it('Should Display the version number in Footer.', async () => {
       render(<QueryClientProvider client={queryClient}><Domains /></QueryClientProvider>);
-      expect(screen.getByText('SerpBear v0.0.0')).toBeVisible();
+      expect(screen.getByText('SEO Ai Agent v0.0.0')).toBeVisible();
    });
 });

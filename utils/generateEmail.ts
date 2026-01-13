@@ -5,7 +5,7 @@ import path from 'path';
 import { getKeywordsInsight, getPagesInsight } from './insight';
 import { readLocalSCData } from './searchConsole';
 
-const serpBearLogo = 'https://serpbear.b-cdn.net/ikAdjQq.png';
+const seoAiAgentLogo = 'https://serpbear.b-cdn.net/ikAdjQq.png';
 const mobileIcon = 'https://serpbear.b-cdn.net/SqXD9rd.png';
 const desktopIcon = 'https://serpbear.b-cdn.net/Dx3u0XD.png';
 const googleIcon = 'https://serpbear.b-cdn.net/Sx3u0X9.png';
@@ -119,7 +119,7 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
    const stat = `${improved > 0 ? `${improved} Improved` : ''} 
                   ${improved > 0 && declined > 0 ? ', ' : ''} ${declined > 0 ? `${declined} Declined` : ''}`;
    const updatedEmail = emailTemplate
-      .replace('{{logo}}', `<img class="logo_img" src="${serpBearLogo}" alt="SerpBear" width="24" height="24" />`)
+      .replace('{{logo}}', `<img class="logo_img" src="${seoAiAgentLogo}" alt="SEO Ai Agent" width="24" height="24" />`)
       .replace('{{currentDate}}', currentDate)
       .replace('{{domainName}}', domainName)
       .replace('{{keywordsCount}}', keywordsCount.toString())
