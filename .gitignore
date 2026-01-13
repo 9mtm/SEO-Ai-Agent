@@ -27,8 +27,11 @@ TODO
 # AI Models (Large Files)
 /models/*
 !models/README.md
+!models/download_model.ps1
 *.gguf
 *.bin
 *.safetensors
 *.pt
 *.pth
+.env.local
+
