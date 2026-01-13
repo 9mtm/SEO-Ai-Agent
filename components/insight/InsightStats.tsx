@@ -130,7 +130,7 @@ const InsightStats = ({ stats = [], totalKeywords = 0, totalPages = 0 }: Insight
                   padding: 15,
                   font: {
                      size: 12,
-                     weight: '500' as const,
+                     weight: 'bold' as const,
                   }
                }
             },
@@ -139,7 +139,7 @@ const InsightStats = ({ stats = [], totalKeywords = 0, totalPages = 0 }: Insight
                padding: 12,
                titleFont: {
                   size: 13,
-                  weight: '600' as const,
+                  weight: 'bold' as const,
                },
                bodyFont: {
                   size: 12,
@@ -289,8 +289,8 @@ const InsightStats = ({ stats = [], totalKeywords = 0, totalPages = 0 }: Insight
                   <button
                      onClick={() => setChartView('both')}
                      className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${chartView === 'both'
-                           ? 'bg-violet-100 text-violet-700'
-                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-violet-100 text-violet-700'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                   >
                      Both
@@ -298,8 +298,8 @@ const InsightStats = ({ stats = [], totalKeywords = 0, totalPages = 0 }: Insight
                   <button
                      onClick={() => setChartView('visits')}
                      className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${chartView === 'visits'
-                           ? 'bg-violet-100 text-violet-700'
-                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-violet-100 text-violet-700'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                   >
                      Visits
@@ -307,8 +307,8 @@ const InsightStats = ({ stats = [], totalKeywords = 0, totalPages = 0 }: Insight
                   <button
                      onClick={() => setChartView('impressions')}
                      className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${chartView === 'impressions'
-                           ? 'bg-emerald-100 text-emerald-700'
-                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                   >
                      Impressions

@@ -298,17 +298,32 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                         )
                      }
                      {isConsoleIntegrated && isPending && (
-                        <p className=' p-9 pt-[10%] text-center text-gray-500'>Loading Insight...</p>
+                        Array(10).fill(0).map((_, i) => (
+                           <div key={i} className='keyword relative py-5 px-4 lg:py-4 lg:px-6 lg:border-0 lg:flex lg:justify-between lg:items-center border-b border-gray-100 animate-pulse'>
+                              <div className='w-1/2 lg:flex-1 h-5 bg-gray-200 rounded'></div>
+                              <div className='hidden lg:block lg:flex-1 lg:basis-20 mx-4 h-5 bg-gray-200 rounded'></div>
+                              <div className='hidden lg:block lg:flex-1 h-5 bg-gray-200 rounded mx-4'></div>
+                              <div className='hidden lg:block lg:flex-1 h-5 bg-gray-200 rounded mx-4'></div>
+                              <div className='hidden lg:block lg:flex-1 h-5 bg-gray-200 rounded'></div>
+                           </div>
+                        ))
                      )}
                      {!isConsoleIntegrated && (
-                        <p className=' p-9 pt-[10%] text-center text-gray-500'>
-                           Google Search Console has not been Integrated yet.
-                        </p>
+                        <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+                           <svg className="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                           </svg>
+                           <p className="text-lg font-medium">Google Search Console Not Integrated</p>
+                           <p className="text-sm mt-2">Connect your account in Settings to see insights.</p>
+                        </div>
                      )}
-                     {searchQuery && filteredItems.length === 0 && (
-                        <p className=' p-9 pt-[10%] text-center text-gray-500'>
-                           No results found for "{searchQuery}"
-                        </p>
+                     {searchQuery && filteredItems.length === 0 && !isPending && (
+                        <div className="flex flex-col items-center justify-center py-16 text-gray-500">
+                           <svg className="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                           </svg>
+                           <p>No results found for "{searchQuery}"</p>
+                        </div>
                      )}
                   </div>
                </div>
