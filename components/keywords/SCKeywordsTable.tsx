@@ -135,30 +135,72 @@ const SCKeywordsTable = ({ domain, keywords = [], isPending = true, isConsoleInt
    const Row = ({ data, index, style }: ListChildComponentProps) => {
       const keyword = data[index];
       return (
-         <SCKeyword
-            key={keyword.uid}
-            style={style}
-            selected={selectedKeywords.includes(keyword.uid)}
-            selectKeyword={selectKeyword}
-            keywordData={keyword}
-            isTracked={addedkeywords.includes(`${keyword.keyword}:${keyword.country}:${keyword.device}`)}
-            lastItem={index === (finalKeywords[device].length - 1)}
-         />
+         <div style={style}>
+            <SCKeyword
+               key={keyword.uid}
+               style={{}}
+               selected={selectedKeywords.includes(keyword.uid)}
+               selectKeyword={selectKeyword}
+               keywordData={keyword}
+               isTracked={addedkeywords.includes(`${keyword.keyword}:${keyword.country}:${keyword.device}`)}
+               lastItem={index === (finalKeywords[device].length - 1)}
+            />
+         </div>
       );
    };
 
+   // Stats Cards Componenent
+   const StatsCards = () => (
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-6 py-4 bg-gray-50 border-b border-gray-200'>
+         <div className='bg-white p-4 rounded-lg border border-gray-200 shadow-sm'>
+            <div className='flex items-center justify-between mb-2'>
+               <span className='text-xs font-medium text-gray-500 uppercase'>Keywords</span>
+               <Icon type="search" size={16} color="#6B7280" />
+            </div>
+            <div className='text-2xl font-bold text-gray-800'>{formattedNum(finalKeywords[device]?.length || 0)}</div>
+         </div>
+         <div className='bg-white p-4 rounded-lg border border-gray-200 shadow-sm'>
+            <div className='flex items-center justify-between mb-2'>
+               <span className='text-xs font-medium text-gray-500 uppercase'>Avg Position</span>
+               <Icon type="tracking" size={16} color="#6B7280" />
+            </div>
+            <div className='text-2xl font-bold text-blue-600'>{Math.round(viewSummary.position)}</div>
+         </div>
+         <div className='bg-white p-4 rounded-lg border border-gray-200 shadow-sm'>
+            <div className='flex items-center justify-between mb-2'>
+               <span className='text-xs font-medium text-gray-500 uppercase'>Total Visits</span>
+               <Icon type="mouse-pointer" size={16} color="#6B7280" />
+            </div>
+            <div className='text-2xl font-bold text-violet-600'>{formattedNum(viewSummary.visits)}</div>
+         </div>
+         <div className='bg-white p-4 rounded-lg border border-gray-200 shadow-sm'>
+            <div className='flex items-center justify-between mb-2'>
+               <span className='text-xs font-medium text-gray-500 uppercase'>Avg CTR</span>
+               <Icon type="percent" size={16} color="#6B7280" />
+            </div>
+            <div className='text-2xl font-bold text-emerald-600'>
+               {new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(viewSummary.ctr)}%
+            </div>
+         </div>
+      </div>
+   );
+
    return (
       <div>
-         <div className='domKeywords flex flex-col bg-[white] rounded-md text-sm border mb-4'>
+         <div className='domKeywords flex flex-col bg-[white] rounded-md text-sm border mb-4 shadow-sm overflow-hidden'>
+            {/* Stats Cards */}
+            {!isPending && finalKeywords[device] && finalKeywords[device].length > 0 && <StatsCards />}
+
             {selectedKeywords.length > 0 && (
-               <div className='font-semibold text-sm py-4 px-8 text-gray-500 '>
+               <div className='font-semibold text-sm py-4 px-8 text-gray-500 bg-blue-50 border-b border-blue-100'>
                   <ul className=''>
                      <li className='inline-block mr-4'>
                         <a
-                           className='block px-2 py-2 cursor-pointer hover:text-indigo-600'
+                           className='block px-2 py-2 cursor-pointer hover:text-indigo-600 flex items-center'
                            onClick={() => addSCKeywordsToTracker()}
                         >
-                           <span className=' bg-indigo-100 text-blue-700 px-1 rounded font-black'>+</span> Add Keywords to Tracker
+                           <span className='bg-indigo-100 text-blue-700 px-1.5 py-0.5 rounded font-black mr-2 text-xs'>+</span>
+                           Add {selectedKeywords.length} Keywords to Tracker
                         </a>
                      </li>
                   </ul>
@@ -182,19 +224,19 @@ const SCKeywordsTable = ({ domain, keywords = [], isPending = true, isConsoleInt
             <div className='domkeywordsTable domkeywordsTable--sckeywords styled-scrollbar w-full overflow-auto min-h-[60vh]'>
                <div className=' lg:min-w-[800px]'>
                   <div className={`domKeywords_head domKeywords_head--${sortBy} hidden lg:flex p-3 px-6 bg-[#FCFCFF]
-                   text-gray-600 justify-between items-center font-semibold border-y`}>
-                     <span className='domKeywords_head_keyword flex-1 basis-20 w-auto '>
+                   text-gray-600 justify-between items-center font-semibold border-y border-gray-100 text-xs uppercase tracking-wider`}>
+                     <span className='domKeywords_head_keyword flex-1 basis-20 w-auto flex items-center'>
                         {finalKeywords[device].length > 0 && (
                            <button
-                              className={`p-0 mr-2 leading-[0px] inline-block rounded-sm pt-0 px-[1px] pb-[3px]  border border-slate-300 
-                           ${selectedAllItems ? ' bg-blue-700 border-blue-700 text-white' : 'text-transparent'}`}
+                              className={`p-0 mr-3 leading-[0px] inline-flex items-center justify-center rounded w-4 h-4 border border-gray-300 transition-colors
+                           ${selectedAllItems ? ' bg-blue-600 border-blue-600 text-white' : 'hover:border-blue-400'}`}
                               onClick={() => setSelectedKeywords(selectedAllItems ? [] : finalKeywords[device].map((k: SearchAnalyticsItem) => k.uid))}
                            >
-                              <Icon type="check" size={10} />
+                              {selectedAllItems && <Icon type="check" size={10} />}
                            </button>
                         )}
                         <span
-                           className='cursor-pointer hover:text-blue-700 select-none'
+                           className='cursor-pointer hover:text-blue-700 select-none flex items-center'
                            onClick={() => handleColumnSort('keyword')}
                         >
                            Keyword{getSortIcon('keyword')}
@@ -231,7 +273,7 @@ const SCKeywordsTable = ({ domain, keywords = [], isPending = true, isConsoleInt
                            innerElementType="div"
                            itemData={finalKeywords[device]}
                            itemCount={finalKeywords[device].length}
-                           itemSize={isMobile ? 100 : 57}
+                           itemSize={isMobile ? 100 : 70}
                            height={SCListHeight}
                            width={'100%'}
                            className={'styled-scrollbar'}
@@ -239,36 +281,43 @@ const SCKeywordsTable = ({ domain, keywords = [], isPending = true, isConsoleInt
                            {Row}
                         </List>
                      )}
-                     {!isPending && finalKeywords[device] && finalKeywords[device].length > 0 && (
-                        <div className={`domKeywords_head hidden lg:flex p-3 px-6 bg-[#FCFCFF]
-                           text-gray-600 justify-between items-center font-semibold border-y`}>
-                           <span className='domKeywords_head_keyword flex-1 basis-20 w-auto font-semibold'>
-                              {finalKeywords[device].length} {device} Keywords
-                           </span>
-                           <span className='domKeywords_head_position flex-1 basis-40 grow-0 text-center'>{viewSummary.position}</span>
-                           <span className='domKeywords_head_imp flex-1 text-center'>
-                              {formattedNum(viewSummary.impressions)}
-                           </span>
-                           <span className='domKeywords_head_visits flex-1 text-center'>
-                              {formattedNum(viewSummary.visits)}
-                           </span>
-                           <span className='domKeywords_head_ctr flex-1 text-center'>
-                              {new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(viewSummary.ctr)}%
-                           </span>
+
+                     {/* Empty States */}
+                     {isConsoleIntegrated && !isPending && finalKeywords[device].length === 0 && (
+                        <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+                           <svg className="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                           </svg>
+                           <p className="text-lg font-medium">No keywords found</p>
+                           <p className="text-sm mt-2">Try adjusting your filters.</p>
                         </div>
                      )}
-                     {isConsoleIntegrated && !isPending && finalKeywords[device].length === 0 && (
-                        <p className=' p-9 pt-[10%] text-center text-gray-500'>
-                           Could Not fetch Keyword Data for this Domain from Google Search Console.
-                        </p>
-                     )}
-                     {isConsoleIntegrated && isPending && (
-                        <p className=' p-9 pt-[10%] text-center text-gray-500'>Loading Keywords...</p>
-                     )}
                      {!isConsoleIntegrated && (
-                        <p className=' p-9 pt-[10%] text-center text-gray-500'>
-                           Google Search Console has not been Integrated yet.
-                        </p>
+                        <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+                           <svg className="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                           </svg>
+                           <p className="text-lg font-medium">Google Search Console Not Integrated</p>
+                           <p className="text-sm mt-2">Connect your account in Settings to see keywords.</p>
+                        </div>
+                     )}
+
+                     {/* Skeleton Loader */}
+                     {isConsoleIntegrated && isPending && (
+                        <div className="p-4">
+                           {Array(8).fill(0).map((_, i) => (
+                              <div key={i} className='flex items-center justify-between py-4 border-b border-gray-100 animate-pulse'>
+                                 <div className='flex items-center flex-1'>
+                                    <div className='w-4 h-4 bg-gray-200 rounded mr-3'></div>
+                                    <div className='w-48 h-5 bg-gray-200 rounded'></div>
+                                 </div>
+                                 <div className='flex-1 flex justify-center'><div className='w-12 h-5 bg-gray-200 rounded'></div></div>
+                                 <div className='flex-1 flex justify-center'><div className='w-16 h-5 bg-gray-200 rounded'></div></div>
+                                 <div className='flex-1 flex justify-center'><div className='w-16 h-5 bg-gray-200 rounded'></div></div>
+                                 <div className='flex-1 flex justify-center'><div className='w-12 h-5 bg-gray-200 rounded'></div></div>
+                              </div>
+                           ))}
+                        </div>
                      )}
                   </div>
                </div>
