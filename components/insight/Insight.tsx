@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { sortInsightItems } from '../../utils/insight';
 import SelectField from '../common/SelectField';
@@ -15,20 +15,22 @@ type SCInsightProps = {
 const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, domain }: SCInsightProps) => {
    const [activeTab, setActiveTab] = useState<string>('stats');
    const [sortBy, setSortBy] = useState<string>('clicks');
+   const [searchQuery, setSearchQuery] = useState<string>('');
+   const [currentPage, setCurrentPage] = useState<number>(1);
+   const itemsPerPage = 20;
 
    const insightItems = insight[activeTab as keyof InsightDataType];
    const startDate = insight && insight.stats && insight.stats.length > 0 ? new Date(insight.stats[0].date) : null;
    const endDate = insight && insight.stats && insight.stats.length > 0 ? new Date(insight.stats[insight.stats.length - 1].date) : null;
 
    const switchTab = (tab: string) => {
-      // window.insightTab = tab;
       setActiveTab(tab);
-      setSortBy('clicks'); // Reset sort when switching tabs
+      setSortBy('clicks');
+      setSearchQuery('');
+      setCurrentPage(1);
    };
 
    const handleSort = (column: string) => {
-      // Logic to toggle asc/desc
-      // If currently asc, go desc. If currently desc, go asc. Default to desc.
       const isAsc = sortBy === `${column}_asc`;
       const isDesc = sortBy === `${column}_desc`;
 
@@ -44,17 +46,33 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
       if (sortBy === `${column}_desc`) return ' ↓';
       return null;
    };
-   // `Insight` does not. 
-   // I might need to update `utils/insight.ts` AGAIN to support direction if I want to match `SCKeywordsTable` behavior perfectly.
-   // However, `sortInsightItems` is a utility.
 
-   // Let's implement basic sort selection first, as `Insight` component structure is a bit different.
-   // User said "Visits ↑", implying a default sort or visual.
+   // Filter and paginate items
+   const { filteredItems, totalPages, topPerformers } = useMemo(() => {
+      if (!insightItems) return { filteredItems: [], totalPages: 0, topPerformers: [] };
 
-   // Actually, to fully match the "Same way" request, I SHOULD implement toggling.
-   // So I really should check `utils/insight.ts` again and make it robust.
-   // But I already moved past that.
-   // Let's look at `renderTableHeader` replacement first.
+      let items = activeTab === 'stats' ? [...insightItems].reverse() : sortInsightItems(insightItems, sortBy);
+
+      // Filter by search query
+      if (searchQuery && activeTab !== 'stats') {
+         items = items.filter((item: SCInsightItem) => {
+            const searchText = (item.keyword || item.page || item.country || '').toLowerCase();
+            return searchText.includes(searchQuery.toLowerCase());
+         });
+      }
+
+      // Get top 5 performers
+      const top = activeTab !== 'stats' && items.length > 0
+         ? items.slice(0, 5)
+         : [];
+
+      // Paginate
+      const total = Math.ceil(items.length / itemsPerPage);
+      const start = (currentPage - 1) * itemsPerPage;
+      const paginated = items.slice(start, start + itemsPerPage);
+
+      return { filteredItems: paginated, totalPages: total, topPerformers: top };
+   }, [insightItems, sortBy, searchQuery, currentPage, activeTab]);
 
    const renderTableHeader = () => {
       const headerNames: { [key: string]: { label: string, key: string }[] } = {
@@ -68,7 +86,7 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
          keywords: [
             { label: 'Keyword', key: 'keyword' },
             { label: 'Avg Position', key: 'position' },
-            { label: 'Visits ↑', key: 'clicks' },
+            { label: 'Visits', key: 'clicks' },
             { label: 'Impressions', key: 'impressions' },
             { label: 'CTR', key: 'ctr' },
             { label: 'Countries', key: 'countries' }
@@ -76,7 +94,7 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
          countries: [
             { label: 'Country', key: 'country' },
             { label: 'Avg Position', key: 'position' },
-            { label: 'Visits ↑', key: 'clicks' },
+            { label: 'Visits', key: 'clicks' },
             { label: 'Impressions', key: 'impressions' },
             { label: 'CTR', key: 'ctr' },
             { label: 'Keywords', key: 'keywords' }
@@ -84,7 +102,7 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
          pages: [
             { label: 'Page', key: 'page' },
             { label: 'Avg Position', key: 'position' },
-            { label: 'Visits ↑', key: 'clicks' },
+            { label: 'Visits', key: 'clicks' },
             { label: 'Impressions', key: 'impressions' },
             { label: 'CTR', key: 'ctr' },
             { label: 'Countries', key: 'countries' },
@@ -92,13 +110,13 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
          ],
       };
 
+      const headers = headerNames[activeTab] || [];
+
       return (
-         <div className={`domKeywords_head hidden lg:flex p-3 px-6 bg-[#FCFCFF]
-            text-gray-600 justify-between items-center font-semibold border-y`}>
-            {headerNames[activeTab].map((header, index) => {
-               // Determine styles based on index to match original layout
+         <div className='domKeywords_header hidden text-xs text-gray-500 font-semibold px-6 py-3 border-b-[1px] border-gray-200 lg:flex lg:justify-between lg:items-center'>
+            {headers.map((header, index) => {
                let className = 'flex-1 text-center';
-               if (index === 0) className = 'domKeywords_head_keyword flex-1 basis-20 w-auto text-left'; // First col
+               if (index === 0) className = 'domKeywords_head_keyword flex-1 basis-20 w-auto text-left';
                else if (header.key === 'position') className = 'domKeywords_head_position flex-1 basis-40 grow-0 text-center';
 
                return (
@@ -107,7 +125,7 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                      className={`${className} cursor-pointer hover:text-blue-700 select-none`}
                      onClick={() => handleSort(header.key)}
                   >
-                     {header.label}{sortBy === header.key ? ' ↓' : ''}
+                     {header.label}{getSortIcon(header.key)}
                   </span>
                );
             })}
@@ -115,23 +133,61 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
       );
    };
 
-   const deviceTabStyle = 'select-none cursor-pointer px-3 py-2 rounded-3xl mr-2';
-   const deviceTabCountStyle = 'px-2 py-0 rounded-3xl bg-[#DEE1FC] text-[0.7rem] font-bold ml-1';
+   const exportToCSV = () => {
+      if (!filteredItems || filteredItems.length === 0) return;
+
+      const headers = activeTab === 'keywords'
+         ? ['Keyword', 'Position', 'Clicks', 'Impressions', 'CTR', 'Countries']
+         : activeTab === 'pages'
+            ? ['Page', 'Position', 'Clicks', 'Impressions', 'CTR', 'Countries', 'Keywords']
+            : activeTab === 'countries'
+               ? ['Country', 'Position', 'Clicks', 'Impressions', 'CTR', 'Keywords']
+               : ['Date', 'Position', 'Clicks', 'Impressions', 'CTR'];
+
+      const rows = filteredItems.map((item: SCInsightItem) => {
+         if (activeTab === 'keywords') {
+            return [item.keyword, item.position, item.clicks, item.impressions, item.ctr, item.countries];
+         } else if (activeTab === 'pages') {
+            return [item.page, item.position, item.clicks, item.impressions, item.ctr, item.countries, item.keywords];
+         } else if (activeTab === 'countries') {
+            return [item.country, item.position, item.clicks, item.impressions, item.ctr, item.keywords];
+         } else {
+            return [item.date, item.position, item.clicks, item.impressions, item.ctr];
+         }
+      });
+
+      const csvContent = [
+         headers.join(','),
+         ...rows.map(row => row.join(','))
+      ].join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${activeTab}-${domain?.domain || 'export'}-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+   };
+
+   const deviceTabStyle = 'select-none cursor-pointer px-4 py-2.5 rounded-lg mr-2 transition-all duration-200 font-medium';
+   const deviceTabCountStyle = 'px-2 py-0.5 rounded-full bg-violet-100 text-[0.7rem] font-bold ml-2 text-violet-700';
 
    return (
       <div>
-         <div className='domKeywords flex flex-col bg-[white] rounded-md text-sm border mb-5'>
+         <div className='domKeywords flex flex-col bg-[white] rounded-md text-sm border mb-5 shadow-sm'>
             <div className='domKeywords_filters py-4 px-6 flex flex-col justify-between
             text-sm text-gray-500 font-semibold border-b-[1px] lg:border-0 lg:flex-row'>
-               <div>
+               <div className='flex items-center justify-between w-full lg:w-auto'>
                   <ul className='text-xs hidden lg:flex'>
                      {['stats', 'keywords', 'countries', 'pages'].map((tabItem) => {
                         const tabInsightItem = insight[tabItem as keyof InsightDataType];
+                        const isActive = activeTab === tabItem;
                         return <li
                            key={`tab-${tabItem}`}
-                           className={`${deviceTabStyle} ${activeTab === tabItem ? ' bg-[#F8F9FF] text-gray-700' : ''}`}
+                           className={`${deviceTabStyle} ${isActive ? 'bg-violet-100 text-violet-700 shadow-sm' : 'hover:bg-gray-100'}`}
                            onClick={() => switchTab(tabItem)}>
-                           <i className='hidden not-italic lg:inline-block ml-1 capitalize'>{tabItem}</i>
+                           <i className='hidden not-italic lg:inline-block capitalize'>{tabItem}</i>
                            {tabItem !== 'stats' && (
                               <span className={`${deviceTabCountStyle}`}>
                                  {tabInsightItem && tabInsightItem.length ? tabInsightItem.length : 0}
@@ -140,6 +196,20 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                         </li>;
                      })}
                   </ul>
+
+                  {/* Export Button */}
+                  {activeTab !== 'stats' && filteredItems.length > 0 && (
+                     <button
+                        onClick={exportToCSV}
+                        className='ml-auto lg:ml-4 px-4 py-2 bg-violet-600 text-white text-sm font-medium rounded-lg hover:bg-violet-700 transition-colors flex items-center gap-2'
+                     >
+                        <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                           <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' />
+                        </svg>
+                        Export CSV
+                     </button>
+                  )}
+
                   <div className='insight_selector lg:hidden'>
                      <SelectField
                         options={['stats', 'keywords', 'countries', 'pages'].map((d) => { return { label: d, value: d }; })}
@@ -155,10 +225,32 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                   {startDate && new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(startDate))}
                   <span className='px-2 inline-block'>-</span>
                   {endDate && new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(endDate))}
-                  <span className='ml-2'>(Last 30 Days)</span>
+                  <span className='ml-2 text-gray-400'>(Last 30 Days)</span>
                </div>
                )}
             </div>
+
+            {/* Search Bar */}
+            {activeTab !== 'stats' && (
+               <div className='px-6 py-3 border-b border-gray-200'>
+                  <div className='relative'>
+                     <input
+                        type='text'
+                        placeholder={`Search ${activeTab}...`}
+                        value={searchQuery}
+                        onChange={(e) => {
+                           setSearchQuery(e.target.value);
+                           setCurrentPage(1);
+                        }}
+                        className='w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent'
+                     />
+                     <svg className='absolute left-3 top-2.5 w-5 h-5 text-gray-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' />
+                     </svg>
+                  </div>
+               </div>
+            )}
+
             {isConsoleIntegrated && activeTab === 'stats' && (
                <InsightStats
                   stats={insight?.stats ? insight.stats : []}
@@ -168,15 +260,39 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                />
             )}
 
+            {/* Top Performers */}
+            {activeTab !== 'stats' && topPerformers.length > 0 && !searchQuery && (
+               <div className='px-6 py-4 bg-gradient-to-r from-violet-50 to-purple-50 border-b border-violet-200'>
+                  <h3 className='text-sm font-semibold text-violet-700 mb-3 flex items-center'>
+                     <svg className='w-5 h-5 mr-2' fill='currentColor' viewBox='0 0 20 20'>
+                        <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                     </svg>
+                     Top 5 Performers
+                  </h3>
+                  <div className='flex gap-2 overflow-x-auto pb-2'>
+                     {topPerformers.map((item: SCInsightItem, idx: number) => (
+                        <div key={idx} className='flex-shrink-0 bg-white border border-violet-200 rounded-lg px-3 py-2 min-w-[200px]'>
+                           <div className='text-xs font-semibold text-gray-800 truncate mb-1'>
+                              {item.keyword || item.page || item.country}
+                           </div>
+                           <div className='flex items-center justify-between text-xs'>
+                              <span className='text-violet-600 font-bold'>{item.clicks} visits</span>
+                              <span className='text-gray-500'>Pos: {Math.round(item.position)}</span>
+                           </div>
+                        </div>
+                     ))}
+                  </div>
+               </div>
+            )}
+
             <div className='domkeywordsTable domkeywordsTable--sckeywords styled-scrollbar w-full overflow-auto min-h-[60vh]'>
                <div className=' lg:min-w-[800px]'>
                   {renderTableHeader()}
                   <div className='domKeywords_keywords border-gray-200 min-h-[55vh] relative'>
-                     {['keywords', 'pages', 'countries', 'stats'].includes(activeTab) && insight && insightItems
-                        && (activeTab === 'stats' ? [...insightItems].reverse() : sortInsightItems(insightItems, sortBy)).map(
+                     {['keywords', 'pages', 'countries', 'stats'].includes(activeTab) && insight && filteredItems
+                        && filteredItems.map(
                            (item: SCInsightItem, index: number) => {
-                              const insightItemCount = insight ? insightItems : [];
-                              const lastItem = !!(insightItemCount && (index === insightItemCount.length));
+                              const lastItem = !!(filteredItems && (index === filteredItems.length - 1));
                               return <InsightItem key={index} item={item} type={activeTab} lastItem={lastItem} domain={domain?.domain || ''} />;
                            },
                         )
@@ -189,9 +305,39 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                            Google Search Console has not been Integrated yet.
                         </p>
                      )}
+                     {searchQuery && filteredItems.length === 0 && (
+                        <p className=' p-9 pt-[10%] text-center text-gray-500'>
+                           No results found for "{searchQuery}"
+                        </p>
+                     )}
                   </div>
                </div>
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+               <div className='px-6 py-4 border-t border-gray-200 flex items-center justify-between'>
+                  <div className='text-sm text-gray-600'>
+                     Page {currentPage} of {totalPages}
+                  </div>
+                  <div className='flex gap-2'>
+                     <button
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                        className='px-3 py-1.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed'
+                     >
+                        Previous
+                     </button>
+                     <button
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                        className='px-3 py-1.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed'
+                     >
+                        Next
+                     </button>
+                  </div>
+               </div>
+            )}
          </div>
          <Toaster position='bottom-center' containerClassName="react_toaster" />
       </div>
