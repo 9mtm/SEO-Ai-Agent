@@ -14,10 +14,11 @@ type DomainHeaderProps = {
    scFilter?: string
    setScFilter?: Function
    showIdeaUpdateModal?: Function
+   onDeleteDomain?: Function
 }
 
 const DomainHeader = (
-   { domain, showAddModal, showSettingsModal, exportCsv, domains, scFilter = 'thirtyDays', setScFilter, showIdeaUpdateModal }: DomainHeaderProps,
+   { domain, showAddModal, showSettingsModal, exportCsv, domains, scFilter = 'thirtyDays', setScFilter, showIdeaUpdateModal, onDeleteDomain }: DomainHeaderProps,
 ) => {
    const router = useRouter();
    const [showOptions, setShowOptions] = useState<boolean>(false);
@@ -137,6 +138,15 @@ const DomainHeader = (
                      onClick={() => showSettingsModal(true)}><Icon type='settings' size={20} />
                      <i className={`${buttonLabelStyle}`}>Domain Settings</i>
                   </button>
+                  {onDeleteDomain && (
+                     <button
+                        data-testid="delete_domain"
+                        className={`domheader_action_button relative ${buttonStyle} lg:ml-3 text-red-600 hover:text-red-700`}
+                        aria-pressed="false"
+                        onClick={() => onDeleteDomain()}><Icon type='trash' size={20} />
+                        <i className={`${buttonLabelStyle}`}>Delete Domain</i>
+                     </button>
+                  )}
                </div>
                {!isConsole && !isInsight && !isIdeas && (
                   <button

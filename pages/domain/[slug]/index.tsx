@@ -11,7 +11,7 @@ import AddDomain from '../../../components/domains/AddDomain';
 import DomainSettings from '../../../components/domains/DomainSettings';
 import exportCSV from '../../../utils/client/exportcsv';
 import Settings from '../../../components/settings/Settings';
-import { useFetchDomains } from '../../../services/domains';
+import { useFetchDomains, useDeleteDomain } from '../../../services/domains';
 import { useFetchKeywords } from '../../../services/keywords';
 import { useFetchSettings } from '../../../services/settings';
 import AddKeywords from '../../../components/keywords/AddKeywords';
@@ -26,6 +26,9 @@ const SingleDomain: NextPage = () => {
    const [keywordSPollInterval, setKeywordSPollInterval] = useState<undefined | number>(undefined);
    const { data: appSettingsData, isPending: isAppSettingsLoading } = useFetchSettings();
    const { data: domainsData } = useFetchDomains(router);
+   const { mutate: deleteDomainMutate } = useDeleteDomain(() => {
+      router.push('/');
+   });
    const appSettings: SettingsType = appSettingsData?.settings || {};
    const { scraper_type = '', available_scapers = [] } = appSettings;
    const activeScraper = useMemo(() => available_scapers.find((scraper) => scraper.value === scraper_type), [scraper_type, available_scapers]);
@@ -46,6 +49,12 @@ const SingleDomain: NextPage = () => {
    const { keywordsData, keywordsLoading } = useFetchKeywords(router, activDomain?.domain || '', setKeywordSPollInterval, keywordSPollInterval);
    const theDomains: DomainType[] = (domainsData && domainsData.domains) || [];
    const theKeywords: KeywordType[] = keywordsData && keywordsData.keywords;
+
+   const handleDeleteDomain = () => {
+      if (activDomain && window.confirm(`Are you sure you want to delete ${activDomain.domain}?`)) {
+         deleteDomainMutate(activDomain);
+      }
+   };
 
    return (
       <div className="Domain ">
@@ -70,6 +79,7 @@ const SingleDomain: NextPage = () => {
                      showAddModal={setShowAddKeywords}
                      showSettingsModal={setShowDomainSettings}
                      exportCsv={() => exportCSV(theKeywords, activDomain.domain)}
+                     onDeleteDomain={handleDeleteDomain}
                   />
                   : <div className='w-full lg:h-[100px]'></div>
                }

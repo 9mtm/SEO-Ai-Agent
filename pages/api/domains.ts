@@ -126,6 +126,37 @@ const addDomain = async (
             if (exists) {
                console.log(`[INFO] Domain ${rawDomain} already exists as ${exists.domain}.`);
 
+               // Detect property type from raw domain string
+               let propertyType = 'domain';
+               let propertyUrl = '';
+
+               if (rawDomain.startsWith('https://') || rawDomain.startsWith('http://')) {
+                  propertyType = 'url';
+                  propertyUrl = rawDomain;
+               } else if (rawDomain.startsWith('sc-domain:')) {
+                  propertyType = 'domain';
+                  propertyUrl = '';
+               }
+
+               // Parse existing search_console settings
+               const existingSCSettings = exists.search_console ? JSON.parse(exists.search_console) : {};
+
+               // Update search_console settings if property type/url is different
+               const needsUpdate =
+                  existingSCSettings.property_type !== propertyType ||
+                  existingSCSettings.url !== propertyUrl;
+
+               if (needsUpdate) {
+                  console.log(`[INFO] Updating search_console settings for ${exists.domain}`);
+                  const updatedSCSettings = {
+                     ...existingSCSettings,
+                     property_type: propertyType,
+                     url: propertyUrl,
+                  };
+                  await exists.update({ search_console: JSON.stringify(updatedSCSettings) });
+                  console.log(`[INFO] Successfully updated search_console settings for ${exists.domain}`);
+               }
+
                // IMPORTANT: Update user_id if different (user is claiming ownership)
                if (userId && !isLegacy && exists.user_id !== userId) {
                   console.log(`[INFO] Updating user_id for ${exists.domain} from ${exists.user_id} to ${userId}`);
@@ -138,11 +169,31 @@ const addDomain = async (
                continue;
             }
 
+            // Detect property type from raw domain string
+            let propertyType = 'domain';
+            let propertyUrl = '';
+
+            if (rawDomain.startsWith('https://') || rawDomain.startsWith('http://')) {
+               propertyType = 'url';
+               propertyUrl = rawDomain;
+            } else if (rawDomain.startsWith('sc-domain:')) {
+               propertyType = 'domain';
+               propertyUrl = '';
+            }
+
+            const searchConsoleSettings = {
+               property_type: propertyType,
+               url: propertyUrl,
+               client_email: '',
+               private_key: ''
+            };
+
             const domainData: any = {
                domain: normalizedInput,
                slug: normalizedInput.replaceAll('.', '-'),
                lastUpdated: new Date().toJSON(),
                added: new Date().toJSON(),
+               search_console: JSON.stringify(searchConsoleSettings),
             };
 
             // Add user_id for multi-tenant mode
