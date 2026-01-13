@@ -79,6 +79,9 @@ class Keyword extends Model {
   @Column({ type: DataType.JSON, allowNull: true })
   declare competitor_positions?: Record<string, number>;
 
+  @Column({ type: DataType.BOOLEAN, allowNull: true, defaultValue: false })
+  declare updating_competitors?: boolean;
+
   @BelongsTo(() => User)
   declare user: User;
 }

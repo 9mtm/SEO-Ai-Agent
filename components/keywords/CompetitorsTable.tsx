@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRefreshCompetitors } from '../../services/competitors';
 
 type CompetitorsTableProps = {
     domain: DomainType | null;
@@ -7,7 +8,7 @@ type CompetitorsTableProps = {
 };
 
 const CompetitorsTable = ({ domain, keywords, isPending }: CompetitorsTableProps) => {
-    // Get competitors from domain
+    const { mutate: refreshCompetitorsMutate } = useRefreshCompetitors(() => { });
     const competitors = domain?.competitors || [];
 
     if (isPending) {
@@ -34,6 +35,12 @@ const CompetitorsTable = ({ domain, keywords, isPending }: CompetitorsTableProps
         );
     }
 
+    const handleRefreshKeyword = (keywordId: number) => {
+        if (domain) {
+            refreshCompetitorsMutate({ domain: domain.domain, keywordId });
+        }
+    };
+
     return (
         <div className="w-full bg-white rounded-md shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
@@ -51,6 +58,9 @@ const CompetitorsTable = ({ domain, keywords, isPending }: CompetitorsTableProps
                                     {competitor.replace(/^https?:\/\//, '').replace(/\/$/, '')}
                                 </th>
                             ))}
+                            <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Action
+                            </th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -78,17 +88,38 @@ const CompetitorsTable = ({ domain, keywords, isPending }: CompetitorsTableProps
 
                                         return (
                                             <td key={index} className="px-4 py-3 text-center">
-                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${position > 0 && position <= 10
-                                                        ? 'bg-blue-100 text-blue-800'
-                                                        : position > 10 && position <= 50
-                                                            ? 'bg-purple-100 text-purple-800'
-                                                            : 'bg-gray-100 text-gray-800'
-                                                    }`}>
-                                                    {position > 0 ? position : '-'}
-                                                </span>
+                                                {keyword.updating_competitors ? (
+                                                    <div className="inline-flex items-center">
+                                                        <svg className="animate-spin h-4 w-4 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                        </svg>
+                                                    </div>
+                                                ) : (
+                                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${position > 0 && position <= 10
+                                                            ? 'bg-blue-100 text-blue-800'
+                                                            : position > 10 && position <= 50
+                                                                ? 'bg-purple-100 text-purple-800'
+                                                                : 'bg-gray-100 text-gray-800'
+                                                        }`}>
+                                                        {position > 0 ? position : '-'}
+                                                    </span>
+                                                )}
                                             </td>
                                         );
                                     })}
+                                    <td className="px-4 py-3 text-center">
+                                        <button
+                                            onClick={() => handleRefreshKeyword(keyword.ID)}
+                                            disabled={keyword.updating_competitors}
+                                            className="text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            title="Refresh competitors for this keyword"
+                                        >
+                                            <svg className={`w-4 h-4 ${keyword.updating_competitors ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                            </svg>
+                                        </button>
+                                    </td>
                                 </tr>
                             );
                         })}

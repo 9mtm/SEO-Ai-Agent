@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
-    const { domain: domainName } = req.body;
+    const { domain: domainName, keywordId } = req.body;
     const userId = verifyResult.userId;
 
     if (!domainName) {
@@ -47,10 +47,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             return res.status(400).json({ error: 'No competitors added yet' });
         }
 
-        // Get all keywords for this domain
-        const keywords = await Keyword.findAll({
-            where: { domain: domainName, user_id: userId }
-        });
+        // Get keywords - either single keyword or all keywords
+        const whereClause: any = { domain: domainName, user_id: userId };
+        if (keywordId) {
+            whereClause.ID = keywordId;
+        }
+
+        const keywords = await Keyword.findAll({ where: whereClause });
 
         if (keywords.length === 0) {
             return res.status(400).json({ error: 'No keywords found for this domain' });
@@ -62,6 +65,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         if (!settings || settings.scraper_type === 'never') {
             return res.status(400).json({ error: 'Scraper settings not configured' });
         }
+
+        // Set updating_competitors flag for selected keywords
+        await Keyword.update(
+            { updating_competitors: true },
+            { where: whereClause }
+        );
 
         // Process in background - don't wait
         processCompetitorRefresh(keywords, competitors, settings);
@@ -95,7 +104,7 @@ async function processCompetitorRefresh(
                 const result = await scrapeKeywordFromGoogle(keywordData, settings);
 
                 // Log all scraped URLs
-                if (result && result.result && result.result.length > 0) {
+                if (result && result.result && Array.isArray(result.result) && result.result.length > 0) {
                     console.log(`[SCRAPED RESULTS] Found ${result.result.length} results for "${keyword.keyword}":`);
                     result.result.forEach((r: any, idx: number) => {
                         console.log(`  ${idx + 1}. ${r.url}`);
@@ -123,7 +132,7 @@ async function processCompetitorRefresh(
                 }
 
                 // Small delay between requests to avoid rate limiting
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 5000));
             } catch (error) {
                 console.error(`Error scraping competitor ${competitor}:`, error);
                 const cleanCompetitor = competitor.replace(/^https?:\/\//, '').replace(/\/$/, '');
@@ -140,6 +149,14 @@ async function processCompetitorRefresh(
             console.log(`[SAVED] Keyword "${keyword.keyword}" competitor positions:`, competitorPositions);
         } catch (error) {
             console.error(`Error updating keyword ${keyword.ID}:`, error);
+        } finally {
+            // Always set updating_competitors to false, even on error
+            try {
+                await keyword.update({ updating_competitors: false });
+                console.log(`[UPDATED] Set updating_competitors=false for keyword "${keyword.keyword}"`);
+            } catch (err) {
+                console.error(`Error setting updating_competitors to false for keyword ${keyword.ID}:`, err);
+            }
         }
     }
 

@@ -5,12 +5,12 @@ export function useRefreshCompetitors(onSuccess: Function) {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (domain: string) => {
+        mutationFn: async ({ domain, keywordId }: { domain: string; keywordId?: number }) => {
             const headers = new Headers({ 'Content-Type': 'application/json' });
             const res = await fetch(`${window.location.origin}/api/competitors/refresh`, {
                 method: 'POST',
                 headers,
-                body: JSON.stringify({ domain }),
+                body: JSON.stringify({ domain, keywordId }),
             });
 
             if (res.status >= 400 && res.status < 600) {

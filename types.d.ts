@@ -51,6 +51,7 @@ type KeywordType = {
    uid?: string
    city?: string
    competitor_positions?: Record<string, number>,
+   updating_competitors?: boolean,
 }
 
 type KeywordLastResult = {

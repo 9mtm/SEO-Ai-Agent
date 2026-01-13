@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -51,6 +51,18 @@ const CompetitorsPage: NextPage = () => {
         }
     };
 
+    // Enable polling when competitors are updating
+    useEffect(() => {
+        if (theKeywords && theKeywords.length > 0) {
+            const hasUpdatingCompetitors = theKeywords.some((k: KeywordType) => k.updating_competitors);
+            if (hasUpdatingCompetitors) {
+                setKeywordSPollInterval(5000);
+            } else {
+                setKeywordSPollInterval(undefined);
+            }
+        }
+    }, [theKeywords, setKeywordSPollInterval]);
+
     return (
         <div className="Domain ">
             {((!scraper_type || (scraper_type === 'none')) && !isAppSettingsLoading) && (
@@ -73,7 +85,7 @@ const CompetitorsPage: NextPage = () => {
                             domains={theDomains}
                             showAddModal={() => setShowManageCompetitors(true)}
                             showSettingsModal={setShowDomainSettings}
-                            exportCsv={() => refreshCompetitorsMutate(activDomain.domain)}
+                            exportCsv={() => refreshCompetitorsMutate({ domain: activDomain.domain })}
                             onDeleteDomain={handleDeleteDomain}
                         />
                         : <div className='w-full lg:h-[100px]'></div>
