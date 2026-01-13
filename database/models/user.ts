@@ -64,6 +64,9 @@ class User extends Model {
   @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: true })
   declare is_active: boolean;
 
+  @Column({ type: DataType.INTEGER, allowNull: false, defaultValue: 0 })
+  declare onboarding_step: number;
+
   @Column({ type: DataType.DATE, allowNull: true })
   declare last_login?: Date;
 

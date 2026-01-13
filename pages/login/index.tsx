@@ -93,7 +93,24 @@ const Login: NextPage = () => {
                setIsLoading(false);
                setTimeout(() => { setError(null); }, 3000);
             } else {
-               router.push('/domains');
+               // Check onboarding status
+               // Note: The login API response 'res' should ideally contain user info or we verify session
+               // If the API returns user object with onboarding_step, we can redirect.
+               // Assuming the login API sets the cookie and returns success.
+               // We might need to fetch user profile or assume /domains and let middleware handle it?
+               // But user wanted explicit stepper.
+               // Let's redirect to /domains first, BUT middleware/dashboard should redirect to /onboarding if needed.
+               // However, for this task, I'll force redirect to /onboarding if query param or global logic exists.
+               // Since I can't easily change the API response structure here without checking api/login.ts.
+               // I'll check if I can modify pages/api/login.ts to return onboarding_step.
+               // FOR NOW: Redirect to /onboarding and let Onboarding page redirect to /dashboard if done.
+               // OR: Redirect to /domains and have /domains check user.onboarding_step.
+
+               // The safest quick implementation:
+               // Redirect to /onboarding. The /onboarding page will check if step > Completed, then go to Dashboard.
+               // IF we want to force it. 
+
+               router.push('/onboarding');
             }
          } catch (fetchError) {
             setError({ type: 'unknown', msg: t.errors.serverError });
@@ -169,11 +186,10 @@ const Login: NextPage = () => {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         onKeyPress={handleKeyPress}
-                        className={`w-full pl-11 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                           error && error.type.includes('username')
+                        className={`w-full pl-11 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${error && error.type.includes('username')
                               ? 'border-red-400 focus:ring-red-200 focus:border-red-400'
                               : 'border-neutral-200 focus:ring-blue-200 focus:border-blue-400'
-                        }`}
+                           }`}
                         placeholder={t.username}
                      />
                   </div>
@@ -191,11 +207,10 @@ const Login: NextPage = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         onKeyPress={handleKeyPress}
-                        className={`w-full pl-11 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                           error && error.type.includes('password')
+                        className={`w-full pl-11 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${error && error.type.includes('password')
                               ? 'border-red-400 focus:ring-red-200 focus:border-red-400'
                               : 'border-neutral-200 focus:ring-blue-200 focus:border-blue-400'
-                        }`}
+                           }`}
                         placeholder={t.password}
                      />
                   </div>

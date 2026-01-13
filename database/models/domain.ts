@@ -50,6 +50,24 @@ class Domain extends Model {
   @Column({ type: DataType.JSON, allowNull: true })
   search_console_data?: any;
 
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare business_name?: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare niche?: string;
+
+  @Column({ type: DataType.TEXT, allowNull: true })
+  declare description?: string;
+
+  @Column({ type: DataType.STRING, allowNull: true, defaultValue: 'en-US' })
+  declare language?: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare blog_url?: string;
+
+  @Column({ type: DataType.JSON, allowNull: true })
+  declare competitors?: string[];
+
   @BelongsTo(() => User)
   declare user: User;
 }
