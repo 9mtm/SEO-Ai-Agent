@@ -33,96 +33,127 @@ const DomainHeader = (
 
    const daysName = (dayKey: string) => dayKey.replace('three', '3').replace('seven', '7').replace('thirty', '30').replace('Days', ' Days');
    const buttonStyle = 'leading-6 inline-block px-2 py-2 text-gray-500 hover:text-gray-700';
-   const buttonLabelStyle = 'ml-2 text-sm not-italic lg:invisible lg:opacity-0';
-   const tabStyle = 'rounded rounded-b-none cursor-pointer border-[#e9ebff] border-b-0';
-   const scDataFilterStlye = 'px-3 py-2 block w-full';
+
    return (
       <div className='domain_kewywords_head w-full '>
-         <div className='flex w-full justify-between'>
+         <div className='flex w-full justify-between items-center'>
 
-            <div className={'flex mb-0 lg:mb-1 lg:mt-3'}>
-               {!isInsight && <button className={`${buttonStyle} lg:hidden`} onClick={() => setShowOptions(!showOptions)}>
-                  <Icon type='dots' size={20} />
-               </button>
-               }
+            {/* Left Side: Mobile Menu Trigger */}
+            <div className={'flex mb-0 lg:mb-1 lg:mt-3 relative'}>
+               {!isInsight && (
+                  <button className={`${buttonStyle} lg:hidden`} onClick={() => setShowOptions(!showOptions)}>
+                     <Icon type='dots' size={20} />
+                  </button>
+               )}
                {isInsight && <button className={`${buttonStyle} lg:hidden invisible`}>x</button>}
+
+               {/* Mobile Dropdown Menu */}
                <div
-                  className={`hidden w-40 ml-[-70px] lg:block absolute mt-10 bg-white border border-gray-100 z-40 rounded 
-            lg:z-auto lg:relative lg:mt-0 lg:border-0 lg:w-auto lg:bg-transparent`}
-                  style={{ display: showOptions ? 'block' : undefined }}>
+                  className={`lg:hidden absolute top-10 left-0 bg-white border border-gray-100 z-50 rounded shadow-lg flex flex-col min-w-[200px]`}
+                  style={{ display: showOptions ? 'flex' : 'none' }}>
                   {!isInsight && !isCompetitors && (
                      <button
-                        className={`domheader_action_button relative ${buttonStyle}`}
-                        aria-pressed="false"
-                        onClick={() => exportCsv()}>
-                        <Icon type='download' size={20} /><i className={`${buttonLabelStyle}`}>Export as csv</i>
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-sm text-gray-700 w-full text-left border-b border-gray-50 last:border-0"
+                        onClick={() => { setShowOptions(false); exportCsv(); }}>
+                        <Icon type='download' size={16} /> Export CSV
                      </button>
                   )}
                   {!isConsole && !isInsight && !isIdeas && !isCompetitors && (
                      <button
-                        className={`domheader_action_button relative ${buttonStyle} lg:ml-3`}
-                        aria-pressed="false"
-                        onClick={() => refreshMutate({ ids: [], domain: domain.domain })}>
-                        <Icon type='reload' size={14} /><i className={`${buttonLabelStyle}`}>Reload All Serps</i>
-                     </button>
-                  )}
-                  {isCompetitors && (
-                     <button
-                        className={`domheader_action_button relative ${buttonStyle} lg:ml-3 ${isRefreshingCompetitors ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        aria-pressed="false"
-                        disabled={isRefreshingCompetitors}
-                        onClick={() => onRefreshCompetitors && onRefreshCompetitors()}>
-                        <Icon type='reload' size={14} classes={isRefreshingCompetitors ? 'animate-spin' : ''} />
-                        <i className={`${buttonLabelStyle}`}>{isRefreshingCompetitors ? 'Updating...' : 'Reload Competitors'}</i>
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-sm text-gray-700 w-full text-left border-b border-gray-50 last:border-0"
+                        onClick={() => { setShowOptions(false); refreshMutate({ ids: [], domain: domain.domain }); }}>
+                        <Icon type='reload' size={16} /> Reload Serps
                      </button>
                   )}
                   {!isCompetitors && !isConsole && (
                      <button
-                        data-testid="show_domain_settings"
-                        className={`domheader_action_button relative ${buttonStyle} lg:ml-3`}
-                        aria-pressed="false"
-                        onClick={() => showSettingsModal(true)}><Icon type='settings' size={20} />
-                        <i className={`${buttonLabelStyle}`}>Domain Settings</i>
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-sm text-gray-700 w-full text-left border-b border-gray-50 last:border-0"
+                        onClick={() => { setShowOptions(false); showSettingsModal(true); }}>
+                        <Icon type='settings' size={16} /> Domain Settings
                      </button>
                   )}
                   {onDeleteDomain && (
                      <button
-                        data-testid="delete_domain"
-                        className={`domheader_action_button relative ${buttonStyle} lg:ml-3 text-red-600 hover:text-red-700`}
-                        aria-pressed="false"
-                        onClick={() => onDeleteDomain()}><Icon type='trash' size={20} />
-                        <i className={`${buttonLabelStyle}`}>Delete Domain</i>
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-sm text-red-600 w-full text-left"
+                        onClick={() => { setShowOptions(false); onDeleteDomain(); }}>
+                        <Icon type='trash' size={16} /> Delete Domain
                      </button>
                   )}
                </div>
+            </div>
+
+            {/* Right Side: All Actions & Filters */}
+            <div className='flex items-center gap-3 lg:mt-3'>
+
+               {/* Desktop Icon Buttons */}
+               <div className="hidden lg:flex items-center gap-1">
+                  {!isInsight && !isCompetitors && (
+                     <button
+                        className={`p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors`}
+                        title="Export as CSV"
+                        onClick={() => exportCsv()}>
+                        <Icon type='download' size={20} />
+                     </button>
+                  )}
+                  {!isConsole && !isInsight && !isIdeas && !isCompetitors && (
+                     <button
+                        className={`p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors`}
+                        title="Reload All Serps"
+                        onClick={() => refreshMutate({ ids: [], domain: domain.domain })}>
+                        <Icon type='reload' size={18} />
+                     </button>
+                  )}
+                  {isCompetitors && (
+                     <button
+                        className={`flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors ${isRefreshingCompetitors ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={isRefreshingCompetitors}
+                        onClick={() => onRefreshCompetitors && onRefreshCompetitors()}>
+                        <Icon type='reload' size={14} classes={isRefreshingCompetitors ? 'animate-spin' : ''} />
+                        {isRefreshingCompetitors ? 'Updating...' : 'Reload'}
+                     </button>
+                  )}
+                  {!isCompetitors && !isConsole && (
+                     <button
+                        className={`p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors`}
+                        title="Domain Settings"
+                        onClick={() => showSettingsModal(true)}>
+                        <Icon type='settings' size={20} />
+                     </button>
+                  )}
+                  {onDeleteDomain && (
+                     <button
+                        className={`p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors`}
+                        title="Delete Domain"
+                        onClick={() => onDeleteDomain()}>
+                        <Icon type='trash' size={20} />
+                     </button>
+                  )}
+               </div>
+
+               {/* Primary Actions (Add Keyword / Load Ideas) */}
                {!isConsole && !isInsight && !isIdeas && !isCompetitors && (
                   <button
                      data-testid="add_keyword"
-                     className={'ml-2 inline-block text-blue-700 font-bold text-sm lg:px-4 lg:py-2'}
+                     className={'flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-semibold'}
                      onClick={() => showAddModal(true)}>
-                     <span
-                        className='text-center leading-4 mr-2 inline-block rounded-full w-7 h-7 pt-1 bg-blue-700 text-white font-bold text-lg'>+</span>
-                     <i className=' not-italic hidden lg:inline-block'>Add Keyword</i>
+                     <span>+</span>
+                     <span className="hidden sm:inline">Add Keyword</span>
                   </button>
                )}
 
                {isIdeas && (
                   <button
                      data-testid="load_ideas"
-                     className={'ml-2 text-blue-700 font-bold text-sm flex items-center lg:px-4 lg:py-2'}
+                     className={'flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-semibold'}
                      onClick={() => showIdeaUpdateModal && showIdeaUpdateModal()}>
-                     <span
-                        className='text-center leading-4 mr-2 inline-block rounded-full w-7 h-7 pt-1 bg-blue-700 text-white font-bold text-lg'>
-                        <Icon type='reload' size={12} />
-                     </span>
-                     <i className=' not-italic hidden lg:inline-block'>Load Ideas</i>
+                     <Icon type='reload' size={14} />
+                     <span className="hidden sm:inline">Load Ideas</span>
                   </button>
                )}
-            </div>
 
-            {isConsole && (
-               <div className='flex items-center lg:mt-3'>
-                  <div className="relative">
+               {/* Console Date Filter */}
+               {isConsole && (
+                  <div className="relative ml-1">
                      <span className='block cursor-pointer py-2 px-3 bg-white border border-gray-200 rounded-md hover:border-blue-400 transition-colors text-xs font-medium text-gray-700 shadow-sm flex items-center' onClick={() => setShowSCDates(!ShowSCDates)}>
                         <Icon type='date' size={14} classes="mr-2 text-gray-500" />
                         Last {daysName(scFilter).trim()}
@@ -140,8 +171,8 @@ const DomainHeader = (
                         </div>
                      )}
                   </div>
-               </div>
-            )}
+               )}
+            </div>
          </div>
       </div>
    );
