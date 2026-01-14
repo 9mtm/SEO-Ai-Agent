@@ -38,7 +38,16 @@ const DomainSelector = ({ showAddModal, domains = [], currentDomain }: DomainSel
             >
                 <div className="flex items-center gap-2 truncate">
                     <div className="p-1 bg-gray-100 rounded-md group-hover:bg-blue-50 transition-colors">
-                        <Globe className="h-4 w-4 text-gray-500 group-hover:text-blue-600" />
+                        {currentDomain ? (
+                            <img
+                                src={`https://www.google.com/s2/favicons?domain=${currentDomain.domain}&sz=64`}
+                                alt={currentDomain.domain}
+                                className="h-4 w-4 rounded-sm"
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                            />
+                        ) : (
+                            <Globe className="h-4 w-4 text-gray-500 group-hover:text-blue-600" />
+                        )}
                     </div>
                     <div className="flex flex-col items-start truncate">
                         <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider leading-none mb-0.5">Current Domain</span>
@@ -68,7 +77,15 @@ const DomainSelector = ({ showAddModal, domains = [], currentDomain }: DomainSel
                                         : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900'
                                         }`}
                                 >
-                                    <Globe className={`h-4 w-4 flex-shrink-0 ${currentDomain?.slug === domain.slug ? 'text-blue-600' : 'text-neutral-400'}`} />
+                                    <img
+                                        src={`https://www.google.com/s2/favicons?domain=${domain.domain}&sz=64`}
+                                        alt={domain.domain}
+                                        className="h-4 w-4 flex-shrink-0 rounded-sm"
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).src = 'https://www.google.com/s2/favicons?domain=example.com'; // Fallback or hide
+                                            (e.target as HTMLImageElement).style.opacity = '0.5';
+                                        }}
+                                    />
                                     <span className="truncate">{domain.domain}</span>
                                     {currentDomain?.slug === domain.slug && (
                                         <div className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-600"></div>
