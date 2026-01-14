@@ -55,7 +55,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   const navigation = [
     { name: t.domains, href: '/domains', icon: Globe },
-    { name: t.keywords, href: '/keywords', icon: Search },
   ];
 
   return (

@@ -38,12 +38,7 @@ const DomainHeader = (
    const scDataFilterStlye = 'px-3 py-2 block w-full';
    return (
       <div className='domain_kewywords_head w-full '>
-         <div>
-            <h1 className="text-xl font-bold my-3" data-testid="domain-header">
-               {domain && domain.domain && <><i className=' capitalize font-bold not-italic'>{domain.domain.charAt(0)}</i>{domain.domain.slice(1)}</>}
-            </h1>
-         </div>
-         <div className='flex w-full justify-between mt-4 lg:mt-0'>
+         <div className='flex w-full justify-between'>
             <ul className=' max-w-[270px] overflow-auto flex items-end text-sm relative top-[2px] lg:max-w-none'>
                <li className={`${tabStyle} ${router.pathname === '/domain/[slug]' ? 'bg-white border border-b-0 font-semibold' : ''}`}>
                   <Link href={`/domain/${domain.slug}`} className='px-4 py-2 inline-block' >
