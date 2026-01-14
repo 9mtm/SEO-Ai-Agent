@@ -3,7 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 
 export async function fetchSCKeywords(router: NextRouter) {
    // if (!router.query.slug) { throw new Error('Invalid Domain Name'); }
-   const res = await fetch(`${window.location.origin}/api/searchconsole?domain=${router.query.slug}`, { method: 'GET' });
+   const domain = (router.query.slug as string)?.replace(/_/g, '.');
+   const res = await fetch(`${window.location.origin}/api/searchconsole?domain=${domain}`, { method: 'GET' });
    if (res.status >= 400 && res.status < 600) {
       if (res.status === 401) {
          console.log('Unauthorized!!');
@@ -21,7 +22,8 @@ export function useFetchSCKeywords(router: NextRouter, domainLoaded: boolean = f
 
 export async function fetchSCInsight(router: NextRouter) {
    // if (!router.query.slug) { throw new Error('Invalid Domain Name'); }
-   const res = await fetch(`${window.location.origin}/api/insight?domain=${router.query.slug}`, { method: 'GET' });
+   const domain = (router.query.slug as string)?.replace(/_/g, '.');
+   const res = await fetch(`${window.location.origin}/api/insight?domain=${domain}`, { method: 'GET' });
    if (res.status >= 400 && res.status < 600) {
       if (res.status === 401) {
          console.log('Unauthorized!!');

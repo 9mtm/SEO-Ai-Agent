@@ -65,11 +65,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         google_token_expiry: expiryDate,
       });
 
-      // Clean up cookie
+      // Clean up cookies
+      const returnUrl = cookies.get('oauth_return_url');
       cookies.set('oauth_connecting_user', '', { maxAge: 0 });
+      cookies.set('oauth_return_url', '', { maxAge: 0 });
 
-      // Redirect to Settings page
-      return res.redirect('/settings?success=google_connected');
+      // Redirect to return URL or default to Settings page
+      return res.redirect(returnUrl || '/settings?success=google_connected');
     }
 
     // ---------------------------------------------------------

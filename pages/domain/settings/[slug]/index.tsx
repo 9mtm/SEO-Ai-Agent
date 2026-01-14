@@ -270,7 +270,11 @@ const DomainSettingsPage: NextPage = () => {
             const res = await fetch('/api/gsc/sites');
             const data = await res.json();
             if (data.sites) {
-                setSites(data.sites);
+                // Filter out sc-domain sites to avoid duplicates
+                const filteredSites = data.sites.filter((site: any) =>
+                    !site.siteUrl.startsWith('sc-domain:')
+                );
+                setSites(filteredSites);
             } else {
                 toast.error('No sites found or error fetching sites.');
             }
@@ -749,91 +753,112 @@ const DomainSettingsPage: NextPage = () => {
                                                         <p className="text-sm text-gray-500">No verified sites found</p>
                                                         <p className="text-xs text-gray-400 mt-1">Click "Refresh Sites" to load your sites</p>
                                                     </div>
-                                                ) : (
-                                                    <div className="space-y-2 max-h-96 overflow-y-auto">
-                                                        {sites.map((site) => {
-                                                            const getPermissionBadge = (level: string) => {
-                                                                switch (level) {
-                                                                    case 'siteOwner':
-                                                                        return (
-                                                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                                                ✓ Owner
-                                                                            </span>
-                                                                        );
-                                                                    case 'siteFullUser':
-                                                                        return (
-                                                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                                                Full Access
-                                                                            </span>
-                                                                        );
-                                                                    case 'siteRestrictedUser':
-                                                                        return (
-                                                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                                                Restricted
-                                                                            </span>
-                                                                        );
-                                                                    case 'siteUnverifiedUser':
-                                                                        return (
-                                                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                                                ⚠ Unverified
-                                                                            </span>
-                                                                        );
-                                                                    default:
-                                                                        return (
-                                                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                                                                                {level}
-                                                                            </span>
-                                                                        );
-                                                                }
-                                                            };
+                                                ) : (() => {
+                                                    // FILTER DISABLED FOR TESTING - Shows all sites
+                                                    // const currentDomain = activeDomain?.domain || '';
+                                                    // const filteredSites = sites.filter(site => {
+                                                    //     ...filter logic...
+                                                    // });
 
-                                                            const isImported = domainsData?.domains?.some(d => {
-                                                                const cleanSiteUrl = site.siteUrl.replace('sc-domain:', '').replace(/\/$/, '');
-                                                                const cleanDomain = d.domain.replace(/\/$/, '');
-                                                                return cleanDomain.includes(cleanSiteUrl) || cleanSiteUrl.includes(cleanDomain);
-                                                            });
+                                                    const filteredSites = sites; // Show ALL sites for testing
 
-                                                            const formatSiteUrl = (url: string) => {
-                                                                return url
-                                                                    .replace(/^https?:\/\//, '') // Remove http:// or https://
-                                                                    .replace(/^sc-domain:/, '')  // Remove sc-domain:
-                                                                    .replace(/\/$/, '');         // Remove trailing slash
-                                                            };
+                                                    if (filteredSites.length === 0) {
+                                                        return (
+                                                            <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
+                                                                <p className="text-sm text-gray-500">No matching site found for {activeDomain?.domain}</p>
+                                                                <p className="text-xs text-gray-400 mt-1">
+                                                                    Make sure this domain is verified in Google Search Console
+                                                                </p>
+                                                            </div>
+                                                        );
+                                                    }
 
-                                                            return (
-                                                                <div
-                                                                    key={site.siteUrl}
-                                                                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors"
-                                                                >
-                                                                    <div className="flex-1 mr-4">
-                                                                        <p className="font-medium text-sm truncate mb-1">{formatSiteUrl(site.siteUrl)}</p>
-                                                                        {getPermissionBadge(site.permissionLevel)}
+                                                    return (
+                                                        <div className="space-y-2">
+                                                            {filteredSites.map((site) => {
+                                                                const getPermissionBadge = (level: string) => {
+                                                                    switch (level) {
+                                                                        case 'siteOwner':
+                                                                            return (
+                                                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                                                    ✓ Owner
+                                                                                </span>
+                                                                            );
+                                                                        case 'siteFullUser':
+                                                                            return (
+                                                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                                    Full Access
+                                                                                </span>
+                                                                            );
+                                                                        case 'siteRestrictedUser':
+                                                                            return (
+                                                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                                                    Restricted
+                                                                                </span>
+                                                                            );
+                                                                        case 'siteUnverifiedUser':
+                                                                            return (
+                                                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                                                    ⚠ Unverified
+                                                                                </span>
+                                                                            );
+                                                                        default:
+                                                                            return (
+                                                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                                                                    {level}
+                                                                                </span>
+                                                                            );
+                                                                    }
+                                                                };
+
+                                                                const isImported = domainsData?.domains?.some(d => {
+                                                                    const cleanSiteUrl = site.siteUrl.replace('sc-domain:', '').replace(/\/$/, '');
+                                                                    const cleanDomain = d.domain.replace(/\/$/, '');
+                                                                    return cleanDomain.includes(cleanSiteUrl) || cleanSiteUrl.includes(cleanDomain);
+                                                                });
+
+                                                                const formatSiteUrl = (url: string) => {
+                                                                    return url
+                                                                        .replace(/^https?:\/\//, '') // Remove http:// or https://
+                                                                        .replace(/^sc-domain:/, '')  // Remove sc-domain:
+                                                                        .replace(/\/$/, '');         // Remove trailing slash
+                                                                };
+
+                                                                return (
+                                                                    <div
+                                                                        key={site.siteUrl}
+                                                                        className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+                                                                    >
+                                                                        <div className="flex-1 mr-4">
+                                                                            <p className="font-medium text-sm truncate mb-1">{formatSiteUrl(site.siteUrl)}</p>
+                                                                            {getPermissionBadge(site.permissionLevel)}
+                                                                        </div>
+                                                                        {isImported ? (
+                                                                            <Button
+                                                                                disabled
+                                                                                variant="secondary"
+                                                                                size="sm"
+                                                                                className="gap-2 bg-green-100 text-green-700 hover:bg-green-100 opacity-100"
+                                                                            >
+                                                                                <CheckCircle className="h-3 w-3" />
+                                                                                Imported
+                                                                            </Button>
+                                                                        ) : (
+                                                                            <Button
+                                                                                onClick={() => importSite(site.siteUrl)}
+                                                                                size="sm"
+                                                                                className="gap-2"
+                                                                            >
+                                                                                <Plus className="h-3 w-3" />
+                                                                                Add
+                                                                            </Button>
+                                                                        )}
                                                                     </div>
-                                                                    {isImported ? (
-                                                                        <Button
-                                                                            disabled
-                                                                            variant="secondary"
-                                                                            size="sm"
-                                                                            className="gap-2 bg-green-100 text-green-700 hover:bg-green-100 opacity-100"
-                                                                        >
-                                                                            <CheckCircle className="h-3 w-3" />
-                                                                            Imported
-                                                                        </Button>
-                                                                    ) : (
-                                                                        <Button
-                                                                            onClick={() => importSite(site.siteUrl)}
-                                                                            size="sm"
-                                                                            className="gap-2"
-                                                                        >
-                                                                            <Plus className="h-3 w-3" />
-                                                                            Add
-                                                                        </Button>
-                                                                    )}
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                )}
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    );
+                                                })()}
                                             </div>
 
                                             <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
@@ -859,7 +884,10 @@ const DomainSettingsPage: NextPage = () => {
                                                 Link your Google account to automatically verify sites and fetch performance data directly into your dashboard.
                                             </p>
                                             <Button
-                                                onClick={() => window.location.href = '/api/auth/google/authorize'}
+                                                onClick={() => {
+                                                    const currentUrl = window.location.pathname + window.location.search;
+                                                    window.location.href = `/api/auth/google/authorize?returnUrl=${encodeURIComponent(currentUrl)}`;
+                                                }}
                                                 size="lg"
                                                 className="gap-2 bg-black text-white hover:bg-gray-800"
                                             >

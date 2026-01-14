@@ -28,13 +28,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 const existing = await Domain.findOne({ where: { domain: domainUrl, user_id: userId } });
                 if (!existing) {
-                    await Domain.create({
+                    // Detect property type from GSC site URL
+                    let propertyType = 'domain';
+                    let propertyUrl = '';
+
+                    if (data.gsc_site_url) {
+                        const rawDomain = data.gsc_site_url.trim();
+                        if (rawDomain.startsWith('https://') || rawDomain.startsWith('http://')) {
+                            propertyType = 'url';
+                            propertyUrl = rawDomain;
+                        } else if (rawDomain.startsWith('sc-domain:')) {
+                            propertyType = 'domain';
+                            propertyUrl = '';
+                        }
+                    }
+
+                    // Create search_console settings (same format as import)
+                    const searchConsoleSettings = {
+                        property_type: propertyType,
+                        url: propertyUrl,
+                        client_email: '',
+                        private_key: ''
+                    };
+
+                    // Create domain with GSC settings
+                    const domainData: any = {
                         domain: domainUrl,
                         slug: slug,
                         user_id: userId,
                         lastUpdated: new Date().toISOString(),
                         added: new Date().toISOString(),
-                    });
+                        search_console: JSON.stringify(searchConsoleSettings),
+                    };
+
+                    // Also store GSC site URL in search_console_data for reference
+                    if (data.gsc_site_url) {
+                        domainData.search_console_data = JSON.stringify({
+                            gsc_site_url: data.gsc_site_url,
+                            connected_at: new Date().toISOString()
+                        });
+                    }
+
+                    await Domain.create(domainData);
                 }
 
                 // --- AI Analysis Logic ---

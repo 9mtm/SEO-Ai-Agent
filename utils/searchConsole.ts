@@ -220,7 +220,7 @@ export const integrateKeywordSCData = (keyword: KeywordType, SCData: SCDomainDat
 export const getSearchConsoleApiInfo = async (domain: DomainType): Promise<SCAPISettings> => {
    const scAPIData = { client_email: '', private_key: '' };
    // Check if the Domain Has the API Data
-   const domainSCSettings = domain.search_console && JSON.parse(domain.search_console);
+   const domainSCSettings = (domain.search_console && domain.search_console !== 'null') ? JSON.parse(domain.search_console) : null;
    if (domainSCSettings && domainSCSettings.private_key) {
       if (!domainSCSettings.private_key.includes('BEGIN PRIVATE KEY')) {
          const cryptr = new Cryptr(process.env.SECRET as string);
@@ -248,7 +248,7 @@ export const getSearchConsoleApiInfo = async (domain: DomainType): Promise<SCAPI
  */
 export const checkSerchConsoleIntegration = async (domain: DomainType): Promise<{ isValid: boolean, error: string }> => {
    const res = { isValid: false, error: '' };
-   const { client_email = '', private_key = '' } = domain?.search_console ? JSON.parse(domain.search_console) : {};
+   const { client_email = '', private_key = '' } = (domain?.search_console && domain.search_console !== 'null') ? JSON.parse(domain.search_console) : {};
    const response = await fetchSearchConsoleData(domain, 3, undefined, { client_email, private_key });
    if (Array.isArray(response)) { res.isValid = true; }
    if ((response as SCDomainFetchError)?.errorMsg) { res.error = (response as SCDomainFetchError).errorMsg; }

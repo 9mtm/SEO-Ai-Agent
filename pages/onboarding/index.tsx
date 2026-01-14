@@ -19,7 +19,13 @@ const Onboarding = () => {
         if (step < 3) {
             setStep(step + 1);
         } else {
-            router.push('/domains');
+            // After completing onboarding, redirect to the domain insight page
+            const domainSlug = onboardingData.website_url?.replace(/\./g, '_');
+            if (domainSlug) {
+                router.push(`/domain/insight/${domainSlug}`);
+            } else {
+                router.push('/domains');
+            }
         }
     };
 
