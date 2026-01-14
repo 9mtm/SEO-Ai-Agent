@@ -130,6 +130,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         await user.update({ last_login: new Date() });
 
+        // Check onboarding status
+        // Cast to any because onboarding_step might not be in the strict TS type definition yet
+        const u = user as any;
+        const onboardingStep = u.onboarding_step || 0;
+
+        if (onboardingStep < 3) {
+          return res.redirect('/onboarding');
+        }
+
         return res.redirect('/domains');
       }
     }

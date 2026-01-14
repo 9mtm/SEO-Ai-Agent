@@ -5,9 +5,14 @@ import { ChevronLeft } from 'lucide-react';
 interface Step2Props {
     onNext: (data: any) => void;
     onBack: () => void;
+    initialData?: {
+        businessName?: string;
+        niche?: string;
+        description?: string;
+    };
 }
 
-const Step2 = ({ onNext, onBack }: Step2Props) => {
+const Step2 = ({ onNext, onBack, initialData }: Step2Props) => {
     const [formData, setFormData] = useState({
         businessName: '',
         niche: '',
@@ -17,6 +22,18 @@ const Step2 = ({ onNext, onBack }: Step2Props) => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    // Pre-fill with AI data
+    React.useEffect(() => {
+        if (initialData) {
+            setFormData(prev => ({
+                ...prev,
+                businessName: initialData.businessName || prev.businessName,
+                niche: initialData.niche || prev.niche,
+                description: initialData.description || prev.description,
+            }));
+        }
+    }, [initialData]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

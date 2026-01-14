@@ -52,15 +52,25 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
             <p className="text-gray-600 mb-6">We'll analyze your website to create a personalized plan.</p>
 
             <form onSubmit={handleSubmit}>
-                <div className="mb-6">
+                <div className="mb-6 relative">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Website URL</label>
-                    <input
-                        type="text"
-                        placeholder="https://example.com"
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                        value={url}
-                        onChange={(e) => setUrl(e.target.value)}
-                    />
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="https://example.com"
+                            className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            value={url}
+                            onChange={(e) => setUrl(e.target.value)}
+                        />
+                        {url && url.includes('.') && (
+                            <img
+                                src={`https://www.google.com/s2/favicons?domain=${url.replace(/^(https?:\/\/)?(www\.)?/, '').split('/')[0]}&sz=64`}
+                                alt="Favicon"
+                                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6 rounded-sm bg-gray-50 bg-opacity-50"
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                            />
+                        )}
+                    </div>
                     {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
                 </div>
 

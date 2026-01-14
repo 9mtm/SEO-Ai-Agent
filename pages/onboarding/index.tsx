@@ -9,8 +9,13 @@ import OnboardingLayout from '../../components/onboarding/OnboardingLayout';
 const Onboarding = () => {
     const router = useRouter();
     const [step, setStep] = useState(1);
+    const [onboardingData, setOnboardingData] = useState<any>({});
 
-    const handleNext = () => {
+    const handleNext = (data?: any) => {
+        if (data) {
+            setOnboardingData((prev: any) => ({ ...prev, ...data }));
+        }
+
         if (step < 3) {
             setStep(step + 1);
         } else {
@@ -32,7 +37,7 @@ const Onboarding = () => {
 
             <OnboardingLayout>
                 {step === 1 && <Step1 onNext={handleNext} />}
-                {step === 2 && <Step2 onNext={handleNext} onBack={handleBack} />}
+                {step === 2 && <Step2 onNext={handleNext} onBack={handleBack} initialData={onboardingData.aiData} />}
                 {step === 3 && <Step3 onNext={handleNext} onBack={handleBack} />}
             </OnboardingLayout>
         </div>
