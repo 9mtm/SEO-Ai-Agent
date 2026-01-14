@@ -111,6 +111,7 @@ type SettingsType = {
    smtp_port: string,
    smtp_username?: string,
    smtp_password?: string,
+   smtp_from_env?: boolean, // Flag to indicate SMTP settings are from environment variables
    available_scapers?: { label: string, value: string, allowsCity?: boolean }[],
    scrape_interval?: string,
    scrape_delay?: string,

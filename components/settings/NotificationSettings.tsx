@@ -47,13 +47,21 @@ const NotificationSettings = ({ settings, settingsError, updateSettings }: Notif
                         onChange={(value: string) => updateSettings('notification_email', value)}
                      />
                   </div>
+
+                  {settings.smtp_from_env && (
+                     <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded text-sm text-blue-700">
+                        <strong>ℹ️ SMTP Configuration:</strong> Email settings are configured via environment variables and cannot be changed here.
+                     </div>
+                  )}
+
                   <div className="settings__section__input mb-5">
                      <InputField
                         label='SMTP Server'
                         hasError={settingsError?.type === 'no_smtp_server'}
                         value={settings?.smtp_server || ''}
-                        placeholder={'test@gmail.com, test2@test.com'}
+                        placeholder={'mail.example.com'}
                         onChange={(value: string) => updateSettings('smtp_server', value)}
+                        disabled={settings.smtp_from_env}
                      />
                   </div>
                   <div className="settings__section__input mb-5">
@@ -61,8 +69,9 @@ const NotificationSettings = ({ settings, settingsError, updateSettings }: Notif
                         label='SMTP Port'
                         hasError={settingsError?.type === 'no_smtp_port'}
                         value={settings?.smtp_port || ''}
-                        placeholder={'2234'}
+                        placeholder={'587 or 465'}
                         onChange={(value: string) => updateSettings('smtp_port', value)}
+                        disabled={settings.smtp_from_env}
                      />
                   </div>
                   <div className="settings__section__input mb-5">
@@ -70,16 +79,20 @@ const NotificationSettings = ({ settings, settingsError, updateSettings }: Notif
                         label='SMTP Username'
                         hasError={settingsError?.type === 'no_smtp_port'}
                         value={settings?.smtp_username || ''}
+                        placeholder={'username@example.com'}
                         onChange={(value: string) => updateSettings('smtp_username', value)}
+                        disabled={settings.smtp_from_env}
                      />
                   </div>
-                  <div className="settings__section__input mb-5">
-                     <SecretField
-                        label='SMTP Password'
-                        value={settings?.smtp_password || ''}
-                        onChange={(value: string) => updateSettings('smtp_password', value)}
-                     />
-                  </div>
+                  {!settings.smtp_from_env && (
+                     <div className="settings__section__input mb-5">
+                        <SecretField
+                           label='SMTP Password'
+                           value={settings?.smtp_password || ''}
+                           onChange={(value: string) => updateSettings('smtp_password', value)}
+                        />
+                     </div>
+                  )}
                   <div className="settings__section__input mb-5">
                      <InputField
                         label='From Email Address'
@@ -87,6 +100,7 @@ const NotificationSettings = ({ settings, settingsError, updateSettings }: Notif
                         value={settings?.notification_email_from || ''}
                         placeholder="no-reply@mydomain.com"
                         onChange={(value: string) => updateSettings('notification_email_from', value)}
+                        disabled={settings.smtp_from_env}
                      />
                   </div>
                   <div className="settings__section__input mb-5">
@@ -96,6 +110,7 @@ const NotificationSettings = ({ settings, settingsError, updateSettings }: Notif
                         value={settings?.notification_email_from_name || 'SEO Ai Agent'}
                         placeholder="SEO Ai Agent"
                         onChange={(value: string) => updateSettings('notification_email_from_name', value)}
+                        disabled={settings.smtp_from_env}
                      />
                   </div>
                </>

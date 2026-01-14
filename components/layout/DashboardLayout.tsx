@@ -1,5 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import {
   BarChart3,
@@ -90,7 +91,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-200">
             <Link href="/domains" className="flex items-center space-x-2">
-              <BarChart3 className="h-7 w-7 text-blue-600" />
+              <Image src="/dpro_logo.png" alt="Dpro" width={32} height={32} className="h-8 w-8" />
               <span className="text-lg font-bold text-neutral-900">SEO AI Agent</span>
             </Link>
             <button

@@ -76,33 +76,31 @@ const runAppCronJobs = () => {
             // console.log('### Running Keyword Position Cron Job!');
             const fetchOpts = { method: 'POST', headers: { Authorization: `Bearer ${process.env.APIKEY}` } };
             fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/cron`, fetchOpts)
-            .then((res) => res.json())
-            // .then((data) =>{ console.log(data)})
-            .catch((err) => {
-               console.log('ERROR Making SERP Scraper Cron Request..');
-               console.log(err);
-            });
+               .then((res) => res.json())
+               // .then((data) =>{ console.log(data)})
+               .catch((err) => {
+                  console.log('ERROR Making SERP Scraper Cron Request..');
+                  console.log(err);
+               });
          }, { scheduled: true });
       }
 
-      // RUN Email Notification CRON
-      const notif_interval = (!settings.notification_interval || settings.notification_interval === 'never') ? false : settings.notification_interval;
-      if (notif_interval) {
-         const cronTime = generateCronTime(notif_interval === 'daily' ? 'daily_morning' : notif_interval);
-         if (cronTime) {
-            new Cron(cronTime, () => {
-               // console.log('### Sending Notification Email...');
-               const fetchOpts = { method: 'POST', headers: { Authorization: `Bearer ${process.env.APIKEY}` } };
-               fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/notify`, fetchOpts)
-               .then((res) => res.json())
-               .then((data) => console.log(data))
-               .catch((err) => {
-                  console.log('ERROR Making Cron Email Notification Request..');
-                  console.log(err);
-               });
-            }, { scheduled: true });
-         }
-      }
+      // RUN Batch Email Notification CRON (Every Hour)
+      // This sends a limited number of emails per run to avoid overloading SMTP server
+      const batchNotifCronTime = generateCronTime('hourly');
+      new Cron(batchNotifCronTime, () => {
+         console.log('### Running Batch Notification Job...');
+         const fetchOpts = { method: 'POST', headers: { Authorization: `Bearer ${process.env.APIKEY}` } };
+         fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/batch-notify`, fetchOpts)
+            .then((res) => res.json())
+            .then((data) => {
+               console.log(`[BATCH NOTIFY] Sent: ${data.sent}, Failed: ${data.failed}, Remaining: ${data.remaining}`);
+            })
+            .catch((err) => {
+               console.log('ERROR Making Batch Notification Request..');
+               console.log(err);
+            });
+      }, { scheduled: true });
    });
 
    // Run Failed scraping CRON (Every Hour)
@@ -117,12 +115,12 @@ const runAppCronJobs = () => {
                if (keywordsToRetry.length > 0) {
                   const fetchOpts = { method: 'POST', headers: { Authorization: `Bearer ${process.env.APIKEY}` } };
                   fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/refresh?id=${keywordsToRetry.join(',')}`, fetchOpts)
-                  .then((res) => res.json())
-                  .then((refreshedData) => console.log(refreshedData))
-                  .catch((fetchErr) => {
-                     console.log('ERROR Making failed_queue Cron Request..');
-                     console.log(fetchErr);
-                  });
+                     .then((res) => res.json())
+                     .then((refreshedData) => console.log(refreshedData))
+                     .catch((fetchErr) => {
+                        console.log('ERROR Making failed_queue Cron Request..');
+                        console.log(fetchErr);
+                     });
                }
             } catch (error) {
                console.log('ERROR Reading Failed Scrapes Queue File..', error);
@@ -139,12 +137,12 @@ const runAppCronJobs = () => {
       new Cron(searchConsoleCRONTime, () => {
          const fetchOpts = { method: 'POST', headers: { Authorization: `Bearer ${process.env.APIKEY}` } };
          fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/searchconsole`, fetchOpts)
-         .then((res) => res.json())
-         .then((data) => console.log(data))
-         .catch((err) => {
-            console.log('ERROR Making Google Search Console Scraper Cron Request..');
-            console.log(err);
-         });
+            .then((res) => res.json())
+            .then((data) => console.log(data))
+            .catch((err) => {
+               console.log('ERROR Making Google Search Console Scraper Cron Request..');
+               console.log(err);
+            });
       }, { scheduled: true });
    }
 };

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { toast, Toaster } from 'react-hot-toast';
-import { Settings as SettingsIcon, Bell, Plug, Save, Loader2, CheckCircle, Download, X } from 'lucide-react';
+import { Settings as SettingsIcon, Plug, Save, Loader2, CheckCircle, Download, X, Search, Plus } from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { useFetchSettings, useUpdateSettings } from '../../services/settings';
+import { useFetchDomains } from '../../services/domains';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,7 +22,7 @@ export const defaultSettings: SettingsType = {
    scraper_type: 'none',
    scrape_delay: 'none',
    scrape_retry: false,
-   notification_interval: 'daily',
+   notification_interval: 'monthly',
    notification_email: '',
    smtp_server: '',
    smtp_port: '',
@@ -40,7 +42,7 @@ const SettingsPage: NextPage = () => {
    const [settings, setSettings] = useState<SettingsType>(defaultSettings);
    const [loadingSites, setLoadingSites] = useState(false);
    const [sites, setSites] = useState<{ siteUrl: string; permissionLevel: string }[]>([]);
-   const [showSitesModal, setShowSitesModal] = useState(false);
+   const { data: domainsData } = useFetchDomains(router);
    const { data: appSettings, isPending } = useFetchSettings();
    const { mutate: updateMutate, isPending: isUpdating } = useUpdateSettings(() => {
       toast.success('Settings updated successfully!');
@@ -61,6 +63,13 @@ const SettingsPage: NextPage = () => {
          router.replace({ pathname, query }, undefined, { shallow: true });
       }
    }, [router.query]);
+
+   // Auto-fetch sites when Google is connected
+   useEffect(() => {
+      if (settings.google_connected && sites.length === 0 && !loadingSites) {
+         fetchSites();
+      }
+   }, [settings.google_connected]);
 
    const updateSettings = (key: string, value: string | number | boolean) => {
       setSettings({ ...settings, [key]: value });
@@ -110,7 +119,6 @@ const SettingsPage: NextPage = () => {
          const data = await res.json();
          if (data.sites) {
             setSites(data.sites);
-            setShowSitesModal(true);
          } else {
             toast.error('No sites found or error fetching sites.');
          }
@@ -193,18 +201,14 @@ const SettingsPage: NextPage = () => {
             </div>
 
             <Tabs defaultValue="scraper" className="space-y-6">
-               <TabsList className="grid w-full grid-cols-3 lg:w-auto">
+               <TabsList className="grid w-full grid-cols-2 lg:w-auto">
                   <TabsTrigger value="scraper" className="gap-2">
                      <SettingsIcon className="h-4 w-4" />
                      {t.scraper}
                   </TabsTrigger>
-                  <TabsTrigger value="notifications" className="gap-2">
-                     <Bell className="h-4 w-4" />
-                     {t.notifications}
-                  </TabsTrigger>
                   <TabsTrigger value="integrations" className="gap-2">
-                     <Plug className="h-4 w-4" />
-                     {t.integrations}
+                     <Image src="/icon/google-logo.svg" alt="Google" width={16} height={16} className="h-4 w-4" />
+                     Google Search Console
                   </TabsTrigger>
                </TabsList>
 
@@ -227,11 +231,16 @@ const SettingsPage: NextPage = () => {
                               </SelectTrigger>
                               <SelectContent>
                                  <SelectItem value="none">None</SelectItem>
-                                 <SelectItem value="proxy">Proxy</SelectItem>
-                                 <SelectItem value="scrapingant">ScrapingAnt</SelectItem>
-                                 <SelectItem value="scrapingrobot">ScrapingRobot</SelectItem>
+                                 {settings.available_scapers?.map((scraper) => (
+                                    <SelectItem key={scraper.value} value={scraper.value}>
+                                       {scraper.label}
+                                    </SelectItem>
+                                 ))}
                               </SelectContent>
                            </Select>
+                           <p className="text-xs text-muted-foreground mt-1">
+                              Choose a scraping service to fetch keyword rankings. Each service requires an API key.
+                           </p>
                         </div>
 
                         {settings.scraper_type !== 'none' && settings.scraper_type !== 'proxy' && (
@@ -279,118 +288,7 @@ const SettingsPage: NextPage = () => {
                   </Card>
                </TabsContent>
 
-               {/* Notification Settings */}
-               <TabsContent value="notifications" className="space-y-4">
-                  <Card>
-                     <CardHeader>
-                        <CardTitle>Email Notifications</CardTitle>
-                        <CardDescription>Configure email notifications for ranking changes</CardDescription>
-                     </CardHeader>
-                     <CardContent className="space-y-6">
-                        <div className="space-y-2">
-                           <Label htmlFor="notification_interval">Notification Frequency</Label>
-                           <Select
-                              value={settings.notification_interval}
-                              onValueChange={(value) => updateSettings('notification_interval', value)}
-                           >
-                              <SelectTrigger id="notification_interval">
-                                 <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                 <SelectItem value="never">Never</SelectItem>
-                                 <SelectItem value="daily">Daily</SelectItem>
-                                 <SelectItem value="weekly">Weekly</SelectItem>
-                                 <SelectItem value="monthly">Monthly</SelectItem>
-                              </SelectContent>
-                           </Select>
-                        </div>
 
-                        {settings.notification_interval !== 'never' && (
-                           <>
-                              <div className="space-y-2">
-                                 <Label htmlFor="notification_email">Notification Email</Label>
-                                 <Input
-                                    id="notification_email"
-                                    type="email"
-                                    value={settings.notification_email}
-                                    onChange={(e) => updateSettings('notification_email', e.target.value)}
-                                    placeholder="your@email.com"
-                                 />
-                              </div>
-
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                 <div className="space-y-2">
-                                    <Label htmlFor="smtp_server">SMTP Server</Label>
-                                    <Input
-                                       id="smtp_server"
-                                       type="text"
-                                       value={settings.smtp_server}
-                                       onChange={(e) => updateSettings('smtp_server', e.target.value)}
-                                       placeholder="smtp.example.com"
-                                    />
-                                 </div>
-
-                                 <div className="space-y-2">
-                                    <Label htmlFor="smtp_port">SMTP Port</Label>
-                                    <Input
-                                       id="smtp_port"
-                                       type="text"
-                                       value={settings.smtp_port}
-                                       onChange={(e) => updateSettings('smtp_port', e.target.value)}
-                                       placeholder="587"
-                                    />
-                                 </div>
-                              </div>
-
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                 <div className="space-y-2">
-                                    <Label htmlFor="smtp_username">SMTP Username</Label>
-                                    <Input
-                                       id="smtp_username"
-                                       type="text"
-                                       value={settings.smtp_username}
-                                       onChange={(e) => updateSettings('smtp_username', e.target.value)}
-                                    />
-                                 </div>
-
-                                 <div className="space-y-2">
-                                    <Label htmlFor="smtp_password">SMTP Password</Label>
-                                    <Input
-                                       id="smtp_password"
-                                       type="password"
-                                       value={settings.smtp_password}
-                                       onChange={(e) => updateSettings('smtp_password', e.target.value)}
-                                    />
-                                 </div>
-                              </div>
-
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                 <div className="space-y-2">
-                                    <Label htmlFor="notification_email_from">From Email</Label>
-                                    <Input
-                                       id="notification_email_from"
-                                       type="email"
-                                       value={settings.notification_email_from}
-                                       onChange={(e) => updateSettings('notification_email_from', e.target.value)}
-                                       placeholder="noreply@example.com"
-                                    />
-                                 </div>
-
-                                 <div className="space-y-2">
-                                    <Label htmlFor="notification_email_from_name">From Name</Label>
-                                    <Input
-                                       id="notification_email_from_name"
-                                       type="text"
-                                       value={settings.notification_email_from_name}
-                                       onChange={(e) => updateSettings('notification_email_from_name', e.target.value)}
-                                    />
-                                 </div>
-                              </div>
-                           </>
-                        )}
-                     </CardContent>
-                  </Card>
-               </TabsContent>
 
                {/* Integration Settings */}
                <TabsContent value="integrations" className="space-y-4">
@@ -403,7 +301,7 @@ const SettingsPage: NextPage = () => {
                         {settings.google_connected ? (
                            <>
                               <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                                 <div className="flex items-center justify-between mb-4">
+                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center text-green-700 font-semibold gap-2">
                                        <CheckCircle className="h-5 w-5" />
                                        {t.googleConnected}
@@ -416,24 +314,130 @@ const SettingsPage: NextPage = () => {
                                        {t.disconnect}
                                     </Button>
                                  </div>
-                                 <Button
-                                    onClick={fetchSites}
-                                    disabled={loadingSites}
-                                    className="w-full gap-2"
-                                 >
-                                    {loadingSites ? (
-                                       <>
-                                          <Loader2 className="h-4 w-4 animate-spin" />
-                                          {t.importingSites}
-                                       </>
-                                    ) : (
-                                       <>
-                                          <Download className="h-4 w-4" />
-                                          {t.importSites}
-                                       </>
-                                    )}
-                                 </Button>
                               </div>
+
+                              {/* Sites List */}
+                              <div className="space-y-3">
+                                 <div className="flex items-center justify-between">
+                                    <h3 className="text-sm font-semibold text-gray-900">Verified Sites</h3>
+                                    <Button
+                                       onClick={fetchSites}
+                                       disabled={loadingSites}
+                                       variant="outline"
+                                       size="sm"
+                                       className="gap-2"
+                                    >
+                                       {loadingSites ? (
+                                          <>
+                                             <Loader2 className="h-3 w-3 animate-spin" />
+                                             Loading...
+                                          </>
+                                       ) : (
+                                          <>
+                                             <Download className="h-3 w-3" />
+                                             Refresh Sites
+                                          </>
+                                       )}
+                                    </Button>
+                                 </div>
+
+                                 {loadingSites ? (
+                                    <div className="text-center py-8">
+                                       <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-400" />
+                                       <p className="text-sm text-gray-500 mt-2">Loading your sites...</p>
+                                    </div>
+                                 ) : sites.length === 0 ? (
+                                    <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
+                                       <p className="text-sm text-gray-500">No verified sites found</p>
+                                       <p className="text-xs text-gray-400 mt-1">Click "Refresh Sites" to load your sites</p>
+                                    </div>
+                                 ) : (
+                                    <div className="space-y-2 max-h-96 overflow-y-auto">
+                                       {sites.map((site) => {
+                                          const getPermissionBadge = (level: string) => {
+                                             switch (level) {
+                                                case 'siteOwner':
+                                                   return (
+                                                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                         ✓ Owner
+                                                      </span>
+                                                   );
+                                                case 'siteFullUser':
+                                                   return (
+                                                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                         Full Access
+                                                      </span>
+                                                   );
+                                                case 'siteRestrictedUser':
+                                                   return (
+                                                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                         Restricted
+                                                      </span>
+                                                   );
+                                                case 'siteUnverifiedUser':
+                                                   return (
+                                                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                         ⚠ Unverified
+                                                      </span>
+                                                   );
+                                                default:
+                                                   return (
+                                                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                                         {level}
+                                                      </span>
+                                                   );
+                                             }
+                                          };
+
+                                          const isImported = domainsData?.domains?.some(d => {
+                                             const cleanSiteUrl = site.siteUrl.replace('sc-domain:', '').replace(/\/$/, '');
+                                             const cleanDomain = d.domain.replace(/\/$/, '');
+                                             return cleanDomain.includes(cleanSiteUrl) || cleanSiteUrl.includes(cleanDomain);
+                                          });
+
+                                          const formatSiteUrl = (url: string) => {
+                                             return url
+                                                .replace(/^https?:\/\//, '') // Remove http:// or https://
+                                                .replace(/^sc-domain:/, '')  // Remove sc-domain:
+                                                .replace(/\/$/, '');         // Remove trailing slash
+                                          };
+
+                                          return (
+                                             <div
+                                                key={site.siteUrl}
+                                                className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+                                             >
+                                                <div className="flex-1 mr-4">
+                                                   <p className="font-medium text-sm truncate mb-1">{formatSiteUrl(site.siteUrl)}</p>
+                                                   {getPermissionBadge(site.permissionLevel)}
+                                                </div>
+                                                {isImported ? (
+                                                   <Button
+                                                      disabled
+                                                      variant="secondary"
+                                                      size="sm"
+                                                      className="gap-2 bg-green-100 text-green-700 hover:bg-green-100 opacity-100"
+                                                   >
+                                                      <CheckCircle className="h-3 w-3" />
+                                                      Imported
+                                                   </Button>
+                                                ) : (
+                                                   <Button
+                                                      onClick={() => importSite(site.siteUrl)}
+                                                      size="sm"
+                                                      className="gap-2"
+                                                   >
+                                                      <Plus className="h-3 w-3" />
+                                                      Add
+                                                   </Button>
+                                                )}
+                                             </div>
+                                          );
+                                       })}
+                                    </div>
+                                 )}
+                              </div>
+
                               <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                                  <p className="text-sm text-yellow-800 mb-2">
                                     <strong>Important Notes:</strong>
@@ -488,47 +492,6 @@ const SettingsPage: NextPage = () => {
             </div>
          </div>
 
-         {/* Sites Import Dialog */}
-         <Dialog open={showSitesModal} onOpenChange={setShowSitesModal}>
-            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-               <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2">
-                     <Download className="h-5 w-5" />
-                     {t.sitesModalTitle}
-                  </DialogTitle>
-                  <DialogDescription>
-                     Select sites to import into your dashboard
-                  </DialogDescription>
-               </DialogHeader>
-               <div className="space-y-2 mt-4">
-                  {sites.length === 0 ? (
-                     <div className="text-center py-8 text-muted-foreground">
-                        {t.noSites}
-                     </div>
-                  ) : (
-                     sites.map((site) => (
-                        <div
-                           key={site.siteUrl}
-                           className="flex items-center justify-between p-4 border rounded-lg hover:bg-neutral-50 transition-colors"
-                        >
-                           <div className="flex-1 mr-4">
-                              <p className="font-medium text-sm truncate">{site.siteUrl}</p>
-                              <p className="text-xs text-muted-foreground">{site.permissionLevel}</p>
-                           </div>
-                           <Button
-                              onClick={() => importSite(site.siteUrl)}
-                              size="sm"
-                              className="gap-2"
-                           >
-                              <Download className="h-3 w-3" />
-                              {t.import}
-                           </Button>
-                        </div>
-                     ))
-                  )}
-               </div>
-            </DialogContent>
-         </Dialog>
 
          <Toaster position='bottom-center' />
       </DashboardLayout>

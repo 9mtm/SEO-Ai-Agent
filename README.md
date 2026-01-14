@@ -114,4 +114,75 @@ python -m llama_cpp.server --model models\qwen2.5-3b-instruct-q4_k_m.gguf --host
 
 ---
 
+## 📧 Email Notifications Setup (Production)
+
+The application includes an automated batch notification system that sends monthly email updates to users.
+
+### Cron Job Configuration
+
+For **production servers**, you need to set up a cron job to run the batch notification process.
+
+#### Linux/Unix Servers:
+
+1. **Open crontab editor:**
+   ```bash
+   crontab -e
+   ```
+
+2. **Add the following cron job** (runs every hour):
+   ```bash
+   0 * * * * cd /path/to/seo_ai_agent && /usr/bin/node cron.js >> /var/log/seo-cron.log 2>&1
+   ```
+
+3. **Or use PM2** (recommended for Node.js apps):
+   ```bash
+   pm2 start cron.js --name "seo-cron"
+   pm2 save
+   pm2 startup
+   ```
+
+#### Windows Servers:
+
+1. **Open Task Scheduler**
+2. **Create New Task:**
+   - **Trigger:** Hourly
+   - **Action:** Start a program
+   - **Program:** `C:\Program Files\nodejs\node.exe`
+   - **Arguments:** `cron.js`
+   - **Start in:** `C:\path\to\seo_ai_agent`
+
+### Environment Variables for Email
+
+Make sure these are set in `.env.local`:
+
+```env
+# SMTP Configuration
+SMTP_HOST=mail.flowxtra.com
+SMTP_PORT=465
+SMTP_USERNAME=no-reply@flowxtra.com
+SMTP_PASSWORD=your_smtp_password
+SMTP_ENCRYPTION=ssl
+SMTP_FROM_EMAIL=no-reply@flowxtra.com
+SMTP_FROM_NAME=SEO AI Agent
+
+# Batch Processing (emails per hour)
+NOTIFICATION_BATCH_SIZE=10
+```
+
+### How It Works
+
+- **Cron runs every hour** and sends a batch of emails (default: 10)
+- **Checks last notification date** - only sends if 30+ days have passed
+- **Logs all attempts** in `notification_logs` table
+- **Prevents spam** by distributing emails over time
+
+### Manual Testing
+
+Test the batch notification system:
+```bash
+curl -X POST http://localhost:55781/api/batch-notify
+```
+
+---
+
 **© 2026 Dpro GmbH - Flowxtra**

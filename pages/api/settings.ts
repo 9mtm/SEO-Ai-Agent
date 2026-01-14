@@ -179,7 +179,14 @@ export const getAppSettings = async (userId?: number, isLegacy?: boolean): Promi
             scraper_type,
             scaping_api,
             proxy,
-            smtp_password,
+            // SMTP Settings: Prioritize Environment Variables
+            smtp_server: process.env.SMTP_HOST || settings.smtp_server || '',
+            smtp_port: process.env.SMTP_PORT || settings.smtp_port || '',
+            smtp_username: process.env.SMTP_USERNAME || settings.smtp_username || '',
+            smtp_password: process.env.SMTP_PASSWORD || smtp_password || '',
+            notification_email_from: process.env.SMTP_FROM_EMAIL || settings.notification_email_from || '',
+            notification_email_from_name: process.env.SMTP_FROM_NAME || settings.notification_email_from_name || 'SEO AI Agent',
+            smtp_from_env: !!(process.env.SMTP_HOST && process.env.SMTP_PORT), // Flag to indicate SMTP is from env
             search_console_client_email,
             search_console_private_key,
             google_connected,
