@@ -8,6 +8,8 @@ type AccountMenuProps = {
     showAddModal: () => void;
     domains?: DomainType[];
     currentDomain?: DomainType | null;
+    selectedLang?: 'en' | 'de';
+    onLanguageChange?: (lang: 'en' | 'de') => void;
 };
 
 type UserInfo = {
@@ -16,7 +18,7 @@ type UserInfo = {
     picture?: string;
 };
 
-const AccountMenu = ({ showAddModal, domains = [], currentDomain }: AccountMenuProps) => {
+const AccountMenu = ({ showAddModal, domains = [], currentDomain, selectedLang = 'en', onLanguageChange }: AccountMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [userInfo, setUserInfo] = useState<UserInfo>({ name: 'User', email: 'user@example.com' });
     const menuRef = useRef<HTMLDivElement>(null);
@@ -120,6 +122,31 @@ const AccountMenu = ({ showAddModal, domains = [], currentDomain }: AccountMenuP
                     {/* Account Header */}
                     <div className="px-4 py-3 border-b border-neutral-200">
                         <p className="text-sm font-semibold text-neutral-900">Account</p>
+                    </div>
+
+                    {/* Language Switcher */}
+                    <div className="px-4 py-2 border-b border-neutral-200">
+                        <div className="text-xs font-semibold text-neutral-500 uppercase mb-2">Language</div>
+                        <div className="flex bg-neutral-100 rounded-lg p-1">
+                            <button
+                                onClick={() => onLanguageChange?.('en')}
+                                className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${selectedLang === 'en'
+                                    ? 'bg-white text-neutral-900 shadow-sm'
+                                    : 'text-neutral-500 hover:text-neutral-900'
+                                    }`}
+                            >
+                                English
+                            </button>
+                            <button
+                                onClick={() => onLanguageChange?.('de')}
+                                className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${selectedLang === 'de'
+                                    ? 'bg-white text-neutral-900 shadow-sm'
+                                    : 'text-neutral-500 hover:text-neutral-900'
+                                    }`}
+                            >
+                                Deutsch
+                            </button>
+                        </div>
                     </div>
 
                     {/* Domains Section */}

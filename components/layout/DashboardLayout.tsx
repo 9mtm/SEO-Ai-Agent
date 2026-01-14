@@ -9,6 +9,7 @@ import {
   X,
 } from 'lucide-react';
 import AccountMenu from '../common/AccountMenu';
+import DomainSelector from '../domains/DomainSelector';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -27,6 +28,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 }) => {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const currentSlug = router.query.slug as string;
+  const currentDomain = domains.find(d => d.slug === currentSlug) || null;
 
   const translations = {
     en: {
@@ -123,21 +127,22 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
             <div className="flex-1 lg:flex-none"></div>
 
-            <div className="flex items-center space-x-4">
-              <select
-                value={selectedLang}
-                onChange={(e) => onLanguageChange?.(e.target.value as 'en' | 'de')}
-                className="px-3 py-1.5 bg-neutral-100 rounded-lg text-sm font-medium text-neutral-700 border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="en">English</option>
-                <option value="de">Deutsch</option>
-              </select>
+            <div className="flex items-center gap-3">
+              <div className="hidden md:block mr-2">
+                <DomainSelector
+                  domains={domains}
+                  currentDomain={currentDomain}
+                  showAddModal={showAddModal}
+                />
+              </div>
 
               {/* Account Menu in Header - Using the same component */}
               <AccountMenu
                 showAddModal={showAddModal}
                 domains={domains}
-                currentDomain={null}
+                currentDomain={currentDomain}
+                selectedLang={selectedLang}
+                onLanguageChange={onLanguageChange}
               />
             </div>
           </div>
