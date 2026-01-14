@@ -15,10 +15,12 @@ type DomainHeaderProps = {
    setScFilter?: Function
    showIdeaUpdateModal?: Function
    onDeleteDomain?: Function
+   onRefreshCompetitors?: Function
+   isRefreshingCompetitors?: boolean
 }
 
 const DomainHeader = (
-   { domain, showAddModal, showSettingsModal, exportCsv, domains, scFilter = 'thirtyDays', setScFilter, showIdeaUpdateModal, onDeleteDomain }: DomainHeaderProps,
+   { domain, showAddModal, showSettingsModal, exportCsv, domains, scFilter = 'thirtyDays', setScFilter, showIdeaUpdateModal, onDeleteDomain, onRefreshCompetitors, isRefreshingCompetitors = false }: DomainHeaderProps,
 ) => {
    const router = useRouter();
    const [showOptions, setShowOptions] = useState<boolean>(false);
@@ -130,10 +132,12 @@ const DomainHeader = (
                   )}
                   {isCompetitors && (
                      <button
-                        className={`domheader_action_button relative ${buttonStyle} lg:ml-3`}
+                        className={`domheader_action_button relative ${buttonStyle} lg:ml-3 ${isRefreshingCompetitors ? 'opacity-50 cursor-not-allowed' : ''}`}
                         aria-pressed="false"
-                        onClick={() => exportCsv()}>
-                        <Icon type='reload' size={14} /><i className={`${buttonLabelStyle}`}>Reload Competitors</i>
+                        disabled={isRefreshingCompetitors}
+                        onClick={() => onRefreshCompetitors && onRefreshCompetitors()}>
+                        <Icon type='reload' size={14} classes={isRefreshingCompetitors ? 'animate-spin' : ''} />
+                        <i className={`${buttonLabelStyle}`}>{isRefreshingCompetitors ? 'Updating...' : 'Reload Competitors'}</i>
                      </button>
                   )}
                   <button

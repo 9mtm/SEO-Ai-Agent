@@ -43,7 +43,7 @@ const CompetitorsPage: NextPage = () => {
     }, [activDomain]);
 
     const { keywordsData, keywordsLoading } = useFetchKeywords(router, activDomain?.domain || '', setKeywordSPollInterval, keywordSPollInterval);
-    const { mutate: refreshCompetitors, isPending: isRefreshing } = useRefreshCompetitors();
+    const { mutate: refreshCompetitors, isPending: isRefreshing } = useRefreshCompetitors(() => { });
     const theDomains: DomainType[] = (domainsData && domainsData.domains) || [];
     const theKeywords: KeywordType[] = keywordsData && keywordsData.keywords;
 
@@ -97,6 +97,7 @@ const CompetitorsPage: NextPage = () => {
                         domains={theDomains}
                         showAddModal={() => setShowManageCompetitors(true)}
                         showSettingsModal={setShowDomainSettings}
+                        exportCsv={() => { }}
                         onDeleteDomain={handleDeleteDomain}
                         onRefreshCompetitors={handleRefreshCompetitors}
                         isRefreshingCompetitors={isRefreshing}
@@ -125,10 +126,12 @@ const CompetitorsPage: NextPage = () => {
             </CSSTransition>
 
             <CSSTransition in={showManageCompetitors} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
-                <ManageCompetitors
-                    domain={activDomain}
-                    closeModal={() => setShowManageCompetitors(false)}
-                />
+                {activDomain && (
+                    <ManageCompetitors
+                        domain={activDomain}
+                        closeModal={() => setShowManageCompetitors(false)}
+                    />
+                )}
             </CSSTransition>
         </DashboardLayout>
     );

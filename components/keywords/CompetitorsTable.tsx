@@ -5,9 +5,11 @@ type CompetitorsTableProps = {
     domain: DomainType | null;
     keywords: KeywordType[];
     isPending: boolean;
+    isConsoleIntegrated?: boolean;
+    settings?: SettingsType;
 };
 
-const CompetitorsTable = ({ domain, keywords, isPending }: CompetitorsTableProps) => {
+const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, settings }: CompetitorsTableProps) => {
     const { mutate: refreshCompetitorsMutate } = useRefreshCompetitors(() => { });
     const competitors = domain?.competitors || [];
 
@@ -74,10 +76,10 @@ const CompetitorsTable = ({ domain, keywords, isPending }: CompetitorsTableProps
                                     </td>
                                     <td className="px-4 py-3 text-center">
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${keyword.position > 0 && keyword.position <= 10
-                                                ? 'bg-green-100 text-green-800'
-                                                : keyword.position > 10 && keyword.position <= 50
-                                                    ? 'bg-yellow-100 text-yellow-800'
-                                                    : 'bg-gray-100 text-gray-800'
+                                            ? 'bg-green-100 text-green-800'
+                                            : keyword.position > 10 && keyword.position <= 50
+                                                ? 'bg-yellow-100 text-yellow-800'
+                                                : 'bg-gray-100 text-gray-800'
                                             }`}>
                                             {keyword.position > 0 ? keyword.position : '-'}
                                         </span>
@@ -97,10 +99,10 @@ const CompetitorsTable = ({ domain, keywords, isPending }: CompetitorsTableProps
                                                     </div>
                                                 ) : (
                                                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${position > 0 && position <= 10
-                                                            ? 'bg-blue-100 text-blue-800'
-                                                            : position > 10 && position <= 50
-                                                                ? 'bg-purple-100 text-purple-800'
-                                                                : 'bg-gray-100 text-gray-800'
+                                                        ? 'bg-blue-100 text-blue-800'
+                                                        : position > 10 && position <= 50
+                                                            ? 'bg-purple-100 text-purple-800'
+                                                            : 'bg-gray-100 text-gray-800'
                                                         }`}>
                                                         {position > 0 ? position : '-'}
                                                     </span>

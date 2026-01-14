@@ -98,7 +98,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           subscription_plan: 'free',
           is_active: true,
           scraper_type: 'scrapingrobot', // Default
+          picture: googleUser.picture || null, // Create with picture
         });
+      } else {
+        // Update existing user with new picture if available
+        if (googleUser.picture) {
+          await user.update({ picture: googleUser.picture });
+        }
       }
 
       // Login the user (Create JWT)
