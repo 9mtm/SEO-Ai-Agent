@@ -11,18 +11,7 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
     const [sessions, setSessions] = useState(initialSessions || []);
     const [currentSessionId, setCurrentSessionId] = useState(initialSessionId);
 
-    const handleDeleteDomain = async () => {
-        if (domain && window.confirm(`Are you sure you want to delete ${domain.domain}?`)) {
-            try {
-                const res = await fetch(`/api/domains?domain=${domain.domain}`, { method: 'DELETE' });
-                if (res.ok) {
-                    router.push('/');
-                }
-            } catch (error) {
-                console.error('Error deleting domain:', error);
-            }
-        }
-    };
+
 
     const { messages, input, setMessages, handleInputChange, handleSubmit, isLoading } = useChat({
         api: '/api/agent/chat',
@@ -90,7 +79,7 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
                 <title>{`Seo Agent - ${domain?.domain}`}</title>
             </Head>
             <div className="flex-none">
-                <DomainHeader domain={domain} domains={[]} showAddModal={() => {}} showSettingsModal={() => {}} exportCsv={() => {}} onDeleteDomain={handleDeleteDomain} />
+                <DomainHeader domain={domain} domains={[]} showAddModal={() => { }} showSettingsModal={() => { }} exportCsv={() => { }} />
             </div>
 
             <div className="flex flex-1 overflow-hidden bg-white">

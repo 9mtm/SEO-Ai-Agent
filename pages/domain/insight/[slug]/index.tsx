@@ -9,7 +9,7 @@ import DomainHeader from '../../../../components/domains/DomainHeader';
 import AddDomain from '../../../../components/domains/AddDomain';
 import DomainSettings from '../../../../components/domains/DomainSettings';
 import exportCSV from '../../../../utils/client/exportcsv';
-import { useFetchDomains, useDeleteDomain } from '../../../../services/domains';
+import { useFetchDomains } from '../../../../services/domains';
 import { useFetchSCInsight } from '../../../../services/searchConsole';
 import SCInsight from '../../../../components/insight/Insight';
 import { useFetchSettings } from '../../../../services/settings';
@@ -21,9 +21,7 @@ const InsightPage: NextPage = () => {
    const [scDateFilter, setSCDateFilter] = useState('thirtyDays');
    const { data: appSettings } = useFetchSettings();
    const { data: domainsData } = useFetchDomains(router);
-   const { mutate: deleteDomainMutate } = useDeleteDomain(() => {
-      router.push('/');
-   });
+
    const scConnected = !!(appSettings && (appSettings?.settings?.search_console_integrated || appSettings?.settings?.google_connected));
    const { data: insightData } = useFetchSCInsight(router, !!(domainsData?.domains?.length) && scConnected);
 
@@ -43,11 +41,7 @@ const InsightPage: NextPage = () => {
       return !!(doaminSc?.client_email && doaminSc?.private_key);
    }, [activDomain]);
 
-   const handleDeleteDomain = () => {
-      if (activDomain && window.confirm(`Are you sure you want to delete ${activDomain.domain}?`)) {
-         deleteDomainMutate(activDomain);
-      }
-   };
+
 
    return (
       <DashboardLayout
@@ -70,7 +64,7 @@ const InsightPage: NextPage = () => {
                   exportCsv={() => exportCSV([], activDomain.domain, scDateFilter)}
                   scFilter={scDateFilter}
                   setScFilter={(item: string) => setSCDateFilter(item)}
-                  onDeleteDomain={handleDeleteDomain}
+
                />
             ) : (
                <div className='w-full lg:h-[100px]'></div>

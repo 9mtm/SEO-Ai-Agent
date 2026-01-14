@@ -10,7 +10,7 @@ import CompetitorsTable from '../../../components/keywords/CompetitorsTable';
 import AddDomain from '../../../components/domains/AddDomain';
 import DomainSettings from '../../../components/domains/DomainSettings';
 import ManageCompetitors from '../../../components/domains/ManageCompetitors';
-import { useFetchDomains, useDeleteDomain } from '../../../services/domains';
+import { useFetchDomains } from '../../../services/domains';
 import { useFetchKeywords } from '../../../services/keywords';
 import { useRefreshCompetitors } from '../../../services/competitors';
 import { useFetchSettings } from '../../../services/settings';
@@ -23,9 +23,7 @@ const CompetitorsPage: NextPage = () => {
     const [keywordSPollInterval, setKeywordSPollInterval] = useState<undefined | number>(undefined);
     const { data: appSettingsData, isPending: isAppSettingsLoading } = useFetchSettings();
     const { data: domainsData } = useFetchDomains(router);
-    const { mutate: deleteDomainMutate } = useDeleteDomain(() => {
-        router.push('/');
-    });
+
     const appSettings: SettingsType = appSettingsData?.settings || {};
     const { scraper_type = '' } = appSettings;
 
@@ -55,11 +53,7 @@ const CompetitorsPage: NextPage = () => {
         }
     }, [isRefreshing]);
 
-    const handleDeleteDomain = () => {
-        if (activDomain && window.confirm(`Are you sure you want to delete ${activDomain.domain}?`)) {
-            deleteDomainMutate(activDomain);
-        }
-    };
+
 
     const handleRefreshCompetitors = () => {
         if (activDomain) {
@@ -98,7 +92,7 @@ const CompetitorsPage: NextPage = () => {
                         showAddModal={() => setShowManageCompetitors(true)}
                         showSettingsModal={setShowDomainSettings}
                         exportCsv={() => { }}
-                        onDeleteDomain={handleDeleteDomain}
+
                         onRefreshCompetitors={handleRefreshCompetitors}
                         isRefreshingCompetitors={isRefreshing}
                     />
