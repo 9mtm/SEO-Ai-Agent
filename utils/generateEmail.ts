@@ -5,10 +5,11 @@ import path from 'path';
 import { getKeywordsInsight, getPagesInsight } from './insight';
 import { readLocalSCData } from './searchConsole';
 
-const seoAiAgentLogo = 'https://serpbear.b-cdn.net/ikAdjQq.png';
-const mobileIcon = 'https://serpbear.b-cdn.net/SqXD9rd.png';
-const desktopIcon = 'https://serpbear.b-cdn.net/Dx3u0XD.png';
-const googleIcon = 'https://serpbear.b-cdn.net/Sx3u0X9.png';
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+const seoAiAgentLogo = `${appUrl}/dpro_logo.png`;
+const mobileIcon = `${appUrl}/dpro_logo.png`;
+const desktopIcon = `${appUrl}/dpro_logo.png`;
+const googleIcon = `${appUrl}/dpro_logo.png`;
 
 type SCStatsObject = {
    [key: string]: {

@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Image from 'next/image';
 import Icon from '../../components/common/Icon';
 
 const Register = () => {
@@ -60,12 +61,14 @@ const Register = () => {
   return (
     <>
       <Head>
-        <title>Create Account - Flowxtra SERP Tracker</title>
+        <title>Create Account - SEO AI Agent</title>
       </Head>
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full">
           <div className="text-center mb-8">
-            <Icon type="logo" size={48} />
+            <div className="flex justify-center mb-6">
+              <Image src="/dpro_logo.png" alt="Dpro" width={48} height={48} className="h-12 w-12" />
+            </div>
             <h1 className="text-3xl font-bold text-gray-900">Create Account</h1>
             <p className="mt-2 text-sm text-gray-600">
               Already have an account?{' '}
@@ -178,7 +181,7 @@ const Register = () => {
                 href="/api/auth/google/login"
                 className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
               >
-                <Icon type="google" size={18} />
+                <Image src="/icon/google-logo.svg" alt="Google" width={18} height={18} className="h-[18px] w-[18px]" />
                 <span className="ml-2">Google</span>
               </a>
             </form>

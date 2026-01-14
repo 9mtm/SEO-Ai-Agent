@@ -48,7 +48,7 @@ To resolve this issue and enable the feature, you must upgrade your developer to
 5.  **Wait for Approval:**
     Google usually reviews these requests quickly (sometimes legally required business verification is needed).
 
-6.  **Re-enable the Feature in Flowxtra:**
+6.  **Re-enable the Feature in SEO AI Agent:**
     Once your access level says **Basic Access**:
     - Open `components/domains/DomainHeader.tsx`.
     - Uncomment the code block for the "Ideas" tab (around lines 77-90).

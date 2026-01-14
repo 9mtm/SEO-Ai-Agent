@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { BarChart3, TrendingUp, Globe, ChevronRight, Menu, X } from 'lucide-react';
 
@@ -68,7 +69,7 @@ const Home: NextPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
-              <BarChart3 className="h-8 w-8 text-blue-600" />
+              <Image src="/dpro_logo.png" alt="Dpro" width={32} height={32} className="h-8 w-8" />
               <span className="text-xl font-bold text-neutral-900">{t.title}</span>
             </div>
 
