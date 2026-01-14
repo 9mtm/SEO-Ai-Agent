@@ -49,6 +49,17 @@ const Domains: NextPage = () => {
       return domainsSCAPI;
    }, [domainsData]);
 
+   const [isRedirecting, setIsRedirecting] = useState(false);
+
+   // Auto redirect to first domain
+   useEffect(() => {
+      if (!isPending && domainsData?.domains && domainsData.domains.length > 0) {
+         setIsRedirecting(true);
+         const firstDomain = domainsData.domains[0];
+         router.push(`/domain/${firstDomain.slug}`);
+      }
+   }, [isPending, domainsData, router]);
+
    useEffect(() => {
       if (domainsData?.domains && domainsData.domains.length > 0) {
          domainsData.domains.forEach(async (domain: DomainType) => {
@@ -102,6 +113,17 @@ const Domains: NextPage = () => {
    };
 
    const t = translations[selectedLang];
+
+   if (isRedirecting) {
+      return (
+         <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+            <div className="flex flex-col items-center gap-2">
+               <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+               <p className="text-neutral-600">Redirecting to your dashboard...</p>
+            </div>
+         </div>
+      );
+   }
 
    return (
       <DashboardLayout

@@ -56,9 +56,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   const t = translations[selectedLang];
 
-  const navigation = [
-    { name: t.domains, href: '/domains', icon: Globe },
-  ];
+  const navigation: { name: string; href: string; icon: any }[] = [];
 
   if (currentDomain) {
     navigation.push(
