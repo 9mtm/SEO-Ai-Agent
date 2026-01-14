@@ -57,7 +57,22 @@ const DomainSettingsPage: NextPage = () => {
                 setBusinessName(found.business_name || '');
                 setNiche(found.niche || '');
                 setDescription(found.description || '');
-                setCompetitors(Array.isArray(found.competitors) ? found.competitors : []);
+                console.log('[DEBUG] Loaded domain data:', found);
+
+                let loadedCompetitors: string[] = [];
+                if (Array.isArray(found.competitors)) {
+                    loadedCompetitors = found.competitors;
+                } else if (typeof found.competitors === 'string') {
+                    try {
+                        // Attempt to parse if it's a JSON string
+                        const parsed = JSON.parse(found.competitors);
+                        if (Array.isArray(parsed)) loadedCompetitors = parsed;
+                    } catch (e) {
+                        console.error('[DEBUG] Failed to parse competitors JSON:', e);
+                    }
+                }
+
+                setCompetitors(loadedCompetitors);
 
                 // Load Focus Keywords
                 if (found.focus_keywords) {

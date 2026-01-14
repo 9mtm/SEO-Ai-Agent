@@ -320,10 +320,14 @@ export const updateDomain = async (
          if (business_name !== undefined) updates.business_name = business_name;
          if (niche !== undefined) updates.niche = niche;
          if (description !== undefined) updates.description = description;
-         if (competitors !== undefined) updates.competitors = competitors;
+         if (competitors !== undefined) {
+            console.log('[DEBUG] Updating competitors:', competitors);
+            updates.competitors = competitors;
+         }
          if (integration_settings !== undefined) updates.integration_settings = integration_settings;
          if (focus_keywords !== undefined) updates.focus_keywords = focus_keywords;
 
+         console.log('[DEBUG] Domain updates payload:', updates);
          domainToUpdate.set(updates);
          await domainToUpdate.save();
       }
