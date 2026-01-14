@@ -54,6 +54,18 @@ class User extends Model {
   @Column({ type: DataType.STRING, allowNull: true })
   declare google_ads_customer_id?: string;
 
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare adwords_client_id?: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare adwords_client_secret?: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare adwords_developer_token?: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare adwords_account_id?: string;
+
   // Scraper Settings (Per-User)
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: 'none' })
   declare scraper_type?: string;
@@ -63,6 +75,12 @@ class User extends Model {
 
   @Column({ type: DataType.TEXT, allowNull: true })
   declare proxy_list?: string;
+
+  @Column({ type: DataType.STRING, allowNull: true, defaultValue: 'none' })
+  declare scrape_delay?: string;
+
+  @Column({ type: DataType.BOOLEAN, allowNull: true, defaultValue: false })
+  declare scrape_retry?: boolean;
 
   @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: true })
   declare is_active: boolean;

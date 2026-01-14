@@ -47,16 +47,26 @@ const updateSettings = async (req: NextApiRequest, res: NextApiResponse<Settings
       // Multi-Tenant: Save scraper settings to user's record
       if (userId && !isLegacy) {
          const scraper_api_key = settings.scaping_api ? cryptr.encrypt(settings.scaping_api.trim()) : null;
+         const adwords_client_id = settings.adwords_client_id ? cryptr.encrypt(settings.adwords_client_id.trim()) : null;
+         const adwords_client_secret = settings.adwords_client_secret ? cryptr.encrypt(settings.adwords_client_secret.trim()) : null;
+         const adwords_developer_token = settings.adwords_developer_token ? cryptr.encrypt(settings.adwords_developer_token.trim()) : null;
+         const adwords_account_id = settings.adwords_account_id ? cryptr.encrypt(settings.adwords_account_id.trim()) : null;
 
          await User.update({
             scraper_type: settings.scraper_type || 'none',
             scraper_api_key,
             proxy_list: settings.proxy || null,
+            scrape_delay: settings.scrape_delay || 'none',
+            scrape_retry: settings.scrape_retry || false,
+            adwords_client_id,
+            adwords_client_secret,
+            adwords_developer_token,
+            adwords_account_id
          }, {
             where: { id: userId }
          });
 
-         console.log(`[INFO] Updated scraper settings for user ${userId}`);
+         console.log(`[INFO] Updated scraper & ads settings for user ${userId}`);
       }
 
       // Helper to update specific setting in DB
@@ -106,7 +116,9 @@ export const getAppSettings = async (userId?: number, isLegacy?: boolean): Promi
 
    try {
       const settingsRow = await Setting.findByPk('app_config');
+      console.log('[DEBUG DB] Raw settings row:', settingsRow?.toJSON());
       const settingsRaw = settingsRow ? settingsRow.value : null;
+      if (settingsRaw) console.log('[DEBUG DB] Raw JSON value:', settingsRaw);
 
       const failedQueueCount = await FailedJob.count();
       // For backward compatibility, the frontend might expect an array. 
@@ -122,36 +134,45 @@ export const getAppSettings = async (userId?: number, isLegacy?: boolean): Promi
       try {
          const cryptr = new Cryptr(process.env.SECRET as string);
 
-         // Multi-Tenant: Load scraper settings from user's record
-         let scaping_api = '';
+         // 1. Initialize with Global Defaults (Decrypted)
+         let scaping_api = settings.scaping_api ? cryptr.decrypt(settings.scaping_api) : '';
          let scraper_type = settings.scraper_type || 'none';
-         let proxy = '';
-         let google_connected = false;
-
-         if (userId && !isLegacy) {
-            const user = await User.findByPk(userId);
-            if (user) {
-               scraper_type = user.scraper_type || settings.scraper_type || 'none';
-               scaping_api = user.scraper_api_key ? cryptr.decrypt(user.scraper_api_key) : (settings.scaping_api ? cryptr.decrypt(settings.scaping_api) : '');
-               proxy = user.proxy_list || settings.proxy || '';
-               google_connected = !!(user.google_refresh_token || user.google_access_token);
-
-               // Fallback for Google connection might not be safe/desired globally, but scraper settings are.
-               // If user explicitly has scraper_type set to 'none' (and not null), they might WANT none. 
-               // But assuming 'undefined' or null means fallback.
-            }
-         } else {
-            // Legacy mode: read from settings.json (now settings DB JSON)
-            scaping_api = settings.scaping_api ? cryptr.decrypt(settings.scaping_api) : '';
-         }
+         let proxy = settings.proxy || '';
+         let scrape_delay = settings.scrape_delay || 'none';
+         let scrape_retry = settings.scrape_retry || false;
 
          const smtp_password = settings.smtp_password ? cryptr.decrypt(settings.smtp_password) : '';
          const search_console_client_email = settings.search_console_client_email ? cryptr.decrypt(settings.search_console_client_email) : '';
          const search_console_private_key = settings.search_console_private_key ? cryptr.decrypt(settings.search_console_private_key) : '';
-         const adwords_client_id = settings.adwords_client_id ? cryptr.decrypt(settings.adwords_client_id) : '';
-         const adwords_client_secret = settings.adwords_client_secret ? cryptr.decrypt(settings.adwords_client_secret) : '';
-         const adwords_developer_token = settings.adwords_developer_token ? cryptr.decrypt(settings.adwords_developer_token) : '';
-         const adwords_account_id = settings.adwords_account_id ? cryptr.decrypt(settings.adwords_account_id) : '';
+
+         let adwords_client_id = settings.adwords_client_id ? cryptr.decrypt(settings.adwords_client_id) : '';
+         let adwords_client_secret = settings.adwords_client_secret ? cryptr.decrypt(settings.adwords_client_secret) : '';
+         let adwords_developer_token = settings.adwords_developer_token ? cryptr.decrypt(settings.adwords_developer_token) : '';
+         let adwords_account_id = settings.adwords_account_id ? cryptr.decrypt(settings.adwords_account_id) : '';
+
+         let google_connected = false;
+
+         // 2. Override with User Settings
+         if (userId && !isLegacy) {
+            const user = await User.findByPk(userId);
+            if (user) {
+               scraper_type = user.scraper_type || scraper_type;
+               scaping_api = user.scraper_api_key ? cryptr.decrypt(user.scraper_api_key) : scaping_api;
+               proxy = user.proxy_list || proxy;
+               scrape_delay = user.scrape_delay || scrape_delay;
+               scrape_retry = user.scrape_retry !== undefined ? user.scrape_retry : scrape_retry;
+
+               // Adwords Overrides
+               if (user.adwords_client_id) adwords_client_id = cryptr.decrypt(user.adwords_client_id);
+               if (user.adwords_client_secret) adwords_client_secret = cryptr.decrypt(user.adwords_client_secret);
+               if (user.adwords_developer_token) adwords_developer_token = cryptr.decrypt(user.adwords_developer_token);
+               if (user.adwords_account_id) adwords_account_id = cryptr.decrypt(user.adwords_account_id);
+
+               google_connected = !!(user.google_refresh_token || user.google_access_token);
+            }
+         } else if (isLegacy) {
+            // Revert scraping api logic for Legacy if needed, but the init above covers it for 'settings.scaping_api'
+         }
 
          decryptedSettings = {
             ...settings,
@@ -171,6 +192,8 @@ export const getAppSettings = async (userId?: number, isLegacy?: boolean): Promi
             adwords_client_secret,
             adwords_developer_token,
             adwords_account_id,
+            scrape_delay,
+            scrape_retry,
          };
       } catch (error) {
          console.log('Error Decrypting Settings API Keys!', error);

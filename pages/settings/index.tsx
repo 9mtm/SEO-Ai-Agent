@@ -3,7 +3,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { toast, Toaster } from 'react-hot-toast';
-import { Settings as SettingsIcon, Bell, Plug, Save, Loader2, CheckCircle, Download, X, Shield, ShieldCheck, ShieldAlert, ShieldX } from 'lucide-react';
+import { Settings as SettingsIcon, Bell, Plug, Save, Loader2, CheckCircle, Download, X } from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { useFetchSettings, useUpdateSettings } from '../../services/settings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -40,6 +40,7 @@ const SettingsPage: NextPage = () => {
    const [settings, setSettings] = useState<SettingsType>(defaultSettings);
    const [loadingSites, setLoadingSites] = useState(false);
    const [sites, setSites] = useState<{ siteUrl: string; permissionLevel: string }[]>([]);
+   const [showSitesModal, setShowSitesModal] = useState(false);
    const { data: appSettings, isPending } = useFetchSettings();
    const { mutate: updateMutate, isPending: isUpdating } = useUpdateSettings(() => {
       toast.success('Settings updated successfully!');
@@ -60,13 +61,6 @@ const SettingsPage: NextPage = () => {
          router.replace({ pathname, query }, undefined, { shallow: true });
       }
    }, [router.query]);
-
-   useEffect(() => {
-      if (settings?.google_connected) {
-         fetchSites();
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [settings?.google_connected]);
 
    const updateSettings = (key: string, value: string | number | boolean) => {
       setSettings({ ...settings, [key]: value });
@@ -116,6 +110,7 @@ const SettingsPage: NextPage = () => {
          const data = await res.json();
          if (data.sites) {
             setSites(data.sites);
+            setShowSitesModal(true);
          } else {
             toast.error('No sites found or error fetching sites.');
          }
@@ -144,55 +139,13 @@ const SettingsPage: NextPage = () => {
       }
    };
 
-   const getPermissionLabel = (permissionLevel: string) => {
-      const labels: { [key: string]: { en: string; de: string; color: string; icon: any } } = {
-         siteOwner: {
-            en: 'Owner',
-            de: 'Eigentümer',
-            color: 'bg-green-100 text-green-800 border-green-200',
-            icon: ShieldCheck
-         },
-         siteFullUser: {
-            en: 'Full Access',
-            de: 'Vollzugriff',
-            color: 'bg-blue-100 text-blue-800 border-blue-200',
-            icon: Shield
-         },
-         siteRestrictedUser: {
-            en: 'Restricted',
-            de: 'Eingeschränkt',
-            color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-            icon: ShieldAlert
-         },
-         siteUnverifiedUser: {
-            en: 'Unverified',
-            de: 'Nicht verifiziert',
-            color: 'bg-gray-100 text-gray-800 border-gray-200',
-            icon: ShieldX
-         }
-      };
-
-      const permission = labels[permissionLevel] || {
-         en: permissionLevel,
-         de: permissionLevel,
-         color: 'bg-neutral-100 text-neutral-800 border-neutral-200',
-         icon: Shield
-      };
-
-      return {
-         label: selectedLang === 'en' ? permission.en : permission.de,
-         color: permission.color,
-         Icon: permission.icon
-      };
-   };
-
    const translations = {
       en: {
          title: 'Settings',
          description: 'Manage your application settings and preferences',
          scraper: 'Scraper',
          notifications: 'Notifications',
-         integrations: 'Google Search Console',
+         integrations: 'Integrations',
          save: 'Save Changes',
          saving: 'Saving...',
          googleConnected: 'Connected to Google',
@@ -203,19 +156,14 @@ const SettingsPage: NextPage = () => {
          sitesModalTitle: 'Import Sites from Google Search Console',
          noSites: 'No verified sites found',
          import: 'Import',
-         close: 'Close',
-         permissionsTitle: 'Permission Levels Explained:',
-         permissionOwner: 'Full control - Recommended for importing sites',
-         permissionFull: 'Can view and manage most data',
-         permissionRestricted: 'Limited access - May not work properly',
-         permissionUnverified: 'Site not verified - Cannot be imported'
+         close: 'Close'
       },
       de: {
          title: 'Einstellungen',
          description: 'Verwalten Sie Ihre Anwendungseinstellungen',
          scraper: 'Scraper',
          notifications: 'Benachrichtigungen',
-         integrations: 'Google Search Console',
+         integrations: 'Integrationen',
          save: 'Änderungen speichern',
          saving: 'Wird gespeichert...',
          googleConnected: 'Mit Google verbunden',
@@ -226,12 +174,7 @@ const SettingsPage: NextPage = () => {
          sitesModalTitle: 'Websites aus Google Search Console importieren',
          noSites: 'Keine verifizierten Websites gefunden',
          import: 'Importieren',
-         close: 'Schließen',
-         permissionsTitle: 'Berechtigungsstufen erklärt:',
-         permissionOwner: 'Volle Kontrolle - Empfohlen zum Importieren',
-         permissionFull: 'Kann die meisten Daten anzeigen und verwalten',
-         permissionRestricted: 'Eingeschränkter Zugriff - Funktioniert möglicherweise nicht richtig',
-         permissionUnverified: 'Website nicht verifiziert - Kann nicht importiert werden'
+         close: 'Schließen'
       }
    };
 
@@ -473,76 +416,32 @@ const SettingsPage: NextPage = () => {
                                        {t.disconnect}
                                     </Button>
                                  </div>
+                                 <Button
+                                    onClick={fetchSites}
+                                    disabled={loadingSites}
+                                    className="w-full gap-2"
+                                 >
+                                    {loadingSites ? (
+                                       <>
+                                          <Loader2 className="h-4 w-4 animate-spin" />
+                                          {t.importingSites}
+                                       </>
+                                    ) : (
+                                       <>
+                                          <Download className="h-4 w-4" />
+                                          {t.importSites}
+                                       </>
+                                    )}
+                                 </Button>
                               </div>
-
-                              <div className="space-y-4 mt-6">
-                                 <h3 className="text-lg font-medium text-neutral-900 border-b pb-2">Verified Sites</h3>
-                                 {loadingSites ? (
-                                    <div className="flex items-center gap-2 text-neutral-500 py-4">
-                                       <Loader2 className="h-5 w-5 animate-spin" />
-                                       <p>Loading sites from Google Search Console...</p>
-                                    </div>
-                                 ) : sites.length === 0 ? (
-                                    <div className="text-center py-8 text-muted-foreground bg-neutral-50 rounded-lg border border-neutral-100">
-                                       {t.noSites}
-                                    </div>
-                                 ) : (
-                                    <div className="grid gap-3">
-                                       {sites.map((site) => (
-                                          <div
-                                             key={site.siteUrl}
-                                             className="flex items-center justify-between p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors bg-white shadow-sm"
-                                          >
-                                             <div className="flex-1 mr-4 overflow-hidden">
-                                                <p className="font-medium text-sm truncate text-neutral-900">{site.siteUrl}</p>
-                                                <div className="flex items-center gap-2 mt-1">
-                                                   {(() => {
-                                                      const { label, color, Icon } = getPermissionLabel(site.permissionLevel);
-                                                      return (
-                                                         <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-semibold border ${color}`}>
-                                                            <Icon className="h-3 w-3" />
-                                                            {label}
-                                                         </span>
-                                                      );
-                                                   })()}
-                                                </div>
-                                             </div>
-                                             <Button
-                                                onClick={() => importSite(site.siteUrl)}
-                                                size="sm"
-                                                variant="outline"
-                                                className="gap-2"
-                                             >
-                                                <Download className="h-4 w-4" />
-                                                {t.import}
-                                             </Button>
-                                          </div>
-                                       ))}
-                                    </div>
-                                 )}
-                              </div>
-                              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                                 <p className="text-sm text-blue-900 mb-2 font-semibold flex items-center gap-2">
-                                    <Shield className="h-4 w-4" />
-                                    {t.permissionsTitle}
+                              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                 <p className="text-sm text-yellow-800 mb-2">
+                                    <strong>Important Notes:</strong>
                                  </p>
-                                 <ul className="text-sm text-blue-800 space-y-2">
-                                    <li className="flex items-start gap-2">
-                                       <ShieldCheck className="h-4 w-4 mt-0.5 text-green-600 flex-shrink-0" />
-                                       <span><strong>Owner:</strong> {t.permissionOwner}</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                       <Shield className="h-4 w-4 mt-0.5 text-blue-600 flex-shrink-0" />
-                                       <span><strong>Full Access:</strong> {t.permissionFull}</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                       <ShieldAlert className="h-4 w-4 mt-0.5 text-yellow-600 flex-shrink-0" />
-                                       <span><strong>Restricted:</strong> {t.permissionRestricted}</span>
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                       <ShieldX className="h-4 w-4 mt-0.5 text-gray-600 flex-shrink-0" />
-                                       <span><strong>Unverified:</strong> {t.permissionUnverified}</span>
-                                    </li>
+                                 <ul className="text-sm text-yellow-800 list-disc list-inside space-y-1">
+                                    <li>Only sites where you are the <strong>Owner</strong> in Google Search Console will appear and work properly.</li>
+                                    <li>If a site has permission errors, check that you have Owner access (not just User) in Google Search Console.</li>
+                                    <li>If you recently changed permissions, try disconnecting and reconnecting your Google account.</li>
                                  </ul>
                               </div>
                            </>
@@ -590,7 +489,46 @@ const SettingsPage: NextPage = () => {
          </div>
 
          {/* Sites Import Dialog */}
-
+         <Dialog open={showSitesModal} onOpenChange={setShowSitesModal}>
+            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+               <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                     <Download className="h-5 w-5" />
+                     {t.sitesModalTitle}
+                  </DialogTitle>
+                  <DialogDescription>
+                     Select sites to import into your dashboard
+                  </DialogDescription>
+               </DialogHeader>
+               <div className="space-y-2 mt-4">
+                  {sites.length === 0 ? (
+                     <div className="text-center py-8 text-muted-foreground">
+                        {t.noSites}
+                     </div>
+                  ) : (
+                     sites.map((site) => (
+                        <div
+                           key={site.siteUrl}
+                           className="flex items-center justify-between p-4 border rounded-lg hover:bg-neutral-50 transition-colors"
+                        >
+                           <div className="flex-1 mr-4">
+                              <p className="font-medium text-sm truncate">{site.siteUrl}</p>
+                              <p className="text-xs text-muted-foreground">{site.permissionLevel}</p>
+                           </div>
+                           <Button
+                              onClick={() => importSite(site.siteUrl)}
+                              size="sm"
+                              className="gap-2"
+                           >
+                              <Download className="h-3 w-3" />
+                              {t.import}
+                           </Button>
+                        </div>
+                     ))
+                  )}
+               </div>
+            </DialogContent>
+         </Dialog>
 
          <Toaster position='bottom-center' />
       </DashboardLayout>
