@@ -75,22 +75,33 @@ const DomainSettingsPage: NextPage = () => {
                 setCompetitors(loadedCompetitors);
 
                 // Load Focus Keywords
-                if (found.focus_keywords) {
+                let loadedFocusKeywords: any = found.focus_keywords;
+
+                if (typeof loadedFocusKeywords === 'string') {
+                    try {
+                        loadedFocusKeywords = JSON.parse(loadedFocusKeywords);
+                    } catch (e) {
+                        console.error('[DEBUG] Failed to parse focus_keywords JSON:', e);
+                        loadedFocusKeywords = null;
+                    }
+                }
+
+                if (loadedFocusKeywords) {
                     setFocusKeywords({
                         high: [
-                            found.focus_keywords.high?.[0] || '',
-                            found.focus_keywords.high?.[1] || '',
-                            found.focus_keywords.high?.[2] || ''
+                            loadedFocusKeywords.high?.[0] || '',
+                            loadedFocusKeywords.high?.[1] || '',
+                            loadedFocusKeywords.high?.[2] || ''
                         ],
                         medium: [
-                            found.focus_keywords.medium?.[0] || '',
-                            found.focus_keywords.medium?.[1] || '',
-                            found.focus_keywords.medium?.[2] || ''
+                            loadedFocusKeywords.medium?.[0] || '',
+                            loadedFocusKeywords.medium?.[1] || '',
+                            loadedFocusKeywords.medium?.[2] || ''
                         ],
                         low: [
-                            found.focus_keywords.low?.[0] || '',
-                            found.focus_keywords.low?.[1] || '',
-                            found.focus_keywords.low?.[2] || ''
+                            loadedFocusKeywords.low?.[0] || '',
+                            loadedFocusKeywords.low?.[1] || '',
+                            loadedFocusKeywords.low?.[2] || ''
                         ]
                     });
                 }
