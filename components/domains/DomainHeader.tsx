@@ -76,13 +76,15 @@ const DomainHeader = (
                         <i className={`${buttonLabelStyle}`}>{isRefreshingCompetitors ? 'Updating...' : 'Reload Competitors'}</i>
                      </button>
                   )}
-                  <button
-                     data-testid="show_domain_settings"
-                     className={`domheader_action_button relative ${buttonStyle} lg:ml-3`}
-                     aria-pressed="false"
-                     onClick={() => showSettingsModal(true)}><Icon type='settings' size={20} />
-                     <i className={`${buttonLabelStyle}`}>Domain Settings</i>
-                  </button>
+                  {!isCompetitors && !isConsole && (
+                     <button
+                        data-testid="show_domain_settings"
+                        className={`domheader_action_button relative ${buttonStyle} lg:ml-3`}
+                        aria-pressed="false"
+                        onClick={() => showSettingsModal(true)}><Icon type='settings' size={20} />
+                        <i className={`${buttonLabelStyle}`}>Domain Settings</i>
+                     </button>
+                  )}
                   {onDeleteDomain && (
                      <button
                         data-testid="delete_domain"
@@ -93,7 +95,7 @@ const DomainHeader = (
                      </button>
                   )}
                </div>
-               {!isConsole && !isInsight && !isIdeas && (
+               {!isConsole && !isInsight && !isIdeas && !isCompetitors && (
                   <button
                      data-testid="add_keyword"
                      className={'ml-2 inline-block text-blue-700 font-bold text-sm lg:px-4 lg:py-2'}
@@ -103,26 +105,7 @@ const DomainHeader = (
                      <i className=' not-italic hidden lg:inline-block'>Add Keyword</i>
                   </button>
                )}
-               {isConsole && (
-                  <div className='text-xs pl-4 ml-2 border-l border-gray-200 relative'>
-                     {/* <span className='hidden lg:inline-block'>Data From Last: </span> */}
-                     <span className='block cursor-pointer py-3' onClick={() => setShowSCDates(!ShowSCDates)}>
-                        <Icon type='date' size={13} classes="mr-1" /> {daysName(scFilter)}
-                     </span>
-                     {ShowSCDates && (
-                        <div className='absolute w-24 z-50 mt-0 right-0 bg-white border border-gray-200 rounded text-center'>
-                           {['threeDays', 'sevenDays', 'thirtyDays'].map((itemKey) => {
-                              return <button
-                                 key={itemKey}
-                                 className={`${scDataFilterStlye} ${scFilter === itemKey ? ' bg-indigo-100 text-indigo-600' : ''}`}
-                                 onClick={() => { setShowSCDates(false); if (setScFilter) setScFilter(itemKey); }}
-                              >Last {daysName(itemKey)}
-                              </button>;
-                           })}
-                        </div>
-                     )}
-                  </div>
-               )}
+
                {isIdeas && (
                   <button
                      data-testid="load_ideas"
@@ -136,6 +119,29 @@ const DomainHeader = (
                   </button>
                )}
             </div>
+
+            {isConsole && (
+               <div className='flex items-center lg:mt-3'>
+                  <div className="relative">
+                     <span className='block cursor-pointer py-2 px-3 bg-white border border-gray-200 rounded-md hover:border-blue-400 transition-colors text-xs font-medium text-gray-700 shadow-sm flex items-center' onClick={() => setShowSCDates(!ShowSCDates)}>
+                        <Icon type='date' size={14} classes="mr-2 text-gray-500" />
+                        Last {daysName(scFilter).trim()}
+                     </span>
+                     {ShowSCDates && (
+                        <div className='absolute w-40 z-50 mt-1 top-full right-0 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100'>
+                           {['threeDays', 'sevenDays', 'thirtyDays'].map((itemKey) => {
+                              return <button
+                                 key={itemKey}
+                                 className={`w-full text-left px-4 py-2.5 text-xs hover:bg-gray-50 transition-colors border-b last:border-0 border-gray-50 ${scFilter === itemKey ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-600'}`}
+                                 onClick={() => { setShowSCDates(false); if (setScFilter) setScFilter(itemKey); }}
+                              >Last {daysName(itemKey)}
+                              </button>;
+                           })}
+                        </div>
+                     )}
+                  </div>
+               </div>
+            )}
          </div>
       </div>
    );

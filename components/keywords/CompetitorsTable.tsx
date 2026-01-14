@@ -11,7 +11,7 @@ type CompetitorsTableProps = {
 
 const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, settings }: CompetitorsTableProps) => {
     const { mutate: refreshCompetitorsMutate } = useRefreshCompetitors(() => { });
-    const competitors = domain?.competitors || [];
+    const competitors = Array.isArray(domain?.competitors) ? domain.competitors : [];
 
     if (isPending) {
         return (
