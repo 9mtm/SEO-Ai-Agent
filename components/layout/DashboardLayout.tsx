@@ -72,7 +72,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     );
   } else if (router.pathname.startsWith('/profile')) {
     navigation.push(
-      { name: 'Scraper', href: '/profile', icon: Settings },
+      { name: 'Scraper', href: '/profile/scraper', icon: Settings },
       { name: 'Billing', href: '/profile/billing', icon: CreditCard }
     );
   } else {
