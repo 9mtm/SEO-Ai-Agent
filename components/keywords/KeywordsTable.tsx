@@ -13,7 +13,7 @@ import AddTags from './AddTags';
 import useWindowResize from '../../hooks/useWindowResize';
 import useIsMobile from '../../hooks/useIsMobile';
 import { useUpdateSettings } from '../../services/settings';
-import { defaultSettings } from '../../pages/settings/index';
+import { defaultSettings } from '../../pages/profile/index';
 
 type KeywordsTableProps = {
    domain: DomainType | null,

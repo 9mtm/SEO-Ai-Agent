@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Settings, LogOut, Plus, Globe } from 'lucide-react';
+import { Settings, LogOut, Plus, Globe, User } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 type AccountMenuProps = {
@@ -182,14 +182,14 @@ const AccountMenu = ({ showAddModal, domains = [], currentDomain, selectedLang =
                         </div>
                     )}
 
-                    {/* Settings */}
+                    {/* Profile */}
                     <Link
-                        href="/settings"
+                        href="/profile"
                         onClick={() => setIsOpen(false)}
                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-100 transition-colors"
                     >
-                        <Settings className="h-4 w-4" />
-                        <span>Settings</span>
+                        <User className="h-4 w-4" />
+                        <span>Profile</span>
                     </Link>
 
                     {/* Logout */}

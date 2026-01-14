@@ -69,6 +69,14 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       { name: 'Seo Agent', href: `/domain/agent/${currentDomain.slug}`, icon: Bot },
       { name: 'Settings', href: `/domain/settings/${currentDomain.slug}`, icon: Settings }
     );
+  } else if (router.pathname.startsWith('/profile')) {
+    navigation.push(
+      { name: 'Scraper', href: '/profile', icon: Settings }
+    );
+  } else {
+    navigation.push(
+      { name: 'My Domains', href: '/', icon: Globe }
+    );
   }
 
   return (

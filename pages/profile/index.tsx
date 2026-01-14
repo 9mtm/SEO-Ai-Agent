@@ -98,8 +98,8 @@ const SettingsPage: NextPage = () => {
 
    const translations = {
       en: {
-         title: 'Settings',
-         description: 'Manage your application settings and preferences',
+         title: 'Profile',
+         description: 'Manage your profile and application settings',
          scraper: 'Scraper',
          notifications: 'Notifications',
          integrations: 'Integrations',
