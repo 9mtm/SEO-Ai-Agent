@@ -104,7 +104,6 @@ const AccountMenu = ({ showAddModal, domains = [], currentDomain, selectedLang =
                 )}
                 <div className="hidden lg:flex flex-col items-start">
                     <span className="text-sm font-semibold text-neutral-900">{userInfo.name}</span>
-                    <span className="text-xs text-neutral-500">{userInfo.email}</span>
                 </div>
                 <svg
                     className={`w-4 h-4 text-neutral-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}

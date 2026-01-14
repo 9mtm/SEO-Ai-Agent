@@ -2,12 +2,32 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 import { BarChart3, TrendingUp, Globe, ChevronRight, Menu, X } from 'lucide-react';
+import AccountMenu from '../components/common/AccountMenu';
+import { useFetchDomains } from '../services/domains';
 
 const Home: NextPage = () => {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const { data: domainsData } = useFetchDomains(router);
+  const domains = domainsData?.domains || [];
+
+  useEffect(() => {
+    fetch('/api/user')
+      .then((res) => {
+        if (res.ok) {
+          setIsLoggedIn(true);
+        }
+      })
+      .catch(() => {
+        // Not logged in
+      });
+  }, []);
 
   const translations = {
     en: {
@@ -83,18 +103,30 @@ const Home: NextPage = () => {
                 <option value="en">English</option>
                 <option value="de">Deutsch</option>
               </select>
-              <Link
-                href="/login"
-                className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors"
-              >
-                {t.login}
-              </Link>
-              <Link
-                href="/login"
-                className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
-              >
-                {t.cta}
-              </Link>
+
+              {isLoggedIn ? (
+                <AccountMenu
+                  showAddModal={() => router.push('/domains?new=true')}
+                  domains={domains}
+                  selectedLang={selectedLang}
+                  onLanguageChange={setSelectedLang}
+                />
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors"
+                  >
+                    {t.login}
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+                  >
+                    {t.cta}
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile menu button */}
