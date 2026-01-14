@@ -108,14 +108,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               );
             })}
           </nav>
-
-          <div className="p-4 border-t border-neutral-200">
-            <AccountMenu
-              showAddModal={showAddModal}
-              domains={domains}
-              currentDomain={null}
-            />
-          </div>
         </div>
       </aside>
 

@@ -10,8 +10,15 @@ type AccountMenuProps = {
     currentDomain?: DomainType | null;
 };
 
+type UserInfo = {
+    name: string;
+    email: string;
+    picture?: string;
+};
+
 const AccountMenu = ({ showAddModal, domains = [], currentDomain }: AccountMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [userInfo, setUserInfo] = useState<UserInfo>({ name: 'User', email: 'user@example.com' });
     const menuRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
@@ -24,6 +31,23 @@ const AccountMenu = ({ showAddModal, domains = [], currentDomain }: AccountMenuP
 
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    useEffect(() => {
+        // Fetch user info
+        const fetchUserInfo = async () => {
+            try {
+                const response = await fetch('/api/user');
+                const data = await response.json();
+                if (data.success && data.user) {
+                    setUserInfo(data.user);
+                }
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+            }
+        };
+
+        fetchUserInfo();
     }, []);
 
     const logoutUser = async () => {
@@ -49,6 +73,15 @@ const AccountMenu = ({ showAddModal, domains = [], currentDomain }: AccountMenuP
         setIsOpen(false);
     };
 
+    const getInitials = (name: string) => {
+        return name
+            .split(' ')
+            .map(n => n[0])
+            .join('')
+            .toUpperCase()
+            .substring(0, 2);
+    };
+
     return (
         <div className="relative" ref={menuRef}>
             {/* Account Button */}
@@ -56,12 +89,20 @@ const AccountMenu = ({ showAddModal, domains = [], currentDomain }: AccountMenuP
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-neutral-100 transition-colors"
             >
-                <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold text-sm">
-                    U
-                </div>
+                {userInfo.picture ? (
+                    <img
+                        src={userInfo.picture}
+                        alt={userInfo.name}
+                        className="w-8 h-8 rounded-full"
+                    />
+                ) : (
+                    <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold text-sm">
+                        {getInitials(userInfo.name)}
+                    </div>
+                )}
                 <div className="hidden lg:flex flex-col items-start">
-                    <span className="text-sm font-semibold text-neutral-900">User</span>
-                    <span className="text-xs text-neutral-500">user@example.com</span>
+                    <span className="text-sm font-semibold text-neutral-900">{userInfo.name}</span>
+                    <span className="text-xs text-neutral-500">{userInfo.email}</span>
                 </div>
                 <svg
                     className={`w-4 h-4 text-neutral-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
@@ -93,8 +134,8 @@ const AccountMenu = ({ showAddModal, domains = [], currentDomain }: AccountMenuP
                                         key={domain.slug}
                                         onClick={() => handleDomainChange(domain.slug)}
                                         className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors ${currentDomain?.slug === domain.slug
-                                                ? 'bg-primary/10 text-primary font-medium'
-                                                : 'text-neutral-700 hover:bg-neutral-100'
+                                            ? 'bg-primary/10 text-primary font-medium'
+                                            : 'text-neutral-700 hover:bg-neutral-100'
                                             }`}
                                     >
                                         <Globe className="h-4 w-4 flex-shrink-0" />
