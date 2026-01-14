@@ -12,6 +12,7 @@ import {
   LineChart,
   Bot,
   Settings,
+  CreditCard,
 } from 'lucide-react';
 import AccountMenu from '../common/AccountMenu';
 import DomainSelector from '../domains/DomainSelector';
@@ -71,7 +72,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     );
   } else if (router.pathname.startsWith('/profile')) {
     navigation.push(
-      { name: 'Scraper', href: '/profile', icon: Settings }
+      { name: 'Scraper', href: '/profile', icon: Settings },
+      { name: 'Billing', href: '/profile/billing', icon: CreditCard }
     );
   } else {
     navigation.push(
