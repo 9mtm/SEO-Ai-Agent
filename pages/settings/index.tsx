@@ -450,17 +450,23 @@ const SettingsPage: NextPage = () => {
                               </div>
                            </>
                         ) : (
-                           <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
-                              <p className="text-sm text-blue-800 mb-4">
-                                 Connect your Google account to automatically import your verified sites and access Search Console data.
+                           <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg border border-gray-200">
+                              <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                                 <svg className="w-8 h-8 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-1.07 3.97-2.9 5.4z" />
+                                 </svg>
+                              </div>
+                              <h3 className="text-lg font-medium text-gray-900 mb-2">Connect Google Search Console</h3>
+                              <p className="text-sm text-gray-500 mb-6 text-center max-w-md">
+                                 Link your Google account to automatically verify sites and fetch performance data directly into your dashboard.
                               </p>
                               <Button
                                  onClick={() => window.location.href = '/api/auth/google/authorize'}
-                                 variant="outline"
-                                 className="gap-2"
+                                 size="lg"
+                                 className="gap-2 bg-black text-white hover:bg-gray-800"
                               >
                                  <Plug className="h-4 w-4" />
-                                 {t.connectGoogle}
+                                 Connect Google Account
                               </Button>
                            </div>
                         )}

@@ -119,9 +119,36 @@ ${content}`
                         business_name: data.businessName,
                         niche: data.niche,
                         description: data.description,
-                        language: data.language,
-                        blog_url: data.blogUrl,
                     });
+
+                    // AI Suggest Competitors (Internal Logic - No External Scraper Token)
+                    try {
+                        const aiRes = await axios.post('http://127.0.0.1:38474/v1/chat/completions', {
+                            model: "qwen",
+                            messages: [
+                                { role: "system", content: "You are an SEO expert. Respond ONLY with a valid JSON array of strings." },
+                                {
+                                    role: "user", content: `List 5 top real-world competitor domains for the niche: "${data.niche}". 
+                                Simulate a comprehensive Google, Trustpilot, and G2 search to find the most relevant and popular active competitors.
+                                Return ONLY a JSON array of domain names (e.g. ["competitor1.com", "example.net"]). Do not number them.` }
+                            ],
+                            temperature: 0.3,
+                            max_tokens: 200
+                        });
+
+                        let suggestedCompetitors = [];
+                        if (aiRes.data?.choices?.[0]?.message?.content) {
+                            const raw = aiRes.data.choices[0].message.content;
+                            const jsonStr = raw.replace(/```json\n?|\n?```/g, '').trim();
+                            suggestedCompetitors = JSON.parse(jsonStr);
+                        }
+
+                        return res.status(200).json({ success: true, suggestedCompetitors });
+
+                    } catch (e) {
+                        // Fallback if AI fails
+                        return res.status(200).json({ success: true, suggestedCompetitors: [] });
+                    }
                 }
             }
 

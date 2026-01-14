@@ -4,9 +4,10 @@ import { ChevronLeft, Plus, X } from 'lucide-react';
 interface Step3Props {
     onNext: (data: any) => void;
     onBack: () => void;
+    suggestedCompetitors?: string[];
 }
 
-const Step3 = ({ onNext, onBack }: Step3Props) => {
+const Step3 = ({ onNext, onBack, suggestedCompetitors }: Step3Props) => {
     const [competitors, setCompetitors] = useState<string[]>(['']);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -29,6 +30,19 @@ const Step3 = ({ onNext, onBack }: Step3Props) => {
         const newCompetitors = [...competitors];
         newCompetitors[index] = value;
         setCompetitors(newCompetitors);
+    };
+
+    const handleAddSuggested = (site: string) => {
+        // Check if already added
+        if (competitors.some(c => c.includes(site))) return;
+
+        // Find first empty slot or add new if < MAX
+        const firstEmpty = competitors.findIndex(c => c.trim() === '');
+        if (firstEmpty !== -1) {
+            handleCompetitorChange(firstEmpty, site.startsWith('http') ? site : `https://${site}`);
+        } else if (competitors.length < MAX_COMPETITORS) {
+            setCompetitors([...competitors, site.startsWith('http') ? site : `https://${site}`]);
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -120,6 +134,34 @@ const Step3 = ({ onNext, onBack }: Step3Props) => {
                     <Plus size={16} className="mr-1" />
                     Add {competitors.length >= MAX_COMPETITORS && '(Max 3 reached)'}
                 </button>
+
+                {/* Proposed Competitors */}
+                {suggestedCompetitors && suggestedCompetitors.length > 0 && (
+                    <div className="mt-4">
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Suggestions:</p>
+                        <div className="flex flex-wrap gap-2">
+                            {suggestedCompetitors.map((site, i) => (
+                                <button
+                                    key={i}
+                                    type="button"
+                                    onClick={() => handleAddSuggested(site)}
+                                    className="pl-2 pr-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-full text-sm transition-all border border-gray-200 flex items-center shadow-sm hover:shadow-md group"
+                                >
+                                    <div className="w-5 h-5 bg-gray-100 rounded-full flex items-center justify-center mr-2 group-hover:bg-blue-50">
+                                        <Plus size={12} className="text-gray-400 group-hover:text-blue-500" />
+                                    </div>
+                                    <img
+                                        src={`https://www.google.com/s2/favicons?domain=${site}&sz=32`}
+                                        alt=""
+                                        className="w-4 h-4 mr-2"
+                                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                    />
+                                    {site}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {error && <p className="text-red-500 text-sm">{error}</p>}
 

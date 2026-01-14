@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { Toaster } from 'react-hot-toast';
 import { sortInsightItems } from '../../utils/insight';
 import SelectField from '../common/SelectField';
@@ -310,11 +311,20 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                      )}
                      {!isConsoleIntegrated && (
                         <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-                           <svg className="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                           </svg>
-                           <p className="text-lg font-medium">Google Search Console Not Integrated</p>
-                           <p className="text-sm mt-2">Connect your account in Settings to see insights.</p>
+                           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                              <svg className="w-8 h-8 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
+                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-1.07 3.97-2.9 5.4z" />
+                              </svg>
+                           </div>
+                           <p className="text-lg font-medium text-gray-900">Google Search Console Not Integrated</p>
+                           <p className="text-sm mt-2 mb-6 text-gray-500">Connect your account in Settings to see insights.</p>
+
+                           <Link
+                              href="/settings?tab=search_console"
+                              className="px-6 py-2.5 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center"
+                           >
+                              Connect Google Search Console
+                           </Link>
                         </div>
                      )}
                      {searchQuery && filteredItems.length === 0 && !isPending && (
