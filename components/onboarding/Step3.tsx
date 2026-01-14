@@ -80,7 +80,7 @@ const Step3 = ({ onNext, onBack, suggestedCompetitors }: Step3Props) => {
                     <div className="w-8 h-1 bg-black rounded"></div>
                     <div className="w-8 h-1 bg-black rounded"></div>
                     <div className="w-8 h-1 bg-black rounded"></div>
-                    <div className="w-8 h-1 bg-gray-300 rounded"></div>
+                    <div className="w-8 h-1 bg-black rounded"></div>
                     <div className="w-8 h-1 bg-gray-300 rounded"></div>
                     <div className="w-8 h-1 bg-gray-300 rounded"></div>
                 </div>

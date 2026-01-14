@@ -754,13 +754,23 @@ const DomainSettingsPage: NextPage = () => {
                                                         <p className="text-xs text-gray-400 mt-1">Click "Refresh Sites" to load your sites</p>
                                                     </div>
                                                 ) : (() => {
-                                                    // FILTER DISABLED FOR TESTING - Shows all sites
-                                                    // const currentDomain = activeDomain?.domain || '';
-                                                    // const filteredSites = sites.filter(site => {
-                                                    //     ...filter logic...
-                                                    // });
+                                                    // Filter sites to show only the current domain
+                                                    const currentDomain = activeDomain?.domain || '';
+                                                    const filteredSites = sites.filter(site => {
+                                                        const cleanSiteUrl = site.siteUrl
+                                                            .replace('sc-domain:', '')
+                                                            .replace(/^https?:\/\//, '')
+                                                            .replace(/\/$/, '')
+                                                            .toLowerCase();
+                                                        const cleanCurrentDomain = currentDomain
+                                                            .replace(/^https?:\/\//, '')
+                                                            .replace(/\/$/, '')
+                                                            .toLowerCase();
 
-                                                    const filteredSites = sites; // Show ALL sites for testing
+                                                        return cleanSiteUrl === cleanCurrentDomain ||
+                                                            cleanSiteUrl.includes(cleanCurrentDomain) ||
+                                                            cleanCurrentDomain.includes(cleanSiteUrl);
+                                                    });
 
                                                     if (filteredSites.length === 0) {
                                                         return (

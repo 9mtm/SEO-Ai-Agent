@@ -156,9 +156,46 @@ ${content}`
                         description: data.description,
                     });
 
-                    // AI Suggest Competitors (Internal Logic - No External Scraper Token)
+                    // AI Suggest Focus Keywords (9 keywords in 3 priority levels)
                     try {
-                        const aiRes = await axios.post('http://127.0.0.1:38474/v1/chat/completions', {
+                        const keywordsRes = await axios.post('http://127.0.0.1:38474/v1/chat/completions', {
+                            model: "qwen",
+                            messages: [
+                                { role: "system", content: "You are an SEO expert. Respond ONLY with valid JSON." },
+                                {
+                                    role: "user", content: `Based on this business information:
+Business Name: ${data.businessName}
+Niche: ${data.niche}
+Description: ${data.description}
+
+Generate 9 SEO focus keywords categorized by priority. Return ONLY a JSON object in this exact format:
+{
+  "high": ["keyword1", "keyword2", "keyword3"],
+  "medium": ["keyword4", "keyword5", "keyword6"],
+  "low": ["keyword7", "keyword8", "keyword9"]
+}
+
+Guidelines:
+- High priority: Main commercial keywords with high search volume
+- Medium priority: Supporting keywords and variations
+- Low priority: Long-tail keywords and niche-specific terms
+- All keywords should be relevant to the niche: "${data.niche}"`
+                                }
+                            ],
+                            temperature: 0.3,
+                            max_tokens: 300,
+                            response_format: { type: "json_object" }
+                        });
+
+                        let suggestedKeywords = { high: [], medium: [], low: [] };
+                        if (keywordsRes.data?.choices?.[0]?.message?.content) {
+                            const raw = keywordsRes.data.choices[0].message.content;
+                            const jsonStr = raw.replace(/```json\n?|\n?```/g, '').trim();
+                            suggestedKeywords = JSON.parse(jsonStr);
+                        }
+
+                        // AI Suggest Competitors (Internal Logic - No External Scraper Token)
+                        const competitorsRes = await axios.post('http://127.0.0.1:38474/v1/chat/completions', {
                             model: "qwen",
                             messages: [
                                 { role: "system", content: "You are an SEO expert. Respond ONLY with a valid JSON array of strings." },
@@ -172,18 +209,37 @@ ${content}`
                         });
 
                         let suggestedCompetitors = [];
-                        if (aiRes.data?.choices?.[0]?.message?.content) {
-                            const raw = aiRes.data.choices[0].message.content;
+                        if (competitorsRes.data?.choices?.[0]?.message?.content) {
+                            const raw = competitorsRes.data.choices[0].message.content;
                             const jsonStr = raw.replace(/```json\n?|\n?```/g, '').trim();
                             suggestedCompetitors = JSON.parse(jsonStr);
                         }
 
-                        return res.status(200).json({ success: true, suggestedCompetitors });
+                        return res.status(200).json({ success: true, suggestedKeywords, suggestedCompetitors });
 
                     } catch (e) {
+                        console.error('AI generation failed:', e);
                         // Fallback if AI fails
-                        return res.status(200).json({ success: true, suggestedCompetitors: [] });
+                        return res.status(200).json({
+                            success: true,
+                            suggestedKeywords: { high: [], medium: [], low: [] },
+                            suggestedCompetitors: []
+                        });
                     }
+                }
+            }
+
+            if (step === 2.5 && data.focus_keywords) {
+                // Step 2.5: Save focus keywords
+                const domain = await Domain.findOne({
+                    where: { user_id: userId },
+                    order: [['ID', 'DESC']]
+                });
+
+                if (domain) {
+                    await domain.update({
+                        focus_keywords: data.focus_keywords,
+                    });
                 }
             }
 

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Step1 from '../../components/onboarding/Step1';
 import Step2 from '../../components/onboarding/Step2';
+import Step2_5 from '../../components/onboarding/Step2_5';
 import Step3 from '../../components/onboarding/Step3';
 import OnboardingLayout from '../../components/onboarding/OnboardingLayout';
 
@@ -16,7 +17,7 @@ const Onboarding = () => {
             setOnboardingData((prev: any) => ({ ...prev, ...data }));
         }
 
-        if (step < 3) {
+        if (step < 4) {
             setStep(step + 1);
         } else {
             // After completing onboarding, redirect to the domain insight page
@@ -44,7 +45,8 @@ const Onboarding = () => {
             <OnboardingLayout>
                 {step === 1 && <Step1 onNext={handleNext} />}
                 {step === 2 && <Step2 onNext={handleNext} onBack={handleBack} initialData={onboardingData.aiData} />}
-                {step === 3 && <Step3 onNext={handleNext} onBack={handleBack} suggestedCompetitors={onboardingData.suggestedCompetitors} />}
+                {step === 3 && <Step2_5 onNext={handleNext} onBack={handleBack} suggestedKeywords={onboardingData.suggestedKeywords} />}
+                {step === 4 && <Step3 onNext={handleNext} onBack={handleBack} suggestedCompetitors={onboardingData.suggestedCompetitors} />}
             </OnboardingLayout>
         </div>
     );
