@@ -129,7 +129,7 @@ const Login: NextPage = () => {
    return (
       <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-neutral-100 flex items-center justify-center p-4">
          <Head>
-            <title>{t.title} - SEO AI Agent</title>
+            <title>{`${t.title} - SEO AI Agent`}</title>
             <meta name="description" content="Sign in to SEO AI Agent" />
          </Head>
 
@@ -187,8 +187,8 @@ const Login: NextPage = () => {
                         onChange={(e) => setUsername(e.target.value)}
                         onKeyPress={handleKeyPress}
                         className={`w-full pl-11 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${error && error.type.includes('username')
-                              ? 'border-red-400 focus:ring-red-200 focus:border-red-400'
-                              : 'border-neutral-200 focus:ring-blue-200 focus:border-blue-400'
+                           ? 'border-red-400 focus:ring-red-200 focus:border-red-400'
+                           : 'border-neutral-200 focus:ring-blue-200 focus:border-blue-400'
                            }`}
                         placeholder={t.username}
                      />
@@ -208,8 +208,8 @@ const Login: NextPage = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         onKeyPress={handleKeyPress}
                         className={`w-full pl-11 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${error && error.type.includes('password')
-                              ? 'border-red-400 focus:ring-red-200 focus:border-red-400'
-                              : 'border-neutral-200 focus:ring-blue-200 focus:border-blue-400'
+                           ? 'border-red-400 focus:ring-red-200 focus:border-red-400'
+                           : 'border-neutral-200 focus:ring-blue-200 focus:border-blue-400'
                            }`}
                         placeholder={t.password}
                      />
@@ -228,7 +228,7 @@ const Login: NextPage = () => {
                <button
                   onClick={loginuser}
                   disabled={isLoading}
-                  className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full py-3.5 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 active:scale-[0.98]"
                >
                   {isLoading ? (
                      <>

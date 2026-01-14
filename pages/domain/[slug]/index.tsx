@@ -3,14 +3,12 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { CSSTransition } from 'react-transition-group';
-import Sidebar from '../../../components/common/Sidebar';
 import TopBar from '../../../components/common/TopBar';
 import DomainHeader from '../../../components/domains/DomainHeader';
 import KeywordsTable from '../../../components/keywords/KeywordsTable';
 import AddDomain from '../../../components/domains/AddDomain';
 import DomainSettings from '../../../components/domains/DomainSettings';
 import exportCSV from '../../../utils/client/exportcsv';
-import Settings from '../../../components/settings/Settings';
 import { useFetchDomains, useDeleteDomain } from '../../../services/domains';
 import { useFetchKeywords } from '../../../services/keywords';
 import { useFetchSettings } from '../../../services/settings';
@@ -22,7 +20,6 @@ const SingleDomain: NextPage = () => {
    const [showAddKeywords, setShowAddKeywords] = useState(false);
    const [showAddDomain, setShowAddDomain] = useState(false);
    const [showDomainSettings, setShowDomainSettings] = useState(false);
-   const [showSettings, setShowSettings] = useState(false);
    const [keywordSPollInterval, setKeywordSPollInterval] = useState<undefined | number>(undefined);
    const { data: appSettingsData, isPending: isAppSettingsLoading } = useFetchSettings();
    const { data: domainsData } = useFetchDomains(router);
@@ -68,10 +65,13 @@ const SingleDomain: NextPage = () => {
                <title>{`${activDomain.domain} - Dpro`} </title>
             </Head>
          }
-         <TopBar showSettings={() => setShowSettings(true)} showAddModal={() => setShowAddDomain(true)} />
-         <div className="flex w-full max-w-7xl mx-auto">
-            <Sidebar domains={theDomains} showAddModal={() => setShowAddDomain(true)} />
-            <div className="domain_kewywords px-5 pt-10 lg:px-0 lg:pt-8 w-full">
+         <TopBar
+            showAddModal={() => setShowAddDomain(true)}
+            domains={theDomains}
+            currentDomain={activDomain}
+         />
+         <div className="w-full max-w-7xl mx-auto">
+            <div className="domain_kewywords px-5 pt-10 lg:px-8 lg:pt-8 w-full">
                {activDomain && activDomain.domain
                   ? <DomainHeader
                      domain={activDomain}
@@ -105,9 +105,7 @@ const SingleDomain: NextPage = () => {
                closeModal={setShowDomainSettings}
             />
          </CSSTransition>
-         <CSSTransition in={showSettings} timeout={300} classNames="settings_anim" unmountOnExit mountOnEnter>
-            <Settings closeSettings={() => setShowSettings(false)} />
-         </CSSTransition>
+
          <CSSTransition in={showAddKeywords} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
             <AddKeywords
                domain={activDomain?.domain || ''}

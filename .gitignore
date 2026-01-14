@@ -33,5 +33,3 @@ TODO
 *.safetensors
 *.pt
 *.pth
-.env.local
-

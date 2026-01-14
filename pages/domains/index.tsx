@@ -104,7 +104,12 @@ const Domains: NextPage = () => {
    const t = translations[selectedLang];
 
    return (
-      <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang}>
+      <DashboardLayout
+         selectedLang={selectedLang}
+         onLanguageChange={setSelectedLang}
+         domains={domainsData?.domains || []}
+         showAddModal={() => setShowAddDomain(true)}
+      >
          <Head>
             <title>{t.title} - SEO AI Agent</title>
          </Head>

@@ -5,32 +5,25 @@ import {
   BarChart3,
   Globe,
   Search,
-  Settings,
-  LogOut,
   Menu,
   X,
-  ChevronDown
 } from 'lucide-react';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import AccountMenu from '../common/AccountMenu';
 
 interface DashboardLayoutProps {
   children: ReactNode;
   selectedLang?: 'en' | 'de';
   onLanguageChange?: (lang: 'en' | 'de') => void;
+  domains?: DomainType[];
+  showAddModal?: () => void;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
   selectedLang = 'en',
-  onLanguageChange
+  onLanguageChange,
+  domains = [],
+  showAddModal = () => { }
 }) => {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -59,17 +52,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const navigation = [
     { name: t.domains, href: '/domains', icon: Globe },
     { name: t.keywords, href: '/keywords', icon: Search },
-    { name: t.settings, href: '/settings', icon: Settings },
   ];
-
-  const handleLogout = async () => {
-    try {
-      await fetch('/api/logout', { method: 'POST' });
-      router.push('/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -105,7 +88,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           <nav className="flex-1 px-4 py-6 space-y-1">
             {navigation.map((item) => {
               const isActive = router.pathname === item.href ||
-                              (item.href.includes('?settings') && router.query.settings);
+                (item.href.includes('?settings') && router.query.settings);
               return (
                 <Link
                   key={item.name}
@@ -127,33 +110,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           </nav>
 
           <div className="p-4 border-t border-neutral-200">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-neutral-100 transition-colors">
-                  <Avatar className="h-9 w-9">
-                    <AvatarFallback className="bg-blue-600 text-white">U</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 text-left">
-                    <div className="text-sm font-medium text-neutral-900">User</div>
-                    <div className="text-xs text-neutral-500">user@example.com</div>
-                  </div>
-                  <ChevronDown className="h-4 w-4 text-neutral-400" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>{t.account}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push('/settings')}>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>{t.settings}</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="text-red-600">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>{t.logout}</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <AccountMenu
+              showAddModal={showAddModal}
+              domains={domains}
+              currentDomain={null}
+            />
           </div>
         </div>
       </aside>
@@ -179,6 +140,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 <option value="en">English</option>
                 <option value="de">Deutsch</option>
               </select>
+
+              {/* Account Menu in Header - Using the same component */}
+              <AccountMenu
+                showAddModal={showAddModal}
+                domains={domains}
+                currentDomain={null}
+              />
             </div>
           </div>
         </header>

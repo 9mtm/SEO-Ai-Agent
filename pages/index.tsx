@@ -90,7 +90,7 @@ const Home: NextPage = () => {
               </Link>
               <Link
                 href="/login"
-                className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all shadow-sm hover:shadow-md"
+                className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
               >
                 {t.cta}
               </Link>
@@ -126,7 +126,7 @@ const Home: NextPage = () => {
               </Link>
               <Link
                 href="/login"
-                className="block px-4 py-2 bg-blue-600 text-white rounded-lg text-center font-medium"
+                className="block px-4 py-2 bg-primary text-primary-foreground rounded-lg text-center font-semibold hover:bg-primary/90 transition-all active:scale-[0.98]"
               >
                 {t.cta}
               </Link>
@@ -148,7 +148,7 @@ const Home: NextPage = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link
                 href="/login"
-                className="px-8 py-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 group"
+                className="px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 group active:scale-[0.98]"
               >
                 {t.cta}
                 <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />

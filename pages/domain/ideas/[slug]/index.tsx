@@ -3,13 +3,11 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { CSSTransition } from 'react-transition-group';
-import Sidebar from '../../../../components/common/Sidebar';
 import TopBar from '../../../../components/common/TopBar';
 import DomainHeader from '../../../../components/domains/DomainHeader';
 import AddDomain from '../../../../components/domains/AddDomain';
 import DomainSettings from '../../../../components/domains/DomainSettings';
 import { exportKeywordIdeas } from '../../../../utils/client/exportcsv';
-import Settings from '../../../../components/settings/Settings';
 import { useFetchDomains } from '../../../../services/domains';
 import { useFetchSettings } from '../../../../services/settings';
 import KeywordIdeasTable from '../../../../components/ideas/KeywordIdeasTable';
@@ -21,7 +19,6 @@ import Footer from '../../../../components/common/Footer';
 const DiscoverPage: NextPage = () => {
    const router = useRouter();
    const [showDomainSettings, setShowDomainSettings] = useState(false);
-   const [showSettings, setShowSettings] = useState(false);
    const [showAddDomain, setShowAddDomain] = useState(false);
    const [showUpdateModal, setShowUpdateModal] = useState(false);
    const [showFavorites, setShowFavorites] = useState(false);
@@ -52,10 +49,13 @@ const DiscoverPage: NextPage = () => {
                <title>{`${activDomain.domain} - Keyword Ideas`} </title>
             </Head>
          }
-         <TopBar showSettings={() => setShowSettings(true)} showAddModal={() => setShowAddDomain(true)} />
-         <div className="flex w-full max-w-7xl mx-auto">
-            <Sidebar domains={theDomains} showAddModal={() => setShowAddDomain(true)} />
-            <div className="domain_kewywords px-5 pt-10 lg:px-0 lg:pt-8 w-full">
+         <TopBar
+            showAddModal={() => setShowAddDomain(true)}
+            domains={theDomains}
+            currentDomain={activDomain}
+         />
+         <div className="w-full max-w-7xl mx-auto">
+            <div className="domain_kewywords px-5 pt-10 lg:px-8 lg:pt-8 w-full">
                {activDomain && activDomain.domain ? (
                   <DomainHeader
                      domain={activDomain}
@@ -90,9 +90,7 @@ const DiscoverPage: NextPage = () => {
             />
          </CSSTransition>
 
-         <CSSTransition in={showSettings} timeout={300} classNames="settings_anim" unmountOnExit mountOnEnter>
-            <Settings closeSettings={() => setShowSettings(false)} />
-         </CSSTransition>
+
 
          {showUpdateModal && activDomain?.domain && (
             <Modal closeModal={() => setShowUpdateModal(false)} title={'Load Keyword Ideas from Google Ads'} verticalCenter={true}>
