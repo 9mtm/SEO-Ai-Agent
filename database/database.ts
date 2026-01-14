@@ -2,7 +2,6 @@ import { Sequelize } from 'sequelize-typescript';
 import Domain from './models/domain';
 import Keyword from './models/keyword';
 import User from './models/user';
-import Setting from './models/setting';
 import FailedJob from './models/failedJob';
 import ChatMessage from './models/chatMessage';
 import ChatSession from './models/chatSession';
@@ -30,7 +29,7 @@ const connection = new Sequelize({
       acquire: 30000,
    },
    logging: false,
-   models: [User, Domain, Keyword, Setting, FailedJob, ChatMessage, ChatSession],
+   models: [User, Domain, Keyword, FailedJob, ChatMessage, ChatSession],
 });
 
 export default connection;

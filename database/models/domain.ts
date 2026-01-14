@@ -48,7 +48,7 @@ class Domain extends Model {
   declare search_console: string;
 
   @Column({ type: DataType.JSON, allowNull: true })
-  search_console_data?: any;
+  declare search_console_data?: any;
 
   @Column({ type: DataType.STRING, allowNull: true })
   declare business_name?: string;

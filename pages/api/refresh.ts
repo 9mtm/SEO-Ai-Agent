@@ -98,7 +98,12 @@ const getKeywordSearchResults = async (req: NextApiRequest, res: NextApiResponse
       return res.status(400).json({ error: 'A Valid keyword, Country Code, and device is Required!' });
    }
    try {
-      const settings = await getAppSettings();
+      // Re-verify user to get userId as it's not passed to this function directly
+      const verifyResult = verifyUser(req, res);
+      const userId = verifyResult.userId || 1; // Default to 1 if legacy/not found (though authorized check passed)
+
+      console.log('Fetching keyword search results for User ID:', userId);
+      const settings = await getAppSettings(userId);
       if (!settings || (settings && settings.scraper_type === 'never')) {
          return res.status(400).json({ error: 'Scraper has not been set up yet.' });
       }

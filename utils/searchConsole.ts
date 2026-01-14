@@ -1,7 +1,6 @@
 import { auth, searchconsole_v1 } from '@googleapis/searchconsole';
 import Cryptr from 'cryptr';
 import { getCountryCodeFromAlphaThree } from './countries';
-import Setting from '../database/models/setting';
 import Domain from '../database/models/domain';
 
 export type SCDomainFetchError = {
@@ -232,19 +231,8 @@ export const getSearchConsoleApiInfo = async (domain: DomainType): Promise<SCAPI
          scAPIData.private_key = domainSCSettings.private_key;
       }
    }
-   // Check if the App Settings Has the API Data
-   if (!scAPIData?.private_key) {
-      try {
-         const settingsRow = await Setting.findByPk('app_config');
-         const settingsRaw = settingsRow ? settingsRow.value : null;
-         const settings: SettingsType = settingsRaw ? JSON.parse(settingsRaw) : {};
-         const cryptr = new Cryptr(process.env.SECRET as string);
-         scAPIData.client_email = settings.search_console_client_email ? cryptr.decrypt(settings.search_console_client_email) : '';
-         scAPIData.private_key = settings.search_console_private_key ? cryptr.decrypt(settings.search_console_private_key) : '';
-      } catch (e) {
-         console.log('Error reading global settings for SC', e);
-      }
-   }
+   // Global fallback removed as Setting model is deprecated.
+   // We now rely on Domain-specific settings (OAuth/Service Account) or Environment Variables.
    if (!scAPIData?.private_key && process.env.SEARCH_CONSOLE_PRIVATE_KEY && process.env.SEARCH_CONSOLE_CLIENT_EMAIL) {
       scAPIData.client_email = process.env.SEARCH_CONSOLE_CLIENT_EMAIL;
       scAPIData.private_key = process.env.SEARCH_CONSOLE_PRIVATE_KEY;

@@ -11,13 +11,13 @@ import { getKeywordsVolume, updateKeywordsVolumeData } from '../../utils/adwords
 
 type KeywordsGetResponse = {
    keywords?: KeywordType[],
-   error?: string|null,
+   error?: string | null,
 }
 
 type KeywordsDeleteRes = {
    domainRemoved?: number,
    keywordsRemoved?: number,
-   error?: string|null,
+   error?: string | null,
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -51,7 +51,12 @@ const getKeywords = async (
    if (!req.query.domain && typeof req.query.domain !== 'string') {
       return res.status(400).json({ error: 'Domain is Required!' });
    }
-   const settings = await getAppSettings();
+   if (!userId && !isLegacy) {
+      return res.status(401).json({ error: 'User ID is required' });
+   }
+   // Use userId 1 for legacy if not provided, otherwise use authenticated userId
+   const settingsUserId = userId || 1;
+   const settings = await getAppSettings(settingsUserId);
    const domain = (req.query.domain as string);
    const integratedSC = process.env.SEARCH_CONSOLE_PRIVATE_KEY && process.env.SEARCH_CONSOLE_CLIENT_EMAIL;
    const { search_console_client_email, search_console_private_key } = settings;
@@ -64,17 +69,17 @@ const getKeywords = async (
          whereClause.user_id = userId;
       }
 
-      const allKeywords:Keyword[] = await Keyword.findAll({ where: whereClause });
+      const allKeywords: Keyword[] = await Keyword.findAll({ where: whereClause });
       const keywords: KeywordType[] = parseKeywords(allKeywords.map((e) => e.get({ plain: true })));
       const processedKeywords = keywords.map((keyword) => {
-         const historyArray = Object.keys(keyword.history).map((dateKey:string) => ({
+         const historyArray = Object.keys(keyword.history).map((dateKey: string) => ({
             date: new Date(dateKey).getTime(),
             dateRaw: dateKey,
             position: keyword.history[dateKey],
          }));
          const historySorted = historyArray.sort((a, b) => a.date - b.date);
-         const lastWeekHistory :KeywordHistory = {};
-         historySorted.slice(-7).forEach((x:any) => { lastWeekHistory[x.dateRaw] = x.position; });
+         const lastWeekHistory: KeywordHistory = {};
+         historySorted.slice(-7).forEach((x: any) => { lastWeekHistory[x.dateRaw] = x.position; });
          const keywordWithSlimHistory = { ...keyword, lastResult: [], history: lastWeekHistory };
          const finalKeyword = domainSCData ? integrateKeywordSCData(keywordWithSlimHistory, domainSCData) : keywordWithSlimHistory;
          return finalKeyword;
@@ -103,7 +108,7 @@ const addKeywords = async (
 
       keywords.forEach((kwrd: KeywordAddPayload) => {
          const { keyword, device, country, domain, tags, city } = kwrd;
-         const tagsArray = tags ? tags.split(',').map((item:string) => item.trim()) : [];
+         const tagsArray = tags ? tags.split(',').map((item: string) => item.trim()) : [];
          const newKeyword: any = {
             keyword,
             device,
@@ -132,12 +137,14 @@ const addKeywords = async (
       });
 
       try {
-         const newKeywords:Keyword[] = await Keyword.bulkCreate(keywordsToAdd);
+         const newKeywords: Keyword[] = await Keyword.bulkCreate(keywordsToAdd);
          const formattedkeywords = newKeywords.map((el) => el.get({ plain: true }));
          const keywordsParsed: KeywordType[] = parseKeywords(formattedkeywords);
 
          // Queue the SERP Scraping Process
-         const settings = await getAppSettings();
+         // Use the userId from the first added keyword or the authenticated userId
+         const settingsUserId = userId || (newKeywords.length > 0 ? newKeywords[0].user_id : 1);
+         const settings = await getAppSettings(settingsUserId);
          refreshAndUpdateKeywords(newKeywords, settings);
 
          // Update the Keyword Volume
@@ -215,9 +222,9 @@ const updateKeywords = async (
       if (sticky !== undefined) {
          await Keyword.update({ sticky }, { where: whereClause });
          const updateQuery = { where: whereClause };
-         const updatedKeywords:Keyword[] = await Keyword.findAll(updateQuery);
+         const updatedKeywords: Keyword[] = await Keyword.findAll(updateQuery);
          const formattedKeywords = updatedKeywords.map((el) => el.get({ plain: true }));
-          keywords = parseKeywords(formattedKeywords);
+         keywords = parseKeywords(formattedKeywords);
          return res.status(200).json({ keywords });
       }
       if (tags) {

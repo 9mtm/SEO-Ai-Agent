@@ -73,7 +73,7 @@ const KeywordDetails = ({ keyword, closeDetails }:KeywordDetailsProps) => {
 
                   <div className='keywordDetails__section'>
                      <div className="keywordDetails__section__head flex justify-between mb-5">
-                        <h3 className=' font-bold text-gray-700 text-lg'>SERP History</h3>
+                        <h3 className=' font-bold text-gray-700 text-lg'>History</h3>
                         <div className="keywordDetails__section__chart_select mr-3">
                            <SelectField
                            options={dateOptions}

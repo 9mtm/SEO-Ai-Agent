@@ -270,7 +270,7 @@ interface ScraperSettings {
     * Example: `{'Cache-Control': 'max-age=0', 'Content-Type': 'application/json'}` */
    headers?(keyword: KeywordType, settings: SettingsType): Object,
    /** Construct the API URL for scraping the data through your Scraper's API */
-   scrapeURL?(keyword: KeywordType, settings: SettingsType, countries: countryData): string,
+   scrapeURL?(keyword: KeywordType, settings: SettingsType, countries: countryData): string | null,
    /** Custom function to extract the serp result from the scraped data. The extracted data should be @return {scraperExtractedItem[]} */
    serpExtractor?(content: string): scraperExtractedItem[],
 }
