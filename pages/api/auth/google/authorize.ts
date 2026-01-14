@@ -21,6 +21,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     sameSite: 'lax',
   });
 
+  // Save return URL if provided
+  const returnUrl = req.query.returnUrl as string;
+  if (returnUrl) {
+    cookies.set('oauth_return_url', returnUrl, {
+      httpOnly: true,
+      maxAge: 600000, // 10 minutes
+      sameSite: 'lax',
+    });
+  }
+
   // Build Google OAuth URL
   const redirectUri = process.env.GOOGLE_REDIRECT_URI || `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/google/callback`;
 

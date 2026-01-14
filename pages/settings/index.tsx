@@ -40,8 +40,6 @@ const SettingsPage: NextPage = () => {
    const router = useRouter();
    const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
    const [settings, setSettings] = useState<SettingsType>(defaultSettings);
-   const [loadingSites, setLoadingSites] = useState(false);
-   const [sites, setSites] = useState<{ siteUrl: string; permissionLevel: string }[]>([]);
    const { data: domainsData } = useFetchDomains(router);
    const { data: appSettings, isPending } = useFetchSettings();
    const { mutate: updateMutate, isPending: isUpdating } = useUpdateSettings(() => {
@@ -64,12 +62,7 @@ const SettingsPage: NextPage = () => {
       }
    }, [router.query]);
 
-   // Auto-fetch sites when Google is connected
-   useEffect(() => {
-      if (settings.google_connected && sites.length === 0 && !loadingSites) {
-         fetchSites();
-      }
-   }, [settings.google_connected]);
+
 
    const updateSettings = (key: string, value: string | number | boolean) => {
       setSettings({ ...settings, [key]: value });
@@ -101,51 +94,7 @@ const SettingsPage: NextPage = () => {
       }
    };
 
-   const disconnectGoogle = async () => {
-      if (confirm('Are you sure you want to disconnect your Google Account?')) {
-         try {
-            await fetch('/api/auth/google/disconnect', { method: 'POST' });
-            window.location.reload();
-         } catch (e) {
-            toast.error('Failed to disconnect');
-         }
-      }
-   };
 
-   const fetchSites = async () => {
-      setLoadingSites(true);
-      try {
-         const res = await fetch('/api/gsc/sites');
-         const data = await res.json();
-         if (data.sites) {
-            setSites(data.sites);
-         } else {
-            toast.error('No sites found or error fetching sites.');
-         }
-      } catch (e) {
-         toast.error('Error fetching sites');
-      } finally {
-         setLoadingSites(false);
-      }
-   };
-
-   const importSite = async (siteUrl: string) => {
-      try {
-         const res = await fetch('/api/domains', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ domains: [siteUrl] })
-         });
-         if (res.ok) {
-            toast.success(`Imported ${siteUrl}`);
-            router.push('/domains');
-         } else {
-            toast.error('Failed to import site');
-         }
-      } catch (e) {
-         toast.error('Error importing site');
-      }
-   };
 
    const translations = {
       en: {
@@ -201,14 +150,10 @@ const SettingsPage: NextPage = () => {
             </div>
 
             <Tabs defaultValue="scraper" className="space-y-6">
-               <TabsList className="grid w-full grid-cols-2 lg:w-auto">
+               <TabsList className="grid w-full grid-cols-1 lg:w-auto">
                   <TabsTrigger value="scraper" className="gap-2">
                      <SettingsIcon className="h-4 w-4" />
                      {t.scraper}
-                  </TabsTrigger>
-                  <TabsTrigger value="integrations" className="gap-2">
-                     <Image src="/icon/google-logo.svg" alt="Google" width={16} height={16} className="h-4 w-4" />
-                     Google Search Console
                   </TabsTrigger>
                </TabsList>
 
@@ -284,192 +229,6 @@ const SettingsPage: NextPage = () => {
                               Enable retry on failure
                            </Label>
                         </div>
-                     </CardContent>
-                  </Card>
-               </TabsContent>
-
-
-
-               {/* Integration Settings */}
-               <TabsContent value="integrations" className="space-y-4">
-                  <Card>
-                     <CardHeader>
-                        <CardTitle>Google Search Console</CardTitle>
-                        <CardDescription>Connect your Google Search Console account</CardDescription>
-                     </CardHeader>
-                     <CardContent className="space-y-6">
-                        {settings.google_connected ? (
-                           <>
-                              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center text-green-700 font-semibold gap-2">
-                                       <CheckCircle className="h-5 w-5" />
-                                       {t.googleConnected}
-                                    </div>
-                                    <Button
-                                       onClick={disconnectGoogle}
-                                       variant="destructive"
-                                       size="sm"
-                                    >
-                                       {t.disconnect}
-                                    </Button>
-                                 </div>
-                              </div>
-
-                              {/* Sites List */}
-                              <div className="space-y-3">
-                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-sm font-semibold text-gray-900">Verified Sites</h3>
-                                    <Button
-                                       onClick={fetchSites}
-                                       disabled={loadingSites}
-                                       variant="outline"
-                                       size="sm"
-                                       className="gap-2"
-                                    >
-                                       {loadingSites ? (
-                                          <>
-                                             <Loader2 className="h-3 w-3 animate-spin" />
-                                             Loading...
-                                          </>
-                                       ) : (
-                                          <>
-                                             <Download className="h-3 w-3" />
-                                             Refresh Sites
-                                          </>
-                                       )}
-                                    </Button>
-                                 </div>
-
-                                 {loadingSites ? (
-                                    <div className="text-center py-8">
-                                       <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-400" />
-                                       <p className="text-sm text-gray-500 mt-2">Loading your sites...</p>
-                                    </div>
-                                 ) : sites.length === 0 ? (
-                                    <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
-                                       <p className="text-sm text-gray-500">No verified sites found</p>
-                                       <p className="text-xs text-gray-400 mt-1">Click "Refresh Sites" to load your sites</p>
-                                    </div>
-                                 ) : (
-                                    <div className="space-y-2 max-h-96 overflow-y-auto">
-                                       {sites.map((site) => {
-                                          const getPermissionBadge = (level: string) => {
-                                             switch (level) {
-                                                case 'siteOwner':
-                                                   return (
-                                                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                         ✓ Owner
-                                                      </span>
-                                                   );
-                                                case 'siteFullUser':
-                                                   return (
-                                                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                         Full Access
-                                                      </span>
-                                                   );
-                                                case 'siteRestrictedUser':
-                                                   return (
-                                                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                         Restricted
-                                                      </span>
-                                                   );
-                                                case 'siteUnverifiedUser':
-                                                   return (
-                                                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                         ⚠ Unverified
-                                                      </span>
-                                                   );
-                                                default:
-                                                   return (
-                                                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                                                         {level}
-                                                      </span>
-                                                   );
-                                             }
-                                          };
-
-                                          const isImported = domainsData?.domains?.some(d => {
-                                             const cleanSiteUrl = site.siteUrl.replace('sc-domain:', '').replace(/\/$/, '');
-                                             const cleanDomain = d.domain.replace(/\/$/, '');
-                                             return cleanDomain.includes(cleanSiteUrl) || cleanSiteUrl.includes(cleanDomain);
-                                          });
-
-                                          const formatSiteUrl = (url: string) => {
-                                             return url
-                                                .replace(/^https?:\/\//, '') // Remove http:// or https://
-                                                .replace(/^sc-domain:/, '')  // Remove sc-domain:
-                                                .replace(/\/$/, '');         // Remove trailing slash
-                                          };
-
-                                          return (
-                                             <div
-                                                key={site.siteUrl}
-                                                className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors"
-                                             >
-                                                <div className="flex-1 mr-4">
-                                                   <p className="font-medium text-sm truncate mb-1">{formatSiteUrl(site.siteUrl)}</p>
-                                                   {getPermissionBadge(site.permissionLevel)}
-                                                </div>
-                                                {isImported ? (
-                                                   <Button
-                                                      disabled
-                                                      variant="secondary"
-                                                      size="sm"
-                                                      className="gap-2 bg-green-100 text-green-700 hover:bg-green-100 opacity-100"
-                                                   >
-                                                      <CheckCircle className="h-3 w-3" />
-                                                      Imported
-                                                   </Button>
-                                                ) : (
-                                                   <Button
-                                                      onClick={() => importSite(site.siteUrl)}
-                                                      size="sm"
-                                                      className="gap-2"
-                                                   >
-                                                      <Plus className="h-3 w-3" />
-                                                      Add
-                                                   </Button>
-                                                )}
-                                             </div>
-                                          );
-                                       })}
-                                    </div>
-                                 )}
-                              </div>
-
-                              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                 <p className="text-sm text-yellow-800 mb-2">
-                                    <strong>Important Notes:</strong>
-                                 </p>
-                                 <ul className="text-sm text-yellow-800 list-disc list-inside space-y-1">
-                                    <li>Only sites where you are the <strong>Owner</strong> in Google Search Console will appear and work properly.</li>
-                                    <li>If a site has permission errors, check that you have Owner access (not just User) in Google Search Console.</li>
-                                    <li>If you recently changed permissions, try disconnecting and reconnecting your Google account.</li>
-                                 </ul>
-                              </div>
-                           </>
-                        ) : (
-                           <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg border border-gray-200">
-                              <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-                                 <svg className="w-8 h-8 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-1.07 3.97-2.9 5.4z" />
-                                 </svg>
-                              </div>
-                              <h3 className="text-lg font-medium text-gray-900 mb-2">Connect Google Search Console</h3>
-                              <p className="text-sm text-gray-500 mb-6 text-center max-w-md">
-                                 Link your Google account to automatically verify sites and fetch performance data directly into your dashboard.
-                              </p>
-                              <Button
-                                 onClick={() => window.location.href = '/api/auth/google/authorize'}
-                                 size="lg"
-                                 className="gap-2 bg-black text-white hover:bg-gray-800"
-                              >
-                                 <Plug className="h-4 w-4" />
-                                 Connect Google Account
-                              </Button>
-                           </div>
-                        )}
                      </CardContent>
                   </Card>
                </TabsContent>
