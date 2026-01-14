@@ -12,6 +12,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import SelectField from '../../../../components/common/SelectField';
+import countries from '../../../../utils/countries';
 
 const DomainSettingsPage: NextPage = () => {
     const router = useRouter();
@@ -35,6 +37,8 @@ const DomainSettingsPage: NextPage = () => {
         medium: ['', '', ''],
         low: ['', '', '']
     });
+
+    const [targetCountry, setTargetCountry] = useState('US');
 
     // Integration States
     const [integrationType, setIntegrationType] = useState<string | null>(null);
@@ -62,6 +66,7 @@ const DomainSettingsPage: NextPage = () => {
                 setBusinessName(found.business_name || '');
                 setNiche(found.niche || '');
                 setDescription(found.description || '');
+                setTargetCountry(found.target_country || 'US');
                 console.log('[DEBUG] Loaded domain data:', found);
 
                 let loadedCompetitors: string[] = [];
@@ -172,7 +177,8 @@ const DomainSettingsPage: NextPage = () => {
                     description: description,
                     competitors: competitors,
                     integration_settings: integrationPayload,
-                    focus_keywords: cleanFocusKeywords
+                    focus_keywords: cleanFocusKeywords,
+                    target_country: targetCountry
                 })
             });
 
@@ -422,9 +428,32 @@ const DomainSettingsPage: NextPage = () => {
                                 {/* Focus Keywords Strategy Card */}
                                 <Card>
                                     <CardHeader>
-                                        <div className="flex items-center gap-2">
-                                            <Target className="h-5 w-5 text-blue-600" />
-                                            <CardTitle>Target Keywords Strategy</CardTitle>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <Target className="h-5 w-5 text-blue-600" />
+                                                <CardTitle>Target Keywords Strategy</CardTitle>
+                                            </div>
+
+                                            {/* Country Selector */}
+                                            <div className="w-48">
+                                                <div className="flex items-center gap-2 mb-1 justify-end">
+                                                    <Globe size={14} className="text-gray-500" />
+                                                    <span className="text-xs font-medium text-gray-500">Target Country</span>
+                                                </div>
+                                                <SelectField
+                                                    multiple={false}
+                                                    selected={[targetCountry]}
+                                                    options={Object.keys(countries).map((countryISO: string) => ({
+                                                        label: countries[countryISO][0],
+                                                        value: countryISO
+                                                    }))}
+                                                    defaultLabel='All Countries'
+                                                    updateField={(updated: string[]) => setTargetCountry(updated[0])}
+                                                    rounded='rounded-lg'
+                                                    maxHeight={48}
+                                                    flags={true}
+                                                />
+                                            </div>
                                         </div>
                                         <CardDescription>
                                             Define up to 9 focus keywords ranked by importance. These guide your SEO strategy for the next 6 months.

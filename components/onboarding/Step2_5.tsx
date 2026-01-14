@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, Sparkles, Target, Zap, Flag, Loader2 } from 'lucide-react';
+import { ChevronLeft, Sparkles, Target, Zap, Flag, Loader2, Globe } from 'lucide-react';
+import SelectField from '../common/SelectField';
+import countries from '../../utils/countries';
 
 interface Step2_5Props {
     onNext: (data: any) => void;
@@ -17,6 +19,7 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
         medium: ['', '', ''],
         low: ['', '', '']
     });
+    const [targetCountry, setTargetCountry] = useState('US');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -41,6 +44,12 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                 ]
             });
         }
+
+        // Load default country
+        const savedCountry = localStorage.getItem('default_country');
+        if (savedCountry) {
+            setTargetCountry(savedCountry);
+        }
     }, [suggestedKeywords]);
 
     const handleKeywordChange = (level: 'high' | 'medium' | 'low', index: number, value: string) => {
@@ -49,6 +58,11 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
             newList[index] = value;
             return { ...prev, [level]: newList };
         });
+    };
+
+    const handleCountryChange = (updated: string[]) => {
+        setTargetCountry(updated[0]);
+        localStorage.setItem('default_country', updated[0]);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -76,7 +90,10 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     step: 2.5,
-                    data: { focus_keywords: cleanKeywords }
+                    data: {
+                        focus_keywords: cleanKeywords,
+                        target_country: targetCountry
+                    }
                 }),
             });
             const data = await res.json();
@@ -113,12 +130,36 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                 </button>
             </div>
 
-            <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                    <Target className="h-6 w-6 text-blue-600" />
+            <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                        <Target className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-gray-900">Define Your SEO Strategy</h2>
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900">Define Your SEO Strategy</h2>
+
+                {/* Country Selector */}
+                <div className="w-48">
+                    <div className="flex items-center gap-2 mb-1">
+                        <Globe size={14} className="text-gray-500" />
+                        <span className="text-xs font-medium text-gray-500">Target Country</span>
+                    </div>
+                    <SelectField
+                        multiple={false}
+                        selected={[targetCountry]}
+                        options={Object.keys(countries).map((countryISO: string) => ({
+                            label: countries[countryISO][0],
+                            value: countryISO
+                        }))}
+                        defaultLabel='All Countries'
+                        updateField={handleCountryChange}
+                        rounded='rounded-lg'
+                        maxHeight={48}
+                        flags={true}
+                    />
+                </div>
             </div>
+
             <p className="text-gray-500 mb-8">
                 We've analyzed your business and suggested 9 focus keywords. Review and edit them to match your goals.
             </p>

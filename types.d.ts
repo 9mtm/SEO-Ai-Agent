@@ -36,6 +36,7 @@ type DomainType = {
       medium: string[],
       low: string[]
    },
+   target_country?: string,
 }
 
 type KeywordHistory = {

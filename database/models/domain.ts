@@ -78,6 +78,9 @@ class Domain extends Model {
     low: string[];
   };
 
+  @Column({ type: DataType.STRING, allowNull: true, defaultValue: 'US' })
+  declare target_country?: string;
+
   @BelongsTo(() => User)
   declare user: User;
 }

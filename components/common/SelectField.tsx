@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import Icon from './Icon';
 
 export type SelectionOption = {
-   label:string,
+   label: string,
    value: string
 }
 type SelectFieldProps = {
@@ -14,7 +14,7 @@ type SelectFieldProps = {
    updateField: Function,
    fullWidth?: boolean,
    minWidth?: number,
-   maxHeight?: number|string,
+   maxHeight?: number | string,
    rounded?: string,
    flags?: boolean,
    inline?: boolean,
@@ -41,12 +41,12 @@ const SelectField = (props: SelectFieldProps) => {
    const [filterdOptions, setFilterdOptions] = useState<SelectionOption[]>([]);
 
    const selectedLabels = useMemo(() => {
-      return options.reduce((acc:string[], item:SelectionOption) :string[] => {
+      return options.reduce((acc: string[], item: SelectionOption): string[] => {
          return selected.includes(item.value) ? [...acc, item.label] : [...acc];
-     }, []);
+      }, []);
    }, [selected, options]);
 
-   const selectItem = (option:SelectionOption) => {
+   const selectItem = (option: SelectionOption) => {
       let updatedSelect = [option.value];
       if (multiple && Array.isArray(selected)) {
          if (selected.includes(option.value)) {
@@ -59,11 +59,11 @@ const SelectField = (props: SelectFieldProps) => {
       if (!multiple) { setShowOptions(false); }
    };
 
-   const filterOptions = (event:React.FormEvent<HTMLInputElement>) => {
+   const filterOptions = (event: React.FormEvent<HTMLInputElement>) => {
       setFilterInput(event.currentTarget.value);
-      const filteredItems:SelectionOption[] = [];
+      const filteredItems: SelectionOption[] = [];
       const userVal = event.currentTarget.value.toLowerCase();
-      options.forEach((option:SelectionOption) => {
+      options.forEach((option: SelectionOption) => {
          if (flags ? option.label.toLowerCase().startsWith(userVal) : option.label.toLowerCase().includes(userVal)) {
             filteredItems.push(option);
          }
@@ -72,31 +72,34 @@ const SelectField = (props: SelectFieldProps) => {
    };
 
    return (
-       <div className={`select font-semibold text-gray-500 relative ${inline ? 'inline-block' : 'flex'} justify-between items-center"`}>
+      <div className={`select font-semibold text-gray-500 relative ${inline ? 'inline-block' : 'flex'} justify-between items-center"`}>
          {label && <label className='mb-2 font-semibold inline-block text-sm text-gray-700 capitalize'>{label}</label>}
          <div
-         className={`selected flex border ${rounded} p-1.5 px-4 cursor-pointer select-none ${fullWidth ? 'w-full' : 'w-[210px]'} 
+            className={`selected flex border ${rounded} p-1.5 px-4 cursor-pointer select-none ${fullWidth ? 'w-full' : 'w-[210px]'} 
          min-w-[${minWidth}px] ${showOptions ? 'border-indigo-200' : ''}`}
-         onClick={() => setShowOptions(!showOptions)}>
+            onClick={() => setShowOptions(!showOptions)}>
             <span className={'w-full inline-block truncate mr-2 capitalize'}>
+               {selected.length === 1 && flags && (
+                  <span className={`fflag fflag-${selected[0]} w-[15px] h-[10px] mr-2 inline-block`} />
+               )}
                {selected.length > 0 ? (selectedLabels.slice(0, 2).join(', ')) : defaultLabel}
             </span>
             {multiple && selected.length > 2
-            && <span className={`px-2 py-0 ${rounded} bg-[#eaecff] text-[0.7rem] font-bold`}>{(selected.length)}</span>}
+               && <span className={`px-2 py-0 ${rounded} bg-[#eaecff] text-[0.7rem] font-bold`}>{(selected.length)}</span>}
             <span className='ml-2'><Icon type={showOptions ? 'caret-up' : 'caret-down'} size={9} /></span>
          </div>
          {showOptions && (
             <div
-            className={`select_list mt-1 border absolute min-w-[${minWidth}px] top-[30px] right-0 ${fullWidth ? 'w-full' : 'w-[210px]'}
+               className={`select_list mt-1 border absolute min-w-[${minWidth}px] top-[30px] right-0 ${fullWidth ? 'w-full' : 'w-[210px]'}
             ${rounded === 'rounded-3xl' ? 'rounded-lg' : rounded} max-h-${maxHeight} bg-white z-50 overflow-y-auto styled-scrollbar`}>
                {options.length > 20 && (
                   <div className=''>
                      <input
-                     className=' border-b-[1px] p-3 w-full focus:outline-0 focus:border-blue-100'
-                     type="text"
-                     placeholder='Search..'
-                     onChange={filterOptions}
-                     value={filterInput}
+                        className=' border-b-[1px] p-3 w-full focus:outline-0 focus:border-blue-100'
+                        type="text"
+                        placeholder='Search..'
+                        onChange={filterOptions}
+                        value={filterInput}
                      />
                   </div>
                )}
@@ -105,10 +108,10 @@ const SelectField = (props: SelectFieldProps) => {
                      const itemActive = selected.includes(opt.value);
                      return (
                         <li
-                        key={opt.value}
-                        className={`select-none cursor-pointer px-3 py-2 hover:bg-[#FCFCFF] capitalize text-ellipsis overflow-hidden
+                           key={opt.value}
+                           className={`select-none cursor-pointer px-3 py-2 hover:bg-[#FCFCFF] capitalize text-ellipsis overflow-hidden
                         ${itemActive ? ' bg-indigo-50 text-indigo-600 hover:bg-indigo-50' : ''} `}
-                        onClick={() => selectItem(opt)}
+                           onClick={() => selectItem(opt)}
                         >
                            {multiple && (
                               <span
@@ -126,8 +129,8 @@ const SelectField = (props: SelectFieldProps) => {
                {emptyMsg && options.length === 0 && <p className='p-4'>{emptyMsg}</p>}
             </div>
          )}
-       </div>
+      </div>
    );
- };
+};
 
- export default SelectField;
+export default SelectField;

@@ -239,6 +239,7 @@ Guidelines:
                 if (domain) {
                     await domain.update({
                         focus_keywords: data.focus_keywords,
+                        target_country: data.target_country || 'US',
                     });
                 }
             }

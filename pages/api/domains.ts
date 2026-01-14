@@ -326,6 +326,7 @@ export const updateDomain = async (
          }
          if (integration_settings !== undefined) updates.integration_settings = integration_settings;
          if (focus_keywords !== undefined) updates.focus_keywords = focus_keywords;
+         if (req.body.target_country !== undefined) updates.target_country = req.body.target_country;
 
          console.log('[DEBUG] Domain updates payload:', updates);
          domainToUpdate.set(updates);
