@@ -3,7 +3,8 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { CSSTransition } from 'react-transition-group';
-import TopBar from '../../../components/common/TopBar';
+import { AlertCircle } from 'lucide-react';
+import DashboardLayout from '../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../components/domains/DomainHeader';
 import CompetitorsTable from '../../../components/keywords/CompetitorsTable';
 import AddDomain from '../../../components/domains/AddDomain';
@@ -13,7 +14,6 @@ import { useFetchDomains, useDeleteDomain } from '../../../services/domains';
 import { useFetchKeywords } from '../../../services/keywords';
 import { useRefreshCompetitors } from '../../../services/competitors';
 import { useFetchSettings } from '../../../services/settings';
-import Footer from '../../../components/common/Footer';
 
 const CompetitorsPage: NextPage = () => {
     const router = useRouter();
@@ -37,10 +37,23 @@ const CompetitorsPage: NextPage = () => {
         return active;
     }, [router.query.slug, domainsData]);
 
+    const domainHasScAPI = useMemo(() => {
+        const doaminSc = activDomain?.search_console ? JSON.parse(activDomain.search_console) : {};
+        return !!(doaminSc?.client_email && doaminSc?.private_key);
+    }, [activDomain]);
+
     const { keywordsData, keywordsLoading } = useFetchKeywords(router, activDomain?.domain || '', setKeywordSPollInterval, keywordSPollInterval);
+    const { mutate: refreshCompetitors, isPending: isRefreshing } = useRefreshCompetitors();
     const theDomains: DomainType[] = (domainsData && domainsData.domains) || [];
     const theKeywords: KeywordType[] = keywordsData && keywordsData.keywords;
-    const { mutate: refreshCompetitorsMutate } = useRefreshCompetitors(() => { });
+
+    useEffect(() => {
+        if (isRefreshing) {
+            setKeywordSPollInterval(1000);
+        } else {
+            setKeywordSPollInterval(undefined);
+        }
+    }, [isRefreshing]);
 
     const handleDeleteDomain = () => {
         if (activDomain && window.confirm(`Are you sure you want to delete ${activDomain.domain}?`)) {
@@ -48,54 +61,56 @@ const CompetitorsPage: NextPage = () => {
         }
     };
 
-    // Enable polling when competitors are updating
-    useEffect(() => {
-        if (theKeywords && theKeywords.length > 0) {
-            const hasUpdatingCompetitors = theKeywords.some((k: KeywordType) => k.updating_competitors);
-            if (hasUpdatingCompetitors) {
-                setKeywordSPollInterval(5000);
-            } else {
-                setKeywordSPollInterval(undefined);
-            }
+    const handleRefreshCompetitors = () => {
+        if (activDomain) {
+            refreshCompetitors({ domain: activDomain.domain });
         }
-    }, [theKeywords, setKeywordSPollInterval]);
+    };
 
     return (
-        <div className="Domain ">
+        <DashboardLayout
+            domains={theDomains}
+            showAddModal={() => setShowAddDomain(true)}
+        >
+            {activDomain && activDomain.domain && (
+                <Head>
+                    <title>{`${activDomain.domain} - Competitors - SEO AI Agent`}</title>
+                </Head>
+            )}
+
+            {/* Warnings */}
             {((!scraper_type || (scraper_type === 'none')) && !isAppSettingsLoading) && (
-                <div className=' p-3 bg-red-600 text-white text-sm text-center'>
-                    A Scrapper/Proxy has not been set up Yet. Open Settings to set it up and start using the app.
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                    <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                        <p className="text-sm text-red-800 font-medium">
+                            A Scrapper/Proxy has not been set up yet. Open Settings to set it up and start using the app.
+                        </p>
+                    </div>
                 </div>
             )}
-            {activDomain && activDomain.domain
-                && <Head>
-                    <title>{`${activDomain.domain} - SEO AI Agent`} </title>
-                </Head>
-            }
-            <TopBar
-                showAddModal={() => setShowAddDomain(true)}
-                domains={theDomains}
-                currentDomain={activDomain}
-            />
-            <div className="w-full max-w-7xl mx-auto">
-                <div className="domain_kewywords px-5 pt-10 lg:px-8 lg:pt-8 w-full">
-                    {activDomain && activDomain.domain
-                        ? <DomainHeader
-                            domain={activDomain}
-                            domains={theDomains}
-                            showAddModal={() => setShowManageCompetitors(true)}
-                            showSettingsModal={setShowDomainSettings}
-                            exportCsv={() => refreshCompetitorsMutate({ domain: activDomain.domain })}
-                            onDeleteDomain={handleDeleteDomain}
-                        />
-                        : <div className='w-full lg:h-[100px]'></div>
-                    }
-                    <CompetitorsTable
-                        isPending={keywordsLoading}
+
+            <div className="domain_keywords">
+                {activDomain && activDomain.domain ? (
+                    <DomainHeader
                         domain={activDomain}
-                        keywords={theKeywords}
+                        domains={theDomains}
+                        showAddModal={() => setShowManageCompetitors(true)}
+                        showSettingsModal={setShowDomainSettings}
+                        onDeleteDomain={handleDeleteDomain}
+                        onRefreshCompetitors={handleRefreshCompetitors}
+                        isRefreshingCompetitors={isRefreshing}
                     />
-                </div>
+                ) : (
+                    <div className='w-full lg:h-[100px]'></div>
+                )}
+                <CompetitorsTable
+                    isPending={keywordsLoading}
+                    domain={activDomain}
+                    keywords={theKeywords}
+                    isConsoleIntegrated={!!(appSettings && appSettings.search_console_integrated) || domainHasScAPI}
+                    settings={appSettings}
+                />
             </div>
 
             <CSSTransition in={showAddDomain} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
@@ -110,12 +125,12 @@ const CompetitorsPage: NextPage = () => {
             </CSSTransition>
 
             <CSSTransition in={showManageCompetitors} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
-                {activDomain && <ManageCompetitors domain={activDomain} closeModal={() => setShowManageCompetitors(false)} />}
+                <ManageCompetitors
+                    domain={activDomain}
+                    closeModal={() => setShowManageCompetitors(false)}
+                />
             </CSSTransition>
-
-
-            <Footer currentVersion={appSettings?.version ? appSettings.version : ''} />
-        </div>
+        </DashboardLayout>
     );
 };
 

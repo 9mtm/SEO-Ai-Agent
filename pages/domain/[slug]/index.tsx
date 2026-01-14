@@ -3,7 +3,8 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { CSSTransition } from 'react-transition-group';
-import TopBar from '../../../components/common/TopBar';
+import { AlertCircle } from 'lucide-react';
+import DashboardLayout from '../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../components/domains/DomainHeader';
 import KeywordsTable from '../../../components/keywords/KeywordsTable';
 import AddDomain from '../../../components/domains/AddDomain';
@@ -13,7 +14,6 @@ import { useFetchDomains, useDeleteDomain } from '../../../services/domains';
 import { useFetchKeywords } from '../../../services/keywords';
 import { useFetchSettings } from '../../../services/settings';
 import AddKeywords from '../../../components/keywords/AddKeywords';
-import Footer from '../../../components/common/Footer';
 
 const SingleDomain: NextPage = () => {
    const router = useRouter();
@@ -54,45 +54,50 @@ const SingleDomain: NextPage = () => {
    };
 
    return (
-      <div className="Domain ">
+      <DashboardLayout
+         domains={theDomains}
+         showAddModal={() => setShowAddDomain(true)}
+      >
+         {activDomain && activDomain.domain && (
+            <Head>
+               <title>{`${activDomain.domain} - SEO AI Agent`}</title>
+            </Head>
+         )}
+
+         {/* Warnings */}
          {((!scraper_type || (scraper_type === 'none')) && !isAppSettingsLoading) && (
-            <div className=' p-3 bg-red-600 text-white text-sm text-center'>
-               A Scrapper/Proxy has not been set up Yet. Open Settings to set it up and start using the app.
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+               <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+               <div className="flex-1">
+                  <p className="text-sm text-red-800 font-medium">
+                     A Scrapper/Proxy has not been set up yet. Open Settings to set it up and start using the app.
+                  </p>
+               </div>
             </div>
          )}
-         {activDomain && activDomain.domain
-            && <Head>
-               <title>{`${activDomain.domain} - Dpro`} </title>
-            </Head>
-         }
-         <TopBar
-            showAddModal={() => setShowAddDomain(true)}
-            domains={theDomains}
-            currentDomain={activDomain}
-         />
-         <div className="w-full max-w-7xl mx-auto">
-            <div className="domain_kewywords px-5 pt-10 lg:px-8 lg:pt-8 w-full">
-               {activDomain && activDomain.domain
-                  ? <DomainHeader
-                     domain={activDomain}
-                     domains={theDomains}
-                     showAddModal={setShowAddKeywords}
-                     showSettingsModal={setShowDomainSettings}
-                     exportCsv={() => exportCSV(theKeywords, activDomain.domain)}
-                     onDeleteDomain={handleDeleteDomain}
-                  />
-                  : <div className='w-full lg:h-[100px]'></div>
-               }
-               <KeywordsTable
-                  isPending={keywordsLoading}
+
+         <div className="domain_keywords">
+            {activDomain && activDomain.domain ? (
+               <DomainHeader
                   domain={activDomain}
-                  keywords={theKeywords}
-                  showAddModal={showAddKeywords}
-                  setShowAddModal={setShowAddKeywords}
-                  isConsoleIntegrated={!!(appSettings && appSettings.search_console_integrated) || domainHasScAPI}
-                  settings={appSettings}
+                  domains={theDomains}
+                  showAddModal={setShowAddKeywords}
+                  showSettingsModal={setShowDomainSettings}
+                  exportCsv={() => exportCSV(theKeywords, activDomain.domain)}
+                  onDeleteDomain={handleDeleteDomain}
                />
-            </div>
+            ) : (
+               <div className='w-full lg:h-[100px]'></div>
+            )}
+            <KeywordsTable
+               isPending={keywordsLoading}
+               domain={activDomain}
+               keywords={theKeywords}
+               showAddModal={showAddKeywords}
+               setShowAddModal={setShowAddKeywords}
+               isConsoleIntegrated={!!(appSettings && appSettings.search_console_integrated) || domainHasScAPI}
+               settings={appSettings}
+            />
          </div>
 
          <CSSTransition in={showAddDomain} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
@@ -115,8 +120,7 @@ const SingleDomain: NextPage = () => {
                closeModal={() => setShowAddKeywords(false)}
             />
          </CSSTransition>
-         <Footer currentVersion={appSettings?.version ? appSettings.version : ''} />
-      </div>
+      </DashboardLayout>
    );
 };
 

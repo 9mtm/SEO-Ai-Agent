@@ -2,10 +2,9 @@ import React, { useMemo, useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-// import { useQuery } from 'react-query';
-// import toast from 'react-hot-toast';
 import { CSSTransition } from 'react-transition-group';
-import TopBar from '../../../../components/common/TopBar';
+import { AlertCircle } from 'lucide-react';
+import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../../components/domains/DomainHeader';
 import AddDomain from '../../../../components/domains/AddDomain';
 import DomainSettings from '../../../../components/domains/DomainSettings';
@@ -14,7 +13,6 @@ import { useFetchDomains, useDeleteDomain } from '../../../../services/domains';
 import { useFetchSCKeywords } from '../../../../services/searchConsole';
 import SCKeywordsTable from '../../../../components/keywords/SCKeywordsTable';
 import { useFetchSettings } from '../../../../services/settings';
-import Footer from '../../../../components/common/Footer';
 
 const DiscoverPage: NextPage = () => {
    const router = useRouter();
@@ -96,39 +94,37 @@ const DiscoverPage: NextPage = () => {
    };
 
    return (
-      <div className="Domain ">
-         {activDomain && activDomain.domain
-            && <Head>
-               <title>{`${activDomain.domain} - Dpro`} </title>
+      <DashboardLayout
+         domains={theDomains}
+         showAddModal={() => setShowAddDomain(true)}
+      >
+         {activDomain && activDomain.domain && (
+            <Head>
+               <title>{`${activDomain.domain} - Search Console - SEO AI Agent`}</title>
             </Head>
-         }
-         <TopBar
-            showAddModal={() => setShowAddDomain(true)}
-            domains={theDomains}
-            currentDomain={activDomain}
-         />
-         <div className="w-full max-w-7xl mx-auto">
-            <div className="domain_kewywords px-5 pt-10 lg:px-8 lg:pt-8 w-full">
-               {activDomain && activDomain.domain
-                  ? <DomainHeader
-                     domain={activDomain}
-                     domains={theDomains}
-                     showAddModal={() => console.log('XXXXX')}
-                     showSettingsModal={setShowDomainSettings}
-                     exportCsv={() => exportCSV(theKeywordsGrouped, activDomain.domain, scDateFilter)}
-                     scFilter={scDateFilter}
-                     setScFilter={(item: string) => setSCDateFilter(item)}
-                     onDeleteDomain={handleDeleteDomain}
-                  />
-                  : <div className='w-full lg:h-[100px]'></div>
-               }
-               <SCKeywordsTable
-                  isPending={keywordsLoading || isFetching}
+         )}
+
+         <div className="domain_keywords">
+            {activDomain && activDomain.domain ? (
+               <DomainHeader
                   domain={activDomain}
-                  keywords={theKeywordsGrouped}
-                  isConsoleIntegrated={scConnected || domainHasScAPI}
+                  domains={theDomains}
+                  showAddModal={() => console.log('XXXXX')}
+                  showSettingsModal={setShowDomainSettings}
+                  exportCsv={() => exportCSV(theKeywordsGrouped, activDomain.domain, scDateFilter)}
+                  scFilter={scDateFilter}
+                  setScFilter={(item: string) => setSCDateFilter(item)}
+                  onDeleteDomain={handleDeleteDomain}
                />
-            </div>
+            ) : (
+               <div className='w-full lg:h-[100px]'></div>
+            )}
+            <SCKeywordsTable
+               isPending={keywordsLoading || isFetching}
+               domain={activDomain}
+               keywords={theKeywordsGrouped}
+               isConsoleIntegrated={scConnected || domainHasScAPI}
+            />
          </div>
 
          <CSSTransition in={showAddDomain} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
@@ -141,9 +137,7 @@ const DiscoverPage: NextPage = () => {
                closeModal={setShowDomainSettings}
             />
          </CSSTransition>
-
-         <Footer currentVersion={appSettings?.settings?.version ? appSettings.settings.version : ''} />
-      </div>
+      </DashboardLayout>
    );
 };
 

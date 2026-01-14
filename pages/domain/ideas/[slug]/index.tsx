@@ -3,7 +3,8 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { CSSTransition } from 'react-transition-group';
-import TopBar from '../../../../components/common/TopBar';
+import { AlertCircle } from 'lucide-react';
+import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../../components/domains/DomainHeader';
 import AddDomain from '../../../../components/domains/AddDomain';
 import DomainSettings from '../../../../components/domains/DomainSettings';
@@ -14,7 +15,6 @@ import KeywordIdeasTable from '../../../../components/ideas/KeywordIdeasTable';
 import { useFetchKeywordIdeas } from '../../../../services/adwords';
 import KeywordIdeasUpdater from '../../../../components/ideas/KeywordIdeasUpdater';
 import Modal from '../../../../components/common/Modal';
-import Footer from '../../../../components/common/Footer';
 
 const DiscoverPage: NextPage = () => {
    const router = useRouter();
@@ -43,40 +43,37 @@ const DiscoverPage: NextPage = () => {
    }, [router.query.slug, domainsData]);
 
    return (
-      <div className="Domain ">
-         {activDomain && activDomain.domain
-            && <Head>
-               <title>{`${activDomain.domain} - Keyword Ideas`} </title>
+      <DashboardLayout
+         domains={theDomains}
+         showAddModal={() => setShowAddDomain(true)}
+      >
+         {activDomain && activDomain.domain && (
+            <Head>
+               <title>{`${activDomain.domain} - Keyword Ideas - SEO AI Agent`}</title>
             </Head>
-         }
-         <TopBar
-            showAddModal={() => setShowAddDomain(true)}
-            domains={theDomains}
-            currentDomain={activDomain}
-         />
-         <div className="w-full max-w-7xl mx-auto">
-            <div className="domain_kewywords px-5 pt-10 lg:px-8 lg:pt-8 w-full">
-               {activDomain && activDomain.domain ? (
-                  <DomainHeader
-                     domain={activDomain}
-                     domains={theDomains}
-                     showAddModal={() => console.log('XXXXX')}
-                     showSettingsModal={setShowDomainSettings}
-                     exportCsv={() => exportKeywordIdeas(showFavorites ? favorites : keywordIdeas, activDomain.domain)}
-                     showIdeaUpdateModal={() => setShowUpdateModal(true)}
-                  />
-               ) : <div className='w-full lg:h-[100px]'></div>}
-               <KeywordIdeasTable
-                  isPending={isLoadingIdeas}
-                  noIdeasDatabase={errorLoadingIdeas}
+         )}
+
+         <div className="domain_keywords">
+            {activDomain && activDomain.domain ? (
+               <DomainHeader
                   domain={activDomain}
-                  keywords={keywordIdeas}
-                  favorites={favorites}
-                  isAdwordsIntegrated={adwordsConnected}
-                  showFavorites={showFavorites}
-                  setShowFavorites={setShowFavorites}
+                  domains={theDomains}
+                  showAddModal={() => console.log('XXXXX')}
+                  showSettingsModal={setShowDomainSettings}
+                  exportCsv={() => exportKeywordIdeas(showFavorites ? favorites : keywordIdeas, activDomain.domain)}
+                  showIdeaUpdateModal={() => setShowUpdateModal(true)}
                />
-            </div>
+            ) : <div className='w-full lg:h-[100px]'></div>}
+            <KeywordIdeasTable
+               isPending={isLoadingIdeas}
+               noIdeasDatabase={errorLoadingIdeas}
+               domain={activDomain}
+               keywords={keywordIdeas}
+               favorites={favorites}
+               isAdwordsIntegrated={adwordsConnected}
+               showFavorites={showFavorites}
+               setShowFavorites={setShowFavorites}
+            />
          </div>
 
          <CSSTransition in={showAddDomain} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
@@ -90,8 +87,6 @@ const DiscoverPage: NextPage = () => {
             />
          </CSSTransition>
 
-
-
          {showUpdateModal && activDomain?.domain && (
             <Modal closeModal={() => setShowUpdateModal(false)} title={'Load Keyword Ideas from Google Ads'} verticalCenter={true}>
                <KeywordIdeasUpdater
@@ -103,8 +98,7 @@ const DiscoverPage: NextPage = () => {
                />
             </Modal>
          )}
-         <Footer currentVersion={appSettings?.settings?.version ? appSettings.settings.version : ''} />
-      </div>
+      </DashboardLayout>
    );
 };
 
