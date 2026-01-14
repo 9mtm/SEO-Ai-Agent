@@ -52,7 +52,7 @@ const DomainSelector = ({ showAddModal, domains = [], currentDomain }: DomainSel
 
             {/* Dropdown Menu */}
             {isOpen && (
-                <div className="absolute right-0 lg:left-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-neutral-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute left-0 bottom-full mb-2 w-full min-w-[240px] bg-white rounded-lg shadow-xl border border-neutral-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-100 slide-in-from-bottom-2">
                     <div className="px-4 py-2 text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">
                         Switch Domain
                     </div>

@@ -124,6 +124,14 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               );
             })}
           </nav>
+
+          <div className="p-4 border-t border-neutral-200">
+            <DomainSelector
+              domains={domains}
+              currentDomain={currentDomain}
+              showAddModal={showAddModal}
+            />
+          </div>
         </div>
       </aside>
 
@@ -140,13 +148,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             <div className="flex-1 lg:flex-none"></div>
 
             <div className="flex items-center gap-3">
-              <div className="hidden md:block mr-2">
-                <DomainSelector
-                  domains={domains}
-                  currentDomain={currentDomain}
-                  showAddModal={showAddModal}
-                />
-              </div>
+
 
               {/* Account Menu in Header - Using the same component */}
               <AccountMenu
