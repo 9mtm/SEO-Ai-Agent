@@ -149,90 +149,81 @@ const ScraperPage: NextPage = () => {
                <p className="text-neutral-600">{t.description}</p>
             </div>
 
-            <Tabs defaultValue="scraper" className="space-y-6">
-               <TabsList className="grid w-full grid-cols-1 lg:w-auto">
-                  <TabsTrigger value="scraper" className="gap-2">
-                     <SettingsIcon className="h-4 w-4" />
-                     {t.scraper}
-                  </TabsTrigger>
-               </TabsList>
+            {/* Scraper Settings */}
+            <div className="space-y-4">
+               <Card>
+                  <CardHeader>
+                     <CardTitle>Scraper Configuration</CardTitle>
+                     <CardDescription>Configure your scraper settings and proxy options</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                     <div className="space-y-2">
+                        <Label htmlFor="scraper_type">Scraper Type</Label>
+                        <Select
+                           value={settings.scraper_type}
+                           onValueChange={(value) => updateSettings('scraper_type', value)}
+                        >
+                           <SelectTrigger id="scraper_type">
+                              <SelectValue placeholder="Select scraper type" />
+                           </SelectTrigger>
+                           <SelectContent>
+                              <SelectItem value="none">None</SelectItem>
+                              {settings.available_scapers?.map((scraper) => (
+                                 <SelectItem key={scraper.value} value={scraper.value}>
+                                    {scraper.label}
+                                 </SelectItem>
+                              ))}
+                           </SelectContent>
+                        </Select>
+                        <p className="text-xs text-muted-foreground mt-1">
+                           Choose a scraping service to fetch keyword rankings. Each service requires an API key.
+                        </p>
+                     </div>
 
-               {/* Scraper Settings */}
-               <TabsContent value="scraper" className="space-y-4">
-                  <Card>
-                     <CardHeader>
-                        <CardTitle>Scraper Configuration</CardTitle>
-                        <CardDescription>Configure your scraper settings and proxy options</CardDescription>
-                     </CardHeader>
-                     <CardContent className="space-y-6">
+                     {settings.scraper_type !== 'none' && settings.scraper_type !== 'proxy' && (
                         <div className="space-y-2">
-                           <Label htmlFor="scraper_type">Scraper Type</Label>
-                           <Select
-                              value={settings.scraper_type}
-                              onValueChange={(value) => updateSettings('scraper_type', value)}
-                           >
-                              <SelectTrigger id="scraper_type">
-                                 <SelectValue placeholder="Select scraper type" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                 <SelectItem value="none">None</SelectItem>
-                                 {settings.available_scapers?.map((scraper) => (
-                                    <SelectItem key={scraper.value} value={scraper.value}>
-                                       {scraper.label}
-                                    </SelectItem>
-                                 ))}
-                              </SelectContent>
-                           </Select>
-                           <p className="text-xs text-muted-foreground mt-1">
-                              Choose a scraping service to fetch keyword rankings. Each service requires an API key.
-                           </p>
-                        </div>
-
-                        {settings.scraper_type !== 'none' && settings.scraper_type !== 'proxy' && (
-                           <div className="space-y-2">
-                              <Label htmlFor="scaping_api">API Key</Label>
-                              <Input
-                                 id="scaping_api"
-                                 type="text"
-                                 value={settings.scaping_api || ''}
-                                 onChange={(e) => updateSettings('scaping_api', e.target.value)}
-                                 placeholder="Enter your API key"
-                              />
-                           </div>
-                        )}
-
-                        <div className="space-y-2">
-                           <Label htmlFor="scrape_delay">Scrape Delay</Label>
-                           <Select
-                              value={settings.scrape_delay}
-                              onValueChange={(value) => updateSettings('scrape_delay', value)}
-                           >
-                              <SelectTrigger id="scrape_delay">
-                                 <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                 <SelectItem value="none">None</SelectItem>
-                                 <SelectItem value="5">5 seconds</SelectItem>
-                                 <SelectItem value="10">10 seconds</SelectItem>
-                                 <SelectItem value="30">30 seconds</SelectItem>
-                              </SelectContent>
-                           </Select>
-                        </div>
-
-                        <div className="flex items-center space-x-2">
-                           <Switch
-                              id="scrape_retry"
-                              checked={settings.scrape_retry}
-                              onCheckedChange={(checked) => updateSettings('scrape_retry', checked)}
+                           <Label htmlFor="scaping_api">API Key</Label>
+                           <Input
+                              id="scaping_api"
+                              type="text"
+                              value={settings.scaping_api || ''}
+                              onChange={(e) => updateSettings('scaping_api', e.target.value)}
+                              placeholder="Enter your API key"
                            />
-                           <Label htmlFor="scrape_retry" className="font-normal cursor-pointer">
-                              Enable retry on failure
-                           </Label>
                         </div>
-                     </CardContent>
-                  </Card>
-               </TabsContent>
-            </Tabs>
+                     )}
+
+                     <div className="space-y-2">
+                        <Label htmlFor="scrape_delay">Scrape Delay</Label>
+                        <Select
+                           value={settings.scrape_delay}
+                           onValueChange={(value) => updateSettings('scrape_delay', value)}
+                        >
+                           <SelectTrigger id="scrape_delay">
+                              <SelectValue />
+                           </SelectTrigger>
+                           <SelectContent>
+                              <SelectItem value="none">None</SelectItem>
+                              <SelectItem value="5">5 seconds</SelectItem>
+                              <SelectItem value="10">10 seconds</SelectItem>
+                              <SelectItem value="30">30 seconds</SelectItem>
+                           </SelectContent>
+                        </Select>
+                     </div>
+
+                     <div className="flex items-center space-x-2">
+                        <Switch
+                           id="scrape_retry"
+                           checked={settings.scrape_retry}
+                           onCheckedChange={(checked) => updateSettings('scrape_retry', checked)}
+                        />
+                        <Label htmlFor="scrape_retry" className="font-normal cursor-pointer">
+                           Enable retry on failure
+                        </Label>
+                     </div>
+                  </CardContent>
+               </Card>
+            </div>
 
             {/* Save Button */}
             <div className="flex justify-end mt-6">
