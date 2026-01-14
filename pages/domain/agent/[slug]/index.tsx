@@ -79,7 +79,7 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
                 <title>{`Seo Agent - ${domain?.domain}`}</title>
             </Head>
             <div className="flex-none">
-                <DomainHeader domain={domain} domains={[]} showAddModal={() => { }} showSettingsModal={() => { }} exportCsv={() => { }} />
+                <DomainHeader domain={domain} domains={[]} showAddModal={() => { }} exportCsv={() => { }} />
             </div>
 
             <div className="flex flex-1 overflow-hidden bg-white">

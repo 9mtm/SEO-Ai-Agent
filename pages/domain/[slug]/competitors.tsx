@@ -8,7 +8,7 @@ import DashboardLayout from '../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../components/domains/DomainHeader';
 import CompetitorsTable from '../../../components/keywords/CompetitorsTable';
 import AddDomain from '../../../components/domains/AddDomain';
-import DomainSettings from '../../../components/domains/DomainSettings';
+
 import ManageCompetitors from '../../../components/domains/ManageCompetitors';
 import { useFetchDomains } from '../../../services/domains';
 import { useFetchKeywords } from '../../../services/keywords';
@@ -18,7 +18,7 @@ import { useFetchSettings } from '../../../services/settings';
 const CompetitorsPage: NextPage = () => {
     const router = useRouter();
     const [showAddDomain, setShowAddDomain] = useState(false);
-    const [showDomainSettings, setShowDomainSettings] = useState(false);
+
     const [showManageCompetitors, setShowManageCompetitors] = useState(false);
     const [keywordSPollInterval, setKeywordSPollInterval] = useState<undefined | number>(undefined);
     const { data: appSettingsData, isPending: isAppSettingsLoading } = useFetchSettings();
@@ -90,7 +90,7 @@ const CompetitorsPage: NextPage = () => {
                         domain={activDomain}
                         domains={theDomains}
                         showAddModal={() => setShowManageCompetitors(true)}
-                        showSettingsModal={setShowDomainSettings}
+
                         exportCsv={() => { }}
 
                         onRefreshCompetitors={handleRefreshCompetitors}
@@ -112,12 +112,7 @@ const CompetitorsPage: NextPage = () => {
                 <AddDomain closeModal={() => setShowAddDomain(false)} domains={domainsData?.domains || []} />
             </CSSTransition>
 
-            <CSSTransition in={showDomainSettings} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
-                <DomainSettings
-                    domain={showDomainSettings && theDomains && activDomain && activDomain.domain ? activDomain : false}
-                    closeModal={setShowDomainSettings}
-                />
-            </CSSTransition>
+
 
             <CSSTransition in={showManageCompetitors} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
                 {activDomain && (

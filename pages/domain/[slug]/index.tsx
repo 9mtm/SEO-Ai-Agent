@@ -8,7 +8,7 @@ import DashboardLayout from '../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../components/domains/DomainHeader';
 import KeywordsTable from '../../../components/keywords/KeywordsTable';
 import AddDomain from '../../../components/domains/AddDomain';
-import DomainSettings from '../../../components/domains/DomainSettings';
+
 import exportCSV from '../../../utils/client/exportcsv';
 import { useFetchDomains } from '../../../services/domains';
 import { useFetchKeywords } from '../../../services/keywords';
@@ -19,7 +19,7 @@ const SingleDomain: NextPage = () => {
    const router = useRouter();
    const [showAddKeywords, setShowAddKeywords] = useState(false);
    const [showAddDomain, setShowAddDomain] = useState(false);
-   const [showDomainSettings, setShowDomainSettings] = useState(false);
+
    const [keywordSPollInterval, setKeywordSPollInterval] = useState<undefined | number>(undefined);
    const { data: appSettingsData, isPending: isAppSettingsLoading } = useFetchSettings();
    const { data: domainsData } = useFetchDomains(router);
@@ -74,7 +74,7 @@ const SingleDomain: NextPage = () => {
                   domain={activDomain}
                   domains={theDomains}
                   showAddModal={setShowAddKeywords}
-                  showSettingsModal={setShowDomainSettings}
+
                   exportCsv={() => exportCSV(theKeywords, activDomain.domain)}
                />
             ) : (
@@ -95,12 +95,7 @@ const SingleDomain: NextPage = () => {
             <AddDomain closeModal={() => setShowAddDomain(false)} domains={domainsData?.domains || []} />
          </CSSTransition>
 
-         <CSSTransition in={showDomainSettings} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
-            <DomainSettings
-               domain={showDomainSettings && theDomains && activDomain && activDomain.domain ? activDomain : false}
-               closeModal={setShowDomainSettings}
-            />
-         </CSSTransition>
+
 
          <CSSTransition in={showAddKeywords} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
             <AddKeywords

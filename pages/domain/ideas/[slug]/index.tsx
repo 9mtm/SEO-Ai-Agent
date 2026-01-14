@@ -7,7 +7,7 @@ import { AlertCircle } from 'lucide-react';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../../components/domains/DomainHeader';
 import AddDomain from '../../../../components/domains/AddDomain';
-import DomainSettings from '../../../../components/domains/DomainSettings';
+
 import { exportKeywordIdeas } from '../../../../utils/client/exportcsv';
 import { useFetchDomains } from '../../../../services/domains';
 import { useFetchSettings } from '../../../../services/settings';
@@ -18,7 +18,7 @@ import Modal from '../../../../components/common/Modal';
 
 const DiscoverPage: NextPage = () => {
    const router = useRouter();
-   const [showDomainSettings, setShowDomainSettings] = useState(false);
+
    const [showAddDomain, setShowAddDomain] = useState(false);
    const [showUpdateModal, setShowUpdateModal] = useState(false);
    const [showFavorites, setShowFavorites] = useState(false);
@@ -59,7 +59,7 @@ const DiscoverPage: NextPage = () => {
                   domain={activDomain}
                   domains={theDomains}
                   showAddModal={() => console.log('XXXXX')}
-                  showSettingsModal={setShowDomainSettings}
+
                   exportCsv={() => exportKeywordIdeas(showFavorites ? favorites : keywordIdeas, activDomain.domain)}
                   showIdeaUpdateModal={() => setShowUpdateModal(true)}
                />
@@ -80,12 +80,7 @@ const DiscoverPage: NextPage = () => {
             <AddDomain closeModal={() => setShowAddDomain(false)} domains={domainsData?.domains || []} />
          </CSSTransition>
 
-         <CSSTransition in={showDomainSettings} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
-            <DomainSettings
-               domain={showDomainSettings && theDomains && activDomain && activDomain.domain ? activDomain : false}
-               closeModal={setShowDomainSettings}
-            />
-         </CSSTransition>
+
 
          {showUpdateModal && activDomain?.domain && (
             <Modal closeModal={() => setShowUpdateModal(false)} title={'Load Keyword Ideas from Google Ads'} verticalCenter={true}>

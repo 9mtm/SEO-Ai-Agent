@@ -7,7 +7,7 @@ import { AlertCircle } from 'lucide-react';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../../components/domains/DomainHeader';
 import AddDomain from '../../../../components/domains/AddDomain';
-import DomainSettings from '../../../../components/domains/DomainSettings';
+
 import exportCSV from '../../../../utils/client/exportcsv';
 import { useFetchDomains } from '../../../../services/domains';
 import { useFetchSCKeywords } from '../../../../services/searchConsole';
@@ -16,7 +16,7 @@ import { useFetchSettings } from '../../../../services/settings';
 
 const DiscoverPage: NextPage = () => {
    const router = useRouter();
-   const [showDomainSettings, setShowDomainSettings] = useState(false);
+
    const [showAddDomain, setShowAddDomain] = useState(false);
    const [scDateFilter, setSCDateFilter] = useState('thirtyDays');
    const { data: appSettings } = useFetchSettings();
@@ -104,7 +104,7 @@ const DiscoverPage: NextPage = () => {
                   domain={activDomain}
                   domains={theDomains}
                   showAddModal={() => console.log('XXXXX')}
-                  showSettingsModal={setShowDomainSettings}
+
                   exportCsv={() => exportCSV(theKeywordsGrouped, activDomain.domain, scDateFilter)}
                   scFilter={scDateFilter}
                   setScFilter={(item: string) => setSCDateFilter(item)}
@@ -125,12 +125,7 @@ const DiscoverPage: NextPage = () => {
             <AddDomain closeModal={() => setShowAddDomain(false)} domains={domainsData?.domains || []} />
          </CSSTransition>
 
-         <CSSTransition in={showDomainSettings} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
-            <DomainSettings
-               domain={showDomainSettings && theDomains && activDomain && activDomain.domain ? activDomain : false}
-               closeModal={setShowDomainSettings}
-            />
-         </CSSTransition>
+
       </DashboardLayout>
    );
 };
