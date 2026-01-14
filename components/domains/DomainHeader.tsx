@@ -9,7 +9,7 @@ type DomainHeaderProps = {
    domain: DomainType,
    domains: DomainType[],
    showAddModal: Function,
-   showSettingsModal: Function,
+
    exportCsv: Function,
    scFilter?: string
    setScFilter?: Function
@@ -20,7 +20,7 @@ type DomainHeaderProps = {
 }
 
 const DomainHeader = (
-   { domain, showAddModal, showSettingsModal, exportCsv, domains, scFilter = 'thirtyDays', setScFilter, showIdeaUpdateModal, onDeleteDomain, onRefreshCompetitors, isRefreshingCompetitors = false }: DomainHeaderProps,
+   { domain, showAddModal, exportCsv, domains, scFilter = 'thirtyDays', setScFilter, showIdeaUpdateModal, onDeleteDomain, onRefreshCompetitors, isRefreshingCompetitors = false }: DomainHeaderProps,
 ) => {
    const router = useRouter();
    const [showOptions, setShowOptions] = useState<boolean>(false);
@@ -51,13 +51,7 @@ const DomainHeader = (
                <div
                   className={`lg:hidden absolute top-10 left-0 bg-white border border-gray-100 z-50 rounded shadow-lg flex flex-col min-w-[200px]`}
                   style={{ display: showOptions ? 'flex' : 'none' }}>
-                  {!isInsight && !isCompetitors && (
-                     <button
-                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-sm text-gray-700 w-full text-left border-b border-gray-50 last:border-0"
-                        onClick={() => { setShowOptions(false); exportCsv(); }}>
-                        <Icon type='download' size={16} /> Export CSV
-                     </button>
-                  )}
+
                   {!isConsole && !isInsight && !isIdeas && !isCompetitors && (
                      <button
                         className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-sm text-gray-700 w-full text-left border-b border-gray-50 last:border-0"
@@ -65,13 +59,7 @@ const DomainHeader = (
                         <Icon type='reload' size={16} /> Reload Serps
                      </button>
                   )}
-                  {!isCompetitors && !isConsole && (
-                     <button
-                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-sm text-gray-700 w-full text-left border-b border-gray-50 last:border-0"
-                        onClick={() => { setShowOptions(false); showSettingsModal(true); }}>
-                        <Icon type='settings' size={16} /> Domain Settings
-                     </button>
-                  )}
+
                   {onDeleteDomain && (
                      <button
                         className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-sm text-red-600 w-full text-left"
@@ -87,14 +75,7 @@ const DomainHeader = (
 
                {/* Desktop Icon Buttons */}
                <div className="hidden lg:flex items-center gap-1">
-                  {!isInsight && !isCompetitors && (
-                     <button
-                        className={`p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors`}
-                        title="Export as CSV"
-                        onClick={() => exportCsv()}>
-                        <Icon type='download' size={20} />
-                     </button>
-                  )}
+
                   {!isConsole && !isInsight && !isIdeas && !isCompetitors && (
                      <button
                         className={`p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors`}
@@ -112,14 +93,7 @@ const DomainHeader = (
                         {isRefreshingCompetitors ? 'Updating...' : 'Reload'}
                      </button>
                   )}
-                  {!isCompetitors && !isConsole && (
-                     <button
-                        className={`p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors`}
-                        title="Domain Settings"
-                        onClick={() => showSettingsModal(true)}>
-                        <Icon type='settings' size={20} />
-                     </button>
-                  )}
+
                   {onDeleteDomain && (
                      <button
                         className={`p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors`}
