@@ -7,6 +7,9 @@ import {
   Search,
   Menu,
   X,
+  Users,
+  LineChart,
+  Bot,
 } from 'lucide-react';
 import AccountMenu from '../common/AccountMenu';
 import DomainSelector from '../domains/DomainSelector';
@@ -56,6 +59,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const navigation = [
     { name: t.domains, href: '/domains', icon: Globe },
   ];
+
+  if (currentDomain) {
+    navigation.push(
+      { name: 'Tracking', href: `/domain/${currentDomain.slug}`, icon: BarChart3 },
+      { name: 'Competitors', href: `/domain/${currentDomain.slug}/competitors`, icon: Users },
+      { name: 'Discover', href: `/domain/console/${currentDomain.slug}`, icon: Search },
+      { name: 'Insight', href: `/domain/insight/${currentDomain.slug}`, icon: LineChart },
+      { name: 'Seo Agent', href: `/domain/agent/${currentDomain.slug}`, icon: Bot }
+    );
+  }
 
   return (
     <div className="min-h-screen bg-neutral-50">
