@@ -130,17 +130,33 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                 </button>
             </div>
 
-            <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                        <Target className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <h2 className="text-3xl font-bold text-gray-900">Define Your SEO Strategy</h2>
+            <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                    <Target className="h-6 w-6 text-blue-600" />
                 </div>
+                <h2 className="text-3xl font-bold text-gray-900">Define Your SEO Strategy</h2>
+            </div>
 
-                {/* Country Selector */}
+            <p className="text-gray-500 mb-8">
+                We've analyzed your business and suggested 9 focus keywords. Review and edit them to match your goals.
+            </p>
+
+            {suggestedKeywords && (
+                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
+                    <Sparkles className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                        <h4 className="font-semibold text-blue-900 text-sm mb-1">AI-Generated Keywords</h4>
+                        <p className="text-blue-700 text-sm">
+                            These keywords were automatically generated based on your business description. Feel free to edit them!
+                        </p>
+                    </div>
+                </div>
+            )}
+
+            {/* Country Selector - Moved Here */}
+            <div className="mb-8 flex justify-end">
                 <div className="w-48">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-2 mb-1 justify-end">
                         <Globe size={14} className="text-gray-500" />
                         <span className="text-xs font-medium text-gray-500">Target Country</span>
                     </div>
@@ -159,22 +175,6 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                     />
                 </div>
             </div>
-
-            <p className="text-gray-500 mb-8">
-                We've analyzed your business and suggested 9 focus keywords. Review and edit them to match your goals.
-            </p>
-
-            {suggestedKeywords && (
-                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
-                    <Sparkles className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                        <h4 className="font-semibold text-blue-900 text-sm mb-1">AI-Generated Keywords</h4>
-                        <p className="text-blue-700 text-sm">
-                            These keywords were automatically generated based on your business description. Feel free to edit them!
-                        </p>
-                    </div>
-                </div>
-            )}
 
             <form onSubmit={handleSubmit} className="space-y-8">
                 {/* High Priority */}

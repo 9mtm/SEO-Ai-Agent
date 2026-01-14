@@ -5,6 +5,9 @@ import db from '../../../database/database';
 import User from '../../../database/models/user';
 import verifyUser from '../../../utils/verifyUser';
 import Domain from '../../../database/models/domain';
+import Keyword from '../../../database/models/keyword';
+import refreshAndUpdateKeywords from '../../../utils/refresh';
+import { getAppSettings } from '../settings';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     await db.sync();
@@ -241,6 +244,49 @@ Guidelines:
                         focus_keywords: data.focus_keywords,
                         target_country: data.target_country || 'US',
                     });
+
+                    // ---------------------------------------------------------
+                    // Auto-Add Keywords to Tracking (Desktop, Tag: Target)
+                    // ---------------------------------------------------------
+                    const targetCountry = data.target_country || 'US';
+                    const allFocusKeywords = [
+                        ...(data.focus_keywords.high || []),
+                        ...(data.focus_keywords.medium || []),
+                        ...(data.focus_keywords.low || [])
+                    ].filter(k => k && k.trim() !== '');
+
+                    if (allFocusKeywords.length > 0 && domain.domain) {
+                        try {
+                            const keywordsToAdd = allFocusKeywords.map((k: string) => ({
+                                keyword: k.trim(),
+                                device: 'desktop',
+                                country: targetCountry,
+                                domain: domain.domain, // Ensure domain is available
+                                user_id: userId,
+                                tags: JSON.stringify(['Target']), // Add "Target" tag
+                                position: 0,
+                                updating: true,
+                                history: JSON.stringify({}),
+                                url: '',
+                                sticky: false,
+                                added: new Date().toJSON(),
+                                lastUpdated: new Date().toJSON(),
+                            }));
+
+                            // Bulk Create
+                            const newKeywords = await Keyword.bulkCreate(keywordsToAdd);
+
+                            // Trigger Rank Refresh
+                            const settings = await getAppSettings(userId);
+                            refreshAndUpdateKeywords(newKeywords, settings);
+
+                            console.log(`[INFO] Auto-added ${newKeywords.length} focus keywords to tracking.`);
+
+                        } catch (err) {
+                            console.error('[ERROR] Failed to auto-add focus keywords:', err);
+                            // Don't fail the request, just log error
+                        }
+                    }
                 }
             }
 
