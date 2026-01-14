@@ -16,9 +16,7 @@ const Step2 = ({ onNext, onBack, initialData }: Step2Props) => {
     const [formData, setFormData] = useState({
         businessName: '',
         niche: '',
-        description: '',
-        language: 'en-US',
-        blogUrl: ''
+        description: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -139,35 +137,7 @@ const Step2 = ({ onNext, onBack, initialData }: Step2Props) => {
                     </p>
                 </div>
 
-                {/* Language and Blog URL Row */}
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Language</label>
-                        <select
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                            value={formData.language}
-                            onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-                        >
-                            <option value="en-US">us English (USA)</option>
-                            <option value="en-GB">English (UK)</option>
-                            <option value="de-DE">German (Germany)</option>
-                            <option value="fr-FR">French (France)</option>
-                            <option value="es-ES">Spanish (Spain)</option>
-                        </select>
-                        <p className="text-xs text-gray-500 mt-1">Primary content language</p>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Blog URL</label>
-                        <input
-                            type="url"
-                            placeholder="https://flowxtra.com/blog"
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                            value={formData.blogUrl}
-                            onChange={(e) => setFormData({ ...formData, blogUrl: e.target.value })}
-                        />
-                        <p className="text-xs text-gray-500 mt-1">URL to your blog articles</p>
-                    </div>
-                </div>
+
 
                 {/* Important Note */}
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">

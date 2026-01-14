@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import { Loader2 } from 'lucide-react';
 
 const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
     const [url, setUrl] = useState('');
@@ -79,9 +80,16 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3 px-4 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-70"
+                    className="w-full py-3 px-4 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-70 flex items-center justify-center"
                 >
-                    {loading ? 'Saving...' : 'Continue'}
+                    {loading ? (
+                        <>
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                            Analyzing...
+                        </>
+                    ) : (
+                        'Continue'
+                    )}
                 </button>
             </form>
         </div>
