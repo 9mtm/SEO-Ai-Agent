@@ -24,6 +24,18 @@ type DomainType = {
    language?: string,
    blog_url?: string,
    competitors?: string[],
+   integration_settings?: {
+      type?: string,
+      url?: string,
+      username?: string,
+      app_password?: string,
+      [key: string]: any
+   },
+   focus_keywords?: {
+      high: string[],
+      medium: string[],
+      low: string[]
+   },
 }
 
 type KeywordHistory = {

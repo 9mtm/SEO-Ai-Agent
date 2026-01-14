@@ -283,7 +283,8 @@ export const updateDomain = async (
       niche,
       description,
       competitors,
-      integration_settings
+      integration_settings,
+      focus_keywords
    } = req.body;
 
    try {
@@ -321,6 +322,7 @@ export const updateDomain = async (
          if (description !== undefined) updates.description = description;
          if (competitors !== undefined) updates.competitors = competitors;
          if (integration_settings !== undefined) updates.integration_settings = integration_settings;
+         if (focus_keywords !== undefined) updates.focus_keywords = focus_keywords;
 
          domainToUpdate.set(updates);
          await domainToUpdate.save();

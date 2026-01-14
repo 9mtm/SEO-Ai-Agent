@@ -2,24 +2,23 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Save, Settings, Info, Briefcase, FileText, Plus, X, Globe, Link2, CheckCircle, AlertCircle } from 'lucide-react';
+import { Save, Settings, Info, Briefcase, FileText, Plus, X, Globe, Link2, CheckCircle, Target, Zap, Flag } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
-import { useFetchDomains } from '../../../../services/domains';
+import { useFetchDomains, useDeleteDomain } from '../../../../services/domains';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'; // Provided default tabs or create manual tabs
 
 const DomainSettingsPage: NextPage = () => {
     const router = useRouter();
     const { data: domainsData, refetch } = useFetchDomains(router);
     const [activeDomain, setActiveDomain] = useState<DomainType | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState<'general' | 'integrations'>('general');
+    const [activeTab, setActiveTab] = useState<'general' | 'integrations' | 'danger'>('general');
 
     // General Form States
     const [businessName, setBusinessName] = useState('');
@@ -30,11 +29,25 @@ const DomainSettingsPage: NextPage = () => {
     const [competitors, setCompetitors] = useState<string[]>([]);
     const [newCompetitor, setNewCompetitor] = useState('');
 
+    // Focus Keywords State
+    const [focusKeywords, setFocusKeywords] = useState<{ high: string[], medium: string[], low: string[] }>({
+        high: ['', '', ''],
+        medium: ['', '', ''],
+        low: ['', '', '']
+    });
+
     // Integration States
     const [integrationType, setIntegrationType] = useState<string | null>(null);
     const [wpUrl, setWpUrl] = useState('');
     const [wpUsername, setWpUsername] = useState('');
     const [wpAppPassword, setWpAppPassword] = useState('');
+
+    // Delete Confirmation State
+    const [deleteConfirmation, setDeleteConfirmation] = useState('');
+
+    const { mutate: deleteDomainMutate, isPending: isDeleting } = useDeleteDomain(() => {
+        router.push('/');
+    });
 
     useEffect(() => {
         if (domainsData?.domains && router.query.slug) {
@@ -44,22 +57,61 @@ const DomainSettingsPage: NextPage = () => {
                 setBusinessName(found.business_name || '');
                 setNiche(found.niche || '');
                 setDescription(found.description || '');
-                setCompetitors(found.competitors || []);
+                setCompetitors(Array.isArray(found.competitors) ? found.competitors : []);
+
+                // Load Focus Keywords
+                if (found.focus_keywords) {
+                    setFocusKeywords({
+                        high: [
+                            found.focus_keywords.high?.[0] || '',
+                            found.focus_keywords.high?.[1] || '',
+                            found.focus_keywords.high?.[2] || ''
+                        ],
+                        medium: [
+                            found.focus_keywords.medium?.[0] || '',
+                            found.focus_keywords.medium?.[1] || '',
+                            found.focus_keywords.medium?.[2] || ''
+                        ],
+                        low: [
+                            found.focus_keywords.low?.[0] || '',
+                            found.focus_keywords.low?.[1] || '',
+                            found.focus_keywords.low?.[2] || ''
+                        ]
+                    });
+                }
 
                 // Load integration settings
-                const intSettings = found.integration_settings; // Ensure this property exists in type definition or cast
+                const intSettings = found.integration_settings;
                 if (intSettings && intSettings.type) {
                     setIntegrationType(intSettings.type);
                     if (intSettings.type === 'wordpress') {
                         setWpUrl(intSettings.url || '');
                         setWpUsername(intSettings.username || '');
-                        // Password is usually not sent back for security, or we handle it carefully
                         setWpAppPassword(intSettings.app_password || '');
                     }
                 }
             }
         }
     }, [domainsData, router.query.slug]);
+
+    const handleFocusKeywordChange = (level: 'high' | 'medium' | 'low', index: number, value: string) => {
+        setFocusKeywords(prev => {
+            const newList = [...prev[level]];
+            newList[index] = value;
+            return { ...prev, [level]: newList };
+        });
+    };
+
+    const handleDeleteDomain = () => {
+        if (!activeDomain) return;
+
+        if (deleteConfirmation !== activeDomain.domain) {
+            toast.error('Please type the domain name correctly to confirm deletion');
+            return;
+        }
+
+        deleteDomainMutate(activeDomain);
+    };
 
     const handleSave = async () => {
         if (!activeDomain) return;
@@ -72,6 +124,13 @@ const DomainSettingsPage: NextPage = () => {
             app_password: wpAppPassword
         } : (integrationType ? { type: integrationType } : null);
 
+        // Filter out empty strings for storage
+        const cleanFocusKeywords = {
+            high: focusKeywords.high.filter(k => k.trim() !== ''),
+            medium: focusKeywords.medium.filter(k => k.trim() !== ''),
+            low: focusKeywords.low.filter(k => k.trim() !== '')
+        };
+
         try {
             const res = await fetch(`/api/domains?domain=${activeDomain.domain}`, {
                 method: 'PUT',
@@ -81,7 +140,8 @@ const DomainSettingsPage: NextPage = () => {
                     niche: niche,
                     description: description,
                     competitors: competitors,
-                    integration_settings: integrationPayload
+                    integration_settings: integrationPayload,
+                    focus_keywords: cleanFocusKeywords
                 })
             });
 
@@ -153,6 +213,15 @@ const DomainSettingsPage: NextPage = () => {
                             >
                                 Integrations
                             </button>
+                            <button
+                                onClick={() => setActiveTab('danger')}
+                                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'danger'
+                                    ? 'bg-red-50 text-red-700'
+                                    : 'text-neutral-600 hover:bg-neutral-100'
+                                    }`}
+                            >
+                                Delete
+                            </button>
                         </div>
                     </div>
 
@@ -216,6 +285,92 @@ const DomainSettingsPage: NextPage = () => {
                                     </CardContent>
                                 </Card>
 
+                                {/* Focus Keywords Strategy Card */}
+                                <Card>
+                                    <CardHeader>
+                                        <div className="flex items-center gap-2">
+                                            <Target className="h-5 w-5 text-blue-600" />
+                                            <CardTitle>Target Keywords Strategy</CardTitle>
+                                        </div>
+                                        <CardDescription>
+                                            Define up to 9 focus keywords ranked by importance. These guide your SEO strategy for the next 6 months.
+                                        </CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="space-y-8">
+                                        {/* High Priority */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-2">
+                                                <div className="p-1.5 bg-red-100 rounded-md">
+                                                    <Zap className="h-4 w-4 text-red-600" />
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-semibold text-sm text-neutral-900">High Importance (Top 3)</h4>
+                                                    <p className="text-xs text-neutral-500">Critical keywords you must dominate to drive core business.</p>
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                {[0, 1, 2].map((i) => (
+                                                    <Input
+                                                        key={`high-${i}`}
+                                                        placeholder={`Priority Keyword #${i + 1}`}
+                                                        value={focusKeywords.high[i]}
+                                                        onChange={(e) => handleFocusKeywordChange('high', i, e.target.value)}
+                                                        className="border-red-200 focus-visible:ring-red-500"
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Medium Priority */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-2">
+                                                <div className="p-1.5 bg-yellow-100 rounded-md">
+                                                    <Flag className="h-4 w-4 text-yellow-600" />
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-semibold text-sm text-neutral-900">Medium Importance</h4>
+                                                    <p className="text-xs text-neutral-500">Important keywords that support your main services.</p>
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                {[0, 1, 2].map((i) => (
+                                                    <Input
+                                                        key={`medium-${i}`}
+                                                        placeholder={`Keyword #${i + 1}`}
+                                                        value={focusKeywords.medium[i]}
+                                                        onChange={(e) => handleFocusKeywordChange('medium', i, e.target.value)}
+                                                        className="border-yellow-200 focus-visible:ring-yellow-500"
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Low Priority */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-2">
+                                                <div className="p-1.5 bg-blue-100 rounded-md">
+                                                    <Flag className="h-4 w-4 text-blue-600" />
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-semibold text-sm text-neutral-900">Low Importance</h4>
+                                                    <p className="text-xs text-neutral-500">Long-tail or future opportunity keywords.</p>
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                {[0, 1, 2].map((i) => (
+                                                    <Input
+                                                        key={`low-${i}`}
+                                                        placeholder={`Keyword #${i + 1}`}
+                                                        value={focusKeywords.low[i]}
+                                                        onChange={(e) => handleFocusKeywordChange('low', i, e.target.value)}
+                                                        className="border-blue-200 focus-visible:ring-blue-500"
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+
                                 {/* Competitors Card */}
                                 <Card>
                                     <CardHeader>
@@ -244,7 +399,7 @@ const DomainSettingsPage: NextPage = () => {
                                         <div className="space-y-2">
                                             <Label>Tracked Competitors</Label>
                                             <div className="bg-neutral-50 rounded-lg p-4 min-h-[100px] border border-neutral-200">
-                                                {competitors.length === 0 ? (
+                                                {!Array.isArray(competitors) || competitors.length === 0 ? (
                                                     <p className="text-sm text-neutral-400 text-center py-4">No competitors added yet.</p>
                                                 ) : (
                                                     <div className="flex flex-wrap gap-2">
@@ -267,7 +422,7 @@ const DomainSettingsPage: NextPage = () => {
                                     </CardContent>
                                 </Card>
 
-                                <div className="flex justify-end pt-4">
+                                <div className="flex justify-end pt-4 pb-4">
                                     <Button onClick={handleSave} disabled={isLoading} size="lg" className="gap-2 min-w-[150px]">
                                         <Save className="h-4 w-4" />
                                         {isLoading ? 'Saving...' : 'Save Changes'}
@@ -292,7 +447,9 @@ const DomainSettingsPage: NextPage = () => {
                                         >
                                             <div className="flex items-start justify-between mb-2">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-8 h-8 rounded bg-[#21759b] flex items-center justify-center text-white font-bold text-lg">W</div>
+                                                    <div className="w-8 h-8 flex items-center justify-center">
+                                                        <img src="/icon/platfourms/wordPress_blue_logo.svg" alt="WordPress" className="w-8 h-8" />
+                                                    </div>
                                                     <h3 className="font-semibold">WordPress</h3>
                                                 </div>
                                                 {integrationType === 'wordpress' && <CheckCircle className="h-5 w-5 text-blue-600" />}
@@ -306,12 +463,46 @@ const DomainSettingsPage: NextPage = () => {
                                         >
                                             <div className="flex items-start justify-between mb-2">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-8 h-8 rounded bg-[#95BF47] flex items-center justify-center text-white font-bold text-lg">S</div>
+                                                    <div className="w-8 h-8 flex items-center justify-center">
+                                                        <img src="/icon/platfourms/shopify-icon.svg" alt="Shopify" className="w-8 h-8" />
+                                                    </div>
                                                     <h3 className="font-semibold">Shopify</h3>
                                                 </div>
                                                 <Badge variant="secondary" className="text-xs">Soon</Badge>
                                             </div>
                                             <p className="text-sm text-neutral-600">Connect your Shopify store using Access Tokens.</p>
+                                        </div>
+
+                                        <div
+                                            className={`border rounded-lg p-4 cursor-default transition-all bg-neutral-50`}
+                                            title="Coming Soon"
+                                        >
+                                            <div className="flex items-start justify-between mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-8 h-8 flex items-center justify-center">
+                                                        <img src="/icon/platfourms/webflow.svg" alt="Webflow" className="w-8 h-8" />
+                                                    </div>
+                                                    <h3 className="font-semibold">Webflow</h3>
+                                                </div>
+                                                <Badge variant="secondary" className="text-xs">Soon</Badge>
+                                            </div>
+                                            <p className="text-sm text-neutral-600">Connect your Webflow site seamlessly.</p>
+                                        </div>
+
+                                        <div
+                                            className={`border rounded-lg p-4 cursor-default transition-all bg-neutral-50`}
+                                            title="Coming Soon"
+                                        >
+                                            <div className="flex items-start justify-between mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-8 h-8 flex items-center justify-center">
+                                                        <img src="/icon/platfourms/wix.com_website_logo.svg" alt="Wix" className="w-8 h-8" />
+                                                    </div>
+                                                    <h3 className="font-semibold">Wix</h3>
+                                                </div>
+                                                <Badge variant="secondary" className="text-xs">Soon</Badge>
+                                            </div>
+                                            <p className="text-sm text-neutral-600">Connect your Wix website easily.</p>
                                         </div>
                                     </div>
 
@@ -365,6 +556,45 @@ const DomainSettingsPage: NextPage = () => {
                                         Save Integration
                                     </Button>
                                 </CardFooter>
+                            </Card>
+                        )}
+
+                        {activeTab === 'danger' && (
+                            <Card className="border-red-200">
+                                <CardHeader>
+                                    <CardTitle className="text-red-600">Delete Site</CardTitle>
+                                    <CardDescription>
+                                        Irreversible actions for your site.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-4 p-4 bg-red-50 rounded-lg border border-red-100">
+                                        <div>
+                                            <h4 className="font-semibold text-red-900">Delete Site</h4>
+                                            <p className="text-sm text-red-700 mb-2">
+                                                Permanently remove this site and all its data. This action cannot be undone.
+                                            </p>
+                                            <p className="text-sm text-red-700 font-medium">
+                                                Please type <span className="font-mono bg-red-100 px-1 rounded select-all">{activeDomain?.domain}</span> to confirm.
+                                            </p>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <Input
+                                                placeholder={activeDomain?.domain}
+                                                value={deleteConfirmation}
+                                                onChange={(e) => setDeleteConfirmation(e.target.value)}
+                                                className="bg-white border-red-200 focus-visible:ring-red-500"
+                                            />
+                                            <Button
+                                                variant="destructive"
+                                                onClick={handleDeleteDomain}
+                                                disabled={isDeleting || deleteConfirmation !== activeDomain?.domain}
+                                            >
+                                                {isDeleting ? 'Deleting...' : 'Delete Site'}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </CardContent>
                             </Card>
                         )}
                     </div>

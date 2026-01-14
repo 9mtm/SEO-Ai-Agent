@@ -71,6 +71,13 @@ class Domain extends Model {
   @Column({ type: DataType.JSON, allowNull: true })
   declare integration_settings?: any;
 
+  @Column({ type: DataType.JSON, allowNull: true })
+  declare focus_keywords?: {
+    high: string[];
+    medium: string[];
+    low: string[];
+  };
+
   @BelongsTo(() => User)
   declare user: User;
 }
