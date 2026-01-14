@@ -275,7 +275,16 @@ export const updateDomain = async (
       return res.status(400).json({ domain: null, error: 'Domain is Required!' });
    }
    const { domain } = req.query || {};
-   const { notification_interval, notification_emails, search_console } = req.body as DomainSettings;
+   const {
+      notification_interval,
+      notification_emails,
+      search_console,
+      business_name,
+      niche,
+      description,
+      competitors,
+      integration_settings
+   } = req.body;
 
    try {
       // Multi-tenant: Verify domain ownership
@@ -291,7 +300,7 @@ export const updateDomain = async (
       }
 
       // Validate Search Console API Data
-      if (domainToUpdate && search_console?.client_email && search_console?.private_key) {
+      if (domainToUpdate && search_console && search_console?.client_email && search_console?.private_key) {
          const theDomainObj = domainToUpdate.get({ plain: true });
          const isSearchConsoleAPIValid = await checkSerchConsoleIntegration({ ...theDomainObj, search_console: JSON.stringify(search_console) });
          if (!isSearchConsoleAPIValid.isValid) {
@@ -303,7 +312,17 @@ export const updateDomain = async (
       }
 
       if (domainToUpdate) {
-         domainToUpdate.set({ notification_interval, notification_emails, search_console: JSON.stringify(search_console) });
+         const updates: any = {};
+         if (notification_interval !== undefined) updates.notification_interval = notification_interval;
+         if (notification_emails !== undefined) updates.notification_emails = notification_emails;
+         if (search_console !== undefined) updates.search_console = JSON.stringify(search_console);
+         if (business_name !== undefined) updates.business_name = business_name;
+         if (niche !== undefined) updates.niche = niche;
+         if (description !== undefined) updates.description = description;
+         if (competitors !== undefined) updates.competitors = competitors;
+         if (integration_settings !== undefined) updates.integration_settings = integration_settings;
+
+         domainToUpdate.set(updates);
          await domainToUpdate.save();
       }
       return res.status(200).json({ domain: domainToUpdate });

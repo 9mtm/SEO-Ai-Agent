@@ -68,6 +68,9 @@ class Domain extends Model {
   @Column({ type: DataType.JSON, allowNull: true })
   declare competitors?: string[];
 
+  @Column({ type: DataType.JSON, allowNull: true })
+  declare integration_settings?: any;
+
   @BelongsTo(() => User)
   declare user: User;
 }

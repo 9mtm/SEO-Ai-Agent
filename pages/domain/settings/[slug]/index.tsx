@@ -1,0 +1,378 @@
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { Save, Settings, Info, Briefcase, FileText, Plus, X, Globe, Link2, CheckCircle, AlertCircle } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
+import DashboardLayout from '../../../../components/layout/DashboardLayout';
+import { useFetchDomains } from '../../../../services/domains';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'; // Provided default tabs or create manual tabs
+
+const DomainSettingsPage: NextPage = () => {
+    const router = useRouter();
+    const { data: domainsData, refetch } = useFetchDomains(router);
+    const [activeDomain, setActiveDomain] = useState<DomainType | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [activeTab, setActiveTab] = useState<'general' | 'integrations'>('general');
+
+    // General Form States
+    const [businessName, setBusinessName] = useState('');
+    const [niche, setNiche] = useState('');
+    const [description, setDescription] = useState('');
+
+    // Competitors State
+    const [competitors, setCompetitors] = useState<string[]>([]);
+    const [newCompetitor, setNewCompetitor] = useState('');
+
+    // Integration States
+    const [integrationType, setIntegrationType] = useState<string | null>(null);
+    const [wpUrl, setWpUrl] = useState('');
+    const [wpUsername, setWpUsername] = useState('');
+    const [wpAppPassword, setWpAppPassword] = useState('');
+
+    useEffect(() => {
+        if (domainsData?.domains && router.query.slug) {
+            const found = domainsData.domains.find((d: DomainType) => d.slug === router.query.slug);
+            if (found) {
+                setActiveDomain(found);
+                setBusinessName(found.business_name || '');
+                setNiche(found.niche || '');
+                setDescription(found.description || '');
+                setCompetitors(found.competitors || []);
+
+                // Load integration settings
+                const intSettings = found.integration_settings; // Ensure this property exists in type definition or cast
+                if (intSettings && intSettings.type) {
+                    setIntegrationType(intSettings.type);
+                    if (intSettings.type === 'wordpress') {
+                        setWpUrl(intSettings.url || '');
+                        setWpUsername(intSettings.username || '');
+                        // Password is usually not sent back for security, or we handle it carefully
+                        setWpAppPassword(intSettings.app_password || '');
+                    }
+                }
+            }
+        }
+    }, [domainsData, router.query.slug]);
+
+    const handleSave = async () => {
+        if (!activeDomain) return;
+        setIsLoading(true);
+
+        const integrationPayload = integrationType === 'wordpress' ? {
+            type: 'wordpress',
+            url: wpUrl,
+            username: wpUsername,
+            app_password: wpAppPassword
+        } : (integrationType ? { type: integrationType } : null);
+
+        try {
+            const res = await fetch(`/api/domains?domain=${activeDomain.domain}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    business_name: businessName,
+                    niche: niche,
+                    description: description,
+                    competitors: competitors,
+                    integration_settings: integrationPayload
+                })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                toast.success('Settings updated successfully', { icon: '✔️' });
+                refetch();
+            } else {
+                toast.error(data.error || 'Failed to update settings');
+            }
+        } catch (e) {
+            toast.error('An error occurred');
+            console.error(e);
+        }
+        setIsLoading(false);
+    };
+
+    const addCompetitor = (e?: React.FormEvent) => {
+        e?.preventDefault();
+        const trimmed = newCompetitor.trim();
+        if (!trimmed) return;
+
+        if (competitors.includes(trimmed)) {
+            toast.error('Competitor already added');
+            return;
+        }
+
+        setCompetitors([...competitors, trimmed]);
+        setNewCompetitor('');
+    };
+
+    const removeCompetitor = (compToRemove: string) => {
+        setCompetitors(competitors.filter(c => c !== compToRemove));
+    };
+
+    return (
+        <DashboardLayout domains={domainsData?.domains || []}>
+            <Head>
+                <title>Settings - {activeDomain?.domain || 'SEO AI Agent'}</title>
+            </Head>
+
+            <div className="w-full max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center gap-2 mb-8">
+                    <Settings className="h-6 w-6 text-neutral-600" />
+                    <h1 className="text-2xl font-bold text-neutral-900">Domain Settings</h1>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    {/* Sub-Sidebar */}
+                    <div className="lg:col-span-3 space-y-1">
+                        <h3 className="font-semibold text-neutral-900 mb-2 px-1">My App</h3>
+                        <div className="space-y-1">
+                            <button
+                                onClick={() => setActiveTab('general')}
+                                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'general'
+                                    ? 'bg-blue-50 text-blue-700'
+                                    : 'text-neutral-600 hover:bg-neutral-100'
+                                    }`}
+                            >
+                                General
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('integrations')}
+                                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'integrations'
+                                    ? 'bg-blue-50 text-blue-700'
+                                    : 'text-neutral-600 hover:bg-neutral-100'
+                                    }`}
+                            >
+                                Integrations
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Main Content */}
+                    <div className="lg:col-span-9 space-y-8">
+                        {activeTab === 'general' && (
+                            <>
+                                {/* General Info Card */}
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>General Information</CardTitle>
+                                        <CardDescription>
+                                            Update your domain's business information and niche details.
+                                        </CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="space-y-6">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="businessName">Business Name</Label>
+                                            <div className="relative">
+                                                <Briefcase className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                                                <Input
+                                                    id="businessName"
+                                                    placeholder="e.g. My Awesome Company"
+                                                    value={businessName}
+                                                    onChange={(e) => setBusinessName(e.target.value)}
+                                                    className="pl-9"
+                                                />
+                                            </div>
+                                            <p className="text-xs text-muted-foreground">The official name of your business or brand.</p>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="niche">Niche / Industry</Label>
+                                            <div className="relative">
+                                                <Info className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                                                <Input
+                                                    id="niche"
+                                                    placeholder="e.g. Digital Marketing, E-commerce, Local Plumbing"
+                                                    value={niche}
+                                                    onChange={(e) => setNiche(e.target.value)}
+                                                    className="pl-9"
+                                                />
+                                            </div>
+                                            <p className="text-xs text-muted-foreground">The primary industry or topic of your website.</p>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="description">Business Description</Label>
+                                            <div className="relative">
+                                                <FileText className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                                                <Textarea
+                                                    id="description"
+                                                    placeholder="Briefly describe what your business does..."
+                                                    value={description}
+                                                    onChange={(e) => setDescription(e.target.value)}
+                                                    className="pl-9 min-h-[100px]"
+                                                />
+                                            </div>
+                                            <p className="text-xs text-muted-foreground">A short description used for AI context generation.</p>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+
+                                {/* Competitors Card */}
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>Competitors</CardTitle>
+                                        <CardDescription>
+                                            Track your competitors to benchmark your performance.
+                                        </CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="space-y-6">
+                                        <form onSubmit={addCompetitor} className="flex gap-2">
+                                            <div className="relative flex-1">
+                                                <Globe className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                                                <Input
+                                                    placeholder="e.g. competitor.com"
+                                                    value={newCompetitor}
+                                                    onChange={(e) => setNewCompetitor(e.target.value)}
+                                                    className="pl-9"
+                                                />
+                                            </div>
+                                            <Button type="submit" variant="outline" className="gap-2">
+                                                <Plus className="h-4 w-4" />
+                                                Add
+                                            </Button>
+                                        </form>
+
+                                        <div className="space-y-2">
+                                            <Label>Tracked Competitors</Label>
+                                            <div className="bg-neutral-50 rounded-lg p-4 min-h-[100px] border border-neutral-200">
+                                                {competitors.length === 0 ? (
+                                                    <p className="text-sm text-neutral-400 text-center py-4">No competitors added yet.</p>
+                                                ) : (
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {competitors.map((comp, idx) => (
+                                                            <Badge key={idx} variant="secondary" className="px-3 py-1.5 gap-2 text-sm font-normal bg-white border-neutral-200 shadow-sm">
+                                                                {comp}
+                                                                <button
+                                                                    onClick={() => removeCompetitor(comp)}
+                                                                    className="text-neutral-400 hover:text-red-500 transition-colors"
+                                                                    title="Remove competitor"
+                                                                >
+                                                                    <X className="h-3 w-3" />
+                                                                </button>
+                                                            </Badge>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+
+                                <div className="flex justify-end pt-4">
+                                    <Button onClick={handleSave} disabled={isLoading} size="lg" className="gap-2 min-w-[150px]">
+                                        <Save className="h-4 w-4" />
+                                        {isLoading ? 'Saving...' : 'Save Changes'}
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+
+                        {activeTab === 'integrations' && (
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>CMS Integrations</CardTitle>
+                                    <CardDescription>
+                                        Connect your website CMS to enable auto-blogging features.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div
+                                            className={`border rounded-lg p-4 cursor-pointer transition-all ${integrationType === 'wordpress' ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500' : 'border-neutral-200 hover:border-blue-300'}`}
+                                            onClick={() => setIntegrationType('wordpress')}
+                                        >
+                                            <div className="flex items-start justify-between mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-8 h-8 rounded bg-[#21759b] flex items-center justify-center text-white font-bold text-lg">W</div>
+                                                    <h3 className="font-semibold">WordPress</h3>
+                                                </div>
+                                                {integrationType === 'wordpress' && <CheckCircle className="h-5 w-5 text-blue-600" />}
+                                            </div>
+                                            <p className="text-sm text-neutral-600">Connect your self-hosted WordPress site using Application Passwords.</p>
+                                        </div>
+
+                                        <div
+                                            className={`border rounded-lg p-4 cursor-pointer transition-all opacity-60`}
+                                            title="Coming Soon"
+                                        >
+                                            <div className="flex items-start justify-between mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-8 h-8 rounded bg-[#95BF47] flex items-center justify-center text-white font-bold text-lg">S</div>
+                                                    <h3 className="font-semibold">Shopify</h3>
+                                                </div>
+                                                <Badge variant="secondary" className="text-xs">Soon</Badge>
+                                            </div>
+                                            <p className="text-sm text-neutral-600">Connect your Shopify store using Access Tokens.</p>
+                                        </div>
+                                    </div>
+
+                                    {integrationType === 'wordpress' && (
+                                        <div className="space-y-4 pt-4 border-t border-neutral-100">
+                                            <h4 className="font-medium flex items-center gap-2">
+                                                <Settings className="h-4 w-4" />
+                                                WordPress Settings
+                                            </h4>
+
+                                            <div className="grid gap-4">
+                                                <div className="space-y-2">
+                                                    <Label>Website URL</Label>
+                                                    <Input
+                                                        placeholder="https://yourwebsite.com"
+                                                        value={wpUrl}
+                                                        onChange={(e) => setWpUrl(e.target.value)}
+                                                    />
+                                                    <p className="text-xs text-neutral-500">The full URL of your WordPress site.</p>
+                                                </div>
+
+                                                <div className="space-y-2">
+                                                    <Label>Username</Label>
+                                                    <Input
+                                                        placeholder="admin"
+                                                        value={wpUsername}
+                                                        onChange={(e) => setWpUsername(e.target.value)}
+                                                    />
+                                                    <p className="text-xs text-neutral-500">Your WordPress username (not email).</p>
+                                                </div>
+
+                                                <div className="space-y-2">
+                                                    <Label>Application Password</Label>
+                                                    <Input
+                                                        type="password"
+                                                        placeholder="xxxx xxxx xxxx xxxx"
+                                                        value={wpAppPassword}
+                                                        onChange={(e) => setWpAppPassword(e.target.value)}
+                                                    />
+                                                    <p className="text-xs text-neutral-500">
+                                                        Create this in WP Admin &gt; Users &gt; Profile &gt; Application Passwords.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </CardContent>
+                                <CardFooter className="bg-neutral-50 border-t border-neutral-100 py-4 flex justify-end">
+                                    <Button onClick={handleSave} disabled={isLoading} className="gap-2">
+                                        <Save className="h-4 w-4" />
+                                        Save Integration
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                        )}
+                    </div>
+                </div>
+            </div>
+            <Toaster position="bottom-right" />
+        </DashboardLayout>
+    );
+};
+
+export default DomainSettingsPage;
