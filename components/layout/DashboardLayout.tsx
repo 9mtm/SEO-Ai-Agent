@@ -22,7 +22,6 @@ interface DashboardLayoutProps {
   selectedLang?: 'en' | 'de';
   onLanguageChange?: (lang: 'en' | 'de') => void;
   domains?: DomainType[];
-  showAddModal?: () => void;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
@@ -30,7 +29,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   selectedLang = 'en',
   onLanguageChange,
   domains = [],
-  showAddModal = () => { }
 }) => {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -143,7 +141,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             <DomainSelector
               domains={domains}
               currentDomain={currentDomain}
-              showAddModal={showAddModal}
             />
           </div>
         </div>
@@ -166,7 +163,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
               {/* Account Menu in Header - Using the same component */}
               <AccountMenu
-                showAddModal={showAddModal}
                 domains={domains}
                 currentDomain={currentDomain}
                 selectedLang={selectedLang}

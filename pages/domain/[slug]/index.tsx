@@ -7,7 +7,7 @@ import { AlertCircle } from 'lucide-react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../components/domains/DomainHeader';
 import KeywordsTable from '../../../components/keywords/KeywordsTable';
-import AddDomain from '../../../components/domains/AddDomain';
+
 
 import exportCSV from '../../../utils/client/exportcsv';
 import { useFetchDomains } from '../../../services/domains';
@@ -18,7 +18,7 @@ import AddKeywords from '../../../components/keywords/AddKeywords';
 const SingleDomain: NextPage = () => {
    const router = useRouter();
    const [showAddKeywords, setShowAddKeywords] = useState(false);
-   const [showAddDomain, setShowAddDomain] = useState(false);
+
 
    const [keywordSPollInterval, setKeywordSPollInterval] = useState<undefined | number>(undefined);
    const { data: appSettingsData, isPending: isAppSettingsLoading } = useFetchSettings();
@@ -48,7 +48,7 @@ const SingleDomain: NextPage = () => {
    return (
       <DashboardLayout
          domains={theDomains}
-         showAddModal={() => setShowAddDomain(true)}
+
       >
          {activDomain && activDomain.domain && (
             <Head>
@@ -90,10 +90,6 @@ const SingleDomain: NextPage = () => {
                settings={appSettings}
             />
          </div>
-
-         <CSSTransition in={showAddDomain} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
-            <AddDomain closeModal={() => setShowAddDomain(false)} domains={domainsData?.domains || []} />
-         </CSSTransition>
 
 
 

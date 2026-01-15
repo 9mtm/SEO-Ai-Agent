@@ -171,7 +171,7 @@ const AccountMenu = ({ showAddModal, domains = [], currentDomain, selectedLang =
                             </div>
                             <button
                                 onClick={() => {
-                                    showAddModal();
+                                    router.push('/onboarding');
                                     setIsOpen(false);
                                 }}
                                 className="w-full flex items-center gap-2 px-3 py-2 mt-1 rounded-md text-sm text-primary hover:bg-primary/10 font-medium transition-colors"

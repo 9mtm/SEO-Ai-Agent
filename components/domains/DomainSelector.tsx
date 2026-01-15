@@ -3,12 +3,11 @@ import { useRouter } from 'next/router';
 import { Plus, Globe, ChevronDown } from 'lucide-react';
 
 type DomainSelectorProps = {
-    showAddModal: () => void;
     domains?: DomainType[];
     currentDomain?: DomainType | null;
 };
 
-const DomainSelector = ({ showAddModal, domains = [], currentDomain }: DomainSelectorProps) => {
+const DomainSelector = ({ domains = [], currentDomain }: DomainSelectorProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
@@ -100,7 +99,7 @@ const DomainSelector = ({ showAddModal, domains = [], currentDomain }: DomainSel
                     <div className="border-t border-neutral-100 mt-2 pt-2 px-2">
                         <button
                             onClick={() => {
-                                showAddModal();
+                                router.push('/onboarding');
                                 setIsOpen(false);
                             }}
                             className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-md text-sm bg-blue-600 text-white hover:bg-blue-700 font-medium transition-colors shadow-sm"

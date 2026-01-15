@@ -6,7 +6,7 @@ import { CSSTransition } from 'react-transition-group';
 import { AlertCircle } from 'lucide-react';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../../components/domains/DomainHeader';
-import AddDomain from '../../../../components/domains/AddDomain';
+
 
 import { exportKeywordIdeas } from '../../../../utils/client/exportcsv';
 import { useFetchDomains } from '../../../../services/domains';
@@ -19,7 +19,7 @@ import Modal from '../../../../components/common/Modal';
 const DiscoverPage: NextPage = () => {
    const router = useRouter();
 
-   const [showAddDomain, setShowAddDomain] = useState(false);
+
    const [showUpdateModal, setShowUpdateModal] = useState(false);
    const [showFavorites, setShowFavorites] = useState(false);
 
@@ -45,7 +45,7 @@ const DiscoverPage: NextPage = () => {
    return (
       <DashboardLayout
          domains={theDomains}
-         showAddModal={() => setShowAddDomain(true)}
+
       >
          {activDomain && activDomain.domain && (
             <Head>
@@ -58,7 +58,7 @@ const DiscoverPage: NextPage = () => {
                <DomainHeader
                   domain={activDomain}
                   domains={theDomains}
-                  showAddModal={() => console.log('XXXXX')}
+
 
                   exportCsv={() => exportKeywordIdeas(showFavorites ? favorites : keywordIdeas, activDomain.domain)}
                   showIdeaUpdateModal={() => setShowUpdateModal(true)}
@@ -76,9 +76,7 @@ const DiscoverPage: NextPage = () => {
             />
          </div>
 
-         <CSSTransition in={showAddDomain} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
-            <AddDomain closeModal={() => setShowAddDomain(false)} domains={domainsData?.domains || []} />
-         </CSSTransition>
+
 
 
 

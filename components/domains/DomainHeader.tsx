@@ -8,7 +8,7 @@ import SelectField from '../common/SelectField';
 type DomainHeaderProps = {
    domain: DomainType,
    domains: DomainType[],
-   showAddModal: Function,
+   showAddModal?: Function,
 
    exportCsv: Function,
    scFilter?: string
@@ -109,7 +109,7 @@ const DomainHeader = (
                   <button
                      data-testid="add_keyword"
                      className={'flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-semibold'}
-                     onClick={() => showAddModal(true)}>
+                     onClick={() => showAddModal && showAddModal(true)}>
                      <span>+</span>
                      <span className="hidden sm:inline">Add Keyword</span>
                   </button>

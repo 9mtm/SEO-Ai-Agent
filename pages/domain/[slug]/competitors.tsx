@@ -7,7 +7,7 @@ import { AlertCircle } from 'lucide-react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../components/domains/DomainHeader';
 import CompetitorsTable from '../../../components/keywords/CompetitorsTable';
-import AddDomain from '../../../components/domains/AddDomain';
+
 
 import ManageCompetitors from '../../../components/domains/ManageCompetitors';
 import { useFetchDomains } from '../../../services/domains';
@@ -17,7 +17,7 @@ import { useFetchSettings } from '../../../services/settings';
 
 const CompetitorsPage: NextPage = () => {
     const router = useRouter();
-    const [showAddDomain, setShowAddDomain] = useState(false);
+
 
     const [showManageCompetitors, setShowManageCompetitors] = useState(false);
     const [keywordSPollInterval, setKeywordSPollInterval] = useState<undefined | number>(undefined);
@@ -64,7 +64,7 @@ const CompetitorsPage: NextPage = () => {
     return (
         <DashboardLayout
             domains={theDomains}
-            showAddModal={() => setShowAddDomain(true)}
+
         >
             {activDomain && activDomain.domain && (
                 <Head>
@@ -108,9 +108,7 @@ const CompetitorsPage: NextPage = () => {
                 />
             </div>
 
-            <CSSTransition in={showAddDomain} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
-                <AddDomain closeModal={() => setShowAddDomain(false)} domains={domainsData?.domains || []} />
-            </CSSTransition>
+
 
 
 

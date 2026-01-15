@@ -6,7 +6,7 @@ import { CSSTransition } from 'react-transition-group';
 import { AlertCircle } from 'lucide-react';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../../components/domains/DomainHeader';
-import AddDomain from '../../../../components/domains/AddDomain';
+
 
 import exportCSV from '../../../../utils/client/exportcsv';
 import { useFetchDomains } from '../../../../services/domains';
@@ -17,7 +17,7 @@ import { useFetchSettings } from '../../../../services/settings';
 const DiscoverPage: NextPage = () => {
    const router = useRouter();
 
-   const [showAddDomain, setShowAddDomain] = useState(false);
+
    const [scDateFilter, setSCDateFilter] = useState('thirtyDays');
    const { data: appSettings } = useFetchSettings();
    const { data: domainsData } = useFetchDomains(router);
@@ -90,7 +90,7 @@ const DiscoverPage: NextPage = () => {
    return (
       <DashboardLayout
          domains={theDomains}
-         showAddModal={() => setShowAddDomain(true)}
+
       >
          {activDomain && activDomain.domain && (
             <Head>
@@ -103,7 +103,7 @@ const DiscoverPage: NextPage = () => {
                <DomainHeader
                   domain={activDomain}
                   domains={theDomains}
-                  showAddModal={() => console.log('XXXXX')}
+
 
                   exportCsv={() => exportCSV(theKeywordsGrouped, activDomain.domain, scDateFilter)}
                   scFilter={scDateFilter}
@@ -121,9 +121,7 @@ const DiscoverPage: NextPage = () => {
             />
          </div>
 
-         <CSSTransition in={showAddDomain} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
-            <AddDomain closeModal={() => setShowAddDomain(false)} domains={domainsData?.domains || []} />
-         </CSSTransition>
+
 
 
       </DashboardLayout>
