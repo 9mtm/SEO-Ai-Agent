@@ -13,7 +13,6 @@ import {
   Bot,
   Settings,
   CreditCard,
-
   User,
   Link as LinkIcon,
   PenTool,
@@ -40,8 +39,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const currentSlug = router.query.slug as string;
   // Try to find domain by slug, and if not found, try by domain name (for backward compatibility)
   const currentDomain = domains.find(d => d.slug === currentSlug) ||
-                        domains.find(d => d.domain === currentSlug) ||
-                        null;
+    domains.find(d => d.domain === currentSlug) ||
+    null;
 
   const translations = {
     en: {

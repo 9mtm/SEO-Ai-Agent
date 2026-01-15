@@ -39,6 +39,9 @@ class Post extends Model {
     @Column({ type: DataType.INTEGER, allowNull: true })
     declare wp_post_id: number;
 
+    @Column({ type: DataType.INTEGER, allowNull: true, defaultValue: 0 })
+    declare seo_score: number;
+
     @CreatedAt
     declare created_at: Date;
 

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
+import { generateSEOArticlePrompt } from '@/lib/prompts';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import { useFetchDomains } from '../../../../services/domains';
 import { Button } from '@/components/ui/button';
@@ -43,7 +44,70 @@ import {
 import 'react-quill/dist/quill.snow.css';
 
 // Dynamic import for ReactQuill to avoid SSR issues
-const ReactQuill = dynamic(() => import('react-quill'), {
+const ReactQuill = dynamic(() => import('react-quill').then((mod) => {
+    const Quill = mod.default.Quill;
+
+    // Extend Image format to support alt attribute
+    const ImageBlot = Quill.import('formats/image');
+    class CustomImage extends ImageBlot {
+        static create(value: any) {
+            const node = super.create(value);
+            if (typeof value === 'object') {
+                node.setAttribute('src', value.src || value);
+                if (value.alt) {
+                    node.setAttribute('alt', value.alt);
+                }
+            } else {
+                node.setAttribute('src', value);
+            }
+            return node;
+        }
+
+        static formats(domNode: HTMLElement) {
+            return {
+                src: domNode.getAttribute('src'),
+                alt: domNode.getAttribute('alt')
+            };
+        }
+
+        static value(domNode: HTMLElement) {
+            return {
+                src: domNode.getAttribute('src'),
+                alt: domNode.getAttribute('alt')
+            };
+        }
+    }
+    CustomImage.blotName = 'image';
+    CustomImage.tagName = 'IMG';
+    Quill.register(CustomImage, true);
+
+    // Extend Link format to support title attribute
+    const LinkBlot = Quill.import('formats/link');
+    class CustomLink extends LinkBlot {
+        static create(value: any) {
+            const node = super.create(value);
+            if (typeof value === 'object') {
+                node.setAttribute('href', value.href || value);
+                if (value.title) {
+                    node.setAttribute('title', value.title);
+                }
+            }
+            return node;
+        }
+
+        static formats(domNode: HTMLElement) {
+            return {
+                href: domNode.getAttribute('href'),
+                title: domNode.getAttribute('title')
+            };
+        }
+    }
+    CustomLink.blotName = 'link';
+    CustomLink.tagName = 'A';
+    Quill.register(CustomLink, true);
+
+    return mod.default;
+}), {
     ssr: false,
     loading: () => <div className="h-64 w-full bg-neutral-100 animate-pulse rounded-md" />
 });
@@ -128,6 +192,7 @@ export default function ArticleWriterPage() {
 
     const [isPublishing, setIsPublishing] = useState(false);
     const [showHtml, setShowHtml] = useState(false);
+    const [editorKey, setEditorKey] = useState(0); // Force re-render of editor
 
     // Generated Content State (Same as before)
     const [article, setArticle] = useState({
@@ -145,9 +210,19 @@ export default function ArticleWriterPage() {
         wordCount: 0,
         keywordDensity: 0,
         headingCount: 0,
+        h1Count: 0, // عدد H1 (يجب أن يكون 1 فقط)
+        h2Count: 0, // عدد H2 (المثالي: 3-6)
+        h3Count: 0, // عدد H3 (المثالي: 6-12)
         hasImage: false,
         hasMeta: false,
-        titleLength: 0
+        titleLength: 0,
+        keywordsInContent: 0, // عدد الكلمات المفتاحية الموجودة في المحتوى
+        keywordInTitle: false, // هل الكلمة المفتاحية الرئيسية في العنوان؟
+        keywordInMeta: false, // هل الكلمة المفتاحية في meta description؟
+        internalLinks: 0, // عدد الروابط الداخلية
+        externalLinks: 0, // عدد الروابط الخارجية
+        imagesInContent: 0, // عدد الصور داخل المحتوى
+        imagesWithAlt: 0 // عدد الصور التي تحتوي على alt text
     });
 
     // Calculate SEO Score whenever article changes
@@ -158,11 +233,14 @@ export default function ArticleWriterPage() {
         const textContent = article.content.replace(/<[^>]+>/g, ' ');
         const wordCount = textContent.trim().split(/\s+/).filter(w => w.length > 0).length;
 
-        // Count headings in HTML (h1, h2, h3)
-        const headings = (article.content.match(/<h[1-3][^>]*>/g) || []).length;
+        // Count headings in HTML - فحص احترافي لكل نوع بشكل منفصل
+        const h1Count = (article.content.match(/<h1[^>]*>/gi) || []).length;
+        const h2Count = (article.content.match(/<h2[^>]*>/gi) || []).length;
+        const h3Count = (article.content.match(/<h3[^>]*>/gi) || []).length;
+        const headings = h1Count + h2Count + h3Count; // إجمالي العناوين
         const titleLength = article.title.length;
 
-        // Check presence of ALL selected keywords
+        // Check presence of ALL selected keywords in content
         let keywordMatches = 0;
         selectedKeywords.forEach(kw => {
             if (new RegExp(kw, "gi").test(textContent)) {
@@ -170,39 +248,183 @@ export default function ArticleWriterPage() {
             }
         });
 
-        // Simple Density Calc (Main Keyword - First one)
+        // Check if primary keyword is in title
         const primaryKeyword = selectedKeywords[0] || '';
+        const keywordInTitle = primaryKeyword ? new RegExp(primaryKeyword, "gi").test(article.title) : false;
+
+        // Check if primary keyword is in meta description
+        const keywordInMeta = primaryKeyword ? new RegExp(primaryKeyword, "gi").test(article.metaDescription) : false;
+
+        // Simple Density Calc (Main Keyword - First one)
         const keywordCount = primaryKeyword
             ? (textContent.match(new RegExp(primaryKeyword, "gi")) || []).length
             : 0;
         const density = wordCount > 0 ? (keywordCount / wordCount) * 100 : 0;
 
-        // Scoring Algorithm (0-100)
+        // Count internal and external links
+        const allLinks = article.content.match(/<a [^>]*href=["']([^"']+)["'][^>]*>/gi) || [];
+        let internalLinks = 0;
+        let externalLinks = 0;
+
+        allLinks.forEach(link => {
+            const hrefMatch = link.match(/href=["']([^"']+)["']/i);
+            if (hrefMatch && hrefMatch[1]) {
+                const url = hrefMatch[1];
+                // Check if it's an internal link (relative or same domain)
+                if (url.startsWith('/') || url.startsWith('#') || url.startsWith('./') ||
+                    (domain && url.includes(domain.domain))) {
+                    internalLinks++;
+                } else if (url.startsWith('http')) {
+                    externalLinks++;
+                }
+            }
+        });
+
+        // فحص الصور داخل المحتوى وال alt text
+        const imgTags = article.content.match(/<img[^>]*>/gi) || [];
+        const imagesInContent = imgTags.length;
+        let imagesWithAlt = 0;
+
+        imgTags.forEach(img => {
+            // Check if image has alt attribute with non-empty value
+            const altMatch = img.match(/alt\s*=\s*["']([^"']+)["']/i);
+            if (altMatch && altMatch[1] && altMatch[1].trim().length > 0) {
+                imagesWithAlt++;
+            }
+        });
+
+        // Scoring Algorithm (0-100) - محسّن للـ SEO الاحترافي
         let score = 0;
+
+        // Word Count (20 points max)
         if (wordCount > 600) score += 20;
         else if (wordCount > 300) score += 10;
 
-        if (titleLength > 10 && titleLength < 70) score += 15;
+        // Title Length (10 points)
+        if (titleLength >= 50 && titleLength <= 60) score += 10;
+        else if (titleLength >= 40 && titleLength < 70) score += 5;
 
-        if (keywordMatches > 0 && keywordMatches === selectedKeywords.length) score += 20; // Bonus for using all selected keywords
-        else if (keywordMatches > 0) score += 10;
+        // Keywords in content (15 points)
+        if (keywordMatches > 0 && keywordMatches === selectedKeywords.length) score += 15;
+        else if (keywordMatches > 0) score += 8;
 
-        if (headings > 2) score += 10;
-        if (article.metaDescription) score += 10;
-        if (article.imageUrl) score += 10;
-        if (density >= 0.5 && density <= 2.5) score += 15;
+        // Primary keyword in title (10 points) - مهم جداً للـ SEO
+        if (keywordInTitle) score += 10;
+
+        // Primary keyword in meta description (8 points)
+        if (keywordInMeta) score += 8;
+
+        // Headings Structure (8 points) - فحص احترافي للبنية الهرمية
+        // المثالي: H1=1, H2=3-6, H3=6-12
+        let headingScore = 0;
+        if (h1Count === 1) headingScore += 2; // H1 واحد فقط (مثالي)
+        else if (h1Count === 0) headingScore += 0; // لا يوجد H1 (سيء)
+        else headingScore -= 1; // أكثر من H1 (سيء للـ SEO)
+
+        if (h2Count >= 3 && h2Count <= 6) headingScore += 3; // H2 مثالي
+        else if (h2Count >= 2 && h2Count <= 8) headingScore += 2; // H2 مقبول
+        else if (h2Count > 0) headingScore += 1; // H2 موجود على الأقل
+
+        if (h3Count >= 6 && h3Count <= 12) headingScore += 3; // H3 مثالي
+        else if (h3Count >= 3 && h3Count <= 15) headingScore += 2; // H3 مقبول
+        else if (h3Count > 0) headingScore += 1; // H3 موجود على الأقل
+
+        score += Math.max(0, headingScore); // لا تسمح بنقاط سالبة
+
+        // Meta description (7 points)
+        if (article.metaDescription && article.metaDescription.length >= 120 && article.metaDescription.length <= 160) score += 7;
+        else if (article.metaDescription) score += 3;
+
+        // Featured image (7 points)
+        if (article.imageUrl) score += 7;
+
+        // Keyword density (8 points)
+        if (density >= 0.5 && density <= 2.5) score += 8;
+        else if (density > 0) score += 3;
+
+        // Internal links (7 points) - مهم للـ SEO
+        if (internalLinks >= 2) score += 7;
+        else if (internalLinks >= 1) score += 3;
+
+        // Images in content with alt text (5 points) - مهم للـ accessibility والـ SEO
+        if (imagesInContent > 0 && imagesWithAlt === imagesInContent) score += 5; // جميع الصور بها alt text
+        else if (imagesWithAlt > 0) score += 2; // بعض الصور بها alt text
 
         setSeoScore(Math.min(100, score));
         setSeoMetrics({
             wordCount,
             keywordDensity: parseFloat(density.toFixed(1)),
             headingCount: headings,
+            h1Count,
+            h2Count,
+            h3Count,
             hasImage: !!article.imageUrl,
             hasMeta: !!article.metaDescription,
-            titleLength
+            titleLength,
+            keywordsInContent: keywordMatches,
+            keywordInTitle,
+            keywordInMeta,
+            internalLinks,
+            externalLinks,
+            imagesInContent,
+            imagesWithAlt
         });
 
-    }, [article, selectedKeywords]);
+    }, [article, selectedKeywords, domain]);
+
+    // Add event listeners to images and links in the editor
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const editorContainer = document.querySelector('.ql-editor');
+            if (!editorContainer) {
+                console.log('⚠️ Editor container not found');
+                return;
+            }
+
+            // Add click listeners to all images
+            const images = editorContainer.querySelectorAll('img');
+            console.log(`📸 Found ${images.length} images in editor`);
+
+            images.forEach((img, index) => {
+                const imgSrc = img.getAttribute('src');
+                const imgAlt = img.alt;
+                console.log(`Image ${index + 1}:`, { src: imgSrc, alt: imgAlt });
+
+                img.style.cursor = 'pointer';
+                img.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const originalSrc = img.getAttribute('src') || img.src;
+                    console.log('🖱️ Image clicked:', originalSrc);
+                    setCurrentImageData({
+                        src: originalSrc,
+                        alt: img.alt || '',
+                        index: -1
+                    });
+                    setShowImageEditor(true);
+                };
+            });
+
+            // Add click listeners to all links
+            const links = editorContainer.querySelectorAll('a');
+            links.forEach(link => {
+                link.style.cursor = 'pointer';
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setCurrentLinkData({
+                        href: link.getAttribute('href') || '',
+                        title: link.title || '',
+                        text: link.textContent || '',
+                        index: -1
+                    });
+                    setShowLinkEditor(true);
+                };
+            });
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [article.content, showHtml]);
 
     // Handle Keyword Selection
     const toggleKeyword = (kw: string) => {
@@ -225,38 +447,220 @@ export default function ArticleWriterPage() {
             return;
         }
 
-        const keywordsString = selectedKeywords.join(', ');
+        if (selectedKeywords.length === 0) {
+            toast.error('Please select at least one keyword');
+            return;
+        }
 
         setIsGenerating(true);
-        // Simulator for AI Generation (Returning HTML now to match Editor)
-        setTimeout(() => {
-            setArticle({
-                title: `The Ultimate Guide to ${topic}`,
-                content: `
-                <h1>Introduction to ${topic}</h1>
-                <p>${topic} has effectively transformed the way we approach modern challenges. In this comprehensive guide, we will explore the key benefits and strategies to master <strong>${topic}</strong>.</p>
 
-                <h2>Why ${topic} Matters in 2026</h2>
-                <p>The landscape of ${topic} is changing rapidly. Experts suggest that integrating <em>${keywordsString || topic}</em> into your workflow can increase efficiency by 40%.</p>
+        try {
+            // استخدام Prompt Library لإنشاء prompt احترافي
+            const primaryKeyword = selectedKeywords[0];
+            const secondaryKeywords = selectedKeywords.slice(1);
 
-                <h3>Key Benefits</h3>
-                <ul>
-                    <li>Improved productivity</li>
-                    <li>Better results</li>
-                    <li>Cost efficiency</li>
-                </ul>
-
-                <h2>Conclusion</h2>
-                <p>In conclusion, mastering ${keywordsString || topic} is essential for success.</p>
-            `,
-                excerpt: `Discover the ultimate secrets to mastering ${topic} in this comprehensive guide for 2026.`,
-                metaDescription: `Learn everything about ${topic}. This guide covers strategies, tips, and the future of ${keywordsString || topic}.`,
-                keywords: [topic, ...selectedKeywords, 'Guide', '2026 Trends'].filter(Boolean),
-                imageUrl: '' // Empty provided initially
+            const professionalPrompt = generateSEOArticlePrompt({
+                topic,
+                primaryKeyword,
+                secondaryKeywords,
+                targetLength: 1200,
+                tone: 'conversational',
+                targetAudience: 'general readers',
+                includeImages: true,
+                language: 'en'
             });
+
+            console.log('📝 Using Prompt Library v2.0.0');
+
+            // استدعاء API مع dpro model
+            const response = await fetch('/api/agent/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    messages: [
+                        { role: 'user', content: professionalPrompt }
+                    ],
+                    domain: domain?.domain || 'general',
+                    model: selectedModel || 'qwen-local', // استخدام الموديل المختار أو dpro
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to generate article');
+            }
+
+            // قراءة الاستجابة كـ stream من OpenAI-compatible API
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
+            let fullResponse = '';
+
+            if (reader) {
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+
+                    // تحليل SSE format: كل سطر بصيغة 0:"token"
+                    const lines = chunk.split('\n');
+                    for (const line of lines) {
+                        if (line.trim()) {
+                            // استخراج النص من صيغة 0:"text"
+                            const match = line.match(/0:"(.*)"/);
+                            if (match && match[1]) {
+                                // فك escape sequences
+                                let token = match[1]
+                                    .replace(/\\n/g, '\n')
+                                    .replace(/\\"/g, '"')
+                                    .replace(/\\\\/g, '\\');
+                                fullResponse += token;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // تحليل الاستجابة - محاولة ذكية لاستخراج المحتوى
+            console.log('Full AI Response:', fullResponse.substring(0, 500)); // للتشخيص
+
+            let articleGenerated = false;
+
+            // محاولة 1: البحث عن JSON كامل
+            try {
+                const jsonMatch = fullResponse.match(/\{[\s\S]*?"title"[\s\S]*?"content"[\s\S]*?\}/);
+                if (jsonMatch) {
+                    const articleData = JSON.parse(jsonMatch[0]);
+
+                    setArticle({
+                        title: articleData.title || topic,
+                        content: articleData.content || '<p>Generated content...</p>',
+                        excerpt: articleData.excerpt || '',
+                        metaDescription: articleData.metaDescription || '',
+                        keywords: selectedKeywords,
+                        imageUrl: ''
+                    });
+
+                    toast.success('Article generated successfully!', { duration: 3000 });
+                    articleGenerated = true;
+                }
+            } catch (e) {
+                console.log('JSON parsing failed, trying alternative methods...');
+            }
+
+            // محاولة 2: إذا فشل JSON، استخدم النص مباشرة كمحتوى HTML
+            if (!articleGenerated) {
+                // تنظيف النص من markdown أو أي رموز غير ضرورية
+                let cleanedContent = fullResponse
+                    .replace(/```json/g, '')
+                    .replace(/```html/g, '')
+                    .replace(/```/g, '')
+                    .replace(/^\s*\{[\s\S]*?\}\s*$/gm, '') // إزالة محاولات JSON فاشلة
+                    .trim();
+
+                // استخراج Title من H1 إذا موجود
+                let extractedTitle = topic;
+                const h1Match = cleanedContent.match(/<h1[^>]*>(.*?)<\/h1>/i);
+                if (h1Match && h1Match[1]) {
+                    extractedTitle = h1Match[1].replace(/<[^>]+>/g, '').trim(); // إزالة أي HTML tags داخل H1
+                    // تأكد أن الطول مثالي (50-60 حرف)
+                    if (extractedTitle.length > 60) {
+                        extractedTitle = extractedTitle.substring(0, 57) + '...';
+                    }
+                }
+
+                // إذا لم يحتوي على HTML tags، قم بتحويله
+                if (!cleanedContent.includes('<h1>') && !cleanedContent.includes('<h2>')) {
+                    // تحويل النص العادي إلى HTML
+                    const lines = cleanedContent.split('\n');
+                    let htmlContent = '';
+                    let firstHeading = true;
+
+                    for (let line of lines) {
+                        line = line.trim();
+                        if (!line) continue;
+
+                        // تحديد نوع السطر
+                        if (line.startsWith('# ')) {
+                            const heading = line.substring(2);
+                            htmlContent += `<h1>${heading}</h1>\n`;
+                            if (firstHeading) {
+                                extractedTitle = heading.substring(0, 60);
+                                firstHeading = false;
+                            }
+                        } else if (line.startsWith('## ')) {
+                            htmlContent += `<h2>${line.substring(3)}</h2>\n`;
+                        } else if (line.startsWith('### ')) {
+                            htmlContent += `<h3>${line.substring(4)}</h3>\n`;
+                        } else if (line.startsWith('- ') || line.startsWith('* ')) {
+                            htmlContent += `<li>${line.substring(2)}</li>\n`;
+                        } else {
+                            htmlContent += `<p>${line}</p>\n`;
+                        }
+                    }
+
+                    // إذا لم يتم إيجاد H1، أضف واحد في البداية
+                    if (!htmlContent.includes('<h1>')) {
+                        htmlContent = `<h1>${extractedTitle}</h1>\n\n` + htmlContent;
+                    }
+
+                    cleanedContent = htmlContent;
+                } else if (!cleanedContent.includes('<h1>')) {
+                    // إضافة H1 إذا لم يكن موجوداً
+                    cleanedContent = `<h1>${extractedTitle}</h1>\n\n` + cleanedContent;
+                }
+
+                // استخراج أول فقرتين كـ excerpt و meta description
+                const paragraphs = cleanedContent.match(/<p>(.*?)<\/p>/g);
+                let excerpt = '';
+                let metaDescription = '';
+
+                if (paragraphs && paragraphs.length > 0) {
+                    // جمع أول فقرتين
+                    let combinedText = '';
+                    for (let i = 0; i < Math.min(2, paragraphs.length); i++) {
+                        const text = paragraphs[i].replace(/<[^>]+>/g, '').trim();
+                        combinedText += text + ' ';
+                    }
+
+                    // Excerpt: 160 حرف
+                    excerpt = combinedText.substring(0, 160).trim();
+                    if (combinedText.length > 160) excerpt += '...';
+
+                    // Meta Description: 150-160 حرف مع الكلمة المفتاحية
+                    const primaryKeyword = selectedKeywords[0];
+                    if (combinedText.includes(primaryKeyword)) {
+                        // إذا الكلمة موجودة، استخدم النص كما هو
+                        metaDescription = combinedText.substring(0, 157).trim() + '...';
+                    } else {
+                        // إذا الكلمة غير موجودة، أضفها في البداية
+                        metaDescription = `${primaryKeyword}: ${combinedText.substring(0, 150 - primaryKeyword.length)}...`;
+                    }
+                } else {
+                    // fallback إذا لم توجد فقرات
+                    excerpt = `Learn about ${extractedTitle}`;
+                    metaDescription = `Discover everything about ${primaryKeyword}. ${extractedTitle.substring(0, 100)}`;
+                }
+
+                setArticle({
+                    title: extractedTitle,
+                    content: cleanedContent,
+                    excerpt: excerpt,
+                    metaDescription: metaDescription.substring(0, 160), // تأكد من الحد الأقصى
+                    keywords: selectedKeywords,
+                    imageUrl: ''
+                });
+
+                toast.success('Article generated! Title and meta description extracted.', { duration: 3000 });
+            }
+
+        } catch (error: any) {
+            console.error('Error generating article:', error);
+            toast.error(error.message || 'Failed to generate article. Please try again.', { duration: 5000 });
+        } finally {
             setIsGenerating(false);
-            toast.success('Article generated!');
-        }, 2000);
+        }
     };
 
     // State for tracking saved post
@@ -289,7 +693,8 @@ export default function ArticleWriterPage() {
                         featured_image: article.imageUrl,
                         meta_description: article.metaDescription,
                         focus_keywords: selectedKeywords,
-                        status: 'draft'
+                        status: 'draft',
+                        seo_score: seoScore // حفظ نتيجة SEO
                     }
                 })
             });
@@ -491,6 +896,139 @@ export default function ArticleWriterPage() {
         });
         setSelectedKeywords(post.focus_keywords || []);
         setView('editor');
+    };
+
+    // Handle Image Upload/Input
+    const [isUploadingImage, setIsUploadingImage] = useState(false);
+
+    // Image/Link Editor Modals
+    const [showImageEditor, setShowImageEditor] = useState(false);
+    const [showLinkEditor, setShowLinkEditor] = useState(false);
+    const [currentImageData, setCurrentImageData] = useState<{ src: string, alt: string, index: number } | null>(null);
+    const [currentLinkData, setCurrentLinkData] = useState<{ href: string, title: string, text: string, index: number } | null>(null);
+    const handleImageInput = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = async (e: any) => {
+            const file = e.target?.files?.[0];
+            if (!file) return;
+
+            // Validate
+            if (!file.type.startsWith('image/')) {
+                toast.error('Please select an image file');
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                toast.error('Image must be less than 5MB');
+                return;
+            }
+
+            setIsUploadingImage(true);
+            try {
+                // For now, use local data URL (or implement upload API later)
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setArticle(prev => ({ ...prev, imageUrl: reader.result as string }));
+                    toast.success('Image added! (Local preview)');
+                    setIsUploadingImage(false);
+                };
+                reader.readAsDataURL(file);
+            } catch (error: any) {
+                console.error('Error handling image:', error);
+                toast.error('Failed to add image');
+                setIsUploadingImage(false);
+            }
+        };
+        input.click();
+    };
+
+    // Update image alt text
+    const handleUpdateImageAlt = () => {
+        if (!currentImageData) return;
+
+        console.log('=== UPDATE IMAGE ALT TEXT ===');
+        console.log('Current image data:', currentImageData);
+
+        let content = article.content;
+        console.log('Content BEFORE update:', content);
+
+        // Find the exact image tag by src
+        const escapedSrc = currentImageData.src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        console.log('Escaped src:', escapedSrc);
+
+        const imgRegex = new RegExp(`<img[^>]*src\\s*=\\s*["']${escapedSrc}["'][^>]*>`, 'gi');
+        const matches = content.match(imgRegex);
+
+        console.log('Regex matches:', matches);
+
+        if (!matches || matches.length === 0) {
+            console.error('❌ Image not found in content!');
+            toast.error('Image not found in content');
+            return;
+        }
+
+        const oldImgTag = matches[0];
+        console.log('Old img tag:', oldImgTag);
+
+        // Create new image tag with updated alt
+        let newImgTag;
+        if (oldImgTag.includes('alt=') || oldImgTag.includes('alt =')) {
+            // Replace existing alt attribute
+            newImgTag = oldImgTag.replace(/alt\s*=\s*["'][^"']*["']/i, `alt="${currentImageData.alt}"`);
+            console.log('Replacing existing alt');
+        } else {
+            // Add new alt attribute after src
+            newImgTag = oldImgTag.replace(/(<img[^>]*src\s*=\s*["'][^"']*["'])/, `$1 alt="${currentImageData.alt}"`);
+            console.log('Adding new alt');
+        }
+
+        console.log('New img tag:', newImgTag);
+
+        // Replace in content
+        content = content.replace(oldImgTag, newImgTag);
+        console.log('Content AFTER update:', content);
+
+        setArticle(prev => ({ ...prev, content }));
+        console.log('✅ Article state updated');
+
+        // Force re-render of ReactQuill to preserve alt attribute
+        setEditorKey(prev => prev + 1);
+        console.log('🔄 Editor re-render triggered');
+
+        setShowImageEditor(false);
+        setCurrentImageData(null);
+        toast.success('Image alt text updated!');
+    };
+
+    // Update link title
+    const handleUpdateLinkTitle = () => {
+        if (!currentLinkData) return;
+
+        let content = article.content;
+        const linkTags = content.match(/<a [^>]*>.*?<\/a>/gi) || [];
+
+        // Find the exact link tag
+        const oldLinkTag = linkTags.find(tag =>
+            tag.includes(currentLinkData.href) && tag.includes(currentLinkData.text)
+        );
+        if (!oldLinkTag) return;
+
+        // Create new link tag with updated title
+        const newLinkTag = oldLinkTag.includes('title=')
+            ? oldLinkTag.replace(/title\s*=\s*["'][^"']*["']/i, `title="${currentLinkData.title}"`)
+            : oldLinkTag.replace(/<a /, `<a title="${currentLinkData.title}" `);
+
+        // Replace in content
+        content = content.replace(oldLinkTag, newLinkTag);
+        setArticle(prev => ({ ...prev, content }));
+
+        // Force re-render of ReactQuill
+        setEditorKey(prev => prev + 1);
+
+        setShowLinkEditor(false);
+        setCurrentLinkData(null);
+        toast.success('Link title updated!');
     };
 
     // Render List View
@@ -724,6 +1262,23 @@ export default function ArticleWriterPage() {
                                 </CardHeader>
                                 <CardContent className="pt-6 space-y-6">
 
+                                    {/* Topic Input - for AI Generation */}
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <label className="text-xs font-semibold text-neutral-500 uppercase">Article Topic/Idea</label>
+                                            {topic && <span className="text-xs text-green-600 flex items-center"><CheckCircle2 className="h-3 w-3 mr-1" /> Ready</span>}
+                                        </div>
+                                        <Textarea
+                                            placeholder="Enter your article topic or main idea... e.g., 'How to improve SEO rankings in 2026'"
+                                            value={topic}
+                                            onChange={(e) => setTopic(e.target.value)}
+                                            className="min-h-[80px] text-sm"
+                                        />
+                                        <p className="text-xs text-neutral-500">
+                                            This will be used by AI to generate your article. Be specific for better results.
+                                        </p>
+                                    </div>
+
                                     {/* Title Input */}
                                     <div className="space-y-2">
                                         <div className="flex items-center justify-between">
@@ -764,17 +1319,30 @@ export default function ArticleWriterPage() {
                                             <span>Featured Image</span>
                                             {article.imageUrl && <span className="text-green-600 text-[10px] flex items-center"><CheckCircle2 className="h-3 w-3 mr-1" /> Ready</span>}
                                         </label>
-                                        <div className="border-2 border-dashed border-neutral-200 rounded-lg p-6 flex flex-col items-center justify-center text-neutral-400 hover:bg-neutral-50 transition-colors cursor-pointer group">
+                                        <div
+                                            onClick={handleImageInput}
+                                            className="border-2 border-dashed border-neutral-200 rounded-lg p-6 flex flex-col items-center justify-center text-neutral-400 hover:bg-neutral-50 hover:border-blue-400 transition-colors cursor-pointer group relative"
+                                        >
+                                            {isUploadingImage && (
+                                                <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg">
+                                                    <RefreshCw className="h-6 w-6 animate-spin text-blue-600" />
+                                                </div>
+                                            )}
                                             {article.imageUrl ? (
-                                                // eslint-disable-next-line @next/next/no-img-element
-                                                <img src={article.imageUrl} alt="Featured" className="max-h-64 rounded-md object-cover" />
+                                                <div className="relative">
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                    <img src={article.imageUrl} alt="Featured" className="max-h-64 rounded-md object-cover" />
+                                                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md">
+                                                        <p className="text-white text-sm">Click to change</p>
+                                                    </div>
+                                                </div>
                                             ) : (
                                                 <>
                                                     <div className="bg-neutral-100 p-3 rounded-full mb-3 group-hover:scale-110 transition-transform">
                                                         <ImageIcon className="h-6 w-6 text-neutral-400" />
                                                     </div>
-                                                    <p className="text-sm">AI will generate an image here</p>
-                                                    <p className="text-xs text-neutral-400 mt-1">or click to upload manually</p>
+                                                    <p className="text-sm font-medium">Click to upload image</p>
+                                                    <p className="text-xs text-neutral-400 mt-1">or AI will generate one (coming soon)</p>
                                                 </>
                                             )}
                                         </div>
@@ -811,6 +1379,7 @@ export default function ArticleWriterPage() {
                                                 />
                                             ) : (
                                                 <ReactQuill
+                                                    key={editorKey}
                                                     theme="snow"
                                                     value={article.content}
                                                     onChange={(content) => setArticle({ ...article, content })}
@@ -869,16 +1438,12 @@ export default function ArticleWriterPage() {
 
                                             {/* Center Content */}
                                             <div className="absolute flex flex-col items-center justify-center">
-                                                {/* Emoji Icon */}
-                                                <div className="text-4xl mb-1">
-                                                    {seoScore >= 80 ? '🎉' : seoScore >= 50 ? '👍' : '📝'}
-                                                </div>
                                                 {/* Score */}
                                                 <div className="flex items-baseline">
-                                                    <span className="text-4xl font-bold text-neutral-800">
+                                                    <span className="text-5xl font-bold text-neutral-800">
                                                         {seoScore}
                                                     </span>
-                                                    <span className="text-lg text-neutral-400 ml-0.5">%</span>
+                                                    <span className="text-xl text-neutral-400 ml-1">%</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -921,10 +1486,20 @@ export default function ArticleWriterPage() {
                                                 </div>
                                             </div>
                                             <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-neutral-600"><Type className="h-3 w-3" /> Headings</span>
+                                                <span className="flex items-center gap-2 text-neutral-600"><Type className="h-3 w-3" /> Heading Structure</span>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-neutral-700">{seoMetrics.headingCount}</span>
-                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.headingCount > 2 ? 'bg-green-500' : 'bg-amber-500'}`} />
+                                                    <span className="font-mono text-xs text-neutral-600">
+                                                        H1:<span className={`font-semibold ml-0.5 ${seoMetrics.h1Count === 1 ? 'text-green-600' : 'text-red-600'}`}>{seoMetrics.h1Count}</span>
+                                                        <span className="mx-1.5 text-neutral-300">|</span>
+                                                        H2:<span className={`font-semibold ml-0.5 ${seoMetrics.h2Count >= 3 && seoMetrics.h2Count <= 6 ? 'text-green-600' : seoMetrics.h2Count >= 2 && seoMetrics.h2Count <= 8 ? 'text-amber-600' : 'text-red-600'}`}>{seoMetrics.h2Count}</span>
+                                                        <span className="mx-1.5 text-neutral-300">|</span>
+                                                        H3:<span className={`font-semibold ml-0.5 ${seoMetrics.h3Count >= 6 && seoMetrics.h3Count <= 12 ? 'text-green-600' : seoMetrics.h3Count >= 3 && seoMetrics.h3Count <= 15 ? 'text-amber-600' : seoMetrics.h3Count > 0 ? 'text-blue-600' : 'text-red-600'}`}>{seoMetrics.h3Count}</span>
+                                                    </span>
+                                                    <div className={`h-2 w-2 rounded-full ${
+                                                        seoMetrics.h1Count === 1 && seoMetrics.h2Count >= 3 && seoMetrics.h2Count <= 6 && seoMetrics.h3Count >= 6 && seoMetrics.h3Count <= 12
+                                                        ? 'bg-green-500'
+                                                        : seoMetrics.headingCount > 2 ? 'bg-amber-500' : 'bg-red-500'
+                                                    }`} />
                                                 </div>
                                             </div>
                                             <div className="flex justify-between items-center text-sm">
@@ -934,6 +1509,69 @@ export default function ArticleWriterPage() {
                                                     <div className={`h-2 w-2 rounded-full ${seoMetrics.hasImage ? 'bg-green-500' : 'bg-red-500'}`} />
                                                 </div>
                                             </div>
+
+                                            {/* New Professional SEO Metrics */}
+                                            <div className="flex justify-between items-center text-sm pt-2 border-t border-neutral-100">
+                                                <span className="flex items-center gap-2 text-neutral-600"><Hash className="h-3 w-3" /> Keywords in Content</span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-mono text-neutral-700">{seoMetrics.keywordsInContent}/{selectedKeywords.length}</span>
+                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordsInContent === selectedKeywords.length && selectedKeywords.length > 0 ? 'bg-green-500' : 'bg-amber-500'}`} />
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-between items-center text-sm">
+                                                <span className="flex items-center gap-2 text-neutral-600"><CheckCircle2 className="h-3 w-3" /> Keyword in Title</span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-mono text-neutral-700">{seoMetrics.keywordInTitle ? 'Yes' : 'No'}</span>
+                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordInTitle ? 'bg-green-500' : 'bg-red-500'}`} />
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-between items-center text-sm">
+                                                <span className="flex items-center gap-2 text-neutral-600"><CheckCircle2 className="h-3 w-3" /> Keyword in Meta</span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-mono text-neutral-700">{seoMetrics.keywordInMeta ? 'Yes' : 'No'}</span>
+                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordInMeta ? 'bg-green-500' : 'bg-red-500'}`} />
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-between items-center text-sm">
+                                                <span className="flex items-center gap-2 text-neutral-600"><LinkIcon className="h-3 w-3" /> Internal Links</span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-mono text-neutral-700">{seoMetrics.internalLinks}</span>
+                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.internalLinks >= 2 ? 'bg-green-500' : seoMetrics.internalLinks >= 1 ? 'bg-amber-500' : 'bg-red-500'}`} />
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-between items-center text-sm">
+                                                <span className="flex items-center gap-2 text-neutral-600"><Globe className="h-3 w-3" /> External Links</span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-mono text-neutral-700">{seoMetrics.externalLinks}</span>
+                                                    <div className={`h-2 w-2 rounded-full bg-blue-400`} />
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-between items-center text-sm">
+                                                <span className="flex items-center gap-2 text-neutral-600"><ImageIcon className="h-3 w-3" /> Images in Content</span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-mono text-neutral-700">{seoMetrics.imagesInContent}</span>
+                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.imagesInContent > 0 ? 'bg-green-500' : 'bg-neutral-300'}`} />
+                                                </div>
+                                            </div>
+                                            {seoMetrics.imagesInContent > 0 && (
+                                                <div className="flex justify-between items-center text-sm">
+                                                    <span className="flex items-center gap-2 text-neutral-600 pl-4">
+                                                        <CheckCircle2 className="h-3 w-3" /> With Alt Text
+                                                    </span>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-mono text-neutral-700">
+                                                            {seoMetrics.imagesWithAlt}/{seoMetrics.imagesInContent}
+                                                        </span>
+                                                        <div className={`h-2 w-2 rounded-full ${
+                                                            seoMetrics.imagesWithAlt === seoMetrics.imagesInContent
+                                                                ? 'bg-green-500'
+                                                                : seoMetrics.imagesWithAlt > 0
+                                                                    ? 'bg-amber-500'
+                                                                    : 'bg-red-500'
+                                                        }`} />
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
@@ -979,6 +1617,78 @@ export default function ArticleWriterPage() {
                                                     <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
                                                         <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
                                                         <span>Optimize title length to <span className="font-medium text-amber-700">50-60 characters</span></span>
+                                                    </div>
+                                                )}
+
+                                                {/* New Professional SEO Suggestions */}
+                                                {selectedKeywords.length > 0 && seoMetrics.keywordsInContent < selectedKeywords.length && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Include <span className="font-medium text-red-700">all selected keywords</span> in your content ({seoMetrics.keywordsInContent}/{selectedKeywords.length} found)</span>
+                                                    </div>
+                                                )}
+                                                {selectedKeywords.length > 0 && !seoMetrics.keywordInTitle && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Add your <span className="font-medium text-red-700">primary keyword</span> "{selectedKeywords[0]}" to the title</span>
+                                                    </div>
+                                                )}
+                                                {selectedKeywords.length > 0 && article.metaDescription && !seoMetrics.keywordInMeta && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Include <span className="font-medium text-amber-700">primary keyword</span> in meta description</span>
+                                                    </div>
+                                                )}
+                                                {seoMetrics.internalLinks === 0 && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Add at least <span className="font-medium text-red-700">2-3 internal links</span> to other pages on your site</span>
+                                                    </div>
+                                                )}
+                                                {seoMetrics.internalLinks === 1 && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Add <span className="font-medium text-amber-700">1-2 more internal links</span> to improve SEO</span>
+                                                    </div>
+                                                )}
+
+                                                {/* Images Alt Text Suggestions */}
+                                                {seoMetrics.imagesInContent > 0 && seoMetrics.imagesWithAlt === 0 && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Add <span className="font-medium text-red-700">alt text</span> to all {seoMetrics.imagesInContent} images for better SEO and accessibility</span>
+                                                    </div>
+                                                )}
+                                                {seoMetrics.imagesInContent > 0 && seoMetrics.imagesWithAlt > 0 && seoMetrics.imagesWithAlt < seoMetrics.imagesInContent && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Add <span className="font-medium text-amber-700">alt text</span> to the remaining {seoMetrics.imagesInContent - seoMetrics.imagesWithAlt} images</span>
+                                                    </div>
+                                                )}
+
+                                                {/* Heading Structure Suggestions */}
+                                                {seoMetrics.h1Count === 0 && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Add <span className="font-medium text-red-700">one H1 heading</span> as the main article title</span>
+                                                    </div>
+                                                )}
+                                                {seoMetrics.h1Count > 1 && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Use only <span className="font-medium text-red-700">one H1 heading</span> (currently: {seoMetrics.h1Count}). Multiple H1s hurt SEO</span>
+                                                    </div>
+                                                )}
+                                                {seoMetrics.h2Count < 3 && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Add <span className="font-medium text-amber-700">{3 - seoMetrics.h2Count} more H2 headings</span> to structure content (optimal: 3-6)</span>
+                                                    </div>
+                                                )}
+                                                {seoMetrics.h3Count < 6 && seoMetrics.h2Count >= 3 && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-blue-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-blue-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Consider adding <span className="font-medium text-blue-700">{6 - seoMetrics.h3Count} more H3 sub-headings</span> for better content hierarchy (optimal: 6-12)</span>
                                                     </div>
                                                 )}
                                             </div>
@@ -1165,6 +1875,125 @@ export default function ArticleWriterPage() {
 
                 </div>
             </div>
+
+            {/* Image Alt Text Editor Modal */}
+            {showImageEditor && currentImageData && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowImageEditor(false)}>
+                    <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold">Edit Image Alt Text</h3>
+                            <button
+                                onClick={() => setShowImageEditor(false)}
+                                className="text-neutral-400 hover:text-neutral-600"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <img
+                                    src={currentImageData.src}
+                                    alt={currentImageData.alt}
+                                    className="w-full h-48 object-cover rounded-md border border-neutral-200"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                                    Alt Text (for SEO & Accessibility)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={currentImageData.alt}
+                                    onChange={(e) => setCurrentImageData({ ...currentImageData, alt: e.target.value })}
+                                    placeholder="Describe the image..."
+                                    className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                                <p className="text-xs text-neutral-500 mt-1">
+                                    Describe what's in the image for screen readers and search engines
+                                </p>
+                            </div>
+                            <div className="flex gap-3 justify-end">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => setShowImageEditor(false)}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    onClick={handleUpdateImageAlt}
+                                    className="bg-blue-600 hover:bg-blue-700"
+                                >
+                                    Update Alt Text
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Link Title Editor Modal */}
+            {showLinkEditor && currentLinkData && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowLinkEditor(false)}>
+                    <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold">Edit Link Title</h3>
+                            <button
+                                onClick={() => setShowLinkEditor(false)}
+                                className="text-neutral-400 hover:text-neutral-600"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                                    Link Text
+                                </label>
+                                <div className="px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-md text-sm text-neutral-700">
+                                    {currentLinkData.text}
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                                    Link URL
+                                </label>
+                                <div className="px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-md text-sm text-neutral-700 truncate">
+                                    {currentLinkData.href}
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                                    Link Title (Tooltip)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={currentLinkData.title}
+                                    onChange={(e) => setCurrentLinkData({ ...currentLinkData, title: e.target.value })}
+                                    placeholder="Add a descriptive title..."
+                                    className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                                <p className="text-xs text-neutral-500 mt-1">
+                                    This appears when users hover over the link
+                                </p>
+                            </div>
+                            <div className="flex gap-3 justify-end">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => setShowLinkEditor(false)}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    onClick={handleUpdateLinkTitle}
+                                    className="bg-blue-600 hover:bg-blue-700"
+                                >
+                                    Update Title
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </DashboardLayout>
     );
 }

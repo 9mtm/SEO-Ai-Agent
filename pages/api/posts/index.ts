@@ -58,7 +58,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     meta_description: postData.meta_description,
                     focus_keywords: postData.focus_keywords,
                     status: postData.status || 'draft',
-                    wp_post_id: postData.wp_post_id
+                    wp_post_id: postData.wp_post_id,
+                    seo_score: postData.seo_score || 0
                 });
                 return res.status(200).json({ message: 'Post updated', post });
             } else {
@@ -72,7 +73,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     meta_description: postData.meta_description,
                     focus_keywords: postData.focus_keywords,
                     status: postData.status || 'draft',
-                    wp_post_id: postData.wp_post_id
+                    wp_post_id: postData.wp_post_id,
+                    seo_score: postData.seo_score || 0
                 });
                 return res.status(201).json({ message: 'Post created', post });
             }

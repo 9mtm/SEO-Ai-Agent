@@ -1,0 +1,15 @@
+
+> seo-ai-agent@2.1.0 dev
+> next dev -p 55781
+
+⨯ Failed to start server
+Error: listen EADDRINUSE: address already in use :::55781
+    at <unknown> (Error: listen EADDRINUSE: address already in use :::55781)
+    at new Promise (<anonymous>) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 55781
+}
+[?25h
