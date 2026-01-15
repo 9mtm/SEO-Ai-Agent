@@ -99,6 +99,9 @@ class User extends Model {
 
   @HasMany(() => Domain)
   declare domains: Domain[];
+
+  @Column({ type: DataType.JSON, allowNull: true })
+  declare ai_api_keys?: any;
 }
 
 export default User;

@@ -11,12 +11,13 @@ type UserInfoResponse = {
         name: string;
         email: string;
         picture?: string;
+        ai_api_keys?: any;
     };
     error?: string;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<UserInfoResponse>) {
-    if (req.method !== 'GET' && req.method !== 'DELETE') {
+    if (req.method !== 'GET' && req.method !== 'DELETE' && req.method !== 'PUT') {
         return res.status(405).json({ success: false, error: 'Method not allowed' });
     }
 
@@ -45,7 +46,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 user: {
                     name: user.name || user.email?.split('@')[0] || 'User',
                     email: user.email || '',
-                    picture: userData.google_picture || userData.picture || undefined
+                    picture: userData.google_picture || userData.picture || undefined,
+                    ai_api_keys: userData.ai_api_keys
                 }
             });
         }
@@ -62,6 +64,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             cookies.set('token', null, { expires: new Date(0) });
 
             return res.status(200).json({ success: true });
+        }
+
+        if (req.method === 'PUT') {
+            const { name, ai_api_keys } = req.body;
+
+            if (name) user.name = name;
+            if (ai_api_keys) user.ai_api_keys = ai_api_keys;
+
+            await user.save();
+
+            return res.status(200).json({ success: true, user: user.toJSON() as any });
         }
 
     } catch (error) {

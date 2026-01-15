@@ -13,7 +13,9 @@ import {
   Bot,
   Settings,
   CreditCard,
+
   User,
+  Link as LinkIcon,
 } from 'lucide-react';
 import AccountMenu from '../common/AccountMenu';
 import DomainSelector from '../domains/DomainSelector';
@@ -60,24 +62,56 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
   const navigation: { name: string; href: string; icon: any }[] = [];
 
+  const navTranslations = {
+    en: {
+      insight: 'Insight',
+      tracking: 'Tracking',
+      competitors: 'Competitors',
+      discover: 'Discover',
+      agent: 'Seo Agent',
+      settings: 'Settings',
+      profile: 'Profile',
+      scraper: 'Scraper',
+      connections: 'Connect',
+      billing: 'Billing',
+      myDomains: 'My Domains'
+    },
+    de: {
+      insight: 'Einblick',
+      tracking: 'Tracking',
+      competitors: 'Wettbewerber',
+      discover: 'Entdecken',
+      agent: 'SEO-Agent',
+      settings: 'Einstellungen',
+      profile: 'Profil',
+      scraper: 'Scraper',
+      connections: 'Verbinden',
+      billing: 'Abrechnung',
+      myDomains: 'Meine Domains'
+    }
+  };
+
+  const navT = navTranslations[selectedLang];
+
   if (currentDomain) {
     navigation.push(
-      { name: 'Insight', href: `/domain/insight/${currentDomain.slug}`, icon: LineChart },
-      { name: 'Tracking', href: `/domain/${currentDomain.slug}`, icon: BarChart3 },
-      { name: 'Competitors', href: `/domain/${currentDomain.slug}/competitors`, icon: Users },
-      { name: 'Discover', href: `/domain/console/${currentDomain.slug}`, icon: Search },
-      { name: 'Seo Agent', href: `/domain/agent/${currentDomain.slug}`, icon: Bot },
-      { name: 'Settings', href: `/domain/settings/${currentDomain.slug}`, icon: Settings }
+      { name: navT.insight, href: `/domain/insight/${currentDomain.slug}`, icon: LineChart },
+      { name: navT.tracking, href: `/domain/${currentDomain.slug}`, icon: BarChart3 },
+      { name: navT.competitors, href: `/domain/${currentDomain.slug}/competitors`, icon: Users },
+      { name: navT.discover, href: `/domain/console/${currentDomain.slug}`, icon: Search },
+      { name: navT.agent, href: `/domain/agent/${currentDomain.slug}`, icon: Bot },
+      { name: navT.settings, href: `/domain/settings/${currentDomain.slug}`, icon: Settings }
     );
   } else if (router.pathname.startsWith('/profile')) {
     navigation.push(
-      { name: 'Profile', href: '/profile', icon: User },
-      { name: 'Scraper', href: '/profile/scraper', icon: Settings },
-      { name: 'Billing', href: '/profile/billing', icon: CreditCard }
+      { name: navT.profile, href: '/profile', icon: User },
+      { name: navT.connections, href: '/profile/connections', icon: LinkIcon },
+      { name: navT.scraper, href: '/profile/scraper', icon: Settings },
+      { name: navT.billing, href: '/profile/billing', icon: CreditCard }
     );
   } else {
     navigation.push(
-      { name: 'My Domains', href: '/', icon: Globe }
+      { name: navT.myDomains, href: '/', icon: Globe }
     );
   }
 
