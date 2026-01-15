@@ -70,7 +70,18 @@ export const getDomains = async (
          const scData = domainItem?.search_console ? JSON.parse(domainItem.search_console) : {};
          const { client_email, private_key } = scData;
          const searchConsoleData = scData ? { ...scData, client_email: client_email ? 'true' : '', private_key: private_key ? 'true' : '' } : {};
-         return { ...domainItem, search_console: JSON.stringify(searchConsoleData) };
+
+         // Ensure focus_keywords is parsed if it's a string
+         let focusKeywords = domainItem.focus_keywords;
+         if (typeof focusKeywords === 'string') {
+            try {
+               focusKeywords = JSON.parse(focusKeywords);
+            } catch (e) {
+               focusKeywords = undefined;
+            }
+         }
+
+         return { ...domainItem, search_console: JSON.stringify(searchConsoleData), focus_keywords: focusKeywords };
       });
       const theDomains: DomainType[] = withStats ? await getdomainStats(formattedDomains) : formattedDomains;
       return res.status(200).json({ domains: theDomains });

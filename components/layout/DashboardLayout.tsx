@@ -16,6 +16,7 @@ import {
 
   User,
   Link as LinkIcon,
+  PenTool,
 } from 'lucide-react';
 import AccountMenu from '../common/AccountMenu';
 import DomainSelector from '../domains/DomainSelector';
@@ -74,7 +75,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       scraper: 'Scraper',
       connections: 'Connect',
       billing: 'Billing',
-      myDomains: 'My Domains'
+      myDomains: 'My Domains',
+      posts: 'Posts'
     },
     de: {
       insight: 'Einblick',
@@ -87,7 +89,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       scraper: 'Scraper',
       connections: 'Verbinden',
       billing: 'Abrechnung',
-      myDomains: 'Meine Domains'
+      myDomains: 'Meine Domains',
+      posts: 'Beiträge'
     }
   };
 
@@ -100,6 +103,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       { name: navT.competitors, href: `/domain/${currentDomain.slug}/competitors`, icon: Users },
       { name: navT.discover, href: `/domain/console/${currentDomain.slug}`, icon: Search },
       { name: navT.agent, href: `/domain/agent/${currentDomain.slug}`, icon: Bot },
+      { name: navT.posts, href: `/domain/posts/${currentDomain.slug}`, icon: PenTool },
       { name: navT.settings, href: `/domain/settings/${currentDomain.slug}`, icon: Settings }
     );
   } else if (router.pathname.startsWith('/profile')) {

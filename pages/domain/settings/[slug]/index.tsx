@@ -171,6 +171,8 @@ const DomainSettingsPage: NextPage = () => {
             low: focusKeywords.low.filter(k => k.trim() !== '')
         };
 
+        console.log('[DEBUG] Saving focus_keywords:', cleanFocusKeywords);
+
         try {
             const res = await fetch(`/api/domains?domain=${activeDomain.domain}`, {
                 method: 'PUT',

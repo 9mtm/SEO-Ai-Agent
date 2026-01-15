@@ -25,7 +25,13 @@
       "Bash(npx @next/codemod@latest new-link:*)",
       "Bash(pnpm dlx shadcn@latest add:*)",
       "Bash(test:*)",
-      "Bash(npx shadcn@latest add:*)"
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(npm run migrate:up:*)",
+      "Bash(npm run db:migrate:*)",
+      "Bash(npx sequelize-cli:*)",
+      "Bash(sqlite3:*)",
+      "Bash(mysql -u root -proot -h localhost -P 8889 flowxtra_serp:*)",
+      "Bash(npx tsx:*)"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"

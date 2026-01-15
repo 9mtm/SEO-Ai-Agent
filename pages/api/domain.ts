@@ -43,6 +43,15 @@ const getDomain = async (req: NextApiRequest, res: NextApiResponse<DomainGetResp
          }
       }
 
+      // Ensure focus_keywords is parsed if it's a string
+      if (parsedDomain && typeof parsedDomain.focus_keywords === 'string') {
+         try {
+            parsedDomain.focus_keywords = JSON.parse(parsedDomain.focus_keywords);
+         } catch (e) {
+            parsedDomain.focus_keywords = undefined;
+         }
+      }
+
       return res.status(200).json({ domain: parsedDomain });
    } catch (error) {
       console.log('[ERROR] Getting Domain: ', error);
