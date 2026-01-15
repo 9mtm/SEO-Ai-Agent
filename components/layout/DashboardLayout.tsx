@@ -13,6 +13,7 @@ import {
   Bot,
   Settings,
   CreditCard,
+  User,
 } from 'lucide-react';
 import AccountMenu from '../common/AccountMenu';
 import DomainSelector from '../domains/DomainSelector';
@@ -70,6 +71,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     );
   } else if (router.pathname.startsWith('/profile')) {
     navigation.push(
+      { name: 'Profile', href: '/profile', icon: User },
       { name: 'Scraper', href: '/profile/scraper', icon: Settings },
       { name: 'Billing', href: '/profile/billing', icon: CreditCard }
     );
@@ -99,7 +101,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-200">
             <Link
-              href={currentDomain ? `/domain/insight/${currentDomain.slug}` : '/domains'}
+              href={currentDomain ? `/domain/insight/${currentDomain.slug}` : '/'}
               className="flex items-center space-x-2"
             >
               <Image src="/dpro_logo.png" alt="Dpro" width={32} height={32} className="h-8 w-8" />

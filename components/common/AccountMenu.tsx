@@ -5,7 +5,7 @@ import { Settings, LogOut, Plus, Globe, User } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 type AccountMenuProps = {
-    showAddModal: () => void;
+
     domains?: DomainType[];
     currentDomain?: DomainType | null;
     selectedLang?: 'en' | 'de';
@@ -18,7 +18,7 @@ type UserInfo = {
     picture?: string;
 };
 
-const AccountMenu = ({ showAddModal, domains = [], currentDomain, selectedLang = 'en', onLanguageChange }: AccountMenuProps) => {
+const AccountMenu = ({ domains = [], currentDomain, selectedLang = 'en', onLanguageChange }: AccountMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [userInfo, setUserInfo] = useState<UserInfo>({ name: 'User', email: 'user@example.com' });
     const menuRef = useRef<HTMLDivElement>(null);

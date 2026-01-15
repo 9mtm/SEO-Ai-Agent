@@ -106,7 +106,7 @@ const Home: NextPage = () => {
 
               {isLoggedIn ? (
                 <AccountMenu
-                  showAddModal={() => router.push('/domains?new=true')}
+
                   domains={domains}
                   selectedLang={selectedLang}
                   onLanguageChange={setSelectedLang}

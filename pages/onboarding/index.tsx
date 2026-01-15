@@ -25,7 +25,7 @@ const Onboarding = () => {
             if (domainSlug) {
                 router.push(`/domain/insight/${domainSlug}`);
             } else {
-                router.push('/domains');
+                router.push('/');
             }
         }
     };

@@ -61,7 +61,7 @@ const Research: NextPage = () => {
          <Head>
             <title>Research Keywords - Dpro</title>
          </Head>
-         <TopBar showSettings={() => setShowSettings(true)} showAddModal={() => null} />
+         <TopBar showSettings={() => setShowSettings(true)} />
          <div className=" w-full max-w-7xl mx-auto lg:flex lg:flex-row">
             <div className="sidebar w-full p-6 lg:pt-44 lg:w-1/5 lg:block lg:pr-0" data-testid="sidebar">
                <h3 className="hidden py-7 text-base font-bold text-blue-700 lg:block">
