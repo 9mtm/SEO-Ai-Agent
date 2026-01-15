@@ -264,8 +264,13 @@ export default function ArticleWriterPage() {
     const [isSaving, setIsSaving] = useState(false);
 
     const handleSavePost = async () => {
-        if (!article.title || !article.content) {
-            toast.error('Title and content are required');
+        // Validation
+        if (!article.title?.trim()) {
+            toast.error('Please add a title', { icon: '📝' });
+            return;
+        }
+        if (!article.content?.trim() || article.content === '<p><br></p>') {
+            toast.error('Please add content to your article', { icon: '✍️' });
             return;
         }
 
@@ -289,15 +294,30 @@ export default function ArticleWriterPage() {
                 })
             });
 
-            const data = await res.json();
-            if (res.ok) {
-                setSavedPost(data.post);
-                toast.success('Article saved successfully!');
-            } else {
-                toast.error(data.error || 'Failed to save');
+            if (!res.ok) {
+                const error = await res.json();
+                throw new Error(error.message || error.error || 'Failed to save post');
             }
-        } catch (error) {
-            toast.error('Save failed');
+
+            const data = await res.json();
+            setSavedPost(data.post);
+            toast.success(savedPost?.id ? 'Article updated successfully!' : 'Article saved successfully!', {
+                icon: '✅',
+                duration: 3000
+            });
+        } catch (error: any) {
+            console.error('Save error:', error);
+            if (error.message.includes('network') || error.message.includes('Failed to fetch')) {
+                toast.error('Network error. Please check your connection and try again.', {
+                    duration: 5000,
+                    icon: '🌐'
+                });
+            } else {
+                toast.error(error.message || 'Failed to save post. Please try again.', {
+                    duration: 5000,
+                    icon: '❌'
+                });
+            }
         } finally {
             setIsSaving(false);
         }
@@ -305,7 +325,7 @@ export default function ArticleWriterPage() {
 
     const handlePublishToWP = async () => {
         if (!savedPost) {
-            toast.error('Please save the article first');
+            toast.error('Please save the article first', { icon: '💾' });
             return;
         }
 
@@ -315,27 +335,76 @@ export default function ArticleWriterPage() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    action: 'publish_post',
+                    action: 'create_post',
                     domain: domain?.domain,
-                    postData: {
+                    post: {
                         title: savedPost.title,
                         content: savedPost.content,
+                        excerpt: savedPost.excerpt || article.excerpt,
                         status: 'publish',
-                        categories: [1] // Default
+                        categories: [1],
+                        featured_media: savedPost.featured_image
                     }
                 })
             });
 
-            const data = await res.json();
-            if (res.ok) {
-                toast.success('Published successfully to WordPress!');
-                // Update local status
-                // Could call save again with status 'published'
-            } else {
-                toast.error(data.error || 'Failed to publish');
+            if (!res.ok) {
+                const error = await res.json();
+                throw new Error(error.error || 'Failed to publish');
             }
-        } catch (error) {
-            toast.error('Publication failed');
+
+            const data = await res.json();
+
+            // Show success with link to view post
+            const postLink = data.link || data.url;
+            if (postLink) {
+                toast.success(
+                    <div className="flex flex-col gap-1">
+                        <span className="font-medium">Published successfully!</span>
+                        <a
+                            href={postLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline text-sm"
+                        >
+                            View on WordPress →
+                        </a>
+                    </div>,
+                    { duration: 6000, icon: '🚀' }
+                );
+            } else {
+                toast.success('Published successfully to WordPress!', {
+                    icon: '✅',
+                    duration: 4000
+                });
+            }
+
+            // Update local post status
+            setSavedPost({ ...savedPost, status: 'published' });
+        } catch (error: any) {
+            console.error('Publish error:', error);
+
+            if (error.message.includes('authentication') || error.message.includes('401')) {
+                toast.error('WordPress authentication failed. Please check your credentials in domain settings.', {
+                    duration: 6000,
+                    icon: '🔐'
+                });
+            } else if (error.message.includes('network') || error.message.includes('Failed to fetch')) {
+                toast.error('Network error. Please check your connection.', {
+                    duration: 5000,
+                    icon: '🌐'
+                });
+            } else if (error.message.includes('permission')) {
+                toast.error('You don\'t have permission to publish posts. Check WordPress user permissions.', {
+                    duration: 6000,
+                    icon: '⚠️'
+                });
+            } else {
+                toast.error(error.message || 'Failed to publish to WordPress. Please try again.', {
+                    duration: 5000,
+                    icon: '❌'
+                });
+            }
         } finally {
             setIsPublishing(false);
         }
@@ -655,6 +724,41 @@ export default function ArticleWriterPage() {
                                 </CardHeader>
                                 <CardContent className="pt-6 space-y-6">
 
+                                    {/* Title Input */}
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <label className="text-xs font-semibold text-neutral-500 uppercase">Article Title</label>
+                                            <span className={`text-xs ${
+                                                article.title.length >= 50 && article.title.length <= 60
+                                                    ? 'text-green-600'
+                                                    : article.title.length > 0
+                                                    ? 'text-amber-600'
+                                                    : 'text-neutral-400'
+                                            }`}>
+                                                {article.title.length} / 50-60 optimal
+                                            </span>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="Enter your article title..."
+                                            value={article.title}
+                                            onChange={(e) => setArticle(prev => ({ ...prev, title: e.target.value }))}
+                                            className="w-full px-4 py-3 text-lg font-semibold border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        />
+                                        {article.title.length > 0 && article.title.length < 50 && (
+                                            <p className="text-xs text-amber-600 flex items-center gap-1">
+                                                <AlertCircle className="h-3 w-3" />
+                                                Title is too short for optimal SEO (aim for 50-60 characters)
+                                            </p>
+                                        )}
+                                        {article.title.length > 60 && (
+                                            <p className="text-xs text-amber-600 flex items-center gap-1">
+                                                <AlertCircle className="h-3 w-3" />
+                                                Title may be truncated in search results (keep it under 60 characters)
+                                            </p>
+                                        )}
+                                    </div>
+
                                     <div className="space-y-2">
                                         <label className="text-xs font-semibold text-neutral-500 uppercase flex justify-between">
                                             <span>Featured Image</span>
@@ -679,13 +783,24 @@ export default function ArticleWriterPage() {
                                     <div className="space-y-2 h-[500px] flex flex-col">
                                         <div className="flex justify-between items-center">
                                             <label className="text-xs font-semibold text-neutral-500 uppercase">Body Content</label>
-                                            <button
-                                                onClick={() => setShowHtml(!showHtml)}
-                                                className="text-xs text-blue-600 hover:underline flex items-center gap-1"
-                                            >
-                                                <Code className="h-3 w-3" />
-                                                {showHtml ? 'Switch to Visual Editor' : 'Edit Source Code'}
-                                            </button>
+                                            <div className="flex items-center gap-4">
+                                                <span className={`text-xs ${
+                                                    seoMetrics.wordCount >= 600
+                                                        ? 'text-green-600 font-medium'
+                                                        : seoMetrics.wordCount >= 300
+                                                        ? 'text-amber-600'
+                                                        : 'text-neutral-500'
+                                                }`}>
+                                                    {seoMetrics.wordCount} words {seoMetrics.wordCount >= 600 ? '✓' : ''}
+                                                </span>
+                                                <button
+                                                    onClick={() => setShowHtml(!showHtml)}
+                                                    className="text-xs text-blue-600 hover:underline flex items-center gap-1"
+                                                >
+                                                    <Code className="h-3 w-3" />
+                                                    {showHtml ? 'Switch to Visual Editor' : 'Edit Source Code'}
+                                                </button>
+                                            </div>
                                         </div>
                                         <div className="flex-1 bg-white rounded-md overflow-hidden border border-neutral-200 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500 relative">
                                             {showHtml ? (
@@ -715,75 +830,160 @@ export default function ArticleWriterPage() {
                         <div className="flex flex-col gap-6">
 
                             {/* SEO Score Card */}
-                            <Card className="border-none shadow-lg bg-slate-900 text-white overflow-hidden relative">
-                                <div className="absolute top-0 right-0 p-4 opacity-10">
-                                    <BarChart className="h-32 w-32" />
-                                </div>
+                            <Card className="border-neutral-200 shadow-sm overflow-hidden">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2">
-                                        <Globe className="h-5 w-5 text-blue-400" />
+                                        <Globe className="h-5 w-5 text-blue-600" />
                                         SEO Score
                                     </CardTitle>
                                 </CardHeader>
-                                <CardContent className="space-y-6 relative z-10">
-                                    <div className="flex flex-col items-center justify-center py-4">
-                                        <div className="relative h-32 w-32 flex items-center justify-center">
-                                            {/* Circular SVG Graphic Placeholder */}
-                                            <svg className="h-full w-full -rotate-90" viewBox="0 0 36 36">
-                                                <path className="text-slate-700" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3" />
-                                                <path className={`${seoScore >= 80 ? 'text-green-500' : seoScore >= 50 ? 'text-amber-500' : 'text-red-500'} transition-all duration-1000 ease-out`}
-                                                    strokeDasharray={`${seoScore}, 100`}
-                                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                                    fill="none" stroke="currentColor" strokeWidth="3"
+                                <CardContent className="space-y-6">
+                                    <div className="flex flex-col items-center justify-center py-6">
+                                        <div className="relative h-44 w-44 flex items-center justify-center">
+                                            {/* Circular Progress Ring - Partial Arc (270 degrees) */}
+                                            <svg className="h-full w-full" viewBox="0 0 120 120" style={{ transform: 'rotate(135deg)' }}>
+                                                {/* Background Arc (Light Gray) */}
+                                                <circle
+                                                    cx="60"
+                                                    cy="60"
+                                                    r="50"
+                                                    fill="none"
+                                                    stroke="#F3F4F6"
+                                                    strokeWidth="12"
+                                                    strokeLinecap="round"
+                                                    strokeDasharray="235.6 314.2"
+                                                />
+                                                {/* Progress Arc (Colored based on score) */}
+                                                <circle
+                                                    cx="60"
+                                                    cy="60"
+                                                    r="50"
+                                                    fill="none"
+                                                    stroke={seoScore >= 80 ? '#10B981' : seoScore >= 50 ? '#60A5FA' : '#F59E0B'}
+                                                    strokeWidth="12"
+                                                    strokeLinecap="round"
+                                                    strokeDasharray={`${(seoScore / 100) * 235.6} 314.2`}
+                                                    className="transition-all duration-1000 ease-out"
                                                 />
                                             </svg>
-                                            <div className="absolute flex flex-col items-center">
-                                                <span className={`text-4xl font-bold ${getScoreColor(seoScore)}`}>{seoScore}</span>
-                                                <span className="text-xs text-slate-400">/ 100</span>
+
+                                            {/* Center Content */}
+                                            <div className="absolute flex flex-col items-center justify-center">
+                                                {/* Emoji Icon */}
+                                                <div className="text-4xl mb-1">
+                                                    {seoScore >= 80 ? '🎉' : seoScore >= 50 ? '👍' : '📝'}
+                                                </div>
+                                                {/* Score */}
+                                                <div className="flex items-baseline">
+                                                    <span className="text-4xl font-bold text-neutral-800">
+                                                        {seoScore}
+                                                    </span>
+                                                    <span className="text-lg text-neutral-400 ml-0.5">%</span>
+                                                </div>
                                             </div>
                                         </div>
-                                        <p className="mt-2 font-medium text-slate-300">
-                                            {seoScore >= 80 ? 'Excellent Optimization' : seoScore >= 50 ? 'Needs Improvement' : 'Optimization Required'}
+
+                                        {/* Labels */}
+                                        <div className="flex items-center justify-between w-full max-w-[160px] mt-4">
+                                            <span className="text-xs font-medium text-neutral-400">0%</span>
+                                            <span className="text-xs font-medium text-neutral-400">100%</span>
+                                        </div>
+
+                                        {/* Description */}
+                                        <p className="text-[11px] text-center text-neutral-400 max-w-[180px] leading-relaxed">
+                                            {seoScore >= 80
+                                                ? "You're doing an excellent job! Your content is well optimized"
+                                                : seoScore >= 50
+                                                ? "You're doing a good effort to reach your goal"
+                                                : "Keep working on your content to improve your SEO score"}
                                         </p>
                                     </div>
 
                                     <div className="space-y-4">
                                         <div className="flex justify-between text-sm">
-                                            <span className="text-slate-400">Article Optimized</span>
+                                            <span className="text-neutral-500">Article Optimized</span>
                                             {seoScore >= 80 ? <CheckCircle2 className="h-4 w-4 text-green-500" /> : <AlertCircle className="h-4 w-4 text-amber-500" />}
                                         </div>
 
-                                        <div className="space-y-3 pt-2 border-t border-slate-800">
+                                        <div className="space-y-3 pt-2 border-t border-neutral-200">
                                             <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-slate-300"><AlignLeft className="h-3 w-3" /> Word Count</span>
+                                                <span className="flex items-center gap-2 text-neutral-600"><AlignLeft className="h-3 w-3" /> Word Count</span>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-mono">{seoMetrics.wordCount}</span>
+                                                    <span className="font-mono text-neutral-700">{seoMetrics.wordCount}</span>
                                                     <div className={`h-2 w-2 rounded-full ${seoMetrics.wordCount > 600 ? 'bg-green-500' : 'bg-red-500'}`} />
                                                 </div>
                                             </div>
                                             <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-slate-300"><Hash className="h-3 w-3" /> Keyword Density</span>
+                                                <span className="flex items-center gap-2 text-neutral-600"><Hash className="h-3 w-3" /> Keyword Density</span>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-mono">{seoMetrics.keywordDensity}%</span>
+                                                    <span className="font-mono text-neutral-700">{seoMetrics.keywordDensity}%</span>
                                                     <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordDensity >= 0.5 && seoMetrics.keywordDensity <= 2.5 ? 'bg-green-500' : 'bg-red-500'}`} />
                                                 </div>
                                             </div>
                                             <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-slate-300"><Type className="h-3 w-3" /> Headings</span>
+                                                <span className="flex items-center gap-2 text-neutral-600"><Type className="h-3 w-3" /> Headings</span>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-mono">{seoMetrics.headingCount}</span>
+                                                    <span className="font-mono text-neutral-700">{seoMetrics.headingCount}</span>
                                                     <div className={`h-2 w-2 rounded-full ${seoMetrics.headingCount > 2 ? 'bg-green-500' : 'bg-amber-500'}`} />
                                                 </div>
                                             </div>
                                             <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-slate-300"><ImageIcon className="h-3 w-3" /> Images</span>
+                                                <span className="flex items-center gap-2 text-neutral-600"><ImageIcon className="h-3 w-3" /> Images</span>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-mono">{seoMetrics.hasImage ? 1 : 0}</span>
+                                                    <span className="font-mono text-neutral-700">{seoMetrics.hasImage ? 1 : 0}</span>
                                                     <div className={`h-2 w-2 rounded-full ${seoMetrics.hasImage ? 'bg-green-500' : 'bg-red-500'}`} />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    {/* SEO Suggestions */}
+                                    {seoScore < 80 && (
+                                        <div className="pt-4 border-t border-neutral-200">
+                                            <h4 className="text-xs font-semibold text-neutral-700 mb-3 flex items-center gap-1">
+                                                <Sparkles className="h-3 w-3" />
+                                                Suggestions to Improve
+                                            </h4>
+                                            <div className="space-y-2">
+                                                {seoMetrics.wordCount < 600 && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Add <span className="font-medium text-amber-700">{600 - seoMetrics.wordCount} more words</span> to reach optimal length</span>
+                                                    </div>
+                                                )}
+                                                {seoMetrics.keywordDensity < 0.5 && selectedKeywords.length > 0 && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Include your keywords <span className="font-medium text-amber-700">2-3 more times</span> naturally</span>
+                                                    </div>
+                                                )}
+                                                {seoMetrics.headingCount < 3 && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Add <span className="font-medium text-amber-700">{3 - seoMetrics.headingCount} more heading(s)</span> (H2 or H3)</span>
+                                                    </div>
+                                                )}
+                                                {!seoMetrics.hasImage && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Add a <span className="font-medium text-amber-700">featured image</span> to improve engagement</span>
+                                                    </div>
+                                                )}
+                                                {!seoMetrics.hasMeta && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Write a <span className="font-medium text-amber-700">meta description</span> (150-160 chars)</span>
+                                                    </div>
+                                                )}
+                                                {article.title.length > 0 && (article.title.length < 50 || article.title.length > 60) && (
+                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                        <span>Optimize title length to <span className="font-medium text-amber-700">50-60 characters</span></span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
                                 </CardContent>
                             </Card>
 
