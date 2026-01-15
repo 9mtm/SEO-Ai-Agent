@@ -46,13 +46,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
     }
 
+    if (req.method === 'PUT') {
+        try {
+            const { sessionId, title } = req.body;
+            if (!sessionId || !title) {
+                return res.status(400).json({ error: 'Session ID and Title are required' });
+            }
+
+            const [updated] = await ChatSession.update(
+                { title },
+                { where: { id: sessionId, userId } } // Ensure user owns the session
+            );
+
+            if (updated) {
+                return res.status(200).json({ success: true });
+            }
+            return res.status(404).json({ error: 'Session not found' });
+        } catch (error) {
+            console.error('[Sessions API] PUT Error:', error);
+            return res.status(500).json({ error: 'Failed to update session' });
+        }
+    }
+
     if (req.method === 'DELETE') {
         try {
             const { id } = req.query;
+
             if (!id) return res.status(400).json({ error: 'Session ID is required' });
 
-            await ChatSession.destroy({ where: { id, userId, domain } });
-            return res.status(200).json({ success: true });
+            // Optional: Delete messages first if not handled by DB cascade
+            await ChatMessage.destroy({ where: { sessionId: id, userId } });
+
+            const deleted = await ChatSession.destroy({
+                where: { id, userId }
+            });
+
+            if (deleted) {
+                return res.status(200).json({ success: true });
+            }
+            return res.status(404).json({ error: 'Session not found' });
         } catch (error) {
             console.error('[Sessions API] DELETE Error:', error);
             return res.status(500).json({ error: 'Failed to delete session' });
