@@ -138,7 +138,7 @@ const ScraperPage: NextPage = () => {
    const t = translations[selectedLang];
 
    return (
-      <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang}>
+      <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang} domains={domainsData?.domains || []}>
          <Head>
             <title>{t.title} - SEO AI Agent</title>
          </Head>

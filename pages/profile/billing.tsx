@@ -12,7 +12,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 
+import { useRouter } from 'next/router';
+import { useFetchDomains } from '../../services/domains';
+
 const BillingPage: NextPage = () => {
+    const router = useRouter();
+    const { data: domainsData } = useFetchDomains(router);
     const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -185,7 +190,7 @@ const BillingPage: NextPage = () => {
     );
 
     return (
-        <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang}>
+        <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang} domains={domainsData?.domains || []}>
             <Head>
                 <title>Billing - SEO AI Agent</title>
             </Head>

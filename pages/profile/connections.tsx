@@ -11,8 +11,11 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 
+import { useFetchDomains } from '../../services/domains';
+
 const ConnectionsPage: NextPage = () => {
     const router = useRouter();
+    const { data: domainsData } = useFetchDomains(router);
     const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
@@ -136,7 +139,7 @@ const ConnectionsPage: NextPage = () => {
     ];
 
     return (
-        <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang}>
+        <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang} domains={domainsData?.domains || []}>
             <Head>
                 <title>{t.title} - SEO AI Agent</title>
             </Head>
