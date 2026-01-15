@@ -171,6 +171,11 @@ const ScraperPage: NextPage = () => {
                               {settings.available_scapers?.map((scraper) => (
                                  <SelectItem key={scraper.value} value={scraper.value}>
                                     {scraper.label}
+                                    {scraper.value === 'scrapingrobot' && (
+                                       <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">
+                                          Recommended
+                                       </span>
+                                    )}
                                  </SelectItem>
                               ))}
                            </SelectContent>
@@ -211,17 +216,6 @@ const ScraperPage: NextPage = () => {
                               </p>
                            </div>
                         )}
-
-                        <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mt-2">
-                           <h4 className="font-semibold text-blue-800 text-sm mb-1">Why connect a scraper?</h4>
-                           <p className="text-sm text-blue-700 leading-relaxed mb-2">
-                              Connecting a scraping service allows you to track keywords and backlinks without limitations.
-                              For the best experience, we recommend <strong>Scraping Robot</strong>, which offers a free plan to track up to <strong>5,000 words</strong>.
-                           </p>
-                           <p className="text-sm text-blue-700">
-                              This ensures reliable data for all your SEO tracking needs.
-                           </p>
-                        </div>
                      </div>
 
                      {settings.scraper_type !== 'none' && settings.scraper_type !== 'proxy' && (
