@@ -12,13 +12,25 @@ import { Badge } from '@/components/ui/badge';
 import {
     Select,
     SelectContent,
+    SelectGroup,
     SelectItem,
+    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
 import { Separator } from '@/components/ui/separator';
-import { Bot, User, Send, Plus, StopCircle, Sparkles, PenTool, Search, Zap } from 'lucide-react';
+import { Bot, User, Send, Plus, StopCircle, Sparkles, PenTool, Search, Zap, FileUp, ImagePlus, BarChart } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSessionId }: any) => {
     const router = useRouter();
@@ -26,8 +38,60 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
     const [sessions, setSessions] = useState(initialSessions || []);
     const [currentSessionId, setCurrentSessionId] = useState(initialSessionId);
     const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
-    const [selectedModel, setSelectedModel] = useState('gpt-4');
+    const [selectedModel, setSelectedModel] = useState('qwen-local');
+    const [availableModels, setAvailableModels] = useState<any[]>([
+        { id: 'qwen-local', name: 'Dpro', icon: '/dpro_logo.png', enabled: true }
+    ]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const imageInputRef = useRef<HTMLInputElement>(null);
+
+    // Fetch available models based on user's API keys
+    useEffect(() => {
+        const fetchAvailableModels = async () => {
+            try {
+                const response = await fetch('/api/user');
+                const data = await response.json();
+
+                if (data.success && data.user?.ai_api_keys) {
+                    const keys = data.user.ai_api_keys;
+                    console.log('API Keys received:', keys); // Debug log
+
+                    const models = [
+                        { id: 'qwen-local', name: 'Dpro', icon: '/dpro_logo.png', enabled: true }
+                    ];
+
+                    if (keys.chatgpt && keys.chatgpt.trim() !== '') {
+                        console.log('Adding GPT models'); // Debug log
+                        models.push({ id: 'gpt-5.2', name: 'GPT-5.2', icon: '/openai-icon.png', enabled: true });
+                        models.push({ id: 'gpt-5-mini', name: 'GPT-5 mini', icon: '/openai-icon.png', enabled: true });
+                        models.push({ id: 'gpt-4.1', name: 'GPT-4.1', icon: '/openai-icon.png', enabled: true });
+                    }
+                    if (keys.claude && keys.claude.trim() !== '') {
+                        console.log('Adding Claude models'); // Debug log
+                        models.push({ id: 'claude-3.5-sonnet', name: 'Claude 3.5 Sonnet', icon: '/claude-icon.png', enabled: true });
+                        models.push({ id: 'claude-3-opus', name: 'Claude 3 Opus', icon: '/claude-icon.png', enabled: true });
+                    }
+                    if (keys.gemini && keys.gemini.trim() !== '') {
+                        console.log('Adding Gemini models'); // Debug log
+                        models.push({ id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', icon: '/gemini-icon.png', enabled: true });
+                        models.push({ id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', icon: '/gemini-icon.png', enabled: true });
+                    }
+                    if (keys.perplexity && keys.perplexity.trim() !== '') {
+                        console.log('Adding Perplexity models'); // Debug log
+                        models.push({ id: 'perplexity-sonar', name: 'Sonar', icon: '/perplexity-icon.png', enabled: true });
+                    }
+
+                    console.log('Final models list:', models); // Debug log
+                    setAvailableModels(models);
+                }
+            } catch (error) {
+                console.error('Failed to fetch available models:', error);
+            }
+        };
+
+        fetchAvailableModels();
+    }, []);
 
     const { messages, input, setMessages, handleInputChange, handleSubmit, isLoading, stop, reload } = useChat({
         api: '/api/agent/chat',
@@ -75,6 +139,57 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
             setMessages(data);
         }
         router.push(`/domain/agent/${domain.slug}?sessionId=${sessionId}`, undefined, { shallow: true });
+    };
+
+    const handleFileUpload = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleImageUpload = () => {
+        imageInputRef.current?.click();
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            // TODO: Implement file upload to server and attach to message
+            console.log('File selected:', file.name);
+            // For now, just add a message indicating file was selected
+            handleInputChange({ target: { value: `[File attached: ${file.name}]\n\n${input}` } } as any);
+        }
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            // TODO: Implement image upload and preview
+            console.log('Image selected:', file.name);
+            handleInputChange({ target: { value: `[Image attached: ${file.name}]\n\n${input}` } } as any);
+        }
+    };
+
+    const handleAccessSEOStats = async () => {
+        try {
+            // Fetch SEO stats for the domain
+            const res = await fetch(`/api/domains/${domain.domain}/stats`);
+            if (res.ok) {
+                const stats = await res.json();
+                const statsMessage = `Here are the current SEO statistics for ${domain.domain}:\n\n` +
+                    `📊 **Total Keywords:** ${stats.totalKeywords || 'N/A'}\n` +
+                    `📈 **Average Position:** ${stats.avgPosition || 'N/A'}\n` +
+                    `🔍 **Total Searches:** ${stats.totalSearches || 'N/A'}\n` +
+                    `👁️ **Total Impressions:** ${stats.totalImpressions || 'N/A'}\n` +
+                    `🖱️ **Total Clicks:** ${stats.totalClicks || 'N/A'}\n\n` +
+                    `What would you like to know about these stats?`;
+
+                handleInputChange({ target: { value: statsMessage } } as any);
+            } else {
+                handleInputChange({ target: { value: `Please analyze the SEO performance for ${domain.domain}` } } as any);
+            }
+        } catch (error) {
+            console.error('Error fetching SEO stats:', error);
+            handleInputChange({ target: { value: `Please provide SEO insights for ${domain.domain}` } } as any);
+        }
     };
 
     const emptyStateCards = [
@@ -145,16 +260,90 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
                     {/* Header */}
                     <div className="h-14 border-b flex items-center justify-between px-4 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
                         <div className="flex items-center gap-2">
-                            <Select value={selectedModel} onValueChange={setSelectedModel}>
-                                <SelectTrigger className="w-[180px] h-8 border-none bg-transparent hover:bg-neutral-100 focus:ring-0">
-                                    <SelectValue placeholder="Select Model" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="gpt-4">GPT-4 Turbo</SelectItem>
-                                    <SelectItem value="gpt-3.5">GPT-3.5 Turbo</SelectItem>
-                                    <SelectItem value="claude-3">Claude 3 Opus</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" className="h-8 px-3 gap-2 hover:bg-neutral-100">
+                                        <span className="text-sm font-medium">
+                                            {availableModels.find(m => m.id === selectedModel)?.name || 'Select Model'}
+                                        </span>
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="opacity-50">
+                                            <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="start" className="w-56">
+                                    {/* Dpro (Local) - Top Level */}
+                                    <DropdownMenuItem onClick={() => setSelectedModel('qwen-local')} className="font-medium">
+                                        Dpro
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuSeparator />
+
+                                    {/* OpenAI Models */}
+                                    {availableModels.some(m => m.id.startsWith('gpt')) && (
+                                        <DropdownMenuSub>
+                                            <DropdownMenuSubTrigger>
+                                                <span>OpenAI</span>
+                                            </DropdownMenuSubTrigger>
+                                            <DropdownMenuSubContent>
+                                                {availableModels.filter(m => m.id.startsWith('gpt')).map((model) => (
+                                                    <DropdownMenuItem key={model.id} onClick={() => setSelectedModel(model.id)}>
+                                                        {model.name}
+                                                    </DropdownMenuItem>
+                                                ))}
+                                            </DropdownMenuSubContent>
+                                        </DropdownMenuSub>
+                                    )}
+
+                                    {/* Google Models */}
+                                    {availableModels.some(m => m.id.startsWith('gemini')) && (
+                                        <DropdownMenuSub>
+                                            <DropdownMenuSubTrigger>
+                                                <span>Google</span>
+                                            </DropdownMenuSubTrigger>
+                                            <DropdownMenuSubContent>
+                                                {availableModels.filter(m => m.id.startsWith('gemini')).map((model) => (
+                                                    <DropdownMenuItem key={model.id} onClick={() => setSelectedModel(model.id)}>
+                                                        {model.name}
+                                                    </DropdownMenuItem>
+                                                ))}
+                                            </DropdownMenuSubContent>
+                                        </DropdownMenuSub>
+                                    )}
+
+                                    {/* Anthropic Models */}
+                                    {availableModels.some(m => m.id.startsWith('claude')) && (
+                                        <DropdownMenuSub>
+                                            <DropdownMenuSubTrigger>
+                                                <span>Anthropic</span>
+                                            </DropdownMenuSubTrigger>
+                                            <DropdownMenuSubContent>
+                                                {availableModels.filter(m => m.id.startsWith('claude')).map((model) => (
+                                                    <DropdownMenuItem key={model.id} onClick={() => setSelectedModel(model.id)}>
+                                                        {model.name}
+                                                    </DropdownMenuItem>
+                                                ))}
+                                            </DropdownMenuSubContent>
+                                        </DropdownMenuSub>
+                                    )}
+
+                                    {/* Perplexity Models */}
+                                    {availableModels.some(m => m.id.startsWith('perplexity')) && (
+                                        <DropdownMenuSub>
+                                            <DropdownMenuSubTrigger>
+                                                <span>Perplexity</span>
+                                            </DropdownMenuSubTrigger>
+                                            <DropdownMenuSubContent>
+                                                {availableModels.filter(m => m.id.startsWith('perplexity')).map((model) => (
+                                                    <DropdownMenuItem key={model.id} onClick={() => setSelectedModel(model.id)}>
+                                                        {model.name}
+                                                    </DropdownMenuItem>
+                                                ))}
+                                            </DropdownMenuSubContent>
+                                        </DropdownMenuSub>
+                                    )}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                     </div>
 
@@ -191,7 +380,7 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
                                     <div key={m.id} className={`flex gap-4 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                         {m.role !== 'user' && (
                                             <Avatar className="h-8 w-8 border bg-white">
-                                                <AvatarImage src="/bot-avatar.png" />
+                                                <AvatarImage src={availableModels.find(model => model.id === selectedModel)?.icon || '/dpro_logo.png'} />
                                                 <AvatarFallback><Bot className="h-5 w-5 text-neutral-600" /></AvatarFallback>
                                             </Avatar>
                                         )}
@@ -248,9 +437,57 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
                                         }
                                     }}
                                     placeholder="Message SEO Agent..."
-                                    className="min-h-[50px] max-h-[200px] w-full pr-24 py-3 bg-neutral-50 border-neutral-200 focus:border-neutral-300 focus:ring-1 focus:ring-neutral-300 resize-none rounded-xl shadow-sm scrollbar-hide focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    className="min-h-[50px] max-h-[200px] w-full pl-12 pr-24 py-3 bg-neutral-50 border-neutral-200 focus:border-neutral-300 focus:ring-1 focus:ring-neutral-300 resize-none rounded-xl shadow-sm scrollbar-hide focus-visible:ring-0 focus-visible:ring-offset-0"
                                     rows={1}
                                 />
+
+                                {/* Attachment Button (Left) */}
+                                <div className="absolute left-2 bottom-2">
+                                    {/* Hidden file inputs */}
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        className="hidden"
+                                        onChange={handleFileChange}
+                                        accept=".pdf,.doc,.docx,.txt,.csv"
+                                    />
+                                    <input
+                                        ref={imageInputRef}
+                                        type="file"
+                                        className="hidden"
+                                        onChange={handleImageChange}
+                                        accept="image/*"
+                                    />
+
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button
+                                                type="button"
+                                                size="sm"
+                                                variant="ghost"
+                                                className="h-8 w-8 p-0 rounded-lg hover:bg-neutral-200 text-neutral-600"
+                                            >
+                                                <Plus className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="start" className="w-48">
+                                            <DropdownMenuItem onClick={handleFileUpload} className="gap-2 cursor-pointer">
+                                                <FileUp className="h-4 w-4" />
+                                                Upload File
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onClick={handleImageUpload} className="gap-2 cursor-pointer">
+                                                <ImagePlus className="h-4 w-4" />
+                                                Upload Image
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onClick={handleAccessSEOStats} className="gap-2 cursor-pointer">
+                                                <BarChart className="h-4 w-4" />
+                                                Access SEO Stats
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+
+                                {/* Send/Stop Button (Right) */}
                                 <div className="absolute right-2 bottom-2 flex items-center gap-2">
                                     {isLoading ? (
                                         <Button
