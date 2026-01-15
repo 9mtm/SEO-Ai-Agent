@@ -148,39 +148,7 @@ const AccountMenu = ({ domains = [], currentDomain, selectedLang = 'en', onLangu
                         </div>
                     </div>
 
-                    {/* Domains Section */}
-                    {domains.length > 0 && (
-                        <div className="px-2 py-2 border-b border-neutral-200">
-                            <div className="px-2 py-1 text-xs font-semibold text-neutral-500 uppercase">
-                                Domains
-                            </div>
-                            <div className="max-h-48 overflow-y-auto">
-                                {domains.map((domain) => (
-                                    <button
-                                        key={domain.slug}
-                                        onClick={() => handleDomainChange(domain.slug)}
-                                        className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors ${currentDomain?.slug === domain.slug
-                                            ? 'bg-primary/10 text-primary font-medium'
-                                            : 'text-neutral-700 hover:bg-neutral-100'
-                                            }`}
-                                    >
-                                        <Globe className="h-4 w-4 flex-shrink-0" />
-                                        <span className="truncate">{domain.domain}</span>
-                                    </button>
-                                ))}
-                            </div>
-                            <button
-                                onClick={() => {
-                                    router.push('/onboarding');
-                                    setIsOpen(false);
-                                }}
-                                className="w-full flex items-center gap-2 px-3 py-2 mt-1 rounded-md text-sm text-primary hover:bg-primary/10 font-medium transition-colors"
-                            >
-                                <Plus className="h-4 w-4" />
-                                <span>Add Domain</span>
-                            </button>
-                        </div>
-                    )}
+
 
                     {/* Profile */}
                     <Link
