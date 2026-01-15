@@ -1,11 +1,24 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { useChat } from 'ai/react';
 import ReactMarkdown from 'react-markdown';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import { useFetchDomains } from '../../../../services/domains';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Separator } from '@/components/ui/separator';
+import { Bot, User, Send, Plus, StopCircle, Sparkles, PenTool, Search, Zap } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
 
 const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSessionId }: any) => {
     const router = useRouter();
@@ -13,25 +26,31 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
     const [sessions, setSessions] = useState(initialSessions || []);
     const [currentSessionId, setCurrentSessionId] = useState(initialSessionId);
     const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
+    const [selectedModel, setSelectedModel] = useState('gpt-4');
+    const messagesEndRef = useRef<HTMLDivElement>(null);
 
-
-    const { messages, input, setMessages, handleInputChange, handleSubmit, isLoading } = useChat({
+    const { messages, input, setMessages, handleInputChange, handleSubmit, isLoading, stop, reload } = useChat({
         api: '/api/agent/chat',
         body: {
             domain: domain?.domain || '',
             sessionId: currentSessionId,
+            model: selectedModel
         },
         initialMessages: initialMessages || [],
         onResponse: (response) => {
-            // Check if we got a new session ID back
             const newSessionId = response.headers.get('X-Session-Id');
             if (newSessionId && !currentSessionId) {
                 setCurrentSessionId(parseInt(newSessionId));
-                // Refresh session list
                 fetchSessions();
             }
         }
     });
+
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages]);
 
     const fetchSessions = async () => {
         const res = await fetch(`/api/agent/sessions?domain=${domain.domain}`);
@@ -43,37 +62,43 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
 
     const handleNewChat = () => {
         setCurrentSessionId(null);
-        setMessages([
-            {
-                id: 'welcome',
-                role: 'assistant',
-                content: `Hello! I'm your **SEO Agent**. 🤖\n\nI can help you analyze **${domain.domain}**, suggest keywords, or write content.\n\nType your question below!`
-            }
-        ]);
-        // Update URL
+        setMessages([]);
         router.push(`/domain/agent/${domain.slug}`, undefined, { shallow: true });
     };
 
     const handleSwitchSession = async (sessionId: any) => {
         if (isLoading) return;
         setCurrentSessionId(sessionId);
-
-        // Fetch messages for this session
         const res = await fetch(`/api/agent/chat/history?sessionId=${sessionId}`);
         if (res.ok) {
             const data = await res.json();
-            setMessages(data.length > 0 ? data : [
-                {
-                    id: 'welcome',
-                    role: 'assistant',
-                    content: `Continuing our conversation in this session...`
-                }
-            ]);
+            setMessages(data);
         }
-
-        // Update URL
         router.push(`/domain/agent/${domain.slug}?sessionId=${sessionId}`, undefined, { shallow: true });
     };
+
+    const emptyStateCards = [
+        {
+            icon: <PenTool className="h-4 w-4 text-purple-500" />,
+            title: "Write a Blog Post",
+            prompt: "Write an SEO-optimized blog post about the latest trends in..."
+        },
+        {
+            icon: <Search className="h-4 w-4 text-blue-500" />,
+            title: "Keyword Research",
+            prompt: "Find high-volume, low-difficulty keywords for..."
+        },
+        {
+            icon: <Zap className="h-4 w-4 text-amber-500" />,
+            title: "Optimize Content",
+            prompt: "Analyze my current homepage content and suggest SEO improvements..."
+        },
+        {
+            icon: <Sparkles className="h-4 w-4 text-green-500" />,
+            title: "Generate Title Tags",
+            prompt: "Generate 5 catchy, SEO-friendly title tags for a page about..."
+        }
+    ];
 
     return (
         <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang} domains={domainsData?.domains || []}>
@@ -81,84 +106,180 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
                 <title>{`Seo Agent - ${domain?.domain}`}</title>
             </Head>
 
-            <div className="flex h-[calc(100vh-theme(spacing.24))] overflow-hidden bg-white border rounded-xl shadow-sm">
-                {/* Sidebar - Chat History */}
-                <div className="w-64 flex-none border-r bg-gray-50 flex flex-col hidden md:flex">
-                    <div className="p-4 border-b">
-                        <button
+            <div className="flex h-[calc(100vh-4rem)] overflow-hidden bg-white -m-4 lg:-m-8">
+
+                {/* Sidebar */}
+                <div className="w-[280px] flex-none border-r bg-neutral-50/50 hidden md:flex flex-col">
+                    <div className="p-4">
+                        <Button
                             onClick={handleNewChat}
-                            className="w-full py-2 px-4 bg-white border border-blue-200 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium text-sm flex items-center justify-center gap-2 shadow-sm"
+                            variant="outline"
+                            className="w-full justify-start gap-2 h-10 bg-white border-neutral-200 hover:bg-neutral-100 text-neutral-600"
                         >
-                            <span>+</span> New Chat
-                        </button>
+                            <Plus className="h-4 w-4" />
+                            New Chat
+                        </Button>
                     </div>
-                    <div className="flex-1 overflow-y-auto styled-scrollbar">
-                        {sessions.map((s: any) => (
-                            <div
-                                key={s.id}
-                                onClick={() => handleSwitchSession(s.id)}
-                                className={`p-4 border-b cursor-pointer hover:bg-white transition-colors text-sm truncate ${currentSessionId === s.id ? 'bg-white font-semibold border-l-4 border-l-blue-600 text-blue-700' : 'text-gray-600'}`}
-                                title={s.title}
-                            >
-                                {s.title || 'Untitled Chat'}
-                                <div className="text-xs text-gray-400 mt-1">
-                                    {new Date(s.updatedAt).toLocaleDateString()}
-                                </div>
-                            </div>
-                        ))}
+
+                    <div className="px-4 py-2">
+                        <h3 className="text-xs font-medium text-neutral-500 mb-2 px-2">History</h3>
+                        <div className="flex-1 overflow-y-auto max-h-[calc(100vh-250px)] space-y-1 styled-scrollbar">
+                            {sessions.map((s: any) => (
+                                <button
+                                    key={s.id}
+                                    onClick={() => handleSwitchSession(s.id)}
+                                    className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors truncate ${currentSessionId === s.id
+                                        ? 'bg-neutral-200/60 text-neutral-900 font-medium'
+                                        : 'text-neutral-600 hover:bg-neutral-100'
+                                        }`}
+                                >
+                                    {s.title || 'New Conversation'}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                {/* Chat Container */}
-                <div className="flex-1 flex flex-col h-full overflow-hidden bg-gray-50/30">
-                    {/* Chat History */}
-                    <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 styled-scrollbar">
-                        {messages.map(m => (
-                            <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[85%] md:max-w-[75%] rounded-2xl p-4 shadow-sm ${m.role === 'user'
-                                    ? 'bg-blue-600 text-white rounded-br-none'
-                                    : 'bg-white border text-gray-800 rounded-bl-none'
-                                    }`}>
-                                    <div className={`prose ${m.role === 'user' ? 'prose-invert' : 'prose-neutral'} text-sm max-w-none`}>
-                                        <ReactMarkdown>{m.content}</ReactMarkdown>
+                {/* Main Chat Area */}
+                <div className="flex-1 flex flex-col min-w-0 bg-white">
+                    {/* Header */}
+                    <div className="h-14 border-b flex items-center justify-between px-4 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+                        <div className="flex items-center gap-2">
+                            <Select value={selectedModel} onValueChange={setSelectedModel}>
+                                <SelectTrigger className="w-[180px] h-8 border-none bg-transparent hover:bg-neutral-100 focus:ring-0">
+                                    <SelectValue placeholder="Select Model" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="gpt-4">GPT-4 Turbo</SelectItem>
+                                    <SelectItem value="gpt-3.5">GPT-3.5 Turbo</SelectItem>
+                                    <SelectItem value="claude-3">Claude 3 Opus</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+
+                    {/* Messages */}
+                    <div className="flex-1 overflow-y-auto p-4 md:p-6 scroll-smooth">
+                        {messages.length === 0 ? (
+                            <div className="h-full flex flex-col items-center justify-center max-w-2xl mx-auto space-y-8">
+                                <div className="text-center space-y-2">
+                                    <div className="bg-white p-4 rounded-2xl shadow-sm border inline-block mb-3">
+                                        <Bot className="h-8 w-8 text-neutral-800" />
                                     </div>
+                                    <h2 className="text-2xl font-semibold text-neutral-900">How can I help you with {domain?.domain}?</h2>
+                                    <p className="text-neutral-500">I'm your AI SEO Assistant. Ask me anything.</p>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                                    {emptyStateCards.map((card, i) => (
+                                        <button
+                                            key={i}
+                                            onClick={() => handleInputChange({ target: { value: card.prompt } } as any)}
+                                            className="text-left p-4 border rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all group"
+                                        >
+                                            <div className="flex items-center gap-3 mb-2">
+                                                {card.icon}
+                                                <span className="font-medium text-neutral-700 group-hover:text-neutral-900">{card.title}</span>
+                                            </div>
+                                            <p className="text-sm text-neutral-500 line-clamp-2">{card.prompt}</p>
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
-                        ))}
-                        {isLoading && (
-                            <div className="flex justify-start">
-                                <div className="bg-white border text-gray-800 rounded-2xl rounded-bl-none p-4 shadow-sm">
-                                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                                        <span className="animate-spin h-3 w-3 border-2 border-blue-500 border-t-transparent rounded-full"></span>
-                                        Thinking...
+                        ) : (
+                            <div className="max-w-3xl mx-auto space-y-6">
+                                {messages.map((m) => (
+                                    <div key={m.id} className={`flex gap-4 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                        {m.role !== 'user' && (
+                                            <Avatar className="h-8 w-8 border bg-white">
+                                                <AvatarImage src="/bot-avatar.png" />
+                                                <AvatarFallback><Bot className="h-5 w-5 text-neutral-600" /></AvatarFallback>
+                                            </Avatar>
+                                        )}
+
+                                        <div className={`flex flex-col max-w-[85%] ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+                                            <div className={`px-4 py-3 rounded-2xl shadow-sm ${m.role === 'user'
+                                                ? 'bg-neutral-900 text-white rounded-br-none'
+                                                : 'bg-white border border-neutral-100 rounded-tl-none'
+                                                }`}>
+                                                <div className={`prose prose-sm ${m.role === 'user' ? 'prose-invert' : 'prose-neutral'} max-w-none break-words`}>
+                                                    <ReactMarkdown>{m.content}</ReactMarkdown>
+                                                </div>
+                                            </div>
+                                            {/* Optional: Add timestamp or actions here */}
+                                        </div>
+
+                                        {m.role === 'user' && (
+                                            <Avatar className="h-8 w-8 border bg-neutral-100">
+                                                <AvatarFallback><User className="h-5 w-5 text-neutral-600" /></AvatarFallback>
+                                            </Avatar>
+                                        )}
                                     </div>
-                                </div>
+                                ))}
+                                {isLoading && (
+                                    <div className="flex gap-4">
+                                        <Avatar className="h-8 w-8 border bg-white">
+                                            <AvatarFallback><Bot className="h-5 w-5 text-neutral-600" /></AvatarFallback>
+                                        </Avatar>
+                                        <div className="bg-white border border-neutral-100 px-4 py-3 rounded-2xl rounded-tl-none shadow-sm flex items-center gap-2">
+                                            <span className="flex gap-1">
+                                                <span className="animate-bounce delay-0 w-1.5 h-1.5 bg-neutral-400 rounded-full"></span>
+                                                <span className="animate-bounce delay-150 w-1.5 h-1.5 bg-neutral-400 rounded-full"></span>
+                                                <span className="animate-bounce delay-300 w-1.5 h-1.5 bg-neutral-400 rounded-full"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+                                <div ref={messagesEndRef} />
                             </div>
                         )}
                     </div>
 
-                    {/* Input Area */}
-                    <div className="p-4 bg-white border-t">
-                        <form onSubmit={handleSubmit} className="relative max-w-4xl mx-auto">
-                            <input
-                                className="w-full p-4 pr-32 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-700 bg-white"
-                                value={input}
-                                placeholder="Ask anything about your SEO strategy..."
-                                onChange={handleInputChange}
-                                disabled={isLoading}
-                                autoFocus
-                            />
-                            <button
-                                type="submit"
-                                disabled={isLoading || !input.trim()}
-                                className={`absolute right-2 top-2 bottom-2 px-6 rounded-lg font-bold text-white transition-all ${isLoading || !input.trim()
-                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                    : 'bg-blue-600 hover:bg-blue-700 shadow-md transform active:scale-95'
-                                    }`}
-                            >
-                                Send
-                            </button>
-                        </form>
+                    {/* Input Footer */}
+                    <div className="p-4 md:p-6 bg-white">
+                        <div className="max-w-3xl mx-auto relative group">
+                            <form onSubmit={handleSubmit} className="relative">
+                                <Textarea
+                                    value={input}
+                                    onChange={handleInputChange}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                            e.preventDefault();
+                                            handleSubmit(e as any);
+                                        }
+                                    }}
+                                    placeholder="Message SEO Agent..."
+                                    className="min-h-[50px] max-h-[200px] w-full pr-24 py-3 bg-neutral-50 border-neutral-200 focus:border-neutral-300 focus:ring-1 focus:ring-neutral-300 resize-none rounded-xl shadow-sm scrollbar-hide focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    rows={1}
+                                />
+                                <div className="absolute right-2 bottom-2 flex items-center gap-2">
+                                    {isLoading ? (
+                                        <Button
+                                            type="button"
+                                            onClick={() => stop()}
+                                            size="sm"
+                                            variant="secondary"
+                                            className="h-8 w-8 p-0 rounded-lg bg-neutral-200 hover:bg-neutral-300 text-neutral-700"
+                                        >
+                                            <StopCircle className="h-4 w-4" />
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            type="submit"
+                                            size="sm"
+                                            disabled={!input.trim()}
+                                            className="h-8 w-8 p-0 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-white disabled:opacity-50"
+                                        >
+                                            <Send className="h-4 w-4" />
+                                        </Button>
+                                    )}
+                                </div>
+                            </form>
+                            <div className="text-center mt-2">
+                                <p className="text-[10px] text-neutral-400">
+                                    SEO Agent can make mistakes. Consider checking important information.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -223,15 +344,6 @@ export const getServerSideProps = async (context: any) => {
         }
     }
 
-    // Default welcome message
-    if (initialMessages.length === 0) {
-        initialMessages.push({
-            id: 'welcome',
-            role: 'assistant',
-            content: `Hello! I'm your **SEO Agent**. 🤖\n\nI can help you analyze **${domainData.domain}**, suggest keywords, or write content.\n\nType your question below!`
-        });
-    }
-
     const optimizedDomain = { domain: domainData.domain, slug: domainData.slug };
 
     return {
@@ -245,4 +357,3 @@ export const getServerSideProps = async (context: any) => {
 }
 
 export default SeoAgentPage;
-
