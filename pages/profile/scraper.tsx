@@ -176,6 +176,42 @@ const ScraperPage: NextPage = () => {
                            </SelectContent>
                         </Select>
 
+                        {settings.scraper_type !== 'none' && settings.scraper_type !== 'proxy' && (
+                           <div className="bg-green-50 border border-green-200 rounded-md p-3 mt-2">
+                              <p className="text-sm text-green-800">
+                                 Don't have an API key? {' '}
+                                 <a
+                                    href={
+                                       settings.scraper_type === 'scrapingrobot'
+                                          ? 'https://scrapingrobot.com/?ref=seo-agent.net'
+                                          : settings.scraper_type === 'scrapingant'
+                                             ? 'https://scrapingant.com/?ref=seo-agent.net'
+                                             : settings.scraper_type === 'serpapi'
+                                                ? 'https://serpapi.com?ref=seo-agent.net' // SerpApi usually tracks via account
+                                                : settings.scraper_type === 'serply'
+                                                   ? 'https://serply.io/?ref=seo-agent.net'
+                                                   : settings.scraper_type === 'spaceserp'
+                                                      ? 'https://spaceserp.com/?ref=seo-agent.net'
+                                                      : settings.scraper_type === 'searchapi'
+                                                         ? 'https://www.searchapi.io/?ref=seo-agent.net'
+                                                         : settings.scraper_type === 'valueserp'
+                                                            ? 'https://valueserp.com/?ref=seo-agent.net'
+                                                            : settings.scraper_type === 'serper'
+                                                               ? 'https://serper.dev/?ref=seo-agent.net'
+                                                               : settings.scraper_type === 'hasdata'
+                                                                  ? 'https://hasdata.com/?ref=seo-agent.net'
+                                                                  : '#'
+                                    }
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="font-semibold text-green-700 hover:text-green-900 underline"
+                                 >
+                                    Sign up for {settings.available_scapers?.find(s => s.value === settings.scraper_type)?.label || 'this service'}
+                                 </a>
+                              </p>
+                           </div>
+                        )}
+
                         <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mt-2">
                            <h4 className="font-semibold text-blue-800 text-sm mb-1">Why connect a scraper?</h4>
                            <p className="text-sm text-blue-700 leading-relaxed mb-2">

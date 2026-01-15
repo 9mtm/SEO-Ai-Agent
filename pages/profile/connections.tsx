@@ -110,28 +110,28 @@ const ConnectionsPage: NextPage = () => {
             name: 'Perplexity AI',
             icon: '/icon/perplexity-logo.svg',
             placeholder: 'pplx-xxxxxxxxxxxxxxxxxxxxxx',
-            link: 'https://www.perplexity.ai/settings/api'
+            link: 'https://www.perplexity.ai/settings/api?ref=seo-agent.net'
         },
         {
             id: 'gemini',
             name: 'Google Gemini',
             icon: '/icon/gemini-logo.svg',
             placeholder: 'AIzaSy...',
-            link: 'https://makersuite.google.com/app/apikey'
+            link: 'https://aistudio.google.com/app/apikey'
         },
         {
             id: 'claude',
             name: 'Anthropic Claude',
             icon: '/icon/claude-logo.svg',
             placeholder: 'sk-ant-api03-...',
-            link: 'https://console.anthropic.com/settings/keys'
+            link: 'https://console.anthropic.com/settings/keys?ref=seo-agent.net'
         },
         {
             id: 'chatgpt',
             name: 'OpenAI ChatGPT',
             icon: '/icon/chatgpt-logo.svg',
             placeholder: 'sk-...',
-            link: 'https://platform.openai.com/api-keys'
+            link: 'https://platform.openai.com/api-keys?ref=seo-agent.net'
         }
     ];
 
