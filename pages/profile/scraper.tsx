@@ -175,9 +175,17 @@ const ScraperPage: NextPage = () => {
                               ))}
                            </SelectContent>
                         </Select>
-                        <p className="text-xs text-muted-foreground mt-1">
-                           Choose a scraping service to fetch keyword rankings. Each service requires an API key.
-                        </p>
+
+                        <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mt-2">
+                           <h4 className="font-semibold text-blue-800 text-sm mb-1">Why connect a scraper?</h4>
+                           <p className="text-sm text-blue-700 leading-relaxed mb-2">
+                              Connecting a scraping service allows you to track keywords and backlinks without limitations.
+                              For the best experience, we recommend <strong>Scraping Robot</strong>, which offers a free plan to track up to <strong>5,000 words</strong>.
+                           </p>
+                           <p className="text-sm text-blue-700">
+                              This ensures reliable data for all your SEO tracking needs.
+                           </p>
+                        </div>
                      </div>
 
                      {settings.scraper_type !== 'none' && settings.scraper_type !== 'proxy' && (

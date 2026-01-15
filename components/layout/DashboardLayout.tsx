@@ -105,9 +105,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   } else if (router.pathname.startsWith('/profile')) {
     navigation.push(
       { name: navT.profile, href: '/profile', icon: User },
-      { name: navT.connections, href: '/profile/connections', icon: LinkIcon },
+      { name: navT.billing, href: '/profile/billing', icon: CreditCard },
       { name: navT.scraper, href: '/profile/scraper', icon: Settings },
-      { name: navT.billing, href: '/profile/billing', icon: CreditCard }
+      { name: navT.connections, href: '/profile/connections', icon: LinkIcon }
     );
   } else {
     navigation.push(
