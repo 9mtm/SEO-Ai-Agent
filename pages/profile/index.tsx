@@ -11,13 +11,16 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useFetchDomains } from '../../services/domains';
 
 const ProfilePage: NextPage = () => {
    const router = useRouter();
    const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
    const [isLoading, setIsLoading] = useState(true);
    const [isSaving, setIsSaving] = useState(false);
+   const { data: domainsData } = useFetchDomains(router);
 
    // User State
    const [user, setUser] = useState({
@@ -88,7 +91,7 @@ const ProfilePage: NextPage = () => {
    };
 
    return (
-      <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang}>
+      <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang} domains={domainsData?.domains || []}>
          <Head>
             <title>Personal Profile - SEO AI Agent</title>
          </Head>
