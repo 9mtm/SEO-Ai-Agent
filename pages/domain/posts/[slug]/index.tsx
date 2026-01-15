@@ -1045,6 +1045,80 @@ export default function ArticleWriterPage() {
                                                 <p className="text-xs text-neutral-400 italic">No keywords defined in settings.</p>
                                             )}
                                         </div>
+
+                                        {/* Custom Keyword Input */}
+                                        {selectedKeywords.length < 3 && (
+                                            <div className="space-y-2 pt-3 border-t border-neutral-100">
+                                                <label className="text-xs font-medium text-neutral-600">Or add custom keyword:</label>
+                                                <div className="flex gap-2">
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Enter keyword..."
+                                                        className="flex-1 px-3 py-1.5 text-xs border border-neutral-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                        onKeyPress={(e) => {
+                                                            if (e.key === 'Enter') {
+                                                                const input = e.currentTarget;
+                                                                const keyword = input.value.trim();
+                                                                if (keyword && !selectedKeywords.includes(keyword)) {
+                                                                    if (selectedKeywords.length < 3) {
+                                                                        setSelectedKeywords([...selectedKeywords, keyword]);
+                                                                        input.value = '';
+                                                                    } else {
+                                                                        toast.error('Maximum 3 keywords allowed');
+                                                                    }
+                                                                } else if (selectedKeywords.includes(keyword)) {
+                                                                    toast.error('Keyword already selected');
+                                                                }
+                                                            }
+                                                        }}
+                                                    />
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="text-xs px-3"
+                                                        onClick={(e) => {
+                                                            const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                                                            const keyword = input.value.trim();
+                                                            if (keyword && !selectedKeywords.includes(keyword)) {
+                                                                if (selectedKeywords.length < 3) {
+                                                                    setSelectedKeywords([...selectedKeywords, keyword]);
+                                                                    input.value = '';
+                                                                } else {
+                                                                    toast.error('Maximum 3 keywords allowed');
+                                                                }
+                                                            } else if (selectedKeywords.includes(keyword)) {
+                                                                toast.error('Keyword already selected');
+                                                            } else {
+                                                                toast.error('Please enter a keyword');
+                                                            }
+                                                        }}
+                                                    >
+                                                        Add
+                                                    </Button>
+                                                </div>
+                                                <p className="text-[10px] text-neutral-400">Press Enter or click Add to include a custom keyword</p>
+                                            </div>
+                                        )}
+
+                                        {/* Selected Keywords Display */}
+                                        {selectedKeywords.length > 0 && (
+                                            <div className="space-y-2 pt-3 border-t border-neutral-100">
+                                                <label className="text-xs font-medium text-neutral-600">Selected Keywords:</label>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {selectedKeywords.map((kw, i) => (
+                                                        <Badge
+                                                            key={`selected-${i}`}
+                                                            variant="default"
+                                                            className="bg-green-500 hover:bg-green-600 cursor-pointer gap-1"
+                                                            onClick={() => toggleKeyword(kw)}
+                                                        >
+                                                            {kw}
+                                                            <span className="text-xs">×</span>
+                                                        </Badge>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-xs font-semibold text-neutral-500">Meta Description</label>

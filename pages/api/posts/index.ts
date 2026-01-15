@@ -21,6 +21,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(400).json({ error: 'Missing domain_slug or postData' });
             }
 
+            // Validate required fields
+            if (!postData.title || postData.title.trim() === '') {
+                return res.status(400).json({ error: 'Title is required' });
+            }
+
+            if (!postData.content || postData.content.trim() === '' || postData.content === '<p><br></p>') {
+                return res.status(400).json({ error: 'Content is required' });
+            }
+
+            // Validate focus keywords (max 3)
+            if (postData.focus_keywords && Array.isArray(postData.focus_keywords)) {
+                if (postData.focus_keywords.length > 3) {
+                    return res.status(400).json({ error: 'Maximum 3 focus keywords allowed' });
+                }
+            }
+
             const domain = await Domain.findOne({ where: { slug: domain_slug, user_id: auth.userId } });
             if (!domain) {
                 return res.status(404).json({ error: 'Domain not found' });
