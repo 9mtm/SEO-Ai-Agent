@@ -676,6 +676,36 @@ const DomainSettingsPage: NextPage = () => {
                                                 WordPress Settings
                                             </h4>
 
+                                            {/* Help Section */}
+                                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                                                <div className="flex items-start gap-3">
+                                                    <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                                                    <div className="flex-1">
+                                                        <h5 className="font-semibold text-blue-900 mb-2">How to Get Your WordPress Credentials</h5>
+                                                        <div className="space-y-3 text-sm text-blue-800">
+                                                            <div>
+                                                                <strong className="block mb-1">1. Website URL:</strong>
+                                                                <p className="text-blue-700">Enter the exact URL of your WordPress site (e.g., https://yoursite.com). Make sure it matches exactly - including http/https and www/non-www.</p>
+                                                            </div>
+                                                            <div>
+                                                                <strong className="block mb-1">2. Username:</strong>
+                                                                <p className="text-blue-700">Use your WordPress <strong>login username</strong> (not your display name or email). Find it in: WP Admin → Users → Your Profile → Username field.</p>
+                                                            </div>
+                                                            <div>
+                                                                <strong className="block mb-1">3. Application Password:</strong>
+                                                                <ol className="list-decimal ml-4 space-y-1 text-blue-700">
+                                                                    <li>Go to: WP Admin → Users → Profile (your account)</li>
+                                                                    <li>Scroll down to "Application Passwords" section</li>
+                                                                    <li>Enter a name (e.g., "SEO Agent") and click "Add New Application Password"</li>
+                                                                    <li>Copy the generated password (format: xxxx xxxx xxxx xxxx)</li>
+                                                                    <li>Paste it in the field below</li>
+                                                                </ol>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div className="grid gap-4">
                                                 <div className="space-y-2">
                                                     <Label>Website URL</Label>
@@ -713,7 +743,40 @@ const DomainSettingsPage: NextPage = () => {
                                         </div>
                                     )}
                                 </CardContent>
-                                <CardFooter className="bg-neutral-50 border-t border-neutral-100 py-4 flex justify-end">
+                                <CardFooter className="bg-neutral-50 border-t border-neutral-100 py-4 flex justify-between">
+                                    <Button
+                                        onClick={async () => {
+                                            const toastId = toast.loading('Testing connection...');
+                                            try {
+                                                const res = await fetch('/api/cms/wordpress', {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify({
+                                                        domain: activeDomain?.domain,
+                                                        action: 'verify_credentials',
+                                                        url: wpUrl,
+                                                        username: wpUsername,
+                                                        app_password: wpAppPassword
+                                                    })
+                                                });
+                                                const data = await res.json();
+                                                if (res.ok && data.success) {
+                                                    toast.success(`Connected as ${data.user.name}`, { id: toastId });
+                                                } else {
+                                                    toast.error(data.error || 'Connection failed', { id: toastId });
+                                                }
+                                            } catch (e) {
+                                                toast.error('Connection failed', { id: toastId });
+                                            }
+                                        }}
+                                        variant="outline"
+                                        disabled={isLoading || !wpUrl || !wpUsername || !wpAppPassword}
+                                        className="gap-2"
+                                    >
+                                        <Zap className="h-4 w-4" />
+                                        Test Connection
+                                    </Button>
+
                                     <Button onClick={handleSave} disabled={isLoading} className="gap-2">
                                         <Save className="h-4 w-4" />
                                         Save Integration
