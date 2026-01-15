@@ -81,6 +81,12 @@ class Domain extends Model {
   @Column({ type: DataType.STRING, allowNull: true, defaultValue: 'US' })
   declare target_country?: string;
 
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare gsc_site_url?: string;
+
+  @Column({ type: DataType.TEXT, allowNull: true })
+  declare gsc_refresh_token?: string;
+
   @BelongsTo(() => User)
   declare user: User;
 }

@@ -64,6 +64,9 @@ class Keyword extends Model {
   @Column({ type: DataType.TEXT, allowNull: true, defaultValue: JSON.stringify([]) })
   declare lastResult: string;
 
+  // Virtual field or helper for previous position (extracted from history)
+  declare lastResult_position?: number;
+
   @Column({ type: DataType.BOOLEAN, allowNull: true, defaultValue: true })
   declare sticky: boolean;
 
