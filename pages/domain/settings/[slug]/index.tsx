@@ -54,6 +54,10 @@ const DomainSettingsPage: NextPage = () => {
     const [loadingSites, setLoadingSites] = useState(false);
     const [settings, setSettings] = useState<any>({ google_connected: false });
 
+    // Categories State
+    const [categories, setCategories] = useState<any[]>([]);
+    const [loadingCategories, setLoadingCategories] = useState(false);
+
     const { mutate: deleteDomainMutate, isPending: isDeleting } = useDeleteDomain(() => {
         router.push('/');
     });
@@ -738,6 +742,73 @@ const DomainSettingsPage: NextPage = () => {
                                                     <p className="text-xs text-neutral-500">
                                                         Create this in WP Admin &gt; Users &gt; Profile &gt; Application Passwords.
                                                     </p>
+                                                </div>
+
+                                                {/* Categories Preview */}
+                                                <div className="pt-4 border-t border-neutral-100">
+                                                    <div className="flex items-center justify-between mb-2">
+                                                        <Label>Available Categories based on your website</Label>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            onClick={async () => {
+                                                                if (!wpUrl || !wpUsername || !wpAppPassword) {
+                                                                    toast.error('Please enter credentials first');
+                                                                    return;
+                                                                }
+                                                                setLoadingCategories(true);
+                                                                try {
+                                                                    const res = await fetch('/api/cms/wordpress', {
+                                                                        method: 'POST',
+                                                                        headers: { 'Content-Type': 'application/json' },
+                                                                        body: JSON.stringify({
+                                                                            domain: activeDomain?.domain,
+                                                                            action: 'get_categories',
+                                                                            url: wpUrl,
+                                                                            username: wpUsername,
+                                                                            app_password: wpAppPassword
+                                                                        })
+                                                                    });
+                                                                    const data = await res.json();
+                                                                    if (res.ok && data.success) {
+                                                                        setCategories(data.categories);
+                                                                        toast.success(`Found ${data.categories.length} categories`);
+                                                                    } else {
+                                                                        toast.error(data.error || 'Failed to fetch categories');
+                                                                    }
+                                                                } catch (e) {
+                                                                    toast.error('Failed to fetch categories');
+                                                                }
+                                                                setLoadingCategories(false);
+                                                            }}
+                                                            disabled={loadingCategories}
+                                                            className="text-xs h-8"
+                                                        >
+                                                            {loadingCategories ? 'Loading...' : 'Refresh Categories'}
+                                                        </Button>
+                                                    </div>
+
+                                                    <div className="bg-neutral-50 p-3 rounded-lg min-h-[60px]">
+                                                        {loadingCategories ? (
+                                                            <div className="flex items-center justify-center p-2">
+                                                                <Loader2 className="h-4 w-4 animate-spin text-neutral-400" />
+                                                            </div>
+                                                        ) : categories.length > 0 ? (
+                                                            <div className="flex flex-wrap gap-2">
+                                                                {categories.map((cat: any) => (
+                                                                    <Badge key={cat.id} variant="secondary" className="bg-white border text-neutral-600 font-normal">
+                                                                        {cat.name}
+                                                                    </Badge>
+                                                                ))}
+                                                            </div>
+                                                        ) : (
+                                                            <div className="text-center">
+                                                                <p className="text-xs text-neutral-400">
+                                                                    Connect above, then click "Refresh" to see your categories.
+                                                                </p>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
