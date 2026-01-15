@@ -43,7 +43,21 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
 
             const keywords = await Keyword.findAll({
                 where: whereClause,
-                attributes: ['id', 'keyword', 'domain', 'position', 'country', 'device', 'lastResult_position', 'created_at'],
+                attributes: [
+                    'id',
+                    'keyword',
+                    'domain',
+                    'position',
+                    'lastResult_position',
+                    'volume',
+                    'country',
+                    'device',
+                    'url',
+                    'tags',
+                    'lastUpdateError',
+                    'lastUpdated',
+                    'created_at'
+                ],
                 order: [['created_at', 'DESC']],
                 limit: 100,
             });

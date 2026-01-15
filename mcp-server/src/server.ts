@@ -66,8 +66,8 @@ export function createServer() {
                 },
                 {
                     uri: 'seo://keywords',
-                    name: 'All Keywords',
-                    description: 'List all tracked keywords across all domains',
+                    name: 'Google Keyword Rankings',
+                    description: 'List tracked keywords with current Google positions, search volume, and changes',
                     mimeType: 'application/json',
                 },
                 {
@@ -168,7 +168,7 @@ export function createServer() {
                 },
                 {
                     name: 'add_keyword',
-                    description: 'Add a new keyword to track',
+                    description: 'Start tracking a new keyword for Google Ranking in a specific location',
                     inputSchema: {
                         type: 'object',
                         properties: {

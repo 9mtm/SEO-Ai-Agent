@@ -29,7 +29,7 @@ const DomainHeader = (
    const isConsole = router.pathname === '/domain/console/[slug]';
    const isInsight = router.pathname === '/domain/insight/[slug]';
    const isIdeas = router.pathname === '/domain/ideas/[slug]';
-   const isCompetitors = router.pathname === '/domain/[slug]/competitors';
+   const isCompetitors = router.pathname === '/domain/[slug]/competitors' || router.pathname === '/tracking/[slug]/competitors';
 
    const daysName = (dayKey: string) => dayKey.replace('three', '3').replace('seven', '7').replace('thirty', '30').replace('Days', ' Days');
    const buttonStyle = 'leading-6 inline-block px-2 py-2 text-gray-500 hover:text-gray-700';
