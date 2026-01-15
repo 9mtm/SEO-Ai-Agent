@@ -38,7 +38,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const currentSlug = router.query.slug as string;
-  const currentDomain = domains.find(d => d.slug === currentSlug) || null;
+  // Try to find domain by slug, and if not found, try by domain name (for backward compatibility)
+  const currentDomain = domains.find(d => d.slug === currentSlug) ||
+                        domains.find(d => d.domain === currentSlug) ||
+                        null;
 
   const translations = {
     en: {

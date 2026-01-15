@@ -52,8 +52,15 @@ export default function ArticleWriterPage() {
     const router = useRouter();
     const { slug } = router.query;
     const { data: domainsData } = useFetchDomains(router);
-    const domain = domainsData?.domains?.find((d: any) => d.slug === slug);
+    const domain = domainsData?.domains?.find((d: any) => d.slug === slug) ||
+                   domainsData?.domains?.find((d: any) => d.domain === slug);
 
+    // Redirect to correct slug if using domain name instead of slug
+    useEffect(() => {
+        if (slug && domain && domain.domain === slug && domain.slug !== slug) {
+            router.replace(`/domain/posts/${domain.slug}`);
+        }
+    }, [slug, domain, router]);
 
     // AI Generation State
     const [isGenerating, setIsGenerating] = useState(false);
