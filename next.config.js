@@ -12,7 +12,7 @@ const nextConfig = {
   i18n: {
     locales: ['en', 'de'],
     defaultLocale: 'en',
-    localeDetection: true, // Auto-detect browser language
+    localeDetection: false, // Auto-detect browser language
   },
 
   // ✅ تحسين الصور

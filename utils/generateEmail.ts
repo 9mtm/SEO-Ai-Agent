@@ -91,17 +91,33 @@ const getBestKeywordPosition = (history: KeywordHistory) => {
    return bestPos?.position || '-';
 };
 
+import jwt from 'jsonwebtoken';
+
 /**
  * Generate the Email HTML based on given domain name and its keywords
  * @param {string} domainName - Keywords to scrape
  * @param {keywords[]} keywords - Keywords to scrape
  * @returns {Promise}
  */
-const generateEmail = async (domainName: string, keywords: KeywordType[], settings: SettingsType, locale: string = 'en'): Promise<string> => {
+const generateEmail = async (domainName: string, keywords: KeywordType[], settings: SettingsType, locale: string = 'en', userId: number | null = null): Promise<string> => {
    const translations = await loadTranslations(locale);
    const t = (key: string, vars: any = {}) => getTranslation(translations, key, vars);
 
    const emailTemplate = await readFile(path.join(process.cwd(), 'email', 'email.html'), { encoding: 'utf-8' });
+
+   // Generate Unsubscribe Link
+   let unsubscribeUrl = 'https://seo-agent.net/login'; // Fallback
+   if (userId) {
+      const secret = process.env.SECRET;
+      if (secret) {
+         // Create a token that doesn't expire quickly (e.g., 30 days or never)
+         // Since it's for unsubscribe, valid for a long time is usually UX friendly.
+         // Let's say 90 days.
+         const token = jwt.sign({ userId }, secret, { expiresIn: '90d' });
+         const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://seo-agent.net';
+         unsubscribeUrl = `${appUrl}/unsubscribe?token=${token}`;
+      }
+   }
 
    // We might need localized date format later, for now keeping English format for date
    const currentDate = dayjs(new Date()).format('MMMM D, YYYY');
@@ -269,6 +285,7 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
       .replace('{{TrafficSummary}}', trafficSummaryHTML)
       .replace('{{appURL}}', process.env.NEXT_PUBLIC_APP_URL || '')
       .replace('{{dashboardUrl}}', 'https://seo-agent.net?utm_source=email_report&utm_medium=email&utm_campaign=daily_rankings')
+      .replace('{{unsubscribeUrl}}', unsubscribeUrl)
       .replace('{{stat}}', statHtml)
       .replace('{{preheader}}', `${improved} ${t('email.improved')}, ${declined} ${t('email.declined')}`);
 

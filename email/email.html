@@ -95,7 +95,7 @@
     .footer p,
     .footer span,
     .footer a {
-      color: #94a3b8;
+      color: #000000;
       font-size: 12px;
       text-align: center;
     }
@@ -410,10 +410,9 @@
                     <tbody>
                       <tr>
                         <td align="center" bgcolor="#2563EB" style="border-radius: 6px;">
-                          style="font-size: 16px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color:
-                          #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 6px; border: 1px solid
-                          #2563EB; display: inline-block; font-weight: 700; background-color: #2563EB;">
-                          &nbsp; Go to Dashboard &nbsp;
+                          <a href="{{dashboardUrl}}" target="_blank"
+                            style="font-size: 16px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 6px; border: 1px solid #2563EB; display: inline-block; font-weight: 700; background-color: #2563EB;">
+                            &nbsp; Go to Dashboard &nbsp;
                           </a>
                         </td>
                       </tr>
@@ -425,7 +424,29 @@
           </table>
           <!-- END CTA BUTTON -->
 
-
+          <!-- START FOOTER -->
+          <div class="footer">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="content-block" style="color: #000000;">
+                  <span class="apple-link" style="color: #000000;"><strong>Dpro GmbH</strong>, Wipplingerstraße 20/18,
+                    1010 Wien, Austria</span>
+                  <br><br>
+                  <a href="https://seo-agent.net/privacy-policy" style="color: #000000;">Privacy Policy</a> | <a
+                    href="https://seo-agent.net/terms" style="color: #000000;">Terms of Service</a>
+                  <br><br>
+                  <span style="color: #000000;">Don't want to receive these emails?</span> <a href="{{unsubscribeUrl}}"
+                    style="color: #000000; text-decoration: underline;">Unsubscribe</a>.
+                </td>
+              </tr>
+              <tr>
+                <td class="content-block powered-by" style="color: #000000;">
+                  Powered by <a href="https://seo-agent.net" style="color: #000000;">SEO Ai Agent</a>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- END FOOTER -->
 
         </div>
       </td>
