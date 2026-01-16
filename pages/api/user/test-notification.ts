@@ -73,10 +73,11 @@ const sendNotificationEmail = async (domain: Domain, settings: any) => {
     const domainKeywords = await Keyword.findAll(query);
     const keywordsArray = domainKeywords.map((el) => el.get({ plain: true }));
     const keywords = parseKeywords(keywordsArray);
-    // Default to 'en' for now, can be fetched from user settings later
-    const emailHTML = await generateEmail(domainName, keywords, settings, 'en');
 
     const userId = domain.user_id || null;
+    // Default to 'en' for now, can be fetched from user settings later
+    const emailHTML = await generateEmail(domainName, keywords, settings, 'en', userId);
+
     let recipientEmail = domain.notification_emails || notification_email;
 
     // Fetch user specific notification email if not set on domain level
