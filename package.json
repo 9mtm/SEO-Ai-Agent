@@ -49,6 +49,7 @@
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "google-auth-library": "^9.15.0",
+    "googleapis": "^168.0.0",
     "https-proxy-agent": "^7.0.5",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^9.0.2",

@@ -4,8 +4,11 @@ import Domain from '../../../database/models/domain';
 import Keyword from '../../../database/models/keyword';
 import Post from '../../../database/models/post';
 import { Op } from 'sequelize';
+import connection from '../../../database/database';
 
 export default async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
+    // Initialize database connection
+    await connection.sync();
     // Validate API Key
     const auth = await validateMcpApiKey(req, res);
     if (!auth.valid || !auth.userId || !auth.apiKeyId) {
@@ -33,20 +36,20 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
         let targetDomainId: number | null = null;
         if (domain_id) {
             const domain = await Domain.findOne({
-                where: { id: domain_id, user_id: auth.userId }
+                where: { ID: domain_id, user_id: auth.userId }
             });
             if (!domain) {
                 return res.status(404).json({ error: 'Domain not found' });
             }
-            targetDomainId = domain.id;
+            targetDomainId = domain.ID;
         }
 
         // Get user's domains
         const userDomains = await Domain.findAll({
-            where: targetDomainId ? { id: targetDomainId } : { user_id: auth.userId },
-            attributes: ['id']
+            where: targetDomainId ? { ID: targetDomainId } : { user_id: auth.userId },
+            attributes: ['ID']
         });
-        const domainIds = userDomains.map(d => d.id);
+        const domainIds = userDomains.map(d => d.ID);
 
         const stats: any = {};
 
@@ -61,13 +64,11 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
         if (canReadKeywords) {
             const allKeywords = await Keyword.findAll({
                 where: { domain: domainIds },
-                attributes: ['id', 'position', 'lastResult_position']
+                attributes: ['ID', 'position']
             });
 
-            const topPositions = allKeywords.filter(k => k.position && k.position <= 10).length;
-            const improved = allKeywords.filter(k =>
-                k.position && k.lastResult_position && k.position < k.lastResult_position
-            ).length;
+            const topPositions = allKeywords.filter((k: any) => k.position && k.position <= 10).length;
+            const improved = 0; // lastResult_position not available
 
             stats.keywords = {
                 total: allKeywords.length,

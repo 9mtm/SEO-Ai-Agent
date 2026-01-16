@@ -1,9 +1,12 @@
 import type { NextApiResponse } from 'next';
 import { validateMcpApiKey, hasPermission, logApiAction, AuthenticatedRequest } from '../../../utils/mcpAuth';
 import Domain from '../../../database/models/domain';
-import { getGSCData } from '../../../utils/gsc';
+import { fetchDomainSCData, getSearchConsoleApiInfo } from '../../../utils/searchConsole';
+import connection from '../../../database/database';
 
 export default async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
+    // Initialize database connection
+    await connection.sync();
     // Validate API Key
     const auth = await validateMcpApiKey(req, res);
     if (!auth.valid || !auth.userId || !auth.apiKeyId) {
@@ -29,54 +32,47 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
 
         // Verify domain belongs to user
         const domain = await Domain.findOne({
-            where: { id: domain_id, user_id: auth.userId }
+            where: { ID: domain_id, user_id: auth.userId }
         });
 
         if (!domain) {
             return res.status(404).json({ error: 'Domain not found' });
         }
 
-        // Check if GSC is connected
-        if (!domain.gsc_site_url || !domain.gsc_refresh_token) {
+        // Get domain object as plain object
+        const domainObj: DomainType = domain.get({ plain: true });
+
+        // Get Search Console API info (supports both OAuth and Service Account)
+        const scDomainAPI = await getSearchConsoleApiInfo(domainObj);
+
+        // Check for OAuth connection (same as frontend)
+        const { hasGoogleConnection } = await import('../../../utils/googleOAuth');
+        const isConnected = domainObj.user_id ? await hasGoogleConnection(domainObj.user_id) : false;
+
+        if (!isConnected && !(scDomainAPI.client_email && scDomainAPI.private_key)) {
             return res.status(400).json({
-                error: 'Google Search Console not connected for this domain',
-                message: 'Please connect GSC in domain settings first'
+                error: 'Google Search Console not connected',
+                message: 'Please connect your Google account in settings or configure service account credentials'
             });
         }
 
-        // Calculate date range (default: last 30 days)
-        const endDate = end_date ? new Date(end_date as string) : new Date();
-        const startDate = start_date
-            ? new Date(start_date as string)
-            : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-
-        // Get GSC data
-        const gscData = await getGSCData(
-            domain.gsc_site_url,
-            domain.gsc_refresh_token,
-            startDate.toISOString().split('T')[0],
-            endDate.toISOString().split('T')[0]
-        );
+        // Fetch GSC data using the same method as frontend
+        const gscData = await fetchDomainSCData(domainObj, scDomainAPI);
 
         await logApiAction(
             auth.apiKeyId,
             'get_gsc_data',
             `domain_${domain_id}`,
             true,
-            { domain_id, start_date: startDate, end_date: endDate },
+            { domain_id },
             undefined,
             req
         );
 
         return res.status(200).json({
             domain: {
-                id: domain.id,
-                domain: domain.domain,
-                gsc_site_url: domain.gsc_site_url,
-            },
-            date_range: {
-                start: startDate.toISOString().split('T')[0],
-                end: endDate.toISOString().split('T')[0],
+                ID: domainObj.ID,
+                domain: domainObj.domain,
             },
             data: gscData,
         });

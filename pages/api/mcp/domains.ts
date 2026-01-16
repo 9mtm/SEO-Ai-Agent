@@ -1,20 +1,14 @@
 import type { NextApiResponse } from 'next';
 import { validateMcpApiKey, hasPermission, logApiAction, AuthenticatedRequest } from '../../../utils/mcpAuth';
 import Domain from '../../../database/models/domain';
+import connection from '../../../database/database';
 
 export default async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
+    // Initialize database connection
+    await connection.sync();
     // Validate API Key
     const auth = await validateMcpApiKey(req, res);
     if (!auth.valid || !auth.userId || !auth.apiKeyId) {
-        await logApiAction(
-            auth.apiKeyId || 0,
-            'list_domains',
-            'domains',
-            false,
-            null,
-            'Unauthorized',
-            req
-        );
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
@@ -34,12 +28,14 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
         }
 
         if (req.method === 'GET') {
+            console.log('Getting domains for user_id:', auth.userId);
             // Get all domains for this user
             const domains = await Domain.findAll({
                 where: { user_id: auth.userId },
-                attributes: ['id', 'domain', 'slug', 'created_at'],
-                order: [['created_at', 'DESC']],
+                attributes: ['ID', 'domain', 'slug', 'added', 'business_name', 'niche'],
+                order: [['added', 'DESC']],
             });
+            console.log('Found domains:', domains.length);
 
             await logApiAction(
                 auth.apiKeyId,

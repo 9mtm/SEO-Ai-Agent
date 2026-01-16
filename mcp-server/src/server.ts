@@ -66,8 +66,8 @@ export function createServer() {
                 },
                 {
                     uri: 'seo://keywords',
-                    name: 'Google Keyword Rankings',
-                    description: 'List tracked keywords with current Google positions, search volume, and changes',
+                    name: 'Tracked Keyword Rankings',
+                    description: 'View all tracked keywords with their Google search rankings, positions, ranking history, position changes, search volume, countries, devices, and URLs. Shows both ranked and unranked keywords.',
                     mimeType: 'application/json',
                 },
                 {
@@ -224,6 +224,20 @@ export function createServer() {
                         required: ['domain_id'],
                     },
                 },
+                {
+                    name: 'get_keyword_rankings',
+                    description: 'Get keyword rankings with competitor analysis. Shows your Google rankings alongside competitor positions for each keyword. Compare your performance vs competitors, track ranking changes, and identify opportunities.',
+                    inputSchema: {
+                        type: 'object',
+                        properties: {
+                            domain_id: {
+                                type: 'number',
+                                description: 'Domain ID (optional - if not provided, returns keywords for all domains)',
+                            },
+                        },
+                        required: [],
+                    },
+                },
             ],
         };
     });
@@ -287,6 +301,97 @@ export function createServer() {
             const result = await apiRequest(url);
             return {
                 content: [
+                    {
+                        type: 'text',
+                        text: JSON.stringify(result, null, 2),
+                    },
+                ],
+            };
+        }
+
+        if (name === 'get_keyword_rankings') {
+            const domainId = args?.domain_id || '';
+            let url = '/api/mcp/keywords';
+            if (domainId) {
+                url += `?domain_id=${domainId}`;
+            }
+
+            const result = await apiRequest(url);
+
+            // Format the response in a more readable way
+            const keywords = result.keywords || [];
+            const total = result.total || 0;
+
+            if (keywords.length === 0) {
+                return {
+                    content: [
+                        {
+                            type: 'text',
+                            text: 'No tracked keywords found.',
+                        },
+                    ],
+                };
+            }
+
+            // Group keywords by position status
+            const ranked = keywords.filter((k: any) => k.position > 0);
+            const notRanked = keywords.filter((k: any) => k.position === 0);
+            const withCompetitors = keywords.filter((k: any) => k.competitor_positions && Object.keys(k.competitor_positions).length > 0);
+
+            let summary = `📊 Keyword Rankings Summary\n\n`;
+            summary += `Total Keywords: ${total}\n`;
+            summary += `Ranked in Google: ${ranked.length}\n`;
+            summary += `Not yet ranked: ${notRanked.length}\n`;
+            summary += `With competitor tracking: ${withCompetitors.length}\n\n`;
+
+            if (ranked.length > 0) {
+                summary += `🏆 Top Rankings:\n`;
+                ranked
+                    .sort((a: any, b: any) => a.position - b.position)
+                    .slice(0, 10)
+                    .forEach((kw: any) => {
+                        const change = kw.positionChange > 0 ? `📈 +${kw.positionChange}` :
+                                     kw.positionChange < 0 ? `📉 ${kw.positionChange}` : '';
+                        summary += `  #${kw.position} - "${kw.keyword}" (${kw.country}, ${kw.device}) ${change}\n`;
+                        if (kw.url && typeof kw.url === 'string') {
+                            summary += `      URL: ${kw.url}\n`;
+                        }
+                        // Show competitor positions if available
+                        if (kw.competitor_positions && Object.keys(kw.competitor_positions).length > 0) {
+                            summary += `      Competitors: `;
+                            const compList = Object.entries(kw.competitor_positions)
+                                .map(([name, pos]: [string, any]) => `${name} (#${pos || 'N/A'})`)
+                                .join(', ');
+                            summary += `${compList}\n`;
+                        }
+                    });
+            }
+
+            // Show competitor analysis
+            if (withCompetitors.length > 0) {
+                summary += `\n🎯 Competitor Analysis:\n`;
+                withCompetitors
+                    .slice(0, 5)
+                    .forEach((kw: any) => {
+                        summary += `  "${kw.keyword}" - You: #${kw.position || 'N/A'}\n`;
+                        if (kw.competitor_positions) {
+                            Object.entries(kw.competitor_positions).forEach(([name, pos]: [string, any]) => {
+                                const diff = kw.position > 0 && pos > 0 ?
+                                    (pos - kw.position > 0 ? `(+${pos - kw.position} ahead)` : `(${pos - kw.position} behind)`) : '';
+                                summary += `    - ${name}: #${pos || 'N/A'} ${diff}\n`;
+                            });
+                        }
+                    });
+            }
+
+            summary += `\n📋 Full data available in JSON below.\n`;
+
+            return {
+                content: [
+                    {
+                        type: 'text',
+                        text: summary,
+                    },
                     {
                         type: 'text',
                         text: JSON.stringify(result, null, 2),

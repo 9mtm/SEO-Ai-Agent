@@ -1,0 +1,14 @@
+{
+    "mcpServers": {
+        "seo-agent-local": {
+            "command": "node",
+            "args": [
+                "C:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent\\mcp-server\\dist\\index.js"
+            ],
+            "env": {
+                "SEO_API_KEY": "sk_live_65fe03dc5bdc9afdab6df0af3884c92563d94526b547b3eeffc9aac5df73272b",
+                "API_BASE_URL": "http://localhost:55781"
+            }
+        }
+    }
+}

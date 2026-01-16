@@ -32,7 +32,9 @@
       "Bash(sqlite3:*)",
       "Bash(mysql -u root -proot -h localhost -P 8889 flowxtra_serp:*)",
       "Bash(npx tsx:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(curl:*)",
+      "Bash(python:*)"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"

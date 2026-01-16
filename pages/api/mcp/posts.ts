@@ -2,8 +2,11 @@ import type { NextApiResponse } from 'next';
 import { validateMcpApiKey, hasPermission, logApiAction, AuthenticatedRequest } from '../../../utils/mcpAuth';
 import Post from '../../../database/models/post';
 import Domain from '../../../database/models/domain';
+import connection from '../../../database/database';
 
 export default async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
+    // Initialize database connection
+    await connection.sync();
     // Validate API Key
     const auth = await validateMcpApiKey(req, res);
     if (!auth.valid || !auth.userId || !auth.apiKeyId) {
@@ -25,7 +28,7 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
             if (domain_id) {
                 // Verify domain belongs to user
                 const domain = await Domain.findOne({
-                    where: { id: domain_id, user_id: auth.userId }
+                    where: { ID: domain_id, user_id: auth.userId }
                 });
                 if (!domain) {
                     return res.status(404).json({ error: 'Domain not found' });
@@ -35,15 +38,15 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
                 // Get all domains for user
                 const userDomains = await Domain.findAll({
                     where: { user_id: auth.userId },
-                    attributes: ['id']
+                    attributes: ['ID']
                 });
-                const domainIds = userDomains.map(d => d.id);
+                const domainIds = userDomains.map((d: any) => d.ID);
                 whereClause.domain_id = domainIds;
             }
 
             const posts = await Post.findAll({
                 where: whereClause,
-                attributes: ['id', 'title', 'slug', 'content', 'meta_description', 'focus_keyword', 'status', 'domain_id', 'created_at'],
+                attributes: ['id', 'title', 'slug', 'content', 'meta_description', 'focus_keywords', 'status', 'domain_id', 'created_at'],
                 order: [['created_at', 'DESC']],
                 limit: 50,
             });
@@ -67,7 +70,7 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
 
             // Verify domain belongs to user
             const domain = await Domain.findOne({
-                where: { id: domain_id, user_id: auth.userId }
+                where: { ID: domain_id, user_id: auth.userId }
             });
 
             if (!domain) {
@@ -86,7 +89,7 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
                 slug,
                 content,
                 meta_description: meta_description || '',
-                focus_keyword: focus_keyword || '',
+                focus_keywords: focus_keyword ? [focus_keyword] : [],
                 status: 'draft',
                 domain_id,
             });
