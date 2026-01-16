@@ -95,9 +95,28 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
    const keywordsCount = keywords.length;
    let improved = 0; let declined = 0;
 
+   // 1. Calculate Stats for ALL keywords
+   keywords.forEach((keyword) => {
+      const positionChange = getPositionChange(keyword.history, keyword.position);
+      if (positionChange !== 0) {
+         if (positionChange > 0) improved++;
+         else declined++;
+      }
+   });
+
    let keywordsTable = '';
 
-   keywords.forEach((keyword) => {
+   // 2. Sort and Generate HTML for Top 10
+   // Prioritize ranked keywords (position > 0), then sort by position (ascending/best first)
+   const sortedKeywords = [...keywords].sort((a, b) => {
+      const posA = a.position > 0 ? a.position : 999999;
+      const posB = b.position > 0 ? b.position : 999999;
+      return posA - posB;
+   });
+
+   const displayedKeywords = sortedKeywords.slice(0, 10);
+
+   displayedKeywords.forEach((keyword) => {
       let changeDisplay = '';
       const positionChange = getPositionChange(keyword.history, keyword.position);
       const countryFlag = `<img class="flag" src="https://flagcdn.com/w20/${keyword.country.toLowerCase()}.png" alt="${keyword.country}" title="${keyword.country}" style="vertical-align: middle; margin-right: 6px;" />`;
@@ -107,9 +126,7 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
          const color = isImproved ? '#16a34a' : '#dc2626';
          const icon = isImproved ? '▲' : '▼';
          changeDisplay = `<span style="font-size: 10px; margin-left: 5px; color: ${color}; font-weight: 700; background: ${isImproved ? '#dcfce7' : '#fee2e2'}; padding: 1px 4px; border-radius: 4px;">${icon} ${Math.abs(positionChange)}</span>`;
-
-         if (isImproved) improved += 1;
-         else declined += 1;
+         // Note: Stats are already calculated above
       }
 
       keywordsTable += `<tr class="keyword">
@@ -119,6 +136,14 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
                            <td style="vertical-align: middle; color: #94a3b8; font-size: 12px;">${timeSince(new Date(keyword.lastUpdated).getTime() / 1000)}</td>
                         </tr>`;
    });
+
+   if (keywords.length > 10) {
+      keywordsTable += `<tr>
+          <td colspan="4" style="text-align: center; padding: 12px; color: #64748b; font-size: 12px; border-top: 1px solid #e2e8f0;">
+             <a href="https://seo-agent.net/domain/tracking/${domainName}" target="_blank" style="color: #2563eb; text-decoration: none; font-weight: 600;">View ${keywords.length - 10} more all keywords on dashboard →</a>
+          </td>
+       </tr>`;
+   }
    const improvedBadge = improved > 0 ? `<span class="stat-badge stat-success">▲ ${improved} Improved</span>` : '';
    const declinedBadge = declined > 0 ? `<span class="stat-badge stat-danger">▼ ${declined} Declined</span>` : '';
    const statHtml = `<div class="stat-wrapper">${improvedBadge} ${declinedBadge}</div>`;
