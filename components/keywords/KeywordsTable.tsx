@@ -22,7 +22,9 @@ type KeywordsTableProps = {
    showAddModal: boolean,
    setShowAddModal: Function,
    isConsoleIntegrated: boolean,
-   settings?: SettingsType
+   settings?: SettingsType,
+   onAddKeyword?: () => void,
+   onReload?: () => void
 }
 
 const KeywordsTable = (props: KeywordsTableProps) => {
@@ -202,9 +204,10 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                   keywords={keywords}
                   device={device}
                   setDevice={setDevice}
-                  updateColumns={updateColumns}
                   tableColumns={tableColumns}
                   integratedConsole={isConsoleIntegrated}
+                  onAddKeyword={props.onAddKeyword}
+                  onReload={props.onReload}
                />
             )}
             <div className={`domkeywordsTable domkeywordsTable--keywords 

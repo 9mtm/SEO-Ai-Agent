@@ -30,6 +30,7 @@ const DomainHeader = (
    const isInsight = router.pathname === '/domain/insight/[slug]';
    const isIdeas = router.pathname === '/domain/ideas/[slug]';
    const isCompetitors = router.pathname === '/domain/[slug]/competitors' || router.pathname === '/tracking/[slug]/competitors';
+   const isTracking = router.pathname === '/tracking/[slug]';
 
    const daysName = (dayKey: string) => dayKey.replace('three', '3').replace('seven', '7').replace('thirty', '30').replace('Days', ' Days');
    const buttonStyle = 'leading-6 inline-block px-2 py-2 text-gray-500 hover:text-gray-700';
@@ -52,7 +53,7 @@ const DomainHeader = (
                   className={`lg:hidden absolute top-10 left-0 bg-white border border-gray-100 z-50 rounded shadow-lg flex flex-col min-w-[200px]`}
                   style={{ display: showOptions ? 'flex' : 'none' }}>
 
-                  {!isConsole && !isInsight && !isIdeas && !isCompetitors && (
+                  {!isConsole && !isInsight && !isIdeas && !isCompetitors && !isTracking && (
                      <button
                         className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-sm text-gray-700 w-full text-left border-b border-gray-50 last:border-0"
                         onClick={() => { setShowOptions(false); refreshMutate({ ids: [], domain: domain.domain }); }}>
@@ -76,7 +77,7 @@ const DomainHeader = (
                {/* Desktop Icon Buttons */}
                <div className="hidden lg:flex items-center gap-1">
 
-                  {!isConsole && !isInsight && !isIdeas && !isCompetitors && (
+                  {!isConsole && !isInsight && !isIdeas && !isCompetitors && !isTracking && (
                      <button
                         className={`p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors`}
                         title="Reload All Serps"
@@ -105,7 +106,7 @@ const DomainHeader = (
                </div>
 
                {/* Primary Actions (Add Keyword / Load Ideas) */}
-               {!isConsole && !isInsight && !isIdeas && !isCompetitors && (
+               {!isConsole && !isInsight && !isIdeas && !isCompetitors && !isTracking && (
                   <button
                      data-testid="add_keyword"
                      className={'flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-semibold'}

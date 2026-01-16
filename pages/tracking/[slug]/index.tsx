@@ -11,7 +11,7 @@ import KeywordsTable from '../../../components/keywords/KeywordsTable';
 
 import exportCSV from '../../../utils/client/exportcsv';
 import { useFetchDomains } from '../../../services/domains';
-import { useFetchKeywords } from '../../../services/keywords';
+import { useFetchKeywords, useRefreshKeywords } from '../../../services/keywords';
 import { useFetchSettings } from '../../../services/settings';
 import AddKeywords from '../../../components/keywords/AddKeywords';
 import CompetitorsTable from '../../../components/keywords/CompetitorsTable';
@@ -49,6 +49,7 @@ const SingleDomain: NextPage = () => {
 
     const { keywordsData, keywordsLoading } = useFetchKeywords(router, activDomain?.domain || '', setKeywordSPollInterval, keywordSPollInterval);
     const { mutate: refreshCompetitors, isPending: isRefreshing } = useRefreshCompetitors(() => { });
+    const { mutate: refreshKeywordsMutate } = useRefreshKeywords(() => { });
     const theDomains: DomainType[] = (domainsData && domainsData.domains) || [];
     const theKeywords: KeywordType[] = keywordsData && keywordsData.keywords;
 
@@ -137,6 +138,8 @@ const SingleDomain: NextPage = () => {
                         setShowAddModal={setShowAddKeywords}
                         isConsoleIntegrated={!!(appSettings && appSettings.search_console_integrated) || domainHasScAPI}
                         settings={appSettings}
+                        onAddKeyword={() => setShowAddKeywords(true)}
+                        onReload={() => activDomain && refreshKeywordsMutate({ ids: [], domain: activDomain.domain })}
                     />
                 )}
 
