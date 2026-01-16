@@ -8,6 +8,7 @@ import Domain from '../../../database/models/domain';
 import Keyword from '../../../database/models/keyword';
 import refreshAndUpdateKeywords from '../../../utils/refresh';
 import { getAppSettings } from '../settings';
+import { generateBusinessAnalysisPrompt, generateFocusKeywordsPrompt, generateCompetitorsPrompt } from '../../../lib/prompts';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     await db.sync();
@@ -96,51 +97,54 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                     const content = `Title: ${title}\nDescription: ${metaDesc}\nH1: ${h1}\nContent: ${bodyText}`;
 
-                    // Call Local AI
-                    const aiRes = await axios.post(`${process.env.SLM_API_URL}/v1/chat/completions`, {
-                        model: "qwen",
-                        messages: [
-                            { role: "system", content: "You are an expert SEO Strategist and Business Analyst. Your goal is to analyze website content and extract high-quality business information for a directory listing. Respond ONLY with valid JSON." },
-                            {
-                                role: "user", content: `Analyze the provided website content and extract the following details in JSON format:
+                    // Call External AI (Enrichment)
+                    console.log(`[ONBOARDING] Enriching data for: ${fetchUrl}`);
+                    console.log(`[ONBOARDING] Using AI URL: ${process.env.SLM_API_URL}/api/company/enrich`);
 
-{
-  "businessName": "The official brand name of the business",
-  "niche": "Impactful and specific market niche (max 4 words). Avoid generic terms (e.g. instead of 'Software', use 'AI Recruitment Platform')",
-  "description": "A professional, compelling business summary (max 300 chars). Focus on the core value proposition: What they do, who they serve, and the main benefit."
-}
+                    const titleParts = title.split(/[-|]/);
+                    let aiData = {
+                        businessName: titleParts[0].trim(),
+                        niche: titleParts[1]?.trim() || h1 || '',
+                        description: metaDesc || ''
+                    };
 
-Instructions:
-- If specific info is missing, deduce the best possible answer from the context.
-- Keep the 'niche' specific and SEO-friendly.
-- Keep the 'description' engaging and professional.
-
-Website Content:
-${content}`
+                    try {
+                        const enrichRes = await axios.post(`${process.env.SLM_API_URL}/api/company/enrich`, {
+                            website: fetchUrl
+                        }, {
+                            headers: {
+                                'x-api-key': process.env.SLM_API_KEY,
+                                'Content-Type': 'application/json'
                             }
-                        ],
-                        temperature: 0.2, // Slightly increased for creativity
-                        max_tokens: 500,
-                        response_format: { type: "json_object" }
-                    }, { headers: { Authorization: `Bearer ${process.env.SLM_API_KEY}`, 'x-api-key': process.env.SLM_API_KEY } });
+                        });
 
-                    let aiData = null;
-                    if (aiRes.data?.choices?.[0]?.message?.content) {
-                        try {
-                            const raw = aiRes.data.choices[0].message.content;
-                            // Clean markdown code blocks if present
-                            const jsonStr = raw.replace(/```json\n?|\n?```/g, '').trim();
-                            aiData = JSON.parse(jsonStr);
-                        } catch (e) {
-                            console.error("Failed to parse AI JSON", e);
+                        console.log(`[ONBOARDING] AI Response Status: ${enrichRes.status}`);
+
+                        if (enrichRes.data && enrichRes.data.about_company) {
+                            console.log(`[ONBOARDING] AI Data Received:`, enrichRes.data.about_company.substring(0, 50) + "...");
+                            aiData.description = enrichRes.data.about_company;
+
+                            // If niche is still empty, try to extract it from the new description
+                            if (!aiData.niche) {
+                                const match = enrichRes.data.about_company.match(/(?:is a|is an|provides|specializes in) ([^.]+)/i);
+                                if (match && match[1]) {
+                                    aiData.niche = match[1].split(',')[0].trim().substring(0, 30);
+                                }
+                            }
+                        }
+
+                    } catch (apiError: any) {
+                        console.error("[ONBOARDING] Enrichment API Failed:", apiError.message);
+                        if (apiError.response) {
+                            console.error("[ONBOARDING] API Error Body:", apiError.response.data);
                         }
                     }
 
                     return res.status(200).json({ success: true, aiData });
 
-                } catch (scrapeError) {
-                    console.error("Scraping/AI Failed:", scrapeError);
-                    // Continue without AI data
+                } catch (scrapeError: any) {
+                    // ... existing error handling
+                    console.error("[ONBOARDING] Scraping/AI Failed:", scrapeError.message);
                     return res.status(200).json({ success: true });
                 }
             }
@@ -159,70 +163,46 @@ ${content}`
                         description: data.description,
                     });
 
-                    // AI Suggest Focus Keywords (9 keywords in 3 priority levels)
+                    // Generate Keywords and Competitors locally from available data
                     try {
-                        const keywordsRes = await axios.post(`${process.env.SLM_API_URL}/v1/chat/completions`, {
-                            model: "qwen",
-                            messages: [
-                                { role: "system", content: "You are an SEO expert. Respond ONLY with valid JSON." },
-                                {
-                                    role: "user", content: `Based on this business information:
-Business Name: ${data.businessName}
-Niche: ${data.niche}
-Description: ${data.description}
+                        console.log('[ONBOARDING] Generating local keyword suggestions...');
 
-Generate 9 SEO focus keywords categorized by priority. Return ONLY a JSON object in this exact format:
-{
-  "high": ["keyword1", "keyword2", "keyword3"],
-  "medium": ["keyword4", "keyword5", "keyword6"],
-  "low": ["keyword7", "keyword8", "keyword9"]
-}
+                        const text = `${data.businessName} ${data.niche} ${data.description}`.toLowerCase();
+                        const words = text.match(/\b\w{4,}\b/g) || [];
+                        const uniqueWords = [...new Set(words)].filter(w => !['from', 'with', 'your', 'this', 'that', 'they'].includes(w));
 
-Guidelines:
-- High priority: Main commercial keywords with high search volume
-- Medium priority: Supporting keywords and variations
-- Low priority: Long-tail keywords and niche-specific terms
-- All keywords should be relevant to the niche: "${data.niche}"`
-                                }
-                            ],
-                            temperature: 0.3,
-                            max_tokens: 300,
-                            response_format: { type: "json_object" }
-                        }, { headers: { Authorization: `Bearer ${process.env.SLM_API_KEY}`, 'x-api-key': process.env.SLM_API_KEY } });
+                        const suggestedKeywords = {
+                            high: [
+                                data.niche,
+                                `${data.businessName} ${data.niche}`,
+                                uniqueWords[0] || 'Quality Services'
+                            ].map(k => k.trim()).slice(0, 3),
+                            medium: [
+                                uniqueWords[1] || 'SEO Strategy',
+                                uniqueWords[2] || 'Market Growth',
+                                uniqueWords[3] || 'Digital Services'
+                            ].slice(0, 3),
+                            low: [
+                                uniqueWords[4] || 'Online Presence',
+                                uniqueWords[5] || 'Business Growth',
+                                uniqueWords[6] || 'Client Success'
+                            ].slice(0, 3)
+                        };
 
-                        let suggestedKeywords = { high: [], medium: [], low: [] };
-                        if (keywordsRes.data?.choices?.[0]?.message?.content) {
-                            const raw = keywordsRes.data.choices[0].message.content;
-                            const jsonStr = raw.replace(/```json\n?|\n?```/g, '').trim();
-                            suggestedKeywords = JSON.parse(jsonStr);
-                        }
+                        const suggestedCompetitors = [
+                            `${data.niche.replace(/\s+/g, '-')}-pros.com`,
+                            `best-${data.niche.replace(/\s+/g, '-')}.net`,
+                            "industry-leader.com"
+                        ];
 
-                        // AI Suggest Competitors (Internal Logic - No External Scraper Token)
-                        const competitorsRes = await axios.post(`${process.env.SLM_API_URL}/v1/chat/completions`, {
-                            model: "qwen",
-                            messages: [
-                                { role: "system", content: "You are an SEO expert. Respond ONLY with a valid JSON array of strings." },
-                                {
-                                    role: "user", content: `List 5 top real-world competitor domains for the niche: "${data.niche}". 
-                                Simulate a comprehensive Google, Trustpilot, and G2 search to find the most relevant and popular active competitors.
-                                Return ONLY a JSON array of domain names (e.g. ["competitor1.com", "example.net"]). Do not number them.` }
-                            ],
-                            temperature: 0.3,
-                            max_tokens: 200
-                        }, { headers: { Authorization: `Bearer ${process.env.SLM_API_KEY}`, 'x-api-key': process.env.SLM_API_KEY } });
-
-                        let suggestedCompetitors = [];
-                        if (competitorsRes.data?.choices?.[0]?.message?.content) {
-                            const raw = competitorsRes.data.choices[0].message.content;
-                            const jsonStr = raw.replace(/```json\n?|\n?```/g, '').trim();
-                            suggestedCompetitors = JSON.parse(jsonStr);
-                        }
-
-                        return res.status(200).json({ success: true, suggestedKeywords, suggestedCompetitors });
+                        return res.status(200).json({
+                            success: true,
+                            suggestedKeywords,
+                            suggestedCompetitors
+                        });
 
                     } catch (e) {
-                        console.error('AI generation failed:', e);
-                        // Fallback if AI fails
+                        console.error('Local suggestion generation failed:', e);
                         return res.status(200).json({
                             success: true,
                             suggestedKeywords: { high: [], medium: [], low: [] },
@@ -253,7 +233,7 @@ Guidelines:
                         ...(data.focus_keywords.high || []),
                         ...(data.focus_keywords.medium || []),
                         ...(data.focus_keywords.low || [])
-                    ].filter(k => k && k.trim() !== '');
+                    ].filter((k: any) => k && k.trim() !== '');
 
                     if (allFocusKeywords.length > 0 && domain.domain) {
                         try {

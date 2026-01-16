@@ -17,8 +17,10 @@ export * from './types';
 export * from './seo-article';
 export * from './content-improvement';
 export * from './keyword-research';
+export * from './onboarding';
 
 // Prompt Configurations
 export { SEO_ARTICLE_CONFIG } from './seo-article';
 export { CONTENT_IMPROVEMENT_CONFIG } from './content-improvement';
 export { KEYWORD_RESEARCH_CONFIG } from './keyword-research';
+export { ONBOARDING_PROMPTS_CONFIG } from './onboarding';
