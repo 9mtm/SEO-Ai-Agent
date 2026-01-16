@@ -17,6 +17,7 @@ import {
   Link as LinkIcon,
   PenTool,
   Key,
+  Bell,
 } from 'lucide-react';
 import AccountMenu from '../common/AccountMenu';
 import DomainSelector from '../domains/DomainSelector';
@@ -80,7 +81,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       billing: 'Billing',
       myDomains: 'My Domains',
       posts: 'Posts',
-      apiKeys: 'API & MCP'
+      apiKeys: 'API & MCP',
+      notifications: 'Notifications',
     },
     de: {
       insight: 'Einblick',
@@ -95,7 +97,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       billing: 'Abrechnung',
       myDomains: 'Meine Domains',
       posts: 'Beiträge',
-      apiKeys: 'API & MCP'
+      apiKeys: 'API & MCP',
+      notifications: 'Benachrichtigungen',
     }
   };
 
@@ -113,6 +116,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   } else if (router.pathname.startsWith('/profile')) {
     navigation.push(
       { name: navT.profile, href: '/profile', icon: User },
+      { name: navT.notifications, href: '/profile/notifications', icon: Bell },
       { name: navT.billing, href: '/profile/billing', icon: CreditCard },
       { name: navT.apiKeys, href: '/profile/api-keys', icon: Key },
       { name: navT.scraper, href: '/profile/scraper', icon: Settings },

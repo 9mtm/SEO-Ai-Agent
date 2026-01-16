@@ -1104,7 +1104,7 @@ export default function ArticleWriterPage() {
 
                                         {/* Date */}
                                         <div className="col-span-2 hidden lg:flex flex-col justify-center text-sm text-neutral-500">
-                                            <span>{new Date(post.updated_at).toLocaleDateString()}</span>
+                                            <span suppressHydrationWarning>{new Date(post.updated_at).toLocaleDateString()}</span>
                                             {post.wp_post_id && <span className="text-[10px] text-blue-500 flex items-center gap-1 bg-blue-50 px-1.5 py-0.5 rounded w-fit mt-1"><Globe className="h-3 w-3" /> WordPress</span>}
                                         </div>
 
@@ -1304,10 +1304,10 @@ export default function ArticleWriterPage() {
                                     <div className="flex items-center justify-between">
                                         <label className="text-xs font-semibold text-neutral-500 uppercase">Article Title</label>
                                         <span className={`text-xs ${article.title.length >= 50 && article.title.length <= 60
-                                                ? 'text-green-600'
-                                                : article.title.length > 0
-                                                    ? 'text-amber-600'
-                                                    : 'text-neutral-400'
+                                            ? 'text-green-600'
+                                            : article.title.length > 0
+                                                ? 'text-amber-600'
+                                                : 'text-neutral-400'
                                             }`}>
                                             {article.title.length} / 50-60 optimal
                                         </span>
@@ -1372,10 +1372,10 @@ export default function ArticleWriterPage() {
                                         <label className="text-xs font-semibold text-neutral-500 uppercase">Body Content</label>
                                         <div className="flex items-center gap-4">
                                             <span className={`text-xs ${seoMetrics.wordCount >= 600
-                                                    ? 'text-green-600 font-medium'
-                                                    : seoMetrics.wordCount >= 300
-                                                        ? 'text-amber-600'
-                                                        : 'text-neutral-500'
+                                                ? 'text-green-600 font-medium'
+                                                : seoMetrics.wordCount >= 300
+                                                    ? 'text-amber-600'
+                                                    : 'text-neutral-500'
                                                 }`}>
                                                 {seoMetrics.wordCount} words {seoMetrics.wordCount >= 600 ? '✓' : ''}
                                             </span>
@@ -1514,8 +1514,8 @@ export default function ArticleWriterPage() {
                                                     H3:<span className={`font-semibold ml-0.5 ${seoMetrics.h3Count >= 6 && seoMetrics.h3Count <= 12 ? 'text-green-600' : seoMetrics.h3Count >= 3 && seoMetrics.h3Count <= 15 ? 'text-amber-600' : seoMetrics.h3Count > 0 ? 'text-blue-600' : 'text-red-600'}`}>{seoMetrics.h3Count}</span>
                                                 </span>
                                                 <div className={`h-2 w-2 rounded-full ${seoMetrics.h1Count === 1 && seoMetrics.h2Count >= 3 && seoMetrics.h2Count <= 6 && seoMetrics.h3Count >= 6 && seoMetrics.h3Count <= 12
-                                                        ? 'bg-green-500'
-                                                        : seoMetrics.headingCount > 2 ? 'bg-amber-500' : 'bg-red-500'
+                                                    ? 'bg-green-500'
+                                                    : seoMetrics.headingCount > 2 ? 'bg-amber-500' : 'bg-red-500'
                                                     }`} />
                                             </div>
                                         </div>
@@ -1580,10 +1580,10 @@ export default function ArticleWriterPage() {
                                                         {seoMetrics.imagesWithAlt}/{seoMetrics.imagesInContent}
                                                     </span>
                                                     <div className={`h-2 w-2 rounded-full ${seoMetrics.imagesWithAlt === seoMetrics.imagesInContent
-                                                            ? 'bg-green-500'
-                                                            : seoMetrics.imagesWithAlt > 0
-                                                                ? 'bg-amber-500'
-                                                                : 'bg-red-500'
+                                                        ? 'bg-green-500'
+                                                        : seoMetrics.imagesWithAlt > 0
+                                                            ? 'bg-amber-500'
+                                                            : 'bg-red-500'
                                                         }`} />
                                                 </div>
                                             </div>

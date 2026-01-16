@@ -6,10 +6,10 @@ import { getKeywordsInsight, getPagesInsight } from './insight';
 import { readLocalSCData } from './searchConsole';
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
-const seoAiAgentLogo = `${appUrl}/dpro_logo.png`;
-const mobileIcon = `${appUrl}/dpro_logo.png`;
-const desktopIcon = `${appUrl}/dpro_logo.png`;
-const googleIcon = `${appUrl}/dpro_logo.png`;
+// Use live domain for images so they appear in emails even when sent from localhost
+const imageBaseUrl = 'https://seo-agent.net';
+
+const seoAiAgentLogo = 'https://cdn.flowxtra.net/landingpage/logo_assest/dpro_logo.png';
 
 type SCStatsObject = {
    [key: string]: {
@@ -90,7 +90,7 @@ const getBestKeywordPosition = (history: KeywordHistory) => {
  * @returns {Promise}
  */
 const generateEmail = async (domainName: string, keywords: KeywordType[], settings: SettingsType): Promise<string> => {
-   const emailTemplate = await readFile(path.join(__dirname, '..', '..', '..', '..', 'email', 'email.html'), { encoding: 'utf-8' });
+   const emailTemplate = await readFile(path.join(process.cwd(), 'email', 'email.html'), { encoding: 'utf-8' });
    const currentDate = dayjs(new Date()).format('MMMM D, YYYY');
    const keywordsCount = keywords.length;
    let improved = 0; let declined = 0;
@@ -101,16 +101,14 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
       let positionChangeIcon = '';
 
       const positionChange = getPositionChange(keyword.history, keyword.position);
-      const deviceIconImg = keyword.device === 'desktop' ? desktopIcon : mobileIcon;
       const countryFlag = `<img class="flag" src="https://flagcdn.com/w20/${keyword.country.toLowerCase()}.png" alt="${keyword.country}" title="${keyword.country}" />`;
-      const deviceIcon = `<img class="device" src="${deviceIconImg}" alt="${keyword.device}" title="${keyword.device}" width="18" height="18" />`;
 
       if (positionChange > 0) { positionChangeIcon = '<span style="color:#5ed7c3;">▲</span>'; improved += 1; }
       if (positionChange < 0) { positionChangeIcon = '<span style="color:#fca5a5;">▼</span>'; declined += 1; }
 
       const posChangeIcon = positionChange ? `<span class="pos_change">${positionChangeIcon} ${positionChange}</span>` : '';
       keywordsTable += `<tr class="keyword">
-                           <td>${countryFlag} ${deviceIcon} ${keyword.keyword}</td>
+                           <td>${countryFlag} ${keyword.keyword}</td>
                            <td>${keyword.position}${posChangeIcon}</td>
                            <td>${getBestKeywordPosition(keyword.history)}</td>
                            <td>${timeSince(new Date(keyword.lastUpdated).getTime() / 1000)}</td>
@@ -189,7 +187,8 @@ const generateGoogeleConsoleStats = async (domainName: string): Promise<string> 
    let htmlWithSCStats = `<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="console_table">
                               <tr>
                                  <td style="font-weight:bold;">
-                                 <img class="google_icon" src="${googleIcon}" alt="Google" width="13" height="13"> Google Search Console Stats</h3>
+                                 <td style="font-weight:bold;">
+                                 Google Search Console Stats</h3>
                                  </td>
                                  <td class="stat" align="right" style="font-size: 12px;">
                                  ${startDate.getDate()} ${months[startDate.getMonth()]} -  ${endDate.getDate()} ${months[endDate.getMonth()]} 

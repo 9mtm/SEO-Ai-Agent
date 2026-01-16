@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { Op } from 'sequelize';
 import db from '../../database/database';
 import Domain from '../../database/models/domain';
+import User from '../../database/models/user';
+import NotificationSetting from '../../database/models/notificationSetting';
 import Keyword from '../../database/models/keyword';
 import NotificationLog from '../../database/models/notificationLog';
 import nodeMailer from 'nodemailer';
@@ -151,8 +153,25 @@ const sendNotificationEmail = async (domain: Domain, settings: SettingsType) => 
     const keywords: KeywordType[] = parseKeywords(keywordsArray);
     const emailHTML = await generateEmail(domainName, keywords, settings);
 
-    const recipientEmail = domain.notification_emails || notification_email;
     const userId = domain.user_id || null;
+    let recipientEmail = domain.notification_emails || notification_email;
+
+    // Fetch user specific notification email if not set on domain level
+    if (!domain.notification_emails && userId) {
+        try {
+            const notifSettings = await NotificationSetting.findOne({ where: { user_id: userId } });
+            if (notifSettings?.notification_email) {
+                recipientEmail = notifSettings.notification_email;
+            } else {
+                const user = await User.findByPk(userId);
+                if (user?.email) {
+                    recipientEmail = user.email;
+                }
+            }
+        } catch (err) {
+            console.error('Error fetching user notification settings', err);
+        }
+    }
 
     try {
         // Send email
