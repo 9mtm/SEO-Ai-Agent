@@ -49,7 +49,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
    const [isMobile] = useIsMobile();
 
    useWindowResize(() => {
-      setSCListHeight(window.innerHeight - (isMobile ? 200 : 400));
+      // setSCListHeight(window.innerHeight - (isMobile ? 200 : 400)); // Removed for auto-height
       if (titleColumnRef.current) {
          setMaxTitleColumnWidth((titleColumnRef.current as HTMLElement).clientWidth);
       }
@@ -165,7 +165,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
 
    return (
       <div>
-         <div className='domKeywords flex flex-col bg-[white] rounded-md text-sm border mb-5'>
+         <div className='domKeywords flex flex-col bg-white rounded-lg text-sm border border-gray-200 mb-5 shadow-sm overflow-hidden'>
             {selectedKeywords.length > 0 && (
                <div className='font-semibold text-sm py-4 px-8 text-gray-500 '>
                   <ul className=''>
@@ -212,7 +212,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
             )}
             <div className={`domkeywordsTable domkeywordsTable--keywords 
             ${showSCData && tableColumns.includes('Search Console') ? 'domkeywordsTable--hasSC' : ''} 
-               styled-scrollbar w-full overflow-auto min-h-[60vh]`}>
+               w-full`}>
                <div className=' lg:min-w-[800px]'>
                   <div className={`domKeywords_head domKeywords_head--${sortBy} hidden lg:flex p-3 px-6 bg-[#FCFCFF]
                    text-gray-600 justify-between items-center font-semibold border-y`}>
@@ -311,7 +311,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                            itemData={processedKeywords[device]}
                            itemCount={processedKeywords[device].length}
                            itemSize={isMobile ? 146 : 57}
-                           height={SCListHeight}
+                           height={Math.max(processedKeywords[device].length * (isMobile ? 146 : 57), 50)}
                            width={'100%'}
                            className={'styled-scrollbar'}
                         >

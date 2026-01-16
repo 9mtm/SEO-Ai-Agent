@@ -29,7 +29,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
     const competitors = Array.isArray(domain?.competitors) ? domain.competitors : [];
 
     useWindowResize(() => {
-        setSCListHeight(window.innerHeight - (isMobile ? 200 : 400));
+        // setSCListHeight(window.innerHeight - (isMobile ? 200 : 400)); // Removed for auto-height
         if (titleColumnRef.current) {
             setMaxTitleColumnWidth((titleColumnRef.current as HTMLElement).clientWidth);
         }
@@ -194,7 +194,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
 
     return (
         <div>
-            <div className='domKeywords flex flex-col bg-[white] rounded-md text-sm border mb-5'>
+            <div className='domKeywords flex flex-col bg-white rounded-lg text-sm border border-gray-200 mb-5 shadow-sm overflow-hidden'>
                 {selectedKeywords.length > 0 && (
                     <div className='font-semibold text-sm py-4 px-8 text-gray-500'>
                         <ul>
@@ -217,7 +217,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                         </ul>
                     </div>
                 )}
-                <div className='domkeywordsTable domkeywordsTable--keywords styled-scrollbar w-full overflow-auto min-h-[60vh]'>
+                <div className='domkeywordsTable domkeywordsTable--keywords w-full'>
                     <div className='w-full'>
                         <div className='domKeywords_head hidden lg:flex p-3 px-6 bg-[#FCFCFF] text-gray-600 justify-between items-center font-semibold border-y'>
                             <span ref={titleColumnRef} className='domKeywords_head_keyword flex-1 basis-[4rem] w-auto lg:flex-1 lg:basis-20 lg:w-auto lg:flex lg:items-center'>
@@ -251,7 +251,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                                     itemData={processedKeywords}
                                     itemCount={processedKeywords.length}
                                     itemSize={isMobile ? 146 : 57}
-                                    height={SCListHeight}
+                                    height={Math.max(processedKeywords.length * (isMobile ? 146 : 57), 50)}
                                     width={'100%'}
                                     className={'styled-scrollbar'}
                                 >
