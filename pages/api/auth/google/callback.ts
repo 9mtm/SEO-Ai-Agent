@@ -141,7 +141,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.redirect('/onboarding');
         }
 
-        return res.redirect('/domains');
+        return res.redirect('/domain/insight/flowxtra_com');
       }
     }
 

@@ -238,6 +238,42 @@ export function createServer() {
                         required: [],
                     },
                 },
+                {
+                    name: 'get_gsc_insight',
+                    description: 'Get comprehensive Google Search Console Insight data with 4 views: Stats (overview with charts), Keywords (performance by keyword), Countries (geographic breakdown), and Pages (performance by page). Includes 30-day historical data with trends, top performers, and detailed metrics (visits, impressions, positions, CTR).',
+                    inputSchema: {
+                        type: 'object',
+                        properties: {
+                            domain_id: {
+                                type: 'number',
+                                description: 'Domain ID',
+                            },
+                        },
+                        required: ['domain_id'],
+                    },
+                },
+                {
+                    name: 'get_gsc_keywords',
+                    description: 'Get detailed Google Search Console keywords data with filtering options. Shows all keywords from GSC (last 30 days) with position, clicks, impressions, and CTR. Filter by device (desktop/mobile/tablet) and country. Includes summary statistics and aggregated metrics.',
+                    inputSchema: {
+                        type: 'object',
+                        properties: {
+                            domain_id: {
+                                type: 'number',
+                                description: 'Domain ID',
+                            },
+                            device: {
+                                type: 'string',
+                                description: 'Filter by device type: desktop, mobile, or tablet (optional)',
+                            },
+                            country: {
+                                type: 'string',
+                                description: 'Filter by country code (e.g., "usa", "deu") (optional)',
+                            },
+                        },
+                        required: ['domain_id'],
+                    },
+                },
             ],
         };
     });
@@ -385,6 +421,203 @@ export function createServer() {
             }
 
             summary += `\n📋 Full data available in JSON below.\n`;
+
+            return {
+                content: [
+                    {
+                        type: 'text',
+                        text: summary,
+                    },
+                    {
+                        type: 'text',
+                        text: JSON.stringify(result, null, 2),
+                    },
+                ],
+            };
+        }
+
+        if (name === 'get_gsc_insight') {
+            const domainId = args?.domain_id || '';
+            const result = await apiRequest(`/api/mcp/insight?domain_id=${domainId}`);
+
+            if (result.error) {
+                return {
+                    content: [
+                        {
+                            type: 'text',
+                            text: `Error: ${result.error}`,
+                        },
+                    ],
+                };
+            }
+
+            const { insight, domain } = result;
+
+            // Format summary
+            let summary = `📊 Google Search Console Insight - ${domain?.domain || 'Unknown'}\n\n`;
+
+            // Stats overview
+            if (insight.stats && insight.stats.length > 0) {
+                const totalStats = insight.stats.reduce((acc: any, stat: any) => ({
+                    clicks: acc.clicks + stat.clicks,
+                    impressions: acc.impressions + stat.impressions,
+                    position: acc.position + stat.position,
+                }), { clicks: 0, impressions: 0, position: 0 });
+
+                const avgPosition = Math.round(totalStats.position / insight.stats.length);
+                const ctr = totalStats.impressions > 0 ? ((totalStats.clicks / totalStats.impressions) * 100).toFixed(2) : 0;
+
+                summary += `📈 30-Day Overview:\n`;
+                summary += `  Visits: ${totalStats.clicks.toLocaleString()}\n`;
+                summary += `  Impressions: ${totalStats.impressions.toLocaleString()}\n`;
+                summary += `  Avg Position: ${avgPosition}\n`;
+                summary += `  Avg CTR: ${ctr}%\n`;
+                summary += `  Date Range: ${insight.stats.length} days\n\n`;
+            }
+
+            // Keywords stats
+            if (insight.keywords && insight.keywords.length > 0) {
+                summary += `🔑 Keywords: ${insight.keywords.length} unique keywords\n`;
+                const topKeywords = insight.keywords
+                    .sort((a: any, b: any) => b.clicks - a.clicks)
+                    .slice(0, 5);
+                summary += `  Top 5 by Visits:\n`;
+                topKeywords.forEach((kw: any) => {
+                    summary += `    "${kw.keyword}" - #${Math.round(kw.position)} (${kw.clicks} visits)\n`;
+                });
+                summary += `\n`;
+            }
+
+            // Countries stats
+            if (insight.countries && insight.countries.length > 0) {
+                summary += `🌍 Countries: ${insight.countries.length} countries\n`;
+                const topCountries = insight.countries
+                    .sort((a: any, b: any) => b.clicks - a.clicks)
+                    .slice(0, 5);
+                summary += `  Top 5 by Visits:\n`;
+                topCountries.forEach((c: any) => {
+                    summary += `    ${c.country} - ${c.clicks} visits (${c.keywords} keywords)\n`;
+                });
+                summary += `\n`;
+            }
+
+            // Pages stats
+            if (insight.pages && insight.pages.length > 0) {
+                summary += `📄 Pages: ${insight.pages.length} indexed pages\n`;
+                const topPages = insight.pages
+                    .sort((a: any, b: any) => b.clicks - a.clicks)
+                    .slice(0, 5);
+                summary += `  Top 5 by Visits:\n`;
+                topPages.forEach((p: any) => {
+                    const shortUrl = p.page.length > 60 ? p.page.substring(0, 60) + '...' : p.page;
+                    summary += `    ${shortUrl} - ${p.clicks} visits\n`;
+                });
+                summary += `\n`;
+            }
+
+            summary += `📋 Full detailed data available in JSON below.\n`;
+
+            return {
+                content: [
+                    {
+                        type: 'text',
+                        text: summary,
+                    },
+                    {
+                        type: 'text',
+                        text: JSON.stringify(result, null, 2),
+                    },
+                ],
+            };
+        }
+
+        if (name === 'get_gsc_keywords') {
+            const domainId = args?.domain_id || '';
+            const device = args?.device || '';
+            const country = args?.country || '';
+
+            let url = `/api/mcp/sc-keywords?domain_id=${domainId}`;
+            if (device) url += `&device=${device}`;
+            if (country) url += `&country=${country}`;
+
+            const result = await apiRequest(url);
+
+            if (result.error) {
+                return {
+                    content: [
+                        {
+                            type: 'text',
+                            text: `Error: ${result.error}`,
+                        },
+                    ],
+                };
+            }
+
+            const { keywords, summary: stats, domain } = result;
+
+            if (!keywords || keywords.length === 0) {
+                return {
+                    content: [
+                        {
+                            type: 'text',
+                            text: `No keywords found for domain ${domain?.domain || 'Unknown'}`,
+                        },
+                    ],
+                };
+            }
+
+            // Format summary
+            let summary = `🔍 Google Search Console Keywords - ${domain?.domain || 'Unknown'}\n\n`;
+
+            // Filters applied
+            const filters = [];
+            if (device) filters.push(`Device: ${device}`);
+            if (country) filters.push(`Country: ${country}`);
+            if (filters.length > 0) {
+                summary += `📌 Filters: ${filters.join(', ')}\n\n`;
+            }
+
+            // Summary stats
+            summary += `📊 Summary:\n`;
+            summary += `  Total Keywords: ${stats.total}\n`;
+            summary += `  Total Visits: ${stats.totalClicks.toLocaleString()}\n`;
+            summary += `  Total Impressions: ${stats.totalImpressions.toLocaleString()}\n`;
+            summary += `  Avg Position: ${stats.avgPosition}\n`;
+            summary += `  Avg CTR: ${stats.avgCTR.toFixed(2)}%\n\n`;
+
+            // Device breakdown
+            if (!device) {
+                summary += `📱 By Device:\n`;
+                summary += `  Desktop: ${stats.byDevice.desktop}\n`;
+                summary += `  Mobile: ${stats.byDevice.mobile}\n`;
+                summary += `  Tablet: ${stats.byDevice.tablet}\n\n`;
+            }
+
+            // Country breakdown
+            if (!country && Object.keys(stats.byCountry).length > 0) {
+                summary += `🌍 Top Countries:\n`;
+                const topCountries = Object.entries(stats.byCountry)
+                    .sort((a: any, b: any) => b[1] - a[1])
+                    .slice(0, 5);
+                topCountries.forEach(([c, count]) => {
+                    summary += `  ${c}: ${count} keywords\n`;
+                });
+                summary += `\n`;
+            }
+
+            // Top keywords by position
+            summary += `🏆 Top 10 Rankings:\n`;
+            const topRanked = keywords
+                .filter((k: any) => k.position > 0)
+                .sort((a: any, b: any) => a.position - b.position)
+                .slice(0, 10);
+
+            topRanked.forEach((kw: any) => {
+                summary += `  #${kw.position} - "${kw.keyword}" (${kw.device}, ${kw.country})\n`;
+                summary += `      ${kw.clicks} visits, ${kw.impressions} impressions, ${kw.ctr.toFixed(2)}% CTR\n`;
+            });
+
+            summary += `\n📋 Full list of ${stats.total} keywords available in JSON below.\n`;
 
             return {
                 content: [

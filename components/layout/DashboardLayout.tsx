@@ -80,7 +80,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       billing: 'Billing',
       myDomains: 'My Domains',
       posts: 'Posts',
-      apiKeys: 'AI Connections'
+      apiKeys: 'API & MCP'
     },
     de: {
       insight: 'Einblick',
@@ -95,7 +95,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       billing: 'Abrechnung',
       myDomains: 'Meine Domains',
       posts: 'Beiträge',
-      apiKeys: 'KI-Verbindungen'
+      apiKeys: 'API & MCP'
     }
   };
 
@@ -117,7 +117,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       { name: navT.billing, href: '/profile/billing', icon: CreditCard },
       { name: navT.apiKeys, href: '/profile/api-keys', icon: Key },
       { name: navT.scraper, href: '/profile/scraper', icon: Settings },
-      { name: navT.connections, href: '/profile/connections', icon: LinkIcon }
+      // Temporarily hidden - Connect option
+      // { name: navT.connections, href: '/profile/connections', icon: LinkIcon }
     );
   } else {
     navigation.push(

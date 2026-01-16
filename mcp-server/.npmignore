@@ -1,0 +1,36 @@
+# Development files
+.env
+.env.*
+.DS_Store
+*.log
+*.map
+
+# Source files (already compiled to dist/)
+src/
+tsconfig.json
+tsconfig.*.json
+
+# Testing and verification
+verify-tools.js
+test_tools.js
+RESTART_INSTRUCTIONS.md
+
+# Git and CI/CD
+.git/
+.github/
+.gitignore
+
+# NPM
+.npmrc
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentation (keep README.md)
+local_claude_config.json
+
+.PUBLISHING.md

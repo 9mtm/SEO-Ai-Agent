@@ -20,10 +20,10 @@ export function useFetchSCKeywords(router: NextRouter, domainLoaded: boolean = f
    return useQuery({ queryKey: ['sckeywords'], queryFn: () => router.query.slug && fetchSCKeywords(router), enabled: domainLoaded });
 }
 
-export async function fetchSCInsight(router: NextRouter) {
+export async function fetchSCInsight(router: NextRouter, days: number = 30) {
    // if (!router.query.slug) { throw new Error('Invalid Domain Name'); }
    const domain = (router.query.slug as string)?.replace(/_/g, '.');
-   const res = await fetch(`${window.location.origin}/api/insight?domain=${domain}`, { method: 'GET' });
+   const res = await fetch(`${window.location.origin}/api/insight?domain=${domain}&days=${days}`, { method: 'GET' });
    if (res.status >= 400 && res.status < 600) {
       if (res.status === 401) {
          console.log('Unauthorized!!');
@@ -34,7 +34,11 @@ export async function fetchSCInsight(router: NextRouter) {
    return res.json();
 }
 
-export function useFetchSCInsight(router: NextRouter, domainLoaded: boolean = false) {
+export function useFetchSCInsight(router: NextRouter, domainLoaded: boolean = false, days: number = 30) {
    // console.log('ROUTER: ', router);
-   return useQuery({ queryKey: ['scinsight'], queryFn: () => router.query.slug && fetchSCInsight(router), enabled: domainLoaded });
+   return useQuery({
+      queryKey: ['scinsight', days],
+      queryFn: () => router.query.slug && fetchSCInsight(router, days),
+      enabled: domainLoaded
+   });
 }

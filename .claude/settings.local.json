@@ -35,7 +35,9 @@
       "Bash(npx tsc:*)",
       "Bash(curl:*)",
       "Bash(python:*)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "Bash(npm pack:*)",
+      "Bash(npm publish:*)"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"

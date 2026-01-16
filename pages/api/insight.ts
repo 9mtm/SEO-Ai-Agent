@@ -25,12 +25,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 const getDomainSearchConsoleInsight = async (req: NextApiRequest, res: NextApiResponse<SCInsightRes>) => {
    if (!req.query.domain && typeof req.query.domain !== 'string') return res.status(400).json({ data: null, error: 'Domain is Missing.' });
    const domainname = (req.query.domain as string).replaceAll('-', '.').replaceAll('_', '-');
-   const getInsightFromSCData = (localSCData: SCDomainDataType): InsightDataType => {
+   const days = req.query.days ? parseInt(req.query.days as string) : 30;
+
+   const getInsightFromSCData = (localSCData: SCDomainDataType, daysFilter: number): InsightDataType => {
       const { stats = [] } = localSCData;
+
+      // Filter stats by days
+      const filteredStats = stats.slice(-daysFilter);
+
       const countries = getCountryInsight(localSCData);
       const keywords = getKeywordsInsight(localSCData);
       const pages = getPagesInsight(localSCData);
-      return { pages, keywords, countries, stats };
+      return { pages, keywords, countries, stats: filteredStats };
    };
 
    // First try and read the  Local SC Domain Data file.
@@ -40,7 +46,7 @@ const getDomainSearchConsoleInsight = async (req: NextApiRequest, res: NextApiRe
       const oldFetchedDate = localSCData.lastFetched;
       const fetchTimeDiff = new Date().getTime() - (oldFetchedDate ? new Date(oldFetchedDate as string).getTime() : 0);
       if (localSCData.stats && localSCData.stats.length && fetchTimeDiff <= 86400000) {
-         const response = getInsightFromSCData(localSCData);
+         const response = getInsightFromSCData(localSCData, days);
          return res.status(200).json({ data: response });
       }
    }
@@ -64,8 +70,8 @@ const getDomainSearchConsoleInsight = async (req: NextApiRequest, res: NextApiRe
       if (!isConnected && !(scDomainAPI.client_email && scDomainAPI.private_key)) {
          return res.status(200).json({ data: null, error: 'Google Search Console is not Integrated.' });
       }
-      const scData = await fetchDomainSCData(domainObj, scDomainAPI);
-      const response = getInsightFromSCData(scData);
+      const scData = await fetchDomainSCData(domainObj, scDomainAPI, days);
+      const response = getInsightFromSCData(scData, days);
       return res.status(200).json({ data: response });
    } catch (error) {
       console.log('[ERROR] Getting Domain Insight: ', domainname, error);

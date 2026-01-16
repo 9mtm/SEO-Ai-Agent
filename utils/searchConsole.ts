@@ -129,7 +129,7 @@ const fetchSearchConsoleData = async (domain: DomainType, days: number, type?: s
  * @returns The function `fetchDomainSCData` is returning a Promise that resolves to an object of type
  * `SCDomainDataType`.
  */
-export const fetchDomainSCData = async (domain: DomainType, scAPI?: SCAPISettings): Promise<SCDomainDataType> => {
+export const fetchDomainSCData = async (domain: DomainType, scAPI?: SCAPISettings, statsDays: number = 30): Promise<SCDomainDataType> => {
    const days = [3, 7, 30];
    const scDomainData: SCDomainDataType = { threeDays: [], sevenDays: [], thirtyDays: [], lastFetched: '', lastFetchError: '', stats: [] };
    if (domain.domain && scAPI) {
@@ -145,7 +145,8 @@ export const fetchDomainSCData = async (domain: DomainType, scAPI?: SCAPISetting
             scDomainData.lastFetchError = items.errorMsg;
          }
       }
-      const stats = await fetchSearchConsoleData(theDomain, 30, 'stat', scAPI);
+      // Fetch stats for the requested number of days
+      const stats = await fetchSearchConsoleData(theDomain, statsDays, 'stat', scAPI);
       if (stats && Array.isArray(stats) && stats.length > 0) {
          scDomainData.stats = stats as SearchAnalyticsStat[];
       }

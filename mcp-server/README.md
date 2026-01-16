@@ -11,7 +11,7 @@ Connect Claude Desktop and other AI assistants to your SEO data through the Mode
 ## Installation
 
 ```bash
-npm install -g @seo-agent/mcp-server
+npm install -g seo-agent-mcp-server
 ```
 
 ## Configuration
@@ -20,15 +20,15 @@ npm install -g @seo-agent/mcp-server
 
 Add this to your Claude Desktop config file:
 
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "seo-agent": {
       "command": "npx",
-      "args": ["-y", "@seo-agent/mcp-server"],
+      "args": ["-y", "seo-agent-mcp-server"],
       "env": {
         "SEO_API_KEY": "your_api_key_here",
         "API_BASE_URL": "https://seo-agent.net"
@@ -93,7 +93,7 @@ Once configured, you can ask Claude:
   - Shows: Your positions, competitor positions, ranking comparisons, history, changes, countries, devices, URLs
   - Competitor data: See where competitors rank for the same keywords and compare performance
 
-### Analytics
+### Analytics & Insights
 - **`get_domain_stats`** - Get comprehensive SEO statistics for a domain
   - Parameters: `domain_id`
   - Returns: Total domains, keywords, posts, top rankings, improvements
@@ -101,6 +101,25 @@ Once configured, you can ask Claude:
 - **`get_gsc_data`** - Fetch Google Search Console data
   - Parameters: `domain_id`, `start_date` (optional), `end_date` (optional)
   - Returns: Real-time GSC data including clicks, impressions, CTR, positions
+
+- **`get_gsc_insight`** - Get comprehensive GSC Insight data with 4 views ⭐ NEW
+  - Parameters: `domain_id`
+  - Returns:
+    - **Stats**: 30-day overview with visits, impressions, avg position, CTR, trends
+    - **Keywords**: Performance by keyword with top 5 performers
+    - **Countries**: Geographic breakdown with keyword counts per country
+    - **Pages**: Performance by page with top 5 pages
+  - Includes: Daily historical data, trend analysis, formatted summary + full JSON
+
+- **`get_gsc_keywords`** - Get detailed GSC keywords with advanced filtering ⭐ NEW
+  - Parameters: `domain_id`, `device` (optional: desktop/mobile/tablet), `country` (optional)
+  - Returns:
+    - Complete keyword list with position, clicks, impressions, CTR
+    - Summary statistics (total keywords, clicks, impressions, avg position, avg CTR)
+    - Device breakdown (desktop/mobile/tablet counts)
+    - Country distribution with keyword counts
+    - Top 10 rankings with full metrics
+  - Use cases: Filter keywords by device to see mobile vs desktop performance, analyze performance by country
 
 ## Available Prompts
 
@@ -155,7 +174,7 @@ npm run build
 
 ## Support
 
-For issues and questions, visit: https://github.com/your-repo/seo-agent
+For issues and questions, please contact: info@dpro.gmbh
 
 ## License
 

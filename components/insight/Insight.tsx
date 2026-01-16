@@ -11,9 +11,11 @@ type SCInsightProps = {
    insight: InsightDataType,
    isPending: boolean,
    isConsoleIntegrated: boolean,
+   daysFilter?: number,
+   setDaysFilter?: (days: number) => void,
 }
 
-const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, domain }: SCInsightProps) => {
+const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, domain, daysFilter = 30, setDaysFilter }: SCInsightProps) => {
    const [activeTab, setActiveTab] = useState<string>('stats');
    const [sortBy, setSortBy] = useState<string>('clicks');
    const [searchQuery, setSearchQuery] = useState<string>('');
@@ -23,6 +25,16 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
    const insightItems = insight[activeTab as keyof InsightDataType];
    const startDate = insight && insight.stats && insight.stats.length > 0 ? new Date(insight.stats[0].date) : null;
    const endDate = insight && insight.stats && insight.stats.length > 0 ? new Date(insight.stats[insight.stats.length - 1].date) : null;
+
+   // Get period label dynamically
+   const getPeriodLabel = (days: number) => {
+      if (days === 1) return 'Yesterday';
+      if (days === 7) return 'Last 7 Days';
+      if (days === 30) return 'Last 30 Days';
+      if (days === 90) return 'Last 90 Days';
+      if (days === 365) return 'Last Year';
+      return `Last ${days} Days`;
+   };
 
    const switchTab = (tab: string) => {
       setActiveTab(tab);
@@ -222,12 +234,40 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                      />
                   </div>
                </div>
-               {isConsoleIntegrated && (<div className='py-2 text-xs text-center mt-2 lg:text-sm lg:mt-0'>
-                  {startDate && new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(startDate))}
-                  <span className='px-2 inline-block'>-</span>
-                  {endDate && new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(endDate))}
-                  <span className='ml-2 text-gray-400'>(Last 30 Days)</span>
-               </div>
+               {isConsoleIntegrated && (
+                  <div className='py-2 text-xs text-center mt-2 lg:text-sm lg:mt-0 flex flex-col lg:flex-row items-center gap-3'>
+                     {/* Date Range Display */}
+                     <div>
+                        {startDate && new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(startDate))}
+                        <span className='px-2 inline-block'>-</span>
+                        {endDate && new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(endDate))}
+                     </div>
+
+                     {/* Time Range Filter */}
+                     {setDaysFilter && (
+                        <div className='flex gap-2 text-xs'>
+                           {[
+                              { label: 'Yesterday', days: 1 },
+                              { label: '7 Days', days: 7 },
+                              { label: '30 Days', days: 30 },
+                              { label: '90 Days', days: 90 },
+                              { label: '1 Year', days: 365 }
+                           ].map(({ label, days }) => (
+                              <button
+                                 key={days}
+                                 onClick={() => setDaysFilter(days)}
+                                 className={`px-3 py-1 rounded-full transition-all ${
+                                    daysFilter === days
+                                       ? 'bg-violet-600 text-white shadow-sm'
+                                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                 }`}
+                              >
+                                 {label}
+                              </button>
+                           ))}
+                        </div>
+                     )}
+                  </div>
                )}
             </div>
 

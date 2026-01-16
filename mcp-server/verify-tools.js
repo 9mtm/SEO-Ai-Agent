@@ -30,7 +30,9 @@ const expectedTools = [
     'add_keyword',
     'get_domain_stats',
     'get_gsc_data',
-    'get_keyword_rankings'  // NEW!
+    'get_keyword_rankings',
+    'get_gsc_insight',      // NEW! v1.2.0
+    'get_gsc_keywords'      // NEW! v1.2.0
 ];
 
 console.log('\n📋 Checking for tools in compiled code:\n');

@@ -1,26 +1,53 @@
 {
-    "name": "@seo-agent/mcp-server",
-    "version": "1.0.0",
-    "description": "MCP Server for SEO AI Agent - Connect Claude & Chatgpt and other AI assistants to your SEO data",
+    "name": "seo-agent-mcp-server",
+    "version": "1.2.0",
+    "description": "MCP Server for SEO AI Agent - Connect Claude & ChatGPT to your SEO data with comprehensive Google Search Console insights, keyword tracking, and competitor analysis",
     "main": "dist/index.js",
     "bin": {
         "seo-agent-mcp": "dist/index.js"
     },
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist/**/*",
+        "README.md",
+        "LICENSE"
+    ],
     "scripts": {
         "build": "tsc",
         "dev": "tsx src/index.ts",
-        "prepare": "npm run build"
+        "prepare": "npm run build",
+        "prepublishOnly": "npm run build",
+        "test": "node verify-tools.js"
     },
     "keywords": [
         "mcp",
+        "model-context-protocol",
         "seo",
+        "keyword-tracking",
+        "competitor-analysis",
+        "google-rankings",
+        "search-console",
+        "gsc-insights",
+        "search-analytics",
         "claude",
+        "claude-desktop",
         "chatgpt",
         "ai",
-        "assistant"
+        "assistant",
+        "seo-tools",
+        "content-management",
+        "performance-tracking"
     ],
-    "author": "Dpro GmbH",
+    "author": "Mohamed ALarade <info@dpro.gmbh> (Dpro GmbH)",
     "homepage": "https://seo-agent.net",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dpro-gmbh/seo-agent-mcp-server"
+    },
+    "bugs": {
+        "url": "https://github.com/dpro-gmbh/seo-agent-mcp-server/issues",
+        "email": "info@dpro.gmbh"
+    },
     "license": "MIT",
     "dependencies": {
         "@modelcontextprotocol/sdk": "^0.5.0",

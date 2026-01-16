@@ -177,28 +177,17 @@ export default function ApiKeysPage() {
 
         setExpandedKeyId(keyId);
 
-        // Fetch API key if not already loaded
+        // Security: API keys cannot be retrieved after creation
+        // Show a message instead
         if (!userApiKeys[keyId]) {
-            try {
-                const res = await fetch(`/api/mcp/get-key?keyId=${keyId}`);
-                const data = await res.json();
-
-                if (res.ok && data.apiKey) {
-                    setUserApiKeys(prev => ({ ...prev, [keyId]: data.apiKey }));
-                } else {
-                    toast.error('Failed to load API key');
-                }
-            } catch (error) {
-                console.error('Failed to fetch API key:', error);
-                toast.error('Failed to load API key');
-            }
+            setUserApiKeys(prev => ({ ...prev, [keyId]: '***************************' }));
         }
     };
 
     return (
         <DashboardLayout domains={domainsData?.domains || []}>
             <Head>
-                <title>AI Assistant Connections</title>
+                <title>API & MCP Connections</title>
             </Head>
 
             <div className="h-full w-full p-6 space-y-6 max-w-6xl mx-auto">
@@ -206,10 +195,10 @@ export default function ApiKeysPage() {
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
                         <Key className="h-6 w-6" />
-                        AI Connections
+                        API & MCP Connections
                     </h1>
                     <p className="text-neutral-500 text-sm mt-1">
-                        Connect AI assistants to manage your SEO data
+                        Connect AI assistants via MCP protocol to manage your SEO data
                     </p>
                 </div>
 
@@ -408,11 +397,21 @@ export default function ApiKeysPage() {
                     </Card>
                 )}
 
+                {/* Create Button (always visible) */}
+                {!showCreateModal && !newKeyData && apiKeys.length > 0 && (
+                    <div className="flex justify-end">
+                        <Button onClick={() => setShowCreateModal(true)} className="bg-blue-600 hover:bg-blue-700" size="lg">
+                            <Plus className="mr-2 h-5 w-5" />
+                            Create New Connection
+                        </Button>
+                    </div>
+                )}
+
                 {/* Active Connections List */}
                 <div>
                     <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                         <Activity className="h-5 w-5" />
-                        Your Active Connections
+                        Your Active Connections ({apiKeys.length})
                     </h2>
 
                     {isLoading ? (
@@ -534,6 +533,20 @@ export default function ApiKeysPage() {
                                         {/* Expandable Setup Instructions */}
                                         {expandedKeyId === key.id && (
                                             <div className="mt-4 pt-4 border-t border-neutral-200">
+                                                {/* Security Notice */}
+                                                <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 mb-4">
+                                                    <div className="flex items-start gap-2">
+                                                        <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                        <div>
+                                                            <p className="text-sm font-semibold text-amber-900">API Key Not Retrievable</p>
+                                                            <p className="text-sm text-amber-800 mt-1">
+                                                                For security reasons, API keys are only shown once during creation.
+                                                                If you lost your key, create a new connection and delete this one.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                                                     <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
                                                         <Info className="h-4 w-4" />
@@ -542,7 +555,7 @@ export default function ApiKeysPage() {
                                                     <div className="space-y-3 text-sm">
                                                         <div>
                                                             <p className="font-medium text-blue-900 mb-1">For Claude Desktop:</p>
-                                                            <p className="text-blue-700 mb-2">Add this to your config file:</p>
+                                                            <p className="text-blue-700 mb-2">Add this to your config file (replace with your actual API key):</p>
                                                             <div className="relative bg-white border border-blue-300 rounded p-3">
                                                                 <Button
                                                                     variant="ghost"
