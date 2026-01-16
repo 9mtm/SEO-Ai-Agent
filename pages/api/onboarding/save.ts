@@ -97,7 +97,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     const content = `Title: ${title}\nDescription: ${metaDesc}\nH1: ${h1}\nContent: ${bodyText}`;
 
                     // Call Local AI
-                    const aiRes = await axios.post('http://127.0.0.1:38474/v1/chat/completions', {
+                    const aiRes = await axios.post(`${process.env.SLM_API_URL}/v1/chat/completions`, {
                         model: "qwen",
                         messages: [
                             { role: "system", content: "You are an expert SEO Strategist and Business Analyst. Your goal is to analyze website content and extract high-quality business information for a directory listing. Respond ONLY with valid JSON." },
@@ -122,7 +122,7 @@ ${content}`
                         temperature: 0.2, // Slightly increased for creativity
                         max_tokens: 500,
                         response_format: { type: "json_object" }
-                    });
+                    }, { headers: { Authorization: `Bearer ${process.env.SLM_API_KEY}`, 'x-api-key': process.env.SLM_API_KEY } });
 
                     let aiData = null;
                     if (aiRes.data?.choices?.[0]?.message?.content) {
@@ -161,7 +161,7 @@ ${content}`
 
                     // AI Suggest Focus Keywords (9 keywords in 3 priority levels)
                     try {
-                        const keywordsRes = await axios.post('http://127.0.0.1:38474/v1/chat/completions', {
+                        const keywordsRes = await axios.post(`${process.env.SLM_API_URL}/v1/chat/completions`, {
                             model: "qwen",
                             messages: [
                                 { role: "system", content: "You are an SEO expert. Respond ONLY with valid JSON." },
@@ -188,7 +188,7 @@ Guidelines:
                             temperature: 0.3,
                             max_tokens: 300,
                             response_format: { type: "json_object" }
-                        });
+                        }, { headers: { Authorization: `Bearer ${process.env.SLM_API_KEY}`, 'x-api-key': process.env.SLM_API_KEY } });
 
                         let suggestedKeywords = { high: [], medium: [], low: [] };
                         if (keywordsRes.data?.choices?.[0]?.message?.content) {
@@ -198,7 +198,7 @@ Guidelines:
                         }
 
                         // AI Suggest Competitors (Internal Logic - No External Scraper Token)
-                        const competitorsRes = await axios.post('http://127.0.0.1:38474/v1/chat/completions', {
+                        const competitorsRes = await axios.post(`${process.env.SLM_API_URL}/v1/chat/completions`, {
                             model: "qwen",
                             messages: [
                                 { role: "system", content: "You are an SEO expert. Respond ONLY with a valid JSON array of strings." },
@@ -209,7 +209,7 @@ Guidelines:
                             ],
                             temperature: 0.3,
                             max_tokens: 200
-                        });
+                        }, { headers: { Authorization: `Bearer ${process.env.SLM_API_KEY}`, 'x-api-key': process.env.SLM_API_KEY } });
 
                         let suggestedCompetitors = [];
                         if (competitorsRes.data?.choices?.[0]?.message?.content) {

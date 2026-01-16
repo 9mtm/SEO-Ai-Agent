@@ -124,67 +124,48 @@ The application includes an automated batch notification system that sends month
 
 ### Cron Job Configuration
 
-For **production servers**, you need to set up a cron job to run the batch notification process.
+### Running Cron Jobs (Production)
 
-#### Linux/Unix Servers:
+The system relies on several background tasks for scraping keywords and sending notifications.
 
-1. **Open crontab editor:**
+#### Using PM2 (Recommended)
+PM2 is a process manager that keeps your app and cron jobs running forever.
+
+1. **Start the Web App:**
    ```bash
-   crontab -e
+   npm run build
+   pm2 start npm --name "seo-web" -- start
    ```
 
-2. **Add the following cron job** (runs every hour):
+2. **Start the Cron Scheduler:**
    ```bash
-   0 * * * * cd /path/to/seo_ai_agent && /usr/bin/node cron.js >> /var/log/seo-cron.log 2>&1
+   pm2 start npm --name "seo-cron" -- run cron
    ```
+   *This runs `cron.js`, which handles:*
+   *   Monthly SERP Scraping
+   *   Hourly Batch Notifications
+   *   Failed Job Retries
+   *   Daily Google Search Console Sync
 
-3. **Or use PM2** (recommended for Node.js apps):
+3. **Monitor Logs:**
+   The cron system automatically creates a `logs/` directory in your project root.
+   *   `logs/cron.log`: General activity and success messages.
+   *   `logs/cron.error.log`: Errors and failure details.
+
+   You can also check live logs via PM2:
    ```bash
-   pm2 start cron.js --name "seo-cron"
-   pm2 save
-   pm2 startup
+   pm2 logs seo-cron
    ```
-
-#### Windows Servers:
-
-1. **Open Task Scheduler**
-2. **Create New Task:**
-   - **Trigger:** Hourly
-   - **Action:** Start a program
-   - **Program:** `C:\Program Files\nodejs\node.exe`
-   - **Arguments:** `cron.js`
-   - **Start in:** `C:\path\to\seo_ai_agent`
-
-### Environment Variables for Email
-
-Make sure these are set in `.env.local`:
-
-```env
-# SMTP Configuration
-SMTP_HOST=mail.flowxtra.com
-SMTP_PORT=465
-SMTP_USERNAME=no-reply@flowxtra.com
-SMTP_PASSWORD=your_smtp_password
-SMTP_ENCRYPTION=ssl
-SMTP_FROM_EMAIL=no-reply@flowxtra.com
-SMTP_FROM_NAME=SEO AI Agent
-
-# Batch Processing (emails per hour)
-NOTIFICATION_BATCH_SIZE=10
-```
-
-### How It Works
-
-- **Cron runs every hour** and sends a batch of emails (default: 10)
-- **Checks last notification date** - only sends if 30+ days have passed
-- **Logs all attempts** in `notification_logs` table
-- **Prevents spam** by distributing emails over time
 
 ### Manual Testing
 
-Test the batch notification system:
+Test the batch notification system manually:
 ```bash
+# Trigger Batch Notification
 curl -X POST http://localhost:55781/api/batch-notify
+
+# Trigger SERP Scraping (Protected)
+curl -X POST http://localhost:55781/api/cron -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
 ---
