@@ -24,7 +24,7 @@ const DomainSelector = ({ domains = [], currentDomain }: DomainSelectorProps) =>
     }, []);
 
     const handleDomainChange = (slug: string) => {
-        router.push(`/domain/${slug}`);
+        router.push(`/domain/insight/${slug}`);
         setIsOpen(false);
     };
 
