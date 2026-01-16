@@ -7,6 +7,7 @@ import { useDeleteKeywords } from '../../services/keywords';
 import useWindowResize from '../../hooks/useWindowResize';
 import useIsMobile from '../../hooks/useIsMobile';
 import Modal from '../common/Modal';
+import TableSkeleton from '../common/TableSkeleton';
 
 type CompetitorsTableProps = {
     domain: DomainType | null;
@@ -262,7 +263,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                                 <p className='p-9 pt-[10%] text-center text-gray-500'>No Keywords Added for this Device Type.</p>
                             )}
                             {isPending && (
-                                <p className='p-9 pt-[10%] text-center text-gray-500'>Loading Keywords...</p>
+                                <TableSkeleton rows={8} />
                             )}
                         </div>
                     </div>

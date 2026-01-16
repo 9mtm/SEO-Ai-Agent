@@ -14,6 +14,7 @@ import useWindowResize from '../../hooks/useWindowResize';
 import useIsMobile from '../../hooks/useIsMobile';
 import { useUpdateSettings } from '../../services/settings';
 import { defaultSettings } from '../../pages/profile/scraper';
+import TableSkeleton from '../common/TableSkeleton';
 
 type KeywordsTableProps = {
    domain: DomainType | null,
@@ -322,7 +323,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                         <p className=' p-9 pt-[10%] text-center text-gray-500'>No Keywords Added for this Device Type.</p>
                      )}
                      {isPending && (
-                        <p className=' p-9 pt-[10%] text-center text-gray-500'>Loading Keywords...</p>
+                        <TableSkeleton rows={8} />
                      )}
                   </div>
                </div>
