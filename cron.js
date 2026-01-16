@@ -69,7 +69,8 @@ const generateCronTime = (interval) => {
 const runAppCronJobs = () => {
    getAppSettings().then((settings) => {
       // RUN SERP Scraping CRON (EveryDay at Midnight) 0 0 0 * *
-      const scrape_interval = settings.scrape_interval || 'daily';
+      // Forced to run Monthly as requested
+      const scrape_interval = 'monthly';
       if (scrape_interval !== 'never') {
          const scrapeCronTime = generateCronTime(scrape_interval);
          new Cron(scrapeCronTime, () => {

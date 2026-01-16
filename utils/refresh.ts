@@ -3,6 +3,7 @@ import { setTimeout as sleep } from 'timers/promises';
 import { RefreshResult, removeFromRetryQueue, retryScrape, scrapeKeywordFromGoogle } from './scraper';
 import parseKeywords from './parseKeywords';
 import Keyword from '../database/models/keyword';
+import FailedJob from '../database/models/failedJob';
 
 /**
  * Refreshes the Keywords position by Scraping Google Search Result by
@@ -11,8 +12,8 @@ import Keyword from '../database/models/keyword';
  * @param {SettingsType} settings - The App Settings that contain the Scraper settings
  * @returns {Promise}
  */
-const refreshAndUpdateKeywords = async (rawkeyword:Keyword[], settings:SettingsType): Promise<KeywordType[]> => {
-   const keywords:KeywordType[] = rawkeyword.map((el) => el.get({ plain: true }));
+const refreshAndUpdateKeywords = async (rawkeyword: Keyword[], settings: SettingsType): Promise<KeywordType[]> => {
+   const keywords: KeywordType[] = rawkeyword.map((el) => el.get({ plain: true }));
    if (!rawkeyword || rawkeyword.length === 0) { return []; }
    const start = performance.now();
    const updatedKeywords: KeywordType[] = [];
@@ -64,53 +65,70 @@ const refreshAndUpdateKeyword = async (keyword: Keyword, settings: SettingsType)
  * @param {SettingsType} settings - The App Settings that contain the Scraper settings
  * @returns {Promise<KeywordType>}
  */
-export const updateKeywordPosition = async (keywordRaw:Keyword, udpatedkeyword: RefreshResult, settings: SettingsType): Promise<KeywordType> => {
+export const updateKeywordPosition = async (keywordRaw: Keyword, udpatedkeyword: RefreshResult, settings: SettingsType): Promise<KeywordType> => {
    const keywordPrased = parseKeywords([keywordRaw.get({ plain: true })]);
-      const keyword = keywordPrased[0];
-      // const udpatedkeyword = refreshed;
-      let updated = keyword;
+   const keyword = keywordPrased[0];
+   // const udpatedkeyword = refreshed;
+   let updated = keyword;
 
-      if (udpatedkeyword && keyword) {
-         const newPos = udpatedkeyword.position;
-         const { history } = keyword;
-         const theDate = new Date();
-         const dateKey = `${theDate.getFullYear()}-${theDate.getMonth() + 1}-${theDate.getDate()}`;
-         history[dateKey] = newPos;
+   if (udpatedkeyword && keyword) {
+      const newPos = udpatedkeyword.position;
+      const { history } = keyword;
+      const theDate = new Date();
+      const dateKey = `${theDate.getFullYear()}-${theDate.getMonth() + 1}-${theDate.getDate()}`;
+      history[dateKey] = newPos;
 
-         const updatedVal = {
-            position: newPos,
-            updating: false,
-            url: udpatedkeyword.url,
-            lastResult: udpatedkeyword.result,
-            history,
-            lastUpdated: udpatedkeyword.error ? keyword.lastUpdated : theDate.toJSON(),
-            lastUpdateError: udpatedkeyword.error
-               ? JSON.stringify({ date: theDate.toJSON(), error: `${udpatedkeyword.error}`, scraper: settings.scraper_type })
-               : 'false',
-         };
+      const updatedVal = {
+         position: newPos,
+         updating: false,
+         url: udpatedkeyword.url,
+         lastResult: udpatedkeyword.result,
+         history,
+         lastUpdated: udpatedkeyword.error ? keyword.lastUpdated : theDate.toJSON(),
+         lastUpdateError: udpatedkeyword.error
+            ? JSON.stringify({ date: theDate.toJSON(), error: `${udpatedkeyword.error}`, scraper: settings.scraper_type })
+            : 'false',
+      };
 
-         // If failed, Add to Retry Queue Cron
-         if (udpatedkeyword.error && settings?.scrape_retry) {
-            await retryScrape(keyword.ID);
-         } else {
-            await removeFromRetryQueue(keyword.ID);
-         }
 
-         // Update the Keyword Position in Database
+      if (udpatedkeyword.error) {
          try {
-            await keywordRaw.update({
-               ...updatedVal,
-               lastResult: Array.isArray(udpatedkeyword.result) ? JSON.stringify(udpatedkeyword.result) : udpatedkeyword.result,
-               history: JSON.stringify(history),
+            await FailedJob.create({
+               payload: JSON.stringify({
+                  keyword_id: keyword.ID,
+                  keyword: keyword.keyword,
+                  domain: keyword.domain,
+                  error: udpatedkeyword.error,
+                  scraper_type: settings.scraper_type,
+                  failed_at: new Date().toISOString()
+               })
             });
-            console.log('[SUCCESS] Updating the Keyword: ', keyword.keyword);
-            updated = { ...keyword, ...updatedVal, lastUpdateError: JSON.parse(updatedVal.lastUpdateError) };
-         } catch (error) {
-            console.log('[ERROR] Updating SERP for Keyword', keyword.keyword, error);
+         } catch (loggingError) {
+            console.error('[ERROR] Failed to log to failed_jobs table:', loggingError);
          }
+
+         if (settings?.scrape_retry) {
+            await retryScrape(keyword.ID);
+         }
+      } else {
+         await removeFromRetryQueue(keyword.ID);
       }
 
-      return updated;
+      // Update the Keyword Position in Database
+      try {
+         await keywordRaw.update({
+            ...updatedVal,
+            lastResult: Array.isArray(udpatedkeyword.result) ? JSON.stringify(udpatedkeyword.result) : udpatedkeyword.result,
+            history: JSON.stringify(history),
+         });
+         console.log('[SUCCESS] Updating the Keyword: ', keyword.keyword);
+         updated = { ...keyword, ...updatedVal, lastUpdateError: JSON.parse(updatedVal.lastUpdateError) };
+      } catch (error) {
+         console.log('[ERROR] Updating SERP for Keyword', keyword.keyword, error);
+      }
+   }
+
+   return updated;
 };
 
 /**
@@ -119,7 +137,7 @@ export const updateKeywordPosition = async (keywordRaw:Keyword, udpatedkeyword: 
  * @param {SettingsType} settings - The App Settings that contain the Scraper settings
  * @returns {Promise}
  */
-const refreshParallel = async (keywords:KeywordType[], settings:SettingsType) : Promise<RefreshResult[]> => {
+const refreshParallel = async (keywords: KeywordType[], settings: SettingsType): Promise<RefreshResult[]> => {
    const promises: Promise<RefreshResult>[] = keywords.map((keyword) => {
       return scrapeKeywordFromGoogle(keyword, settings);
    });

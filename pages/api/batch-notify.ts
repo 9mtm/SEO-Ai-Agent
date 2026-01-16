@@ -95,7 +95,7 @@ const batchNotify = async (req: NextApiRequest, res: NextApiResponse<BatchNotify
                 sentCount++;
 
                 // Small delay between emails to avoid rate limiting
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 20000));
             } catch (error) {
                 console.error(`[ERROR] Failed to send notification for ${domain.domain}:`, error);
                 failedCount++;
@@ -131,6 +131,10 @@ const sendNotificationEmail = async (domain: Domain, settings: SettingsType) => 
     const smtp_encryption = process.env.SMTP_ENCRYPTION || 'tls';
 
     const { notification_email = '', notification_interval = 'monthly' } = settings;
+
+    // Ensure notification type is valid for DB enum (daily, weekly, monthly)
+    const validTypes = ['daily', 'weekly', 'monthly'];
+    const logType = validTypes.includes(notification_interval) ? notification_interval : 'monthly';
 
     const fromEmail = `${notification_email_from_name} <${notification_email_from || 'no-reply@seo-ai-agent.com'}>`;
     const mailerSettings: any = {
@@ -190,7 +194,7 @@ const sendNotificationEmail = async (domain: Domain, settings: SettingsType) => 
             user_id: userId,
             domain: domainName,
             notification_email: recipientEmail,
-            notification_type: notification_interval as 'daily' | 'weekly' | 'monthly',
+            notification_type: logType as 'daily' | 'weekly' | 'monthly',
             sent_at: new Date(),
             status: 'success',
             keywords_count: keywords.length,
@@ -204,7 +208,7 @@ const sendNotificationEmail = async (domain: Domain, settings: SettingsType) => 
             user_id: userId,
             domain: domainName,
             notification_email: recipientEmail,
-            notification_type: notification_interval as 'daily' | 'weekly' | 'monthly',
+            notification_type: logType as 'daily' | 'weekly' | 'monthly',
             sent_at: new Date(),
             status: 'failed',
             keywords_count: keywords.length,

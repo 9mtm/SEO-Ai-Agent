@@ -287,7 +287,7 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
       .replace('{{dashboardUrl}}', 'https://seo-agent.net?utm_source=email_report&utm_medium=email&utm_campaign=daily_rankings')
       .replace('{{unsubscribeUrl}}', unsubscribeUrl)
       .replace('{{stat}}', statHtml)
-      .replace('{{preheader}}', `${improved} ${t('email.improved')}, ${declined} ${t('email.declined')}`);
+      .replace('{{preheader}}', '');
 
    const htmlWithSCStats = await generateGoogeleConsoleStats(domainName, t);
    const emailHTML = updatedEmail.replace('{{SCStatsTable}}', htmlWithSCStats);

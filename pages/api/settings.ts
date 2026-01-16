@@ -79,9 +79,41 @@ const updateSettings = async (req: NextApiRequest, res: NextApiResponse<Settings
 };
 
 export const getAppSettings = async (userId?: number): Promise<SettingsType> => {
+   // Default settings object
+   const defaultSettings: SettingsType = {
+      scraper_type: 'none',
+      scaping_api: '',
+      proxy: '',
+      scrape_delay: 'none',
+      scrape_retry: false,
+      notification_interval: 'never',
+      notification_email: '',
+      notification_email_from: '',
+      notification_email_from_name: 'SEO Ai Agent',
+      smtp_server: process.env.SMTP_HOST || '',
+      smtp_port: process.env.SMTP_PORT || '',
+      smtp_username: process.env.SMTP_USERNAME || '',
+      smtp_password: process.env.SMTP_PASSWORD || '',
+      smtp_from_env: !!(process.env.SMTP_HOST && process.env.SMTP_PORT),
+      screenshot_key: '',
+      google_connected: false,
+      search_console: true,
+      search_console_integrated: false,
+      search_console_client_email: '',
+      search_console_private_key: '',
+      available_scapers: allScrapers.map((scraper) => ({ label: scraper.name, value: scraper.id, allowsCity: !!scraper.allowsCity })),
+      failed_queue: [],
+      adwords_client_id: '',
+      adwords_client_secret: '',
+      adwords_developer_token: '',
+      adwords_account_id: '',
+      keywordsColumns: ['Best', 'History', 'Volume', 'Search Console'],
+   };
+
    try {
       if (!userId) {
-         throw new Error('User ID is required');
+         // If no user ID provided (e.g. system batch process), return defaults
+         return defaultSettings;
       }
 
       const user = await User.findByPk(userId);
@@ -148,38 +180,6 @@ export const getAppSettings = async (userId?: number): Promise<SettingsType> => 
       return settings;
    } catch (error) {
       console.log('[ERROR] Getting App Settings. ', error);
-
-      // Return default settings on error
-      const defaultSettings: SettingsType = {
-         scraper_type: 'none',
-         scaping_api: '',
-         proxy: '',
-         scrape_delay: 'none',
-         scrape_retry: false,
-         notification_interval: 'never',
-         notification_email: '',
-         notification_email_from: '',
-         notification_email_from_name: 'SEO AI Agent',
-         smtp_server: process.env.SMTP_HOST || '',
-         smtp_port: process.env.SMTP_PORT || '',
-         smtp_username: process.env.SMTP_USERNAME || '',
-         smtp_password: process.env.SMTP_PASSWORD || '',
-         smtp_from_env: !!(process.env.SMTP_HOST && process.env.SMTP_PORT),
-         screenshot_key: '',
-         google_connected: false,
-         search_console: true,
-         search_console_integrated: false,
-         search_console_client_email: '',
-         search_console_private_key: '',
-         available_scapers: allScrapers.map((scraper) => ({ label: scraper.name, value: scraper.id, allowsCity: !!scraper.allowsCity })),
-         failed_queue: [],
-         adwords_client_id: '',
-         adwords_client_secret: '',
-         adwords_developer_token: '',
-         adwords_account_id: '',
-         keywordsColumns: ['Best', 'History', 'Volume', 'Search Console'],
-      };
-
       return defaultSettings;
    }
 };
