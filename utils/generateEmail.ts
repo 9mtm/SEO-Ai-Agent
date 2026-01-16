@@ -143,10 +143,22 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
             const calcAvg = (arr: any[], key: string) => arr.length ? arr.reduce((sum, item) => sum + (item[key] || 0), 0) / arr.length : 0;
 
             const metrics = [
-               { label: 'Visits', key: 'clicks', type: 'total' },
-               { label: 'Impressions', key: 'impressions', type: 'total' },
-               { label: 'Avg Position', key: 'position', type: 'avg' },
-               { label: 'Avg CTR', key: 'ctr', type: 'avg', isPercent: true }
+               {
+                  label: 'Visits', key: 'clicks', type: 'total',
+                  bg: '#f5f3ff', border: '#ddd6fe', text: '#5b21b6', labelColor: '#7c3aed'
+               },
+               {
+                  label: 'Impressions', key: 'impressions', type: 'total',
+                  bg: '#ecfdf5', border: '#a7f3d0', text: '#065f46', labelColor: '#059669'
+               },
+               {
+                  label: 'Avg Position', key: 'position', type: 'avg',
+                  bg: '#eff6ff', border: '#bfdbfe', text: '#1e40af', labelColor: '#2563eb'
+               },
+               {
+                  label: 'Avg CTR', key: 'ctr', type: 'avg', isPercent: true,
+                  bg: '#fffbeb', border: '#fde68a', text: '#92400e', labelColor: '#d97706'
+               }
             ];
 
             let cardsHTML = '';
@@ -160,17 +172,17 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
                   diff = ((currentVal - prevVal) / prevVal) * 100;
                }
 
-               // Color Logic
-               let colorClass = '#64748b'; // Default
+               // Color Logic regarding the background of the card
+               // We keep the trend indicator logic separately
                let diffContent = '';
+               let trendColor = '#64748b'; // Default gray for trend text if needed
 
                if (prevVal === 0) {
-                  colorClass = '#94a3b8';
                   diffContent = '-';
+                  trendColor = '#94a3b8';
                } else {
-                  // For position, lower is better. So negative diff is good (Green).
                   const isPositive = metric.key === 'position' ? diff < 0 : diff > 0;
-                  colorClass = isPositive ? '#16a34a' : '#dc2626';
+                  trendColor = isPositive ? '#16a34a' : '#dc2626'; // Green or Red for the trend arrow
                   const arrow = diff === 0 ? '' : (diff > 0 ? '▲' : '▼');
                   diffContent = `${arrow} ${Math.abs(diff).toFixed(1)}%`;
                }
@@ -181,10 +193,10 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
                else displayVal = Math.round(currentVal).toLocaleString();
 
                cardsHTML += `
-                    <td class="traffic-card" width="23%" style="padding: 10px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
-                        <span class="traffic-label" style="display:block; margin-bottom:5px; font-size:10px; color:#64748B; font-weight:600; text-transform:uppercase;">${metric.label}</span>
-                        <span class="traffic-number" style="font-size: 18px; display:block; margin-bottom:4px; font-weight:700; color:#1E293B;">${displayVal}</span>
-                        <span style="font-size: 11px; font-weight: 600; color: ${colorClass};">
+                    <td class="traffic-card" width="23%" valign="top" style="padding: 15px; background: ${metric.bg}; border: 1px solid ${metric.border}; border-radius: 10px; text-align: center;">
+                        <span class="traffic-label" style="display:block; margin-bottom:6px; font-size:11px; color:${metric.labelColor}; font-weight:700; text-transform:uppercase;">${metric.label}</span>
+                        <span class="traffic-number" style="font-size: 20px; display:block; margin-bottom:4px; font-weight:800; color:${metric.text};">${displayVal}</span>
+                        <span style="font-size: 11px; font-weight: 700; color: ${trendColor};">
                            ${diffContent}
                         </span>
                     </td>
