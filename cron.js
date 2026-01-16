@@ -1,9 +1,34 @@
 /* eslint-disable no-new */
 const Cryptr = require('cryptr');
-const { promises } = require('fs');
+const { promises, createWriteStream, existsSync, mkdirSync } = require('fs');
 const { readFile } = require('fs');
+const path = require('path');
 const { Cron } = require('croner');
 require('dotenv').config({ path: './.env.local' });
+
+// --- LOGGER SETUP ---
+const logDir = path.join(process.cwd(), 'logs');
+if (!existsSync(logDir)) {
+   mkdirSync(logDir);
+}
+
+const accessLogStream = createWriteStream(path.join(logDir, 'cron.log'), { flags: 'a' });
+const errorLogStream = createWriteStream(path.join(logDir, 'cron.error.log'), { flags: 'a' });
+
+const originalLog = console.log;
+console.log = function (...args) {
+   const msg = `[${new Date().toISOString()}] [INFO] ${args.join(' ')}\n`;
+   accessLogStream.write(msg);
+   originalLog.apply(console, args);
+};
+
+const originalError = console.error;
+console.error = function (...args) {
+   const msg = `[${new Date().toISOString()}] [ERROR] ${args.join(' ')}\n`;
+   errorLogStream.write(msg);
+   originalError.apply(console, args);
+};
+// --------------------
 
 const getAppSettings = async () => {
    const defaultSettings = {
