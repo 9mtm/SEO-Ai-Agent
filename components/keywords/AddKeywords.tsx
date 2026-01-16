@@ -19,7 +19,8 @@ type KeywordsInput = {
    country: string,
    domain: string,
    tags: string,
-   city?:string,
+   city?: string,
+   track_competitors?: boolean,
 }
 
 const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCity = false }: AddKeywordsProps) => {
@@ -28,7 +29,7 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
 
    const [error, setError] = useState<string>('');
    const [showTagSuggestions, setShowTagSuggestions] = useState(false);
-   const [newKeywordsData, setNewKeywordsData] = useState<KeywordsInput>({ keywords: '', device: 'desktop', country: defCountry, domain, tags: '' });
+   const [newKeywordsData, setNewKeywordsData] = useState<KeywordsInput>({ keywords: '', device: 'desktop', country: defCountry, domain, tags: '', track_competitors: false });
    const { mutate: addMutate, isPending: isAdding } = useAddKeywords(() => closeModal(false));
 
    const existingTags: string[] = useMemo(() => {
@@ -36,7 +37,7 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
       return [...new Set(allTags)];
    }, [keywords]);
 
-   const setDeviceType = useCallback((input:string) => {
+   const setDeviceType = useCallback((input: string) => {
       let updatedDevice = '';
       if (newKeywordsData.device.includes(input)) {
          updatedDevice = newKeywordsData.device.replace(',', '').replace(input, '');
@@ -64,16 +65,17 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
          } else {
             const newKeywords = keywordsArray.flatMap((k) =>
                devices.filter((device) =>
-                 !currentKeywords.includes(`${k}-${device}-${nkwrds.country}${nkwrds.city ? `-${nkwrds.city}` : ''}`),
+                  !currentKeywords.includes(`${k}-${device}-${nkwrds.country}${nkwrds.city ? `-${nkwrds.city}` : ''}`),
                ).map((device) => ({
-                 keyword: k,
-                 device,
-                 country: nkwrds.country,
-                 domain: nkwrds.domain,
-                 tags: nkwrds.tags,
-                 city: nkwrds.city,
+                  keyword: k,
+                  device,
+                  country: nkwrds.country,
+                  domain: nkwrds.domain,
+                  tags: nkwrds.tags,
+                  city: nkwrds.city,
+                  track_competitors: nkwrds.track_competitors,
                })),
-             );
+            );
             addMutate(newKeywords);
          }
       } else {
@@ -99,33 +101,33 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
 
                <div className=' my-3 flex justify-between text-sm'>
                   <div>
-                  <SelectField
-                     multiple={false}
-                     selected={[newKeywordsData.country]}
-                     options={Object.keys(countries).map((countryISO:string) => { return { label: countries[countryISO][0], value: countryISO }; })}
-                     defaultLabel='All Countries'
-                     updateField={(updated:string[]) => {
-                        setNewKeywordsData({ ...newKeywordsData, country: updated[0] });
-                        localStorage.setItem('default_country', updated[0]);
-                     }}
-                     rounded='rounded'
-                     maxHeight={48}
-                     flags={true}
-                  />
+                     <SelectField
+                        multiple={false}
+                        selected={[newKeywordsData.country]}
+                        options={Object.keys(countries).map((countryISO: string) => { return { label: countries[countryISO][0], value: countryISO }; })}
+                        defaultLabel='All Countries'
+                        updateField={(updated: string[]) => {
+                           setNewKeywordsData({ ...newKeywordsData, country: updated[0] });
+                           localStorage.setItem('default_country', updated[0]);
+                        }}
+                        rounded='rounded'
+                        maxHeight={48}
+                        flags={true}
+                     />
                   </div>
                   <ul className='flex text-xs font-semibold text-gray-500'>
                      <li
                         className={`${deviceTabStyle} mr-2 ${newKeywordsData.device.includes('desktop') ? '  bg-indigo-50 text-indigo-700' : ''}`}
                         onClick={() => setDeviceType('desktop')}>
-                           <Icon type='desktop' classes={'top-[3px]'} size={15} /> <i className='not-italic hidden lg:inline-block'>Desktop</i>
-                           <Icon type='check' classes={'pl-1'} size={12} color={newKeywordsData.device.includes('desktop') ? '#4338ca' : '#bbb'} />
-                        </li>
+                        <Icon type='desktop' classes={'top-[3px]'} size={15} /> <i className='not-italic hidden lg:inline-block'>Desktop</i>
+                        <Icon type='check' classes={'pl-1'} size={12} color={newKeywordsData.device.includes('desktop') ? '#4338ca' : '#bbb'} />
+                     </li>
                      <li
                         className={`${deviceTabStyle} ${newKeywordsData.device.includes('mobile') ? '  bg-indigo-50 text-indigo-700' : ''}`}
                         onClick={() => setDeviceType('mobile')}>
-                           <Icon type='mobile' /> <i className='not-italic hidden lg:inline-block'>Mobile</i>
-                           <Icon type='check' classes={'pl-1'} size={12} color={newKeywordsData.device.includes('mobile') ? '#4338ca' : '#bbb'} />
-                        </li>
+                        <Icon type='mobile' /> <i className='not-italic hidden lg:inline-block'>Mobile</i>
+                        <Icon type='check' classes={'pl-1'} size={12} color={newKeywordsData.device.includes('mobile') ? '#4338ca' : '#bbb'} />
+                     </li>
                   </ul>
                </div>
                <div className='relative'>
@@ -144,18 +146,18 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
                      bg-white border border-t-0 border-gray-200 rounded rounded-t-none w-full`}>
                         {existingTags.length > 0 && existingTags.map((tag, index) => {
                            return newKeywordsData.tags.split(',').map((t) => t.trim()).includes(tag) === false && <li
-                                    className=' p-2 cursor-pointer hover:text-indigo-600 hover:bg-indigo-50 transition'
-                                    key={index}
-                                    onClick={() => {
-                                       const tagInput = newKeywordsData.tags;
-                                       // eslint-disable-next-line no-nested-ternary
-                                       const tagToInsert = tagInput + (tagInput.trim().slice(-1) === ',' ? '' : (tagInput.trim() ? ', ' : '')) + tag;
-                                       setNewKeywordsData({ ...newKeywordsData, tags: tagToInsert });
-                                       setShowTagSuggestions(false);
-                                       if (inputRef?.current) (inputRef.current as HTMLInputElement).focus();
-                                    }}>
-                                       <Icon type='tags' size={14} color='#bbb' /> {tag}
-                                    </li>;
+                              className=' p-2 cursor-pointer hover:text-indigo-600 hover:bg-indigo-50 transition'
+                              key={index}
+                              onClick={() => {
+                                 const tagInput = newKeywordsData.tags;
+                                 // eslint-disable-next-line no-nested-ternary
+                                 const tagToInsert = tagInput + (tagInput.trim().slice(-1) === ',' ? '' : (tagInput.trim() ? ', ' : '')) + tag;
+                                 setNewKeywordsData({ ...newKeywordsData, tags: tagToInsert });
+                                 setShowTagSuggestions(false);
+                                 if (inputRef?.current) (inputRef.current as HTMLInputElement).focus();
+                              }}>
+                              <Icon type='tags' size={14} color='#bbb' /> {tag}
+                           </li>;
                         })}
                         {existingTags.length === 0 && <p>No Existing Tags Found... </p>}
                      </ul>
@@ -173,18 +175,33 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
                   />
                   <span className='absolute text-gray-400 top-2 left-2'><Icon type="city" size={16} /></span>
                </div>
+
+               {/* Track Competitors Checkbox */}
+               <div className='mt-3 flex items-center gap-2'>
+                  <input
+                     type="checkbox"
+                     id="track_competitors"
+                     className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 cursor-pointer'
+                     checked={newKeywordsData.track_competitors}
+                     onChange={(e) => setNewKeywordsData({ ...newKeywordsData, track_competitors: e.target.checked })}
+                  />
+                  <label htmlFor="track_competitors" className='text-sm text-gray-700 cursor-pointer select-none'>
+                     <Icon type="users" size={14} classes="inline mr-1" />
+                     Track Competitors (will automatically check competitor rankings)
+                  </label>
+               </div>
             </div>
             {error && <div className='w-full mt-4 p-3 text-sm bg-red-50 text-red-700'>{error}</div>}
             <div className='mt-6 text-right text-sm font-semibold flex justify-between'>
                <button
                   className=' py-2 px-5 rounded cursor-pointer bg-indigo-50 text-slate-500 mr-3'
                   onClick={() => closeModal(false)}>
-                     Cancel
+                  Cancel
                </button>
                <button
                   className=' py-2 px-5 rounded cursor-pointer bg-blue-700 text-white'
                   onClick={() => !isAdding && addKeywords()}>
-                     {isAdding ? 'Adding....' : 'Add Keywords'}
+                  {isAdding ? 'Adding....' : 'Add Keywords'}
                </button>
             </div>
          </div>

@@ -14,10 +14,16 @@ import { useFetchDomains } from '../../../services/domains';
 import { useFetchKeywords } from '../../../services/keywords';
 import { useFetchSettings } from '../../../services/settings';
 import AddKeywords from '../../../components/keywords/AddKeywords';
+import CompetitorsTable from '../../../components/keywords/CompetitorsTable';
+import ManageCompetitors from '../../../components/domains/ManageCompetitors';
+import { useRefreshCompetitors } from '../../../services/competitors';
+import toast, { Toaster } from 'react-hot-toast';
 
 const SingleDomain: NextPage = () => {
     const router = useRouter();
     const [showAddKeywords, setShowAddKeywords] = useState(false);
+    const [showManageCompetitors, setShowManageCompetitors] = useState(false);
+    const [activeTab, setActiveTab] = useState<'keywords' | 'competitors'>('keywords');
 
 
     const [keywordSPollInterval, setKeywordSPollInterval] = useState<undefined | number>(undefined);
@@ -42,8 +48,15 @@ const SingleDomain: NextPage = () => {
     }, [activDomain]);
 
     const { keywordsData, keywordsLoading } = useFetchKeywords(router, activDomain?.domain || '', setKeywordSPollInterval, keywordSPollInterval);
+    const { mutate: refreshCompetitors, isPending: isRefreshing } = useRefreshCompetitors(() => { });
     const theDomains: DomainType[] = (domainsData && domainsData.domains) || [];
     const theKeywords: KeywordType[] = keywordsData && keywordsData.keywords;
+
+    const handleRefreshCompetitors = () => {
+        if (activDomain) {
+            refreshCompetitors({ domain: activDomain.domain });
+        }
+    };
 
     return (
         <DashboardLayout
@@ -76,19 +89,58 @@ const SingleDomain: NextPage = () => {
                         showAddModal={setShowAddKeywords}
 
                         exportCsv={() => exportCSV(theKeywords, activDomain.domain)}
+                        onRefreshCompetitors={activeTab === 'competitors' ? handleRefreshCompetitors : undefined}
+                        isRefreshingCompetitors={isRefreshing}
                     />
                 ) : (
                     <div className='w-full lg:h-[100px]'></div>
                 )}
-                <KeywordsTable
-                    isPending={keywordsLoading}
-                    domain={activDomain}
-                    keywords={theKeywords}
-                    showAddModal={showAddKeywords}
-                    setShowAddModal={setShowAddKeywords}
-                    isConsoleIntegrated={!!(appSettings && appSettings.search_console_integrated) || domainHasScAPI}
-                    settings={appSettings}
-                />
+
+                {/* Tabs */}
+                <div className="flex gap-2 mb-4 border-b border-gray-200">
+                    <button
+                        className={`px-4 py-2 font-medium text-sm transition-colors ${activeTab === 'keywords'
+                            ? 'border-b-2 border-blue-600 text-blue-600'
+                            : 'text-gray-600 hover:text-gray-900'
+                            }`}
+                        onClick={() => setActiveTab('keywords')}
+                    >
+                        Keywords
+                    </button>
+                    <button
+                        className={`px-4 py-2 font-medium text-sm transition-colors ${activeTab === 'competitors'
+                            ? 'border-b-2 border-blue-600 text-blue-600'
+                            : 'text-gray-600 hover:text-gray-900'
+                            }`}
+                        onClick={() => setActiveTab('competitors')}
+                    >
+                        Competitors
+                    </button>
+                </div>
+
+                {/* Keywords Tab Content */}
+                {activeTab === 'keywords' && (
+                    <KeywordsTable
+                        isPending={keywordsLoading}
+                        domain={activDomain}
+                        keywords={theKeywords}
+                        showAddModal={showAddKeywords}
+                        setShowAddModal={setShowAddKeywords}
+                        isConsoleIntegrated={!!(appSettings && appSettings.search_console_integrated) || domainHasScAPI}
+                        settings={appSettings}
+                    />
+                )}
+
+                {/* Competitors Tab Content */}
+                {activeTab === 'competitors' && (
+                    <CompetitorsTable
+                        isPending={keywordsLoading}
+                        domain={activDomain}
+                        keywords={theKeywords}
+                        isConsoleIntegrated={!!(appSettings && appSettings.search_console_integrated) || domainHasScAPI}
+                        settings={appSettings}
+                    />
+                )}
             </div>
 
 
@@ -102,6 +154,17 @@ const SingleDomain: NextPage = () => {
                     closeModal={() => setShowAddKeywords(false)}
                 />
             </CSSTransition>
+
+            <CSSTransition in={showManageCompetitors} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
+                {activDomain && (
+                    <ManageCompetitors
+                        domain={activDomain}
+                        closeModal={() => setShowManageCompetitors(false)}
+                    />
+                )}
+            </CSSTransition>
+
+            <Toaster position='bottom-center' containerClassName="react_toaster" />
         </DashboardLayout>
     );
 };

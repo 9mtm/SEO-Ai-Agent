@@ -155,7 +155,8 @@ type KeywordAddPayload = {
    country: string,
    domain: string,
    tags?: string,
-   city?: string
+   city?: string,
+   track_competitors?: boolean
 }
 
 type SearchAnalyticsRawItem = {

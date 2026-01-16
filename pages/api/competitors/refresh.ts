@@ -95,34 +95,46 @@ async function processCompetitorRefresh(
             const competitorPositions: Record<string, number> = {};
 
             try {
-                // Check each competitor sequentially
-                for (const competitor of competitors) {
-                    try {
-                        const cleanCompetitor = competitor.replace(/^https?:\/\//, '').replace(/\/$/, '');
+                console.log(`\n[COMPETITOR SCRAPE] Keyword: "${keyword.keyword}" - Checking ${competitors.length} competitors`);
 
-                        console.log(`\n[COMPETITOR SCRAPE] Keyword: "${keyword.keyword}" | Competitor: "${cleanCompetitor}"`);
+                // Use original keyword (don't change domain) to get all search results
+                const keywordData: KeywordType = keyword.get({ plain: true });
 
-                        // Use original keyword (don't change domain) to get all search results
-                        const keywordData: KeywordType = keyword.get({ plain: true });
+                // ✅ Scrape ONCE per keyword (not once per competitor!)
+                const result = await scrapeKeywordFromGoogle(keywordData, settings);
 
-                        // Scrape using existing scraper
-                        const result = await scrapeKeywordFromGoogle(keywordData, settings);
+                // Log all scraped URLs
+                if (result && result.result && Array.isArray(result.result) && result.result.length > 0) {
+                    console.log(`[SCRAPED RESULTS] Found ${result.result.length} results for "${keyword.keyword}":`);
+                    result.result.forEach((r: any, idx: number) => {
+                        console.log(`  ${idx + 1}. ${r.url}`);
+                    });
 
-                        // Log all scraped URLs
-                        if (result && result.result && Array.isArray(result.result) && result.result.length > 0) {
-                            console.log(`[SCRAPED RESULTS] Found ${result.result.length} results for "${keyword.keyword}":`);
-                            result.result.forEach((r: any, idx: number) => {
-                                console.log(`  ${idx + 1}. ${r.url}`);
-                            });
+                    // ✅ Check ALL competitors in the SAME results
+                    for (const competitor of competitors) {
+                        try {
+                            const cleanCompetitor = competitor.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
-                            // Manually find competitor position in results
+                            console.log(`\n[CHECKING COMPETITOR] "${cleanCompetitor}"`);
+
+                            // Find competitor position in results
                             const competitorIndex = result.result.findIndex((r: any) => {
                                 try {
-                                    const resultURL = new URL(r.url.includes('https://') ? r.url : `https://${r.url}`);
-                                    const resultHost = resultURL.hostname.replace(/^www\./, '');
+                                    // Clean the result URL
+                                    let resultUrl = r.url || '';
+                                    resultUrl = resultUrl.replace(/^https?:\/\//, '');
+                                    resultUrl = resultUrl.replace(/\/$/, '');
+                                    resultUrl = resultUrl.replace(/^www\./, '');
+                                    const resultHost = resultUrl.split('/')[0];
+
+                                    // Clean competitor
                                     const competitorHost = cleanCompetitor.replace(/^www\./, '');
+
+                                    console.log(`  Comparing: "${resultHost}" === "${competitorHost}"`);
+
                                     return resultHost === competitorHost;
-                                } catch {
+                                } catch (error) {
+                                    console.error(`  Error comparing URL: ${r.url}`, error);
                                     return false;
                                 }
                             });
@@ -130,19 +142,20 @@ async function processCompetitorRefresh(
                             const position = competitorIndex >= 0 ? competitorIndex + 1 : 0;
                             competitorPositions[cleanCompetitor] = position;
                             console.log(`[COMPETITOR RESULT] Keyword: "${keyword.keyword}" | Competitor: "${cleanCompetitor}" | Position: ${position}`);
-                        } else {
-                            console.log(`[SCRAPED RESULTS] No results found for "${keyword.keyword}"`);
+                        } catch (error) {
+                            console.error(`Error checking competitor ${competitor}:`, error);
+                            const cleanCompetitor = competitor.replace(/^https?:\/\//, '').replace(/\/$/, '');
                             competitorPositions[cleanCompetitor] = 0;
-                            console.log(`[COMPETITOR RESULT] Keyword: "${keyword.keyword}" | Competitor: "${cleanCompetitor}" | Position: 0`);
                         }
-
-                        // Small delay between requests to avoid rate limiting
-                        await new Promise(resolve => setTimeout(resolve, 5000));
-                    } catch (error) {
-                        console.error(`Error scraping competitor ${competitor}:`, error);
+                    }
+                } else {
+                    console.log(`[SCRAPED RESULTS] No results found for "${keyword.keyword}"`);
+                    // Set all competitors to position 0
+                    competitors.forEach(competitor => {
                         const cleanCompetitor = competitor.replace(/^https?:\/\//, '').replace(/\/$/, '');
                         competitorPositions[cleanCompetitor] = 0;
-                    }
+                        console.log(`[COMPETITOR RESULT] Keyword: "${keyword.keyword}" | Competitor: "${cleanCompetitor}" | Position: 0`);
+                    });
                 }
 
                 // Update keyword with competitor positions

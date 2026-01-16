@@ -8,6 +8,7 @@ import parseKeywords from '../../utils/parseKeywords';
 import { integrateKeywordSCData, readLocalSCData } from '../../utils/searchConsole';
 import refreshAndUpdateKeywords from '../../utils/refresh';
 import { getKeywordsVolume, updateKeywordsVolumeData } from '../../utils/adwords';
+import Domain from '../../database/models/domain';
 
 type KeywordsGetResponse = {
    keywords?: KeywordType[],
@@ -107,7 +108,7 @@ const addKeywords = async (
       const keywordsToAdd: any = []; // QuickFIX for bug: https://github.com/sequelize/sequelize-typescript/issues/936
 
       keywords.forEach((kwrd: KeywordAddPayload) => {
-         const { keyword, device, country, domain, tags, city } = kwrd;
+         const { keyword, device, country, domain, tags, city, track_competitors } = kwrd;
          const tagsArray = tags ? tags.split(',').map((item: string) => item.trim()) : [];
          const newKeyword: any = {
             keyword,
@@ -123,6 +124,7 @@ const addKeywords = async (
             sticky: false,
             lastUpdated: new Date().toJSON(),
             added: new Date().toJSON(),
+            updating_competitors: track_competitors || false,
          };
 
          // Add user_id for multi-tenant mode
@@ -153,6 +155,75 @@ const addKeywords = async (
             const keywordsVolumeData = await getKeywordsVolume(keywordsParsed);
             if (keywordsVolumeData.volumes !== false) {
                await updateKeywordsVolumeData(keywordsVolumeData.volumes);
+            }
+         }
+
+         // Track competitors if requested
+         const keywordsWithCompetitors = keywords.filter((k: KeywordAddPayload) => k.track_competitors);
+         if (keywordsWithCompetitors.length > 0) {
+            // Get domain to check if competitors are configured
+            const firstKeyword = keywordsWithCompetitors[0];
+            const domainRecord = await Domain.findOne({ where: { domain: firstKeyword.domain, user_id: settingsUserId } });
+
+            if (domainRecord && domainRecord.competitors && domainRecord.competitors.length > 0) {
+               // Trigger competitor refresh for new keywords
+               const newKeywordIds = newKeywords
+                  .filter(k => keywordsWithCompetitors.some(kwc =>
+                     kwc.keyword === k.keyword && kwc.device === k.device && kwc.country === k.country
+                  ))
+                  .map(k => k.ID);
+
+               if (newKeywordIds.length > 0) {
+                  // Import and trigger competitor refresh
+                  const { scrapeKeywordFromGoogle } = await import('../../utils/scraper');
+
+                  // Process competitors in background
+                  (async () => {
+                     for (const keywordId of newKeywordIds) {
+                        const keyword = newKeywords.find(k => k.ID === keywordId);
+                        if (!keyword) continue;
+
+                        const competitorPositions: Record<string, number> = {};
+
+                        const competitors = domainRecord.competitors || [];
+                        for (const competitor of competitors) {
+                           try {
+                              const cleanCompetitor = competitor.replace(/^https?:\/\//, '').replace(/\/$/, '');
+                              const keywordData: KeywordType = keyword.get({ plain: true });
+                              const result = await scrapeKeywordFromGoogle(keywordData, settings);
+
+                              if (result && result.result && Array.isArray(result.result) && result.result.length > 0) {
+                                 const competitorIndex = result.result.findIndex((r: any) => {
+                                    try {
+                                       const resultURL = new URL(r.url.includes('https://') ? r.url : `https://${r.url}`);
+                                       const resultHost = resultURL.hostname.replace(/^www\./, '');
+                                       const competitorHost = cleanCompetitor.replace(/^www\./, '');
+                                       return resultHost === competitorHost;
+                                    } catch {
+                                       return false;
+                                    }
+                                 });
+
+                                 competitorPositions[cleanCompetitor] = competitorIndex >= 0 ? competitorIndex + 1 : 0;
+                              } else {
+                                 competitorPositions[cleanCompetitor] = 0;
+                              }
+
+                              await new Promise(resolve => setTimeout(resolve, 5000));
+                           } catch (error) {
+                              console.error(`Error tracking competitor ${competitor}:`, error);
+                              const cleanCompetitor = competitor.replace(/^https?:\/\//, '').replace(/\/$/, '');
+                              competitorPositions[cleanCompetitor] = 0;
+                           }
+                        }
+
+                        await keyword.update({
+                           competitor_positions: competitorPositions,
+                           updating_competitors: false,
+                        });
+                     }
+                  })();
+               }
             }
          }
 
