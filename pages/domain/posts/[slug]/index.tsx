@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
+import TableSkeleton from '../../../../components/common/TableSkeleton';
 import { generateSEOArticlePrompt } from '@/lib/prompts';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import { useFetchDomains } from '../../../../services/domains';
@@ -117,7 +118,7 @@ export default function ArticleWriterPage() {
     const { slug } = router.query;
     const { data: domainsData } = useFetchDomains(router);
     const domain = domainsData?.domains?.find((d: any) => d.slug === slug) ||
-                   domainsData?.domains?.find((d: any) => d.domain === slug);
+        domainsData?.domains?.find((d: any) => d.domain === slug);
 
     // Redirect to correct slug if using domain name instead of slug
     useEffect(() => {
@@ -1034,73 +1035,92 @@ export default function ArticleWriterPage() {
     // Render List View
     if (view === 'list') {
         return (
-                <DashboardLayout domains={domainsData?.domains || []}>
-                    <Head><title>{`Posts - ${domain?.domain || 'SEO Agent'}`}</title></Head>
-                    <div className="h-full w-full p-6 space-y-6">
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h1 className="text-2xl font-bold tracking-tight">Articles</h1>
-                                <p className="text-neutral-500">Manage and optimize your blog content.</p>
-                            </div>
-                            <Button onClick={handleCreateNew} className="bg-black text-white hover:bg-neutral-800">
-                                <PenTool className="mr-2 h-4 w-4" /> New Article
-                            </Button>
+            <DashboardLayout domains={domainsData?.domains || []}>
+                <Head><title>{`Posts - ${domain?.domain || 'SEO Agent'}`}</title></Head>
+                <div className="h-full w-full p-6 space-y-6">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h1 className="text-2xl font-bold tracking-tight">Articles</h1>
+                            <p className="text-neutral-500">Manage and optimize your blog content.</p>
                         </div>
+                        <Button onClick={handleCreateNew} className="bg-black text-white hover:bg-neutral-800">
+                            <PenTool className="mr-2 h-4 w-4" /> New Article
+                        </Button>
+                    </div>
 
-                        <Tabs defaultValue="All" className="w-full mb-6" onValueChange={(v) => setListFilter(v as any)}>
-                            <TabsList>
-                                <TabsTrigger value="All">All Posts</TabsTrigger>
-                                <TabsTrigger value="Draft">Drafts</TabsTrigger>
-                                <TabsTrigger value="Published">Published</TabsTrigger>
-                            </TabsList>
-                        </Tabs>
+                    <Tabs defaultValue="All" className="w-full mb-6" onValueChange={(v) => setListFilter(v as any)}>
+                        <TabsList>
+                            <TabsTrigger value="All">All Posts</TabsTrigger>
+                            <TabsTrigger value="Draft">Drafts</TabsTrigger>
+                            <TabsTrigger value="Published">Published</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
 
-                        {isLoadingPosts ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {[1, 2, 3].map(i => <div key={i} className="h-48 bg-neutral-100 rounded-lg animate-pulse" />)}
+                    {isLoadingPosts ? (
+                        <TableSkeleton rows={5} />
+                    ) : postsList.length === 0 ? (
+                        <div className="text-center py-20 bg-neutral-50 rounded-lg border border-neutral-200 border-dashed">
+                            <div className="mx-auto bg-white p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4 shadow-sm">
+                                <PenTool className="h-8 w-8 text-neutral-400" />
                             </div>
-                        ) : postsList.length === 0 ? (
-                            <div className="text-center py-20 bg-neutral-50 rounded-lg border border-neutral-200 border-dashed">
-                                <div className="mx-auto bg-white p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4 shadow-sm">
-                                    <PenTool className="h-8 w-8 text-neutral-400" />
-                                </div>
-                                <h3 className="text-lg font-medium text-neutral-900">No articles found</h3>
-                                <p className="text-neutral-500 mb-6 max-w-sm mx-auto">Get started by creating your first AI-optimized article.</p>
-                                <Button onClick={handleCreateNew} variant="outline">Create Article</Button>
+                            <h3 className="text-lg font-medium text-neutral-900">No articles found</h3>
+                            <p className="text-neutral-500 mb-6 max-w-sm mx-auto">Get started by creating your first AI-optimized article.</p>
+                            <Button onClick={handleCreateNew} variant="outline">Create Article</Button>
+                        </div>
+                    ) : (
+                        <div className="bg-white rounded-lg border border-neutral-200 shadow-sm overflow-hidden">
+                            <div className="grid grid-cols-12 gap-4 p-4 border-b bg-neutral-50 font-medium text-sm text-neutral-500">
+                                <div className="col-span-12 lg:col-span-6">Article</div>
+                                <div className="col-span-2 hidden lg:block">Status</div>
+                                <div className="col-span-2 hidden lg:block">Last Updated</div>
+                                <div className="col-span-2 hidden lg:block text-right">Actions</div>
                             </div>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="divide-y divide-neutral-100">
                                 {postsList.map((post) => (
-                                    <Card key={post.id} className="cursor-pointer hover:shadow-md transition-shadow group" onClick={() => handleEditPost(post)}>
-                                        <div className="h-40 bg-neutral-100 relative overflow-hidden">
-                                            {post.featured_image ? (
-                                                // eslint-disable-next-line @next/next/no-img-element
-                                                <img src={post.featured_image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-neutral-400">
-                                                    <ImageIcon className="h-10 w-10 opacity-20" />
-                                                </div>
-                                            )}
-                                            <Badge className={`absolute top-3 right-3 ${post.status === 'publish' ? 'bg-green-500' : 'bg-amber-500'}`}>
+                                    <div key={post.id} className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-neutral-50 transition-colors group">
+                                        {/* Article Info */}
+                                        <div className="col-span-9 lg:col-span-6 flex items-center gap-4 cursor-pointer" onClick={() => handleEditPost(post)}>
+                                            <div className="h-12 w-16 bg-neutral-100 rounded-md overflow-hidden relative shrink-0 border border-neutral-200">
+                                                {post.featured_image ? (
+                                                    <img src={post.featured_image} alt={post.title} className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center text-neutral-400">
+                                                        <ImageIcon className="h-5 w-5 opacity-30" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="min-w-0">
+                                                <h3 className="font-medium text-neutral-900 truncate group-hover:text-blue-600 transition-colors" title={post.title}>{post.title}</h3>
+                                                <p className="text-xs text-neutral-500 truncate max-w-[300px]">{post.meta_description || 'No description'}</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Status */}
+                                        <div className="col-span-3 lg:col-span-2 flex items-center">
+                                            <Badge className={`px-2.5 py-0.5 rounded-full font-normal shadow-none ${post.status === 'publish' ? 'bg-green-100 text-green-700 hover:bg-green-200 border-green-200' : 'bg-amber-100 text-amber-700 hover:bg-amber-200 border-amber-200'}`}>
                                                 {post.status === 'publish' ? 'Published' : 'Draft'}
                                             </Badge>
                                         </div>
-                                        <CardContent className="p-5">
-                                            <h3 className="font-bold text-lg mb-2 line-clamp-2 leading-tight">{post.title}</h3>
-                                            <p className="text-sm text-neutral-500 line-clamp-2 mb-4 h-10">
-                                                {post.meta_description || 'No description...'}
-                                            </p>
-                                            <div className="flex justify-between items-center text-xs text-neutral-400 pt-3 border-t">
-                                                <span>{new Date(post.updated_at).toLocaleDateString()}</span>
-                                                {post.wp_post_id && <span className="flex items-center text-blue-500"><Globe className="h-3 w-3 mr-1" /> WP Linked</span>}
-                                            </div>
-                                        </CardContent>
-                                    </Card>
+
+                                        {/* Date */}
+                                        <div className="col-span-2 hidden lg:flex flex-col justify-center text-sm text-neutral-500">
+                                            <span>{new Date(post.updated_at).toLocaleDateString()}</span>
+                                            {post.wp_post_id && <span className="text-[10px] text-blue-500 flex items-center gap-1 bg-blue-50 px-1.5 py-0.5 rounded w-fit mt-1"><Globe className="h-3 w-3" /> WordPress</span>}
+                                        </div>
+
+                                        {/* Actions */}
+                                        <div className="col-span-2 hidden lg:flex justify-end gap-2">
+                                            <Button size="sm" variant="ghost" onClick={() => handleEditPost(post)} className="h-8 w-8 p-0 hover:bg-neutral-100">
+                                                <PenTool className="h-4 w-4 text-neutral-500" />
+                                            </Button>
+                                        </div>
+                                    </div>
                                 ))}
                             </div>
-                        )}
-                    </div>
-                </DashboardLayout>
+                        </div>
+                    )}
+                </div>
+            </DashboardLayout>
         );
     }
 
@@ -1114,680 +1134,656 @@ export default function ArticleWriterPage() {
             </Head>
 
             <div className="h-full w-full p-6 space-y-6">
-                    {/* Top Action Bar */}
-                    <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                            <Button variant="ghost" size="sm" onClick={() => setView('list')} className="text-neutral-500 hover:text-neutral-900 -ml-2">
-                                ← Back to Posts
+                {/* Top Action Bar */}
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                        <Button variant="ghost" size="sm" onClick={() => setView('list')} className="text-neutral-500 hover:text-neutral-900 -ml-2">
+                            ← Back to Posts
+                        </Button>
+                        <div className="flex items-center gap-3">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" className="h-9 px-3 gap-2 hover:bg-neutral-50">
+                                        <span className="text-sm font-medium">
+                                            {availableModels.find(m => m.id === selectedModel)?.name || 'Dpro'}
+                                        </span>
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="opacity-50">
+                                            <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="start" className="w-56">
+                                    {/* Dpro (Local) - Top Level */}
+                                    <DropdownMenuItem onClick={() => setSelectedModel('qwen-local')} className="font-medium">
+                                        Dpro
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuSeparator />
+
+                                    {/* OpenAI Models */}
+                                    {availableModels.filter(m => m.id.startsWith('gpt')).length > 0 && (
+                                        <DropdownMenuSub>
+                                            <DropdownMenuSubTrigger>
+                                                <span>OpenAI</span>
+                                            </DropdownMenuSubTrigger>
+                                            <DropdownMenuSubContent>
+                                                {availableModels.filter(m => m.id.startsWith('gpt')).map((model) => (
+                                                    <DropdownMenuItem key={model.id} onClick={() => setSelectedModel(model.id)}>
+                                                        {model.name}
+                                                    </DropdownMenuItem>
+                                                ))}
+                                            </DropdownMenuSubContent>
+                                        </DropdownMenuSub>
+                                    )}
+
+                                    {/* Google Models */}
+                                    {availableModels.filter(m => m.id.startsWith('gemini')).length > 0 && (
+                                        <DropdownMenuSub>
+                                            <DropdownMenuSubTrigger>
+                                                <span>Google</span>
+                                            </DropdownMenuSubTrigger>
+                                            <DropdownMenuSubContent>
+                                                {availableModels.filter(m => m.id.startsWith('gemini')).map((model) => (
+                                                    <DropdownMenuItem key={model.id} onClick={() => setSelectedModel(model.id)}>
+                                                        {model.name}
+                                                    </DropdownMenuItem>
+                                                ))}
+                                            </DropdownMenuSubContent>
+                                        </DropdownMenuSub>
+                                    )}
+
+                                    {/* Anthropic Models */}
+                                    {availableModels.filter(m => m.id.startsWith('claude')).length > 0 && (
+                                        <DropdownMenuSub>
+                                            <DropdownMenuSubTrigger>
+                                                <span>Anthropic</span>
+                                            </DropdownMenuSubTrigger>
+                                            <DropdownMenuSubContent>
+                                                {availableModels.filter(m => m.id.startsWith('claude')).map((model) => (
+                                                    <DropdownMenuItem key={model.id} onClick={() => setSelectedModel(model.id)}>
+                                                        {model.name}
+                                                    </DropdownMenuItem>
+                                                ))}
+                                            </DropdownMenuSubContent>
+                                        </DropdownMenuSub>
+                                    )}
+
+                                    {/* Perplexity Models */}
+                                    {availableModels.filter(m => m.id.startsWith('perplexity')).length > 0 && (
+                                        <DropdownMenuSub>
+                                            <DropdownMenuSubTrigger>
+                                                <span>Perplexity</span>
+                                            </DropdownMenuSubTrigger>
+                                            <DropdownMenuSubContent>
+                                                {availableModels.filter(m => m.id.startsWith('perplexity')).map((model) => (
+                                                    <DropdownMenuItem key={model.id} onClick={() => setSelectedModel(model.id)}>
+                                                        {model.name}
+                                                    </DropdownMenuItem>
+                                                ))}
+                                            </DropdownMenuSubContent>
+                                        </DropdownMenuSub>
+                                    )}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                            <Button
+                                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
+                                onClick={handleGenerate}
+                                disabled={isGenerating || !topic}
+                            >
+                                {isGenerating ? (
+                                    <>
+                                        <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                                        Generating...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Sparkles className="mr-2 h-4 w-4" />
+                                        Generate
+                                    </>
+                                )}
                             </Button>
-                            <div className="flex items-center gap-3">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline" className="h-9 px-3 gap-2 hover:bg-neutral-50">
-                                            <span className="text-sm font-medium">
-                                                {availableModels.find(m => m.id === selectedModel)?.name || 'Dpro'}
-                                            </span>
-                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="opacity-50">
-                                                <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="start" className="w-56">
-                                        {/* Dpro (Local) - Top Level */}
-                                        <DropdownMenuItem onClick={() => setSelectedModel('qwen-local')} className="font-medium">
-                                            Dpro
-                                        </DropdownMenuItem>
-
-                                        <DropdownMenuSeparator />
-
-                                        {/* OpenAI Models */}
-                                        {availableModels.filter(m => m.id.startsWith('gpt')).length > 0 && (
-                                            <DropdownMenuSub>
-                                                <DropdownMenuSubTrigger>
-                                                    <span>OpenAI</span>
-                                                </DropdownMenuSubTrigger>
-                                                <DropdownMenuSubContent>
-                                                    {availableModels.filter(m => m.id.startsWith('gpt')).map((model) => (
-                                                        <DropdownMenuItem key={model.id} onClick={() => setSelectedModel(model.id)}>
-                                                            {model.name}
-                                                        </DropdownMenuItem>
-                                                    ))}
-                                                </DropdownMenuSubContent>
-                                            </DropdownMenuSub>
-                                        )}
-
-                                        {/* Google Models */}
-                                        {availableModels.filter(m => m.id.startsWith('gemini')).length > 0 && (
-                                            <DropdownMenuSub>
-                                                <DropdownMenuSubTrigger>
-                                                    <span>Google</span>
-                                                </DropdownMenuSubTrigger>
-                                                <DropdownMenuSubContent>
-                                                    {availableModels.filter(m => m.id.startsWith('gemini')).map((model) => (
-                                                        <DropdownMenuItem key={model.id} onClick={() => setSelectedModel(model.id)}>
-                                                            {model.name}
-                                                        </DropdownMenuItem>
-                                                    ))}
-                                                </DropdownMenuSubContent>
-                                            </DropdownMenuSub>
-                                        )}
-
-                                        {/* Anthropic Models */}
-                                        {availableModels.filter(m => m.id.startsWith('claude')).length > 0 && (
-                                            <DropdownMenuSub>
-                                                <DropdownMenuSubTrigger>
-                                                    <span>Anthropic</span>
-                                                </DropdownMenuSubTrigger>
-                                                <DropdownMenuSubContent>
-                                                    {availableModels.filter(m => m.id.startsWith('claude')).map((model) => (
-                                                        <DropdownMenuItem key={model.id} onClick={() => setSelectedModel(model.id)}>
-                                                            {model.name}
-                                                        </DropdownMenuItem>
-                                                    ))}
-                                                </DropdownMenuSubContent>
-                                            </DropdownMenuSub>
-                                        )}
-
-                                        {/* Perplexity Models */}
-                                        {availableModels.filter(m => m.id.startsWith('perplexity')).length > 0 && (
-                                            <DropdownMenuSub>
-                                                <DropdownMenuSubTrigger>
-                                                    <span>Perplexity</span>
-                                                </DropdownMenuSubTrigger>
-                                                <DropdownMenuSubContent>
-                                                    {availableModels.filter(m => m.id.startsWith('perplexity')).map((model) => (
-                                                        <DropdownMenuItem key={model.id} onClick={() => setSelectedModel(model.id)}>
-                                                            {model.name}
-                                                        </DropdownMenuItem>
-                                                    ))}
-                                                </DropdownMenuSubContent>
-                                            </DropdownMenuSub>
-                                        )}
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                                <Button
-                                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
-                                    onClick={handleGenerate}
-                                    disabled={isGenerating || !topic}
-                                >
-                                    {isGenerating ? (
-                                        <>
-                                            <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                                            Generating...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Sparkles className="mr-2 h-4 w-4" />
-                                            Generate
-                                        </>
-                                    )}
-                                </Button>
-                                <Button
-                                    className="bg-black hover:bg-neutral-800 text-white"
-                                    onClick={handleSavePost}
-                                    disabled={isSaving || !article.content}
-                                >
-                                    {isSaving ? (
-                                        <>
-                                            <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                                            Saving...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Save className="mr-2 h-4 w-4" />
-                                            Save{savedPost ? ' (Saved)' : ''}
-                                        </>
-                                    )}
-                                </Button>
-                            </div>
-                        </div>
-                        <div>
-                            <h1 className="text-2xl font-bold tracking-tight">{savedPost ? 'Edit Article' : 'New Article'}</h1>
-                            <p className="text-neutral-500 text-sm">Generate SEO-optimized content for your blog</p>
+                            <Button
+                                className="bg-black hover:bg-neutral-800 text-white"
+                                onClick={handleSavePost}
+                                disabled={isSaving || !article.content}
+                            >
+                                {isSaving ? (
+                                    <>
+                                        <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                                        Saving...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Save className="mr-2 h-4 w-4" />
+                                        Save{savedPost ? ' (Saved)' : ''}
+                                    </>
+                                )}
+                            </Button>
                         </div>
                     </div>
+                    <div>
+                        <h1 className="text-2xl font-bold tracking-tight">{savedPost ? 'Edit Article' : 'New Article'}</h1>
+                        <p className="text-neutral-500 text-sm">Generate SEO-optimized content for your blog</p>
+                    </div>
+                </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-140px)]">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-140px)]">
 
-                        {/* LEFT COLUMN: Editor & Inputs */}
-                        <div className="lg:col-span-2 flex flex-col gap-4 overflow-y-auto pb-20 styled-scrollbar pr-2">
+                    {/* LEFT COLUMN: Editor & Inputs */}
+                    <div className="lg:col-span-2 flex flex-col gap-4 overflow-y-auto pb-20 styled-scrollbar pr-2">
 
-                            {/* Article Editor */}
-                            <Card className="flex-1 border-neutral-200 shadow-sm">
-                                <CardHeader className="pb-3 border-b bg-neutral-50/50">
-                                    <CardTitle className="text-sm font-medium flex items-center gap-2">
-                                        <PenTool className="h-4 w-4 text-neutral-500" />
-                                        Content Editor
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="pt-6 space-y-6">
+                        {/* Article Editor */}
+                        <Card className="flex-1 border-neutral-200 shadow-sm">
+                            <CardHeader className="pb-3 border-b bg-neutral-50/50">
+                                <CardTitle className="text-sm font-medium flex items-center gap-2">
+                                    <PenTool className="h-4 w-4 text-neutral-500" />
+                                    Content Editor
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="pt-6 space-y-6">
 
-                                    {/* Topic Input - for AI Generation */}
-                                    <div className="space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <label className="text-xs font-semibold text-neutral-500 uppercase">Article Topic/Idea</label>
-                                            {topic && <span className="text-xs text-green-600 flex items-center"><CheckCircle2 className="h-3 w-3 mr-1" /> Ready</span>}
-                                        </div>
-                                        <Textarea
-                                            placeholder="Enter your article topic or main idea... e.g., 'How to improve SEO rankings in 2026'"
-                                            value={topic}
-                                            onChange={(e) => setTopic(e.target.value)}
-                                            className="min-h-[80px] text-sm"
-                                        />
-                                        <p className="text-xs text-neutral-500">
-                                            This will be used by AI to generate your article. Be specific for better results.
-                                        </p>
+                                {/* Topic Input - for AI Generation */}
+                                <div className="space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-xs font-semibold text-neutral-500 uppercase">Article Topic/Idea</label>
+                                        {topic && <span className="text-xs text-green-600 flex items-center"><CheckCircle2 className="h-3 w-3 mr-1" /> Ready</span>}
                                     </div>
+                                    <Textarea
+                                        placeholder="Enter your article topic or main idea... e.g., 'How to improve SEO rankings in 2026'"
+                                        value={topic}
+                                        onChange={(e) => setTopic(e.target.value)}
+                                        className="min-h-[80px] text-sm"
+                                    />
+                                    <p className="text-xs text-neutral-500">
+                                        This will be used by AI to generate your article. Be specific for better results.
+                                    </p>
+                                </div>
 
-                                    {/* Title Input */}
-                                    <div className="space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <label className="text-xs font-semibold text-neutral-500 uppercase">Article Title</label>
-                                            <span className={`text-xs ${
-                                                article.title.length >= 50 && article.title.length <= 60
-                                                    ? 'text-green-600'
-                                                    : article.title.length > 0
+                                {/* Title Input */}
+                                <div className="space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-xs font-semibold text-neutral-500 uppercase">Article Title</label>
+                                        <span className={`text-xs ${article.title.length >= 50 && article.title.length <= 60
+                                                ? 'text-green-600'
+                                                : article.title.length > 0
                                                     ? 'text-amber-600'
                                                     : 'text-neutral-400'
                                             }`}>
-                                                {article.title.length} / 50-60 optimal
-                                            </span>
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder="Enter your article title..."
-                                            value={article.title}
-                                            onChange={(e) => setArticle(prev => ({ ...prev, title: e.target.value }))}
-                                            className="w-full px-4 py-3 text-lg font-semibold border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                        />
-                                        {article.title.length > 0 && article.title.length < 50 && (
-                                            <p className="text-xs text-amber-600 flex items-center gap-1">
-                                                <AlertCircle className="h-3 w-3" />
-                                                Title is too short for optimal SEO (aim for 50-60 characters)
-                                            </p>
+                                            {article.title.length} / 50-60 optimal
+                                        </span>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter your article title..."
+                                        value={article.title}
+                                        onChange={(e) => setArticle(prev => ({ ...prev, title: e.target.value }))}
+                                        className="w-full px-4 py-3 text-lg font-semibold border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    />
+                                    {article.title.length > 0 && article.title.length < 50 && (
+                                        <p className="text-xs text-amber-600 flex items-center gap-1">
+                                            <AlertCircle className="h-3 w-3" />
+                                            Title is too short for optimal SEO (aim for 50-60 characters)
+                                        </p>
+                                    )}
+                                    {article.title.length > 60 && (
+                                        <p className="text-xs text-amber-600 flex items-center gap-1">
+                                            <AlertCircle className="h-3 w-3" />
+                                            Title may be truncated in search results (keep it under 60 characters)
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-xs font-semibold text-neutral-500 uppercase flex justify-between">
+                                        <span>Featured Image</span>
+                                        {article.imageUrl && <span className="text-green-600 text-[10px] flex items-center"><CheckCircle2 className="h-3 w-3 mr-1" /> Ready</span>}
+                                    </label>
+                                    <div
+                                        onClick={handleImageInput}
+                                        className="border-2 border-dashed border-neutral-200 rounded-lg p-6 flex flex-col items-center justify-center text-neutral-400 hover:bg-neutral-50 hover:border-blue-400 transition-colors cursor-pointer group relative"
+                                    >
+                                        {isUploadingImage && (
+                                            <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg">
+                                                <RefreshCw className="h-6 w-6 animate-spin text-blue-600" />
+                                            </div>
                                         )}
-                                        {article.title.length > 60 && (
-                                            <p className="text-xs text-amber-600 flex items-center gap-1">
-                                                <AlertCircle className="h-3 w-3" />
-                                                Title may be truncated in search results (keep it under 60 characters)
-                                            </p>
+                                        {article.imageUrl ? (
+                                            <div className="relative">
+                                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                <img src={article.imageUrl} alt="Featured" className="max-h-64 rounded-md object-cover" />
+                                                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md">
+                                                    <p className="text-white text-sm">Click to change</p>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <div className="bg-neutral-100 p-3 rounded-full mb-3 group-hover:scale-110 transition-transform">
+                                                    <ImageIcon className="h-6 w-6 text-neutral-400" />
+                                                </div>
+                                                <p className="text-sm font-medium">Click to upload image</p>
+                                                <p className="text-xs text-neutral-400 mt-1">or AI will generate one (coming soon)</p>
+                                            </>
                                         )}
                                     </div>
+                                </div>
 
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-semibold text-neutral-500 uppercase flex justify-between">
-                                            <span>Featured Image</span>
-                                            {article.imageUrl && <span className="text-green-600 text-[10px] flex items-center"><CheckCircle2 className="h-3 w-3 mr-1" /> Ready</span>}
-                                        </label>
-                                        <div
-                                            onClick={handleImageInput}
-                                            className="border-2 border-dashed border-neutral-200 rounded-lg p-6 flex flex-col items-center justify-center text-neutral-400 hover:bg-neutral-50 hover:border-blue-400 transition-colors cursor-pointer group relative"
-                                        >
-                                            {isUploadingImage && (
-                                                <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg">
-                                                    <RefreshCw className="h-6 w-6 animate-spin text-blue-600" />
-                                                </div>
-                                            )}
-                                            {article.imageUrl ? (
-                                                <div className="relative">
-                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                    <img src={article.imageUrl} alt="Featured" className="max-h-64 rounded-md object-cover" />
-                                                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md">
-                                                        <p className="text-white text-sm">Click to change</p>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    <div className="bg-neutral-100 p-3 rounded-full mb-3 group-hover:scale-110 transition-transform">
-                                                        <ImageIcon className="h-6 w-6 text-neutral-400" />
-                                                    </div>
-                                                    <p className="text-sm font-medium">Click to upload image</p>
-                                                    <p className="text-xs text-neutral-400 mt-1">or AI will generate one (coming soon)</p>
-                                                </>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-2 h-[500px] flex flex-col">
-                                        <div className="flex justify-between items-center">
-                                            <label className="text-xs font-semibold text-neutral-500 uppercase">Body Content</label>
-                                            <div className="flex items-center gap-4">
-                                                <span className={`text-xs ${
-                                                    seoMetrics.wordCount >= 600
-                                                        ? 'text-green-600 font-medium'
-                                                        : seoMetrics.wordCount >= 300
+                                <div className="space-y-2 h-[500px] flex flex-col">
+                                    <div className="flex justify-between items-center">
+                                        <label className="text-xs font-semibold text-neutral-500 uppercase">Body Content</label>
+                                        <div className="flex items-center gap-4">
+                                            <span className={`text-xs ${seoMetrics.wordCount >= 600
+                                                    ? 'text-green-600 font-medium'
+                                                    : seoMetrics.wordCount >= 300
                                                         ? 'text-amber-600'
                                                         : 'text-neutral-500'
                                                 }`}>
-                                                    {seoMetrics.wordCount} words {seoMetrics.wordCount >= 600 ? '✓' : ''}
-                                                </span>
-                                                <button
-                                                    onClick={() => setShowHtml(!showHtml)}
-                                                    className="text-xs text-blue-600 hover:underline flex items-center gap-1"
-                                                >
-                                                    <Code className="h-3 w-3" />
-                                                    {showHtml ? 'Switch to Visual Editor' : 'Edit Source Code'}
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div className="flex-1 bg-white rounded-md overflow-hidden border border-neutral-200 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500 relative">
-                                            {showHtml ? (
-                                                <textarea
-                                                    className="w-full h-full p-4 font-mono text-xs text-neutral-800 focus:outline-none resize-none"
-                                                    value={article.content}
-                                                    onChange={(e) => setArticle({ ...article, content: e.target.value })}
-                                                />
-                                            ) : (
-                                                <ReactQuill
-                                                    key={editorKey}
-                                                    theme="snow"
-                                                    value={article.content}
-                                                    onChange={(content) => setArticle({ ...article, content })}
-                                                    modules={modules}
-                                                    formats={formats}
-                                                    className="h-[calc(100%-42px)] border-none"
-                                                    placeholder="Start writing or generate content..."
-                                                />
-                                            )}
+                                                {seoMetrics.wordCount} words {seoMetrics.wordCount >= 600 ? '✓' : ''}
+                                            </span>
+                                            <button
+                                                onClick={() => setShowHtml(!showHtml)}
+                                                className="text-xs text-blue-600 hover:underline flex items-center gap-1"
+                                            >
+                                                <Code className="h-3 w-3" />
+                                                {showHtml ? 'Switch to Visual Editor' : 'Edit Source Code'}
+                                            </button>
                                         </div>
                                     </div>
-                                </CardContent>
-                            </Card>
-                        </div>
+                                    <div className="flex-1 bg-white rounded-md overflow-hidden border border-neutral-200 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500 relative">
+                                        {showHtml ? (
+                                            <textarea
+                                                className="w-full h-full p-4 font-mono text-xs text-neutral-800 focus:outline-none resize-none"
+                                                value={article.content}
+                                                onChange={(e) => setArticle({ ...article, content: e.target.value })}
+                                            />
+                                        ) : (
+                                            <ReactQuill
+                                                key={editorKey}
+                                                theme="snow"
+                                                value={article.content}
+                                                onChange={(content) => setArticle({ ...article, content })}
+                                                modules={modules}
+                                                formats={formats}
+                                                className="h-[calc(100%-42px)] border-none"
+                                                placeholder="Start writing or generate content..."
+                                            />
+                                        )}
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
 
-                        {/* RIGHT COLUMN: SEO Sidebar & Publishing */}
-                        <div className="flex flex-col gap-6">
+                    {/* RIGHT COLUMN: SEO Sidebar & Publishing */}
+                    <div className="flex flex-col gap-6">
 
-                            {/* SEO Score Card */}
-                            <Card className="border-neutral-200 shadow-sm overflow-hidden">
-                                <CardHeader>
-                                    <CardTitle className="flex items-center gap-2">
-                                        <Globe className="h-5 w-5 text-blue-600" />
-                                        SEO Score
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-6">
-                                    <div className="flex flex-col items-center justify-center py-6">
-                                        <div className="relative h-44 w-44 flex items-center justify-center">
-                                            {/* Circular Progress Ring - Partial Arc (270 degrees) */}
-                                            <svg className="h-full w-full" viewBox="0 0 120 120" style={{ transform: 'rotate(135deg)' }}>
-                                                {/* Background Arc (Light Gray) */}
-                                                <circle
-                                                    cx="60"
-                                                    cy="60"
-                                                    r="50"
-                                                    fill="none"
-                                                    stroke="#F3F4F6"
-                                                    strokeWidth="12"
-                                                    strokeLinecap="round"
-                                                    strokeDasharray="235.6 314.2"
-                                                />
-                                                {/* Progress Arc (Colored based on score) */}
-                                                <circle
-                                                    cx="60"
-                                                    cy="60"
-                                                    r="50"
-                                                    fill="none"
-                                                    stroke={seoScore >= 80 ? '#10B981' : seoScore >= 50 ? '#60A5FA' : '#F59E0B'}
-                                                    strokeWidth="12"
-                                                    strokeLinecap="round"
-                                                    strokeDasharray={`${(seoScore / 100) * 235.6} 314.2`}
-                                                    className="transition-all duration-1000 ease-out"
-                                                />
-                                            </svg>
+                        {/* SEO Score Card */}
+                        <Card className="border-neutral-200 shadow-sm overflow-hidden">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Globe className="h-5 w-5 text-blue-600" />
+                                    SEO Score
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <div className="flex flex-col items-center justify-center py-6">
+                                    <div className="relative h-44 w-44 flex items-center justify-center">
+                                        {/* Circular Progress Ring - Partial Arc (270 degrees) */}
+                                        <svg className="h-full w-full" viewBox="0 0 120 120" style={{ transform: 'rotate(135deg)' }}>
+                                            {/* Background Arc (Light Gray) */}
+                                            <circle
+                                                cx="60"
+                                                cy="60"
+                                                r="50"
+                                                fill="none"
+                                                stroke="#F3F4F6"
+                                                strokeWidth="12"
+                                                strokeLinecap="round"
+                                                strokeDasharray="235.6 314.2"
+                                            />
+                                            {/* Progress Arc (Colored based on score) */}
+                                            <circle
+                                                cx="60"
+                                                cy="60"
+                                                r="50"
+                                                fill="none"
+                                                stroke={seoScore >= 80 ? '#10B981' : seoScore >= 50 ? '#60A5FA' : '#F59E0B'}
+                                                strokeWidth="12"
+                                                strokeLinecap="round"
+                                                strokeDasharray={`${(seoScore / 100) * 235.6} 314.2`}
+                                                className="transition-all duration-1000 ease-out"
+                                            />
+                                        </svg>
 
-                                            {/* Center Content */}
-                                            <div className="absolute flex flex-col items-center justify-center">
-                                                {/* Score */}
-                                                <div className="flex items-baseline">
-                                                    <span className="text-5xl font-bold text-neutral-800">
-                                                        {seoScore}
-                                                    </span>
-                                                    <span className="text-xl text-neutral-400 ml-1">%</span>
-                                                </div>
+                                        {/* Center Content */}
+                                        <div className="absolute flex flex-col items-center justify-center">
+                                            {/* Score */}
+                                            <div className="flex items-baseline">
+                                                <span className="text-5xl font-bold text-neutral-800">
+                                                    {seoScore}
+                                                </span>
+                                                <span className="text-xl text-neutral-400 ml-1">%</span>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        {/* Labels */}
-                                        <div className="flex items-center justify-between w-full max-w-[160px] mt-4">
-                                            <span className="text-xs font-medium text-neutral-400">0%</span>
-                                            <span className="text-xs font-medium text-neutral-400">100%</span>
-                                        </div>
+                                    {/* Labels */}
+                                    <div className="flex items-center justify-between w-full max-w-[160px] mt-4">
+                                        <span className="text-xs font-medium text-neutral-400">0%</span>
+                                        <span className="text-xs font-medium text-neutral-400">100%</span>
+                                    </div>
 
-                                        {/* Description */}
-                                        <p className="text-[11px] text-center text-neutral-400 max-w-[180px] leading-relaxed">
-                                            {seoScore >= 80
-                                                ? "You're doing an excellent job! Your content is well optimized"
-                                                : seoScore >= 50
+                                    {/* Description */}
+                                    <p className="text-[11px] text-center text-neutral-400 max-w-[180px] leading-relaxed">
+                                        {seoScore >= 80
+                                            ? "You're doing an excellent job! Your content is well optimized"
+                                            : seoScore >= 50
                                                 ? "You're doing a good effort to reach your goal"
                                                 : "Keep working on your content to improve your SEO score"}
-                                        </p>
+                                    </p>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-neutral-500">Article Optimized</span>
+                                        {seoScore >= 80 ? <CheckCircle2 className="h-4 w-4 text-green-500" /> : <AlertCircle className="h-4 w-4 text-amber-500" />}
                                     </div>
 
-                                    <div className="space-y-4">
-                                        <div className="flex justify-between text-sm">
-                                            <span className="text-neutral-500">Article Optimized</span>
-                                            {seoScore >= 80 ? <CheckCircle2 className="h-4 w-4 text-green-500" /> : <AlertCircle className="h-4 w-4 text-amber-500" />}
+                                    <div className="space-y-3 pt-2 border-t border-neutral-200">
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="flex items-center gap-2 text-neutral-600"><AlignLeft className="h-3 w-3" /> Word Count</span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-mono text-neutral-700">{seoMetrics.wordCount}</span>
+                                                <div className={`h-2 w-2 rounded-full ${seoMetrics.wordCount > 600 ? 'bg-green-500' : 'bg-red-500'}`} />
+                                            </div>
                                         </div>
-
-                                        <div className="space-y-3 pt-2 border-t border-neutral-200">
-                                            <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-neutral-600"><AlignLeft className="h-3 w-3" /> Word Count</span>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-neutral-700">{seoMetrics.wordCount}</span>
-                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.wordCount > 600 ? 'bg-green-500' : 'bg-red-500'}`} />
-                                                </div>
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="flex items-center gap-2 text-neutral-600"><Hash className="h-3 w-3" /> Keyword Density</span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-mono text-neutral-700">{seoMetrics.keywordDensity}%</span>
+                                                <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordDensity >= 0.5 && seoMetrics.keywordDensity <= 2.5 ? 'bg-green-500' : 'bg-red-500'}`} />
                                             </div>
-                                            <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-neutral-600"><Hash className="h-3 w-3" /> Keyword Density</span>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-neutral-700">{seoMetrics.keywordDensity}%</span>
-                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordDensity >= 0.5 && seoMetrics.keywordDensity <= 2.5 ? 'bg-green-500' : 'bg-red-500'}`} />
-                                                </div>
-                                            </div>
-                                            <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-neutral-600"><Type className="h-3 w-3" /> Heading Structure</span>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-xs text-neutral-600">
-                                                        H1:<span className={`font-semibold ml-0.5 ${seoMetrics.h1Count === 1 ? 'text-green-600' : 'text-red-600'}`}>{seoMetrics.h1Count}</span>
-                                                        <span className="mx-1.5 text-neutral-300">|</span>
-                                                        H2:<span className={`font-semibold ml-0.5 ${seoMetrics.h2Count >= 3 && seoMetrics.h2Count <= 6 ? 'text-green-600' : seoMetrics.h2Count >= 2 && seoMetrics.h2Count <= 8 ? 'text-amber-600' : 'text-red-600'}`}>{seoMetrics.h2Count}</span>
-                                                        <span className="mx-1.5 text-neutral-300">|</span>
-                                                        H3:<span className={`font-semibold ml-0.5 ${seoMetrics.h3Count >= 6 && seoMetrics.h3Count <= 12 ? 'text-green-600' : seoMetrics.h3Count >= 3 && seoMetrics.h3Count <= 15 ? 'text-amber-600' : seoMetrics.h3Count > 0 ? 'text-blue-600' : 'text-red-600'}`}>{seoMetrics.h3Count}</span>
-                                                    </span>
-                                                    <div className={`h-2 w-2 rounded-full ${
-                                                        seoMetrics.h1Count === 1 && seoMetrics.h2Count >= 3 && seoMetrics.h2Count <= 6 && seoMetrics.h3Count >= 6 && seoMetrics.h3Count <= 12
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="flex items-center gap-2 text-neutral-600"><Type className="h-3 w-3" /> Heading Structure</span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-mono text-xs text-neutral-600">
+                                                    H1:<span className={`font-semibold ml-0.5 ${seoMetrics.h1Count === 1 ? 'text-green-600' : 'text-red-600'}`}>{seoMetrics.h1Count}</span>
+                                                    <span className="mx-1.5 text-neutral-300">|</span>
+                                                    H2:<span className={`font-semibold ml-0.5 ${seoMetrics.h2Count >= 3 && seoMetrics.h2Count <= 6 ? 'text-green-600' : seoMetrics.h2Count >= 2 && seoMetrics.h2Count <= 8 ? 'text-amber-600' : 'text-red-600'}`}>{seoMetrics.h2Count}</span>
+                                                    <span className="mx-1.5 text-neutral-300">|</span>
+                                                    H3:<span className={`font-semibold ml-0.5 ${seoMetrics.h3Count >= 6 && seoMetrics.h3Count <= 12 ? 'text-green-600' : seoMetrics.h3Count >= 3 && seoMetrics.h3Count <= 15 ? 'text-amber-600' : seoMetrics.h3Count > 0 ? 'text-blue-600' : 'text-red-600'}`}>{seoMetrics.h3Count}</span>
+                                                </span>
+                                                <div className={`h-2 w-2 rounded-full ${seoMetrics.h1Count === 1 && seoMetrics.h2Count >= 3 && seoMetrics.h2Count <= 6 && seoMetrics.h3Count >= 6 && seoMetrics.h3Count <= 12
                                                         ? 'bg-green-500'
                                                         : seoMetrics.headingCount > 2 ? 'bg-amber-500' : 'bg-red-500'
                                                     }`} />
-                                                </div>
                                             </div>
-                                            <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-neutral-600"><ImageIcon className="h-3 w-3" /> Images</span>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-neutral-700">{seoMetrics.hasImage ? 1 : 0}</span>
-                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.hasImage ? 'bg-green-500' : 'bg-red-500'}`} />
-                                                </div>
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="flex items-center gap-2 text-neutral-600"><ImageIcon className="h-3 w-3" /> Images</span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-mono text-neutral-700">{seoMetrics.hasImage ? 1 : 0}</span>
+                                                <div className={`h-2 w-2 rounded-full ${seoMetrics.hasImage ? 'bg-green-500' : 'bg-red-500'}`} />
                                             </div>
+                                        </div>
 
-                                            {/* New Professional SEO Metrics */}
-                                            <div className="flex justify-between items-center text-sm pt-2 border-t border-neutral-100">
-                                                <span className="flex items-center gap-2 text-neutral-600"><Hash className="h-3 w-3" /> Keywords in Content</span>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-neutral-700">{seoMetrics.keywordsInContent}/{selectedKeywords.length}</span>
-                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordsInContent === selectedKeywords.length && selectedKeywords.length > 0 ? 'bg-green-500' : 'bg-amber-500'}`} />
-                                                </div>
+                                        {/* New Professional SEO Metrics */}
+                                        <div className="flex justify-between items-center text-sm pt-2 border-t border-neutral-100">
+                                            <span className="flex items-center gap-2 text-neutral-600"><Hash className="h-3 w-3" /> Keywords in Content</span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-mono text-neutral-700">{seoMetrics.keywordsInContent}/{selectedKeywords.length}</span>
+                                                <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordsInContent === selectedKeywords.length && selectedKeywords.length > 0 ? 'bg-green-500' : 'bg-amber-500'}`} />
                                             </div>
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="flex items-center gap-2 text-neutral-600"><CheckCircle2 className="h-3 w-3" /> Keyword in Title</span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-mono text-neutral-700">{seoMetrics.keywordInTitle ? 'Yes' : 'No'}</span>
+                                                <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordInTitle ? 'bg-green-500' : 'bg-red-500'}`} />
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="flex items-center gap-2 text-neutral-600"><CheckCircle2 className="h-3 w-3" /> Keyword in Meta</span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-mono text-neutral-700">{seoMetrics.keywordInMeta ? 'Yes' : 'No'}</span>
+                                                <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordInMeta ? 'bg-green-500' : 'bg-red-500'}`} />
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="flex items-center gap-2 text-neutral-600"><LinkIcon className="h-3 w-3" /> Internal Links</span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-mono text-neutral-700">{seoMetrics.internalLinks}</span>
+                                                <div className={`h-2 w-2 rounded-full ${seoMetrics.internalLinks >= 2 ? 'bg-green-500' : seoMetrics.internalLinks >= 1 ? 'bg-amber-500' : 'bg-red-500'}`} />
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="flex items-center gap-2 text-neutral-600"><Globe className="h-3 w-3" /> External Links</span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-mono text-neutral-700">{seoMetrics.externalLinks}</span>
+                                                <div className={`h-2 w-2 rounded-full bg-blue-400`} />
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="flex items-center gap-2 text-neutral-600"><ImageIcon className="h-3 w-3" /> Images in Content</span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-mono text-neutral-700">{seoMetrics.imagesInContent}</span>
+                                                <div className={`h-2 w-2 rounded-full ${seoMetrics.imagesInContent > 0 ? 'bg-green-500' : 'bg-neutral-300'}`} />
+                                            </div>
+                                        </div>
+                                        {seoMetrics.imagesInContent > 0 && (
                                             <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-neutral-600"><CheckCircle2 className="h-3 w-3" /> Keyword in Title</span>
+                                                <span className="flex items-center gap-2 text-neutral-600 pl-4">
+                                                    <CheckCircle2 className="h-3 w-3" /> With Alt Text
+                                                </span>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-neutral-700">{seoMetrics.keywordInTitle ? 'Yes' : 'No'}</span>
-                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordInTitle ? 'bg-green-500' : 'bg-red-500'}`} />
-                                                </div>
-                                            </div>
-                                            <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-neutral-600"><CheckCircle2 className="h-3 w-3" /> Keyword in Meta</span>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-neutral-700">{seoMetrics.keywordInMeta ? 'Yes' : 'No'}</span>
-                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordInMeta ? 'bg-green-500' : 'bg-red-500'}`} />
-                                                </div>
-                                            </div>
-                                            <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-neutral-600"><LinkIcon className="h-3 w-3" /> Internal Links</span>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-neutral-700">{seoMetrics.internalLinks}</span>
-                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.internalLinks >= 2 ? 'bg-green-500' : seoMetrics.internalLinks >= 1 ? 'bg-amber-500' : 'bg-red-500'}`} />
-                                                </div>
-                                            </div>
-                                            <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-neutral-600"><Globe className="h-3 w-3" /> External Links</span>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-neutral-700">{seoMetrics.externalLinks}</span>
-                                                    <div className={`h-2 w-2 rounded-full bg-blue-400`} />
-                                                </div>
-                                            </div>
-                                            <div className="flex justify-between items-center text-sm">
-                                                <span className="flex items-center gap-2 text-neutral-600"><ImageIcon className="h-3 w-3" /> Images in Content</span>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-neutral-700">{seoMetrics.imagesInContent}</span>
-                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.imagesInContent > 0 ? 'bg-green-500' : 'bg-neutral-300'}`} />
-                                                </div>
-                                            </div>
-                                            {seoMetrics.imagesInContent > 0 && (
-                                                <div className="flex justify-between items-center text-sm">
-                                                    <span className="flex items-center gap-2 text-neutral-600 pl-4">
-                                                        <CheckCircle2 className="h-3 w-3" /> With Alt Text
+                                                    <span className="font-mono text-neutral-700">
+                                                        {seoMetrics.imagesWithAlt}/{seoMetrics.imagesInContent}
                                                     </span>
-                                                    <div className="flex items-center gap-2">
-                                                        <span className="font-mono text-neutral-700">
-                                                            {seoMetrics.imagesWithAlt}/{seoMetrics.imagesInContent}
-                                                        </span>
-                                                        <div className={`h-2 w-2 rounded-full ${
-                                                            seoMetrics.imagesWithAlt === seoMetrics.imagesInContent
-                                                                ? 'bg-green-500'
-                                                                : seoMetrics.imagesWithAlt > 0
-                                                                    ? 'bg-amber-500'
-                                                                    : 'bg-red-500'
+                                                    <div className={`h-2 w-2 rounded-full ${seoMetrics.imagesWithAlt === seoMetrics.imagesInContent
+                                                            ? 'bg-green-500'
+                                                            : seoMetrics.imagesWithAlt > 0
+                                                                ? 'bg-amber-500'
+                                                                : 'bg-red-500'
                                                         }`} />
-                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* SEO Suggestions */}
+                                {seoScore < 80 && (
+                                    <div className="pt-4 border-t border-neutral-200">
+                                        <h4 className="text-xs font-semibold text-neutral-700 mb-3 flex items-center gap-1">
+                                            <Sparkles className="h-3 w-3" />
+                                            Suggestions to Improve
+                                        </h4>
+                                        <div className="space-y-2">
+                                            {seoMetrics.wordCount < 600 && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Add <span className="font-medium text-amber-700">{600 - seoMetrics.wordCount} more words</span> to reach optimal length</span>
+                                                </div>
+                                            )}
+                                            {seoMetrics.keywordDensity < 0.5 && selectedKeywords.length > 0 && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Include your keywords <span className="font-medium text-amber-700">2-3 more times</span> naturally</span>
+                                                </div>
+                                            )}
+                                            {seoMetrics.headingCount < 3 && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Add <span className="font-medium text-amber-700">{3 - seoMetrics.headingCount} more heading(s)</span> (H2 or H3)</span>
+                                                </div>
+                                            )}
+                                            {!seoMetrics.hasImage && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Add a <span className="font-medium text-amber-700">featured image</span> to improve engagement</span>
+                                                </div>
+                                            )}
+                                            {!seoMetrics.hasMeta && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Write a <span className="font-medium text-amber-700">meta description</span> (150-160 chars)</span>
+                                                </div>
+                                            )}
+                                            {article.title.length > 0 && (article.title.length < 50 || article.title.length > 60) && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Optimize title length to <span className="font-medium text-amber-700">50-60 characters</span></span>
+                                                </div>
+                                            )}
+
+                                            {/* New Professional SEO Suggestions */}
+                                            {selectedKeywords.length > 0 && seoMetrics.keywordsInContent < selectedKeywords.length && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Include <span className="font-medium text-red-700">all selected keywords</span> in your content ({seoMetrics.keywordsInContent}/{selectedKeywords.length} found)</span>
+                                                </div>
+                                            )}
+                                            {selectedKeywords.length > 0 && !seoMetrics.keywordInTitle && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Add your <span className="font-medium text-red-700">primary keyword</span> "{selectedKeywords[0]}" to the title</span>
+                                                </div>
+                                            )}
+                                            {selectedKeywords.length > 0 && article.metaDescription && !seoMetrics.keywordInMeta && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Include <span className="font-medium text-amber-700">primary keyword</span> in meta description</span>
+                                                </div>
+                                            )}
+                                            {seoMetrics.internalLinks === 0 && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Add at least <span className="font-medium text-red-700">2-3 internal links</span> to other pages on your site</span>
+                                                </div>
+                                            )}
+                                            {seoMetrics.internalLinks === 1 && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Add <span className="font-medium text-amber-700">1-2 more internal links</span> to improve SEO</span>
+                                                </div>
+                                            )}
+
+                                            {/* Images Alt Text Suggestions */}
+                                            {seoMetrics.imagesInContent > 0 && seoMetrics.imagesWithAlt === 0 && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Add <span className="font-medium text-red-700">alt text</span> to all {seoMetrics.imagesInContent} images for better SEO and accessibility</span>
+                                                </div>
+                                            )}
+                                            {seoMetrics.imagesInContent > 0 && seoMetrics.imagesWithAlt > 0 && seoMetrics.imagesWithAlt < seoMetrics.imagesInContent && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Add <span className="font-medium text-amber-700">alt text</span> to the remaining {seoMetrics.imagesInContent - seoMetrics.imagesWithAlt} images</span>
+                                                </div>
+                                            )}
+
+                                            {/* Heading Structure Suggestions */}
+                                            {seoMetrics.h1Count === 0 && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Add <span className="font-medium text-red-700">one H1 heading</span> as the main article title</span>
+                                                </div>
+                                            )}
+                                            {seoMetrics.h1Count > 1 && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Use only <span className="font-medium text-red-700">one H1 heading</span> (currently: {seoMetrics.h1Count}). Multiple H1s hurt SEO</span>
+                                                </div>
+                                            )}
+                                            {seoMetrics.h2Count < 3 && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Add <span className="font-medium text-amber-700">{3 - seoMetrics.h2Count} more H2 headings</span> to structure content (optimal: 3-6)</span>
+                                                </div>
+                                            )}
+                                            {seoMetrics.h3Count < 6 && seoMetrics.h2Count >= 3 && (
+                                                <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-blue-50 rounded-md">
+                                                    <AlertCircle className="h-3 w-3 text-blue-600 mt-0.5 flex-shrink-0" />
+                                                    <span>Consider adding <span className="font-medium text-blue-700">{6 - seoMetrics.h3Count} more H3 sub-headings</span> for better content hierarchy (optimal: 6-12)</span>
                                                 </div>
                                             )}
                                         </div>
                                     </div>
+                                )}
+                            </CardContent>
+                        </Card>
 
-                                    {/* SEO Suggestions */}
-                                    {seoScore < 80 && (
-                                        <div className="pt-4 border-t border-neutral-200">
-                                            <h4 className="text-xs font-semibold text-neutral-700 mb-3 flex items-center gap-1">
-                                                <Sparkles className="h-3 w-3" />
-                                                Suggestions to Improve
-                                            </h4>
-                                            <div className="space-y-2">
-                                                {seoMetrics.wordCount < 600 && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Add <span className="font-medium text-amber-700">{600 - seoMetrics.wordCount} more words</span> to reach optimal length</span>
-                                                    </div>
-                                                )}
-                                                {seoMetrics.keywordDensity < 0.5 && selectedKeywords.length > 0 && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Include your keywords <span className="font-medium text-amber-700">2-3 more times</span> naturally</span>
-                                                    </div>
-                                                )}
-                                                {seoMetrics.headingCount < 3 && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Add <span className="font-medium text-amber-700">{3 - seoMetrics.headingCount} more heading(s)</span> (H2 or H3)</span>
-                                                    </div>
-                                                )}
-                                                {!seoMetrics.hasImage && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Add a <span className="font-medium text-amber-700">featured image</span> to improve engagement</span>
-                                                    </div>
-                                                )}
-                                                {!seoMetrics.hasMeta && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Write a <span className="font-medium text-amber-700">meta description</span> (150-160 chars)</span>
-                                                    </div>
-                                                )}
-                                                {article.title.length > 0 && (article.title.length < 50 || article.title.length > 60) && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Optimize title length to <span className="font-medium text-amber-700">50-60 characters</span></span>
-                                                    </div>
-                                                )}
+                        {/* Article Meta Data */}
+                        <Card>
+                            <CardHeader className="pb-3">
+                                <CardTitle className="text-sm font-medium">Meta Data</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center">
+                                        <label className="text-xs font-semibold text-neutral-500">Target Keywords ({selectedKeywords.length}/3)</label>
+                                        {domain && (
+                                            <Link href={`/domain/settings/${domain.slug}`} className="text-[10px] text-blue-500 hover:underline flex items-center gap-1">
+                                                Edit Strategy <LinkIcon className="h-2 w-2" />
+                                            </Link>
+                                        )}
+                                    </div>
 
-                                                {/* New Professional SEO Suggestions */}
-                                                {selectedKeywords.length > 0 && seoMetrics.keywordsInContent < selectedKeywords.length && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Include <span className="font-medium text-red-700">all selected keywords</span> in your content ({seoMetrics.keywordsInContent}/{selectedKeywords.length} found)</span>
-                                                    </div>
-                                                )}
-                                                {selectedKeywords.length > 0 && !seoMetrics.keywordInTitle && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Add your <span className="font-medium text-red-700">primary keyword</span> "{selectedKeywords[0]}" to the title</span>
-                                                    </div>
-                                                )}
-                                                {selectedKeywords.length > 0 && article.metaDescription && !seoMetrics.keywordInMeta && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Include <span className="font-medium text-amber-700">primary keyword</span> in meta description</span>
-                                                    </div>
-                                                )}
-                                                {seoMetrics.internalLinks === 0 && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Add at least <span className="font-medium text-red-700">2-3 internal links</span> to other pages on your site</span>
-                                                    </div>
-                                                )}
-                                                {seoMetrics.internalLinks === 1 && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Add <span className="font-medium text-amber-700">1-2 more internal links</span> to improve SEO</span>
-                                                    </div>
-                                                )}
+                                    {/* Strategy Keywords Selection */}
+                                    <div className="flex flex-wrap gap-2 min-h-[40px]">
+                                        {/* High Priority */}
+                                        {availableKeywords.high.filter(k => k).map((kw, i) => (
+                                            <Badge
+                                                key={`high-${i}`}
+                                                variant={selectedKeywords.includes(kw) ? "default" : "outline"}
+                                                className={`cursor-pointer transition-all ${selectedKeywords.includes(kw) ? 'bg-red-500 hover:bg-red-600 border-red-500' : 'border-red-200 text-red-600 hover:bg-red-50'}`}
+                                                onClick={() => toggleKeyword(kw)}
+                                            >
+                                                {kw}
+                                            </Badge>
+                                        ))}
 
-                                                {/* Images Alt Text Suggestions */}
-                                                {seoMetrics.imagesInContent > 0 && seoMetrics.imagesWithAlt === 0 && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Add <span className="font-medium text-red-700">alt text</span> to all {seoMetrics.imagesInContent} images for better SEO and accessibility</span>
-                                                    </div>
-                                                )}
-                                                {seoMetrics.imagesInContent > 0 && seoMetrics.imagesWithAlt > 0 && seoMetrics.imagesWithAlt < seoMetrics.imagesInContent && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Add <span className="font-medium text-amber-700">alt text</span> to the remaining {seoMetrics.imagesInContent - seoMetrics.imagesWithAlt} images</span>
-                                                    </div>
-                                                )}
+                                        {/* Medium Priority */}
+                                        {availableKeywords.medium.filter(k => k).map((kw, i) => (
+                                            <Badge
+                                                key={`medium-${i}`}
+                                                variant={selectedKeywords.includes(kw) ? "default" : "outline"}
+                                                className={`cursor-pointer transition-all ${selectedKeywords.includes(kw) ? 'bg-yellow-500 hover:bg-yellow-600 border-yellow-500' : 'border-yellow-200 text-yellow-600 hover:bg-yellow-50'}`}
+                                                onClick={() => toggleKeyword(kw)}
+                                            >
+                                                {kw}
+                                            </Badge>
+                                        ))}
 
-                                                {/* Heading Structure Suggestions */}
-                                                {seoMetrics.h1Count === 0 && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Add <span className="font-medium text-red-700">one H1 heading</span> as the main article title</span>
-                                                    </div>
-                                                )}
-                                                {seoMetrics.h1Count > 1 && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Use only <span className="font-medium text-red-700">one H1 heading</span> (currently: {seoMetrics.h1Count}). Multiple H1s hurt SEO</span>
-                                                    </div>
-                                                )}
-                                                {seoMetrics.h2Count < 3 && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Add <span className="font-medium text-amber-700">{3 - seoMetrics.h2Count} more H2 headings</span> to structure content (optimal: 3-6)</span>
-                                                    </div>
-                                                )}
-                                                {seoMetrics.h3Count < 6 && seoMetrics.h2Count >= 3 && (
-                                                    <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-blue-50 rounded-md">
-                                                        <AlertCircle className="h-3 w-3 text-blue-600 mt-0.5 flex-shrink-0" />
-                                                        <span>Consider adding <span className="font-medium text-blue-700">{6 - seoMetrics.h3Count} more H3 sub-headings</span> for better content hierarchy (optimal: 6-12)</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-                                </CardContent>
-                            </Card>
+                                        {/* Low Priority */}
+                                        {availableKeywords.low.filter(k => k).map((kw, i) => (
+                                            <Badge
+                                                key={`low-${i}`}
+                                                variant={selectedKeywords.includes(kw) ? "default" : "outline"}
+                                                className={`cursor-pointer transition-all ${selectedKeywords.includes(kw) ? 'bg-blue-500 hover:bg-blue-600 border-blue-500' : 'border-blue-200 text-blue-600 hover:bg-blue-50'}`}
+                                                onClick={() => toggleKeyword(kw)}
+                                            >
+                                                {kw}
+                                            </Badge>
+                                        ))}
 
-                            {/* Article Meta Data */}
-                            <Card>
-                                <CardHeader className="pb-3">
-                                    <CardTitle className="text-sm font-medium">Meta Data</CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <div className="space-y-4">
-                                        <div className="flex justify-between items-center">
-                                            <label className="text-xs font-semibold text-neutral-500">Target Keywords ({selectedKeywords.length}/3)</label>
-                                            {domain && (
-                                                <Link href={`/domain/settings/${domain.slug}`} className="text-[10px] text-blue-500 hover:underline flex items-center gap-1">
-                                                    Edit Strategy <LinkIcon className="h-2 w-2" />
-                                                </Link>
-                                            )}
-                                        </div>
+                                        {(!availableKeywords.high.length && !availableKeywords.medium.length && !availableKeywords.low.length) && (
+                                            <p className="text-xs text-neutral-400 italic">No keywords defined in settings.</p>
+                                        )}
+                                    </div>
 
-                                        {/* Strategy Keywords Selection */}
-                                        <div className="flex flex-wrap gap-2 min-h-[40px]">
-                                            {/* High Priority */}
-                                            {availableKeywords.high.filter(k => k).map((kw, i) => (
-                                                <Badge
-                                                    key={`high-${i}`}
-                                                    variant={selectedKeywords.includes(kw) ? "default" : "outline"}
-                                                    className={`cursor-pointer transition-all ${selectedKeywords.includes(kw) ? 'bg-red-500 hover:bg-red-600 border-red-500' : 'border-red-200 text-red-600 hover:bg-red-50'}`}
-                                                    onClick={() => toggleKeyword(kw)}
-                                                >
-                                                    {kw}
-                                                </Badge>
-                                            ))}
-
-                                            {/* Medium Priority */}
-                                            {availableKeywords.medium.filter(k => k).map((kw, i) => (
-                                                <Badge
-                                                    key={`medium-${i}`}
-                                                    variant={selectedKeywords.includes(kw) ? "default" : "outline"}
-                                                    className={`cursor-pointer transition-all ${selectedKeywords.includes(kw) ? 'bg-yellow-500 hover:bg-yellow-600 border-yellow-500' : 'border-yellow-200 text-yellow-600 hover:bg-yellow-50'}`}
-                                                    onClick={() => toggleKeyword(kw)}
-                                                >
-                                                    {kw}
-                                                </Badge>
-                                            ))}
-
-                                            {/* Low Priority */}
-                                            {availableKeywords.low.filter(k => k).map((kw, i) => (
-                                                <Badge
-                                                    key={`low-${i}`}
-                                                    variant={selectedKeywords.includes(kw) ? "default" : "outline"}
-                                                    className={`cursor-pointer transition-all ${selectedKeywords.includes(kw) ? 'bg-blue-500 hover:bg-blue-600 border-blue-500' : 'border-blue-200 text-blue-600 hover:bg-blue-50'}`}
-                                                    onClick={() => toggleKeyword(kw)}
-                                                >
-                                                    {kw}
-                                                </Badge>
-                                            ))}
-
-                                            {(!availableKeywords.high.length && !availableKeywords.medium.length && !availableKeywords.low.length) && (
-                                                <p className="text-xs text-neutral-400 italic">No keywords defined in settings.</p>
-                                            )}
-                                        </div>
-
-                                        {/* Custom Keyword Input */}
-                                        {selectedKeywords.length < 3 && (
-                                            <div className="space-y-2 pt-3 border-t border-neutral-100">
-                                                <label className="text-xs font-medium text-neutral-600">Or add custom keyword:</label>
-                                                <div className="flex gap-2">
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Enter keyword..."
-                                                        className="flex-1 px-3 py-1.5 text-xs border border-neutral-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                        onKeyPress={(e) => {
-                                                            if (e.key === 'Enter') {
-                                                                const input = e.currentTarget;
-                                                                const keyword = input.value.trim();
-                                                                if (keyword && !selectedKeywords.includes(keyword)) {
-                                                                    if (selectedKeywords.length < 3) {
-                                                                        setSelectedKeywords([...selectedKeywords, keyword]);
-                                                                        input.value = '';
-                                                                    } else {
-                                                                        toast.error('Maximum 3 keywords allowed');
-                                                                    }
-                                                                } else if (selectedKeywords.includes(keyword)) {
-                                                                    toast.error('Keyword already selected');
-                                                                }
-                                                            }
-                                                        }}
-                                                    />
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="text-xs px-3"
-                                                        onClick={(e) => {
-                                                            const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                                    {/* Custom Keyword Input */}
+                                    {selectedKeywords.length < 3 && (
+                                        <div className="space-y-2 pt-3 border-t border-neutral-100">
+                                            <label className="text-xs font-medium text-neutral-600">Or add custom keyword:</label>
+                                            <div className="flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Enter keyword..."
+                                                    className="flex-1 px-3 py-1.5 text-xs border border-neutral-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                    onKeyPress={(e) => {
+                                                        if (e.key === 'Enter') {
+                                                            const input = e.currentTarget;
                                                             const keyword = input.value.trim();
                                                             if (keyword && !selectedKeywords.includes(keyword)) {
                                                                 if (selectedKeywords.length < 3) {
@@ -1798,79 +1794,99 @@ export default function ArticleWriterPage() {
                                                                 }
                                                             } else if (selectedKeywords.includes(keyword)) {
                                                                 toast.error('Keyword already selected');
-                                                            } else {
-                                                                toast.error('Please enter a keyword');
                                                             }
-                                                        }}
-                                                    >
-                                                        Add
-                                                    </Button>
-                                                </div>
-                                                <p className="text-[10px] text-neutral-400">Press Enter or click Add to include a custom keyword</p>
+                                                        }
+                                                    }}
+                                                />
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="text-xs px-3"
+                                                    onClick={(e) => {
+                                                        const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                                                        const keyword = input.value.trim();
+                                                        if (keyword && !selectedKeywords.includes(keyword)) {
+                                                            if (selectedKeywords.length < 3) {
+                                                                setSelectedKeywords([...selectedKeywords, keyword]);
+                                                                input.value = '';
+                                                            } else {
+                                                                toast.error('Maximum 3 keywords allowed');
+                                                            }
+                                                        } else if (selectedKeywords.includes(keyword)) {
+                                                            toast.error('Keyword already selected');
+                                                        } else {
+                                                            toast.error('Please enter a keyword');
+                                                        }
+                                                    }}
+                                                >
+                                                    Add
+                                                </Button>
                                             </div>
-                                        )}
-
-                                        {/* Selected Keywords Display */}
-                                        {selectedKeywords.length > 0 && (
-                                            <div className="space-y-2 pt-3 border-t border-neutral-100">
-                                                <label className="text-xs font-medium text-neutral-600">Selected Keywords:</label>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {selectedKeywords.map((kw, i) => (
-                                                        <Badge
-                                                            key={`selected-${i}`}
-                                                            variant="default"
-                                                            className="bg-green-500 hover:bg-green-600 cursor-pointer gap-1"
-                                                            onClick={() => toggleKeyword(kw)}
-                                                        >
-                                                            {kw}
-                                                            <span className="text-xs">×</span>
-                                                        </Badge>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-semibold text-neutral-500">Meta Description</label>
-                                        <Textarea
-                                            className="h-24 text-xs resize-none"
-                                            placeholder="Description for search engines..."
-                                            value={article.metaDescription}
-                                            onChange={(e) => setArticle({ ...article, metaDescription: e.target.value })}
-                                        />
-                                        <div className="flex justify-end">
-                                            <span className={`text-[10px] ${article.metaDescription.length > 160 ? 'text-red-500' : 'text-neutral-400'}`}>
-                                                {article.metaDescription.length} / 160
-                                            </span>
+                                            <p className="text-[10px] text-neutral-400">Press Enter or click Add to include a custom keyword</p>
                                         </div>
+                                    )}
+
+                                    {/* Selected Keywords Display */}
+                                    {selectedKeywords.length > 0 && (
+                                        <div className="space-y-2 pt-3 border-t border-neutral-100">
+                                            <label className="text-xs font-medium text-neutral-600">Selected Keywords:</label>
+                                            <div className="flex flex-wrap gap-2">
+                                                {selectedKeywords.map((kw, i) => (
+                                                    <Badge
+                                                        key={`selected-${i}`}
+                                                        variant="default"
+                                                        className="bg-green-500 hover:bg-green-600 cursor-pointer gap-1"
+                                                        onClick={() => toggleKeyword(kw)}
+                                                    >
+                                                        {kw}
+                                                        <span className="text-xs">×</span>
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-semibold text-neutral-500">Meta Description</label>
+                                    <Textarea
+                                        className="h-24 text-xs resize-none"
+                                        placeholder="Description for search engines..."
+                                        value={article.metaDescription}
+                                        onChange={(e) => setArticle({ ...article, metaDescription: e.target.value })}
+                                    />
+                                    <div className="flex justify-end">
+                                        <span className={`text-[10px] ${article.metaDescription.length > 160 ? 'text-red-500' : 'text-neutral-400'}`}>
+                                            {article.metaDescription.length} / 160
+                                        </span>
                                     </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Publish Actions */}
+                        {savedPost && (
+                            <Card>
+                                <CardContent className="pt-6">
+                                    <Button
+                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                                        onClick={handlePublishToWP}
+                                        disabled={isPublishing}
+                                    >
+                                        {isPublishing ? (
+                                            <>
+                                                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                                                Publishing...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <UploadCloud className="mr-2 h-4 w-4" />
+                                                Publish to WordPress
+                                            </>
+                                        )}
+                                    </Button>
                                 </CardContent>
                             </Card>
-
-                            {/* Publish Actions */}
-                            {savedPost && (
-                                <Card>
-                                    <CardContent className="pt-6">
-                                        <Button
-                                            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                                            onClick={handlePublishToWP}
-                                            disabled={isPublishing}
-                                        >
-                                            {isPublishing ? (
-                                                <>
-                                                    <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                                                    Publishing...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <UploadCloud className="mr-2 h-4 w-4" />
-                                                    Publish to WordPress
-                                                </>
-                                            )}
-                                        </Button>
-                                    </CardContent>
-                                </Card>
-                            )}
+                        )}
                     </div>
 
                 </div>
