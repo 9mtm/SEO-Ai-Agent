@@ -9,9 +9,6 @@
     /* -------------------------------------
           GLOBAL RESETS
       ------------------------------------- */
-
-    /*All the styling goes here*/
-
     img {
       border: none;
       -ms-interpolation-mode: bicubic;
@@ -19,15 +16,16 @@
     }
 
     body {
-      background-color: #f8f9ff;
-      font-family: sans-serif;
+      background-color: #F3F4F6;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
       font-size: 14px;
-      line-height: 1.4;
+      line-height: 1.5;
       margin: 0;
       padding: 0;
       -ms-text-size-adjust: 100%;
       -webkit-text-size-adjust: 100%;
+      color: #334155;
     }
 
     table {
@@ -36,7 +34,7 @@
     }
 
     table td {
-      font-family: sans-serif;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 14px;
       vertical-align: top;
     }
@@ -44,29 +42,25 @@
     /* -------------------------------------
           BODY & CONTAINER
       ------------------------------------- */
-
     .body {
-      background-color: #f8f9ff;
+      background-color: #F3F4F6;
       width: 100%;
     }
 
-    /* Set a max-width, and make it display as block so it will automatically stretch to that width, but will also shrink down on a phone or something */
     .container {
       display: block;
       margin: 0 auto !important;
-      /* makes it centered */
-      max-width: 580px;
-      padding: 10px;
-      width: 580px;
+      max-width: 600px;
+      padding: 20px;
+      width: 600px;
     }
 
-    /* This should also be a block element, so that it will fill 100% of the .container */
     .content {
       box-sizing: border-box;
       display: block;
       margin: 0 auto;
-      max-width: 580px;
-      padding: 10px;
+      max-width: 600px;
+      padding: 0;
     }
 
     /* -------------------------------------
@@ -74,14 +68,15 @@
       ------------------------------------- */
     .main {
       background: #ffffff;
-      border-radius: 3px;
+      border-radius: 12px;
       width: 100%;
-      border: 1px solid #e7e9f5;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      overflow: hidden;
     }
 
     .wrapper {
       box-sizing: border-box;
-      padding: 20px;
+      padding: 30px;
     }
 
     .content-block {
@@ -91,7 +86,7 @@
 
     .footer {
       clear: both;
-      margin-top: 10px;
+      margin-top: 20px;
       text-align: center;
       width: 100%;
     }
@@ -100,7 +95,7 @@
     .footer p,
     .footer span,
     .footer a {
-      color: #999999;
+      color: #94a3b8;
       font-size: 12px;
       text-align: center;
     }
@@ -112,345 +107,224 @@
     h2,
     h3,
     h4 {
-      color: #000000;
-      font-family: sans-serif;
-      font-weight: 400;
-      line-height: 1.4;
+      color: #1e293b;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 600;
+      line-height: 1.2;
       margin: 0;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
 
     h1 {
-      font-size: 35px;
-      font-weight: 300;
-      text-align: center;
-      text-transform: capitalize;
+      font-size: 24px;
+      text-align: left;
     }
 
     p,
     ul,
     ol {
-      font-family: sans-serif;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 14px;
       font-weight: normal;
       margin: 0;
       margin-bottom: 15px;
-    }
-
-    p li,
-    ul li,
-    ol li {
-      list-style-position: inside;
-      margin-left: 5px;
+      color: #475569;
     }
 
     a {
-      color: #3498db;
-      text-decoration: underline;
+      color: #2563EB;
+      text-decoration: none;
+      font-weight: 500;
     }
 
     /* -------------------------------------
-          BUTTONS
+          CUSTOM COMPONENTS
       ------------------------------------- */
-    .btn {
-      box-sizing: border-box;
-      width: 100%;
-    }
-
-    .btn>tbody>tr>td {
-      padding-bottom: 15px;
-    }
-
-    .btn table {
-      width: auto;
-    }
-
-    .btn table td {
-      background-color: #ffffff;
-      border-radius: 5px;
-      text-align: center;
-    }
-
-    .btn a {
-      background-color: #ffffff;
-      border: solid 1px #3498db;
-      border-radius: 5px;
-      box-sizing: border-box;
-      color: #3498db;
-      cursor: pointer;
-      display: inline-block;
-      font-size: 14px;
-      font-weight: bold;
-      margin: 0;
-      padding: 12px 25px;
-      text-decoration: none;
-      text-transform: capitalize;
-    }
-
-    .btn-primary table td {
-      background-color: #3498db;
-    }
-
-    .btn-primary a {
-      background-color: #3498db;
-      border-color: #3498db;
-      color: #ffffff;
-    }
-
-    /* -------------------------------------
-          OTHER STYLES THAT MIGHT BE USEFUL
-      ------------------------------------- */
-    .last {
-      margin-bottom: 0;
-    }
-
-    .first {
-      margin-top: 0;
-    }
-
-    .align-center {
-      text-align: center;
-    }
-
-    .align-right {
-      text-align: right;
-    }
-
-    .align-left {
-      text-align: left;
-    }
-
-    .clear {
-      clear: both;
-    }
-
-    .mt0 {
-      margin-top: 0;
-    }
-
-    .mb0 {
-      margin-bottom: 0;
-    }
-
-    .preheader {
-      color: transparent;
-      display: none;
-      height: 0;
-      max-height: 0;
-      max-width: 0;
-      opacity: 0;
-      overflow: hidden;
-      visibility: hidden;
-      width: 0;
-    }
-
-    .powered-by a {
-      text-decoration: none;
-    }
-
-    hr {
-      border: 0;
-      border-bottom: 1px solid #f8f9ff;
-      margin: 20px 0;
-    }
-
+    /* Header Section */
     .topbar {
-      margin: 15px 10px;
-    }
-
-    .logo {
-      font-weight: bold;
-      color: #1d4ed8;
-    }
-
-    .logo img {
-      max-width: 24px;
-      vertical-align: bottom;
-    }
-
-    .mainhead {
-      background: #3f51b5;
-      color: #fff;
-      border-radius: 4px 4px 0 0;
-    }
-
-    .mainhead td,
-    .subhead td {
-      padding: 15px;
-    }
-
-    .mainhead a {
-      color: white;
-      text-decoration: none;
-    }
-
-    .subhead {
-      background: #dee3ff;
-      color: #344dd7;
-      border-radius: 4px 4px 0 0;
-    }
-
-    .subhead a {
-      color: #344dd7;
-      text-decoration: none;
-    }
-
-    .console_table {
-      margin-top: 40px;
       margin-bottom: 20px;
     }
 
-    .keyword_table td {
-      padding: 10px 0;
+    .logo {
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo img {
+      vertical-align: middle;
+      margin-right: 8px;
+      border-radius: 4px;
+    }
+
+    .mainhead {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 20px 30px;
+    }
+
+    .domain-title {
+      font-size: 20px;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    .keyword-badge {
+      display: inline-block;
+      background: #eff6ff;
+      color: #2563eb;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* Badge Stats */
+    .stat-wrapper {
+      text-align: right;
+    }
+
+    .stat-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 5px;
+    }
+
+    .stat-success {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+
+    .stat-danger {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* Traffic Summary Cards */
+    .traffic-summary {
+      width: 100%;
+      margin-bottom: 25px;
+      margin-top: 10px;
+      border-spacing: 15px 0;
+      border-collapse: separate;
+      margin-left: -15px;
+    }
+
+    .traffic-card {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+      width: 48%;
+    }
+
+    .traffic-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1e293b;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .traffic-label {
+      font-size: 11px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    /* Keyword Table */
+    .keyword_table {
+      width: 100%;
+      margin-top: 10px;
+      border-collapse: collapse;
     }
 
     .keyword_table th {
-      font-weight: normal;
-      color: #888;
-      padding-bottom: 10px;
-    }
-
-    .keyword td:nth-child(1) {
-      font-weight: bold;
-    }
-
-    .keyword_table th:nth-child(2),
-    .keyword_table th:nth-child(3),
-    .keyword td:nth-child(2),
-    .keyword td:nth-child(3),
-    .keyword_table--sc th:nth-child(4),
-    .keyword_table--sc td:nth-child(4) {
-      text-align: center;
-    }
-
-    .keyword td:nth-child(3) {
+      text-align: left;
+      color: #64748b;
       font-size: 12px;
-      color: #888;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 12px 10px;
+      border-bottom: 2px solid #e2e8f0;
     }
 
-    .keyword_table--sc td:nth-child(3) {
-      color: inherit;
-    }
-
-    .keyword svg {
-      width: 15px;
-    }
-
-    .keyword .pos_change {
-      font-size: 12px;
-    }
-
-    .keyword .pos_change span {
-      padding-left: 5px;
-    }
-
-    .keyword .flag {
-      max-width: 20px;
-      margin-right: 2px;
-    }
-
-    .device {
-      width: 18px;
-      margin-right: 2px;
-      position: relative;
+    .keyword_table td {
+      padding: 14px 10px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #334155;
+      font-size: 14px;
       vertical-align: middle;
-      opacity: 0.6;
     }
 
-    .google_icon {
-      max-width: 13px;
+    .keyword_table tr:last-child td {
+      border-bottom: none;
     }
 
-    /* -------------------------------------
-          RESPONSIVE AND MOBILE FRIENDLY STYLES
-      ------------------------------------- */
+    .keyword-text {
+      font-weight: 500;
+      color: #0f172a;
+    }
+
+    .pos-change {
+      font-size: 11px;
+      margin-left: 6px;
+      font-weight: 600;
+    }
+
+    /* Search Console Section */
+    .console_table {
+      margin-top: 40px;
+      margin-bottom: 15px;
+    }
+
+    .console-header {
+      color: #1e293b;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+    }
+
+    .google-icon {
+      margin-right: 8px;
+      vertical-align: sub;
+    }
+
+    /* Responsive */
     @media only screen and (max-width: 620px) {
-      table.body h1 {
-        font-size: 28px !important;
-        margin-bottom: 10px !important;
-      }
-
-      table.body .wrapper,
-      table.body .article {
+      .container {
+        width: 100% !important;
         padding: 10px !important;
       }
 
-      table.body .content {
-        padding: 0 !important;
+      .wrapper {
+        padding: 15px !important;
       }
 
-      table.body .container {
-        padding: 0 !important;
+      .stat-wrapper {
+        text-align: left;
+        margin-top: 10px;
+      }
+
+      .mainhead {
+        padding: 15px;
+      }
+
+      .traffic-card {
+        display: block;
         width: 100% !important;
-      }
-
-      table.body .main {
-        border-left-width: 0 !important;
-        border-radius: 0 !important;
-        border-right-width: 0 !important;
-      }
-
-      table.body .btn table {
-        width: 100% !important;
-      }
-
-      table.body .btn a {
-        width: 100% !important;
-      }
-
-      table.body .img-responsive {
-        height: auto !important;
-        max-width: 100% !important;
-        width: auto !important;
-      }
-
-      .stat {
-        display: none;
-      }
-    }
-
-    /* -------------------------------------
-          PRESERVE THESE STYLES IN THE HEAD
-      ------------------------------------- */
-    @media all {
-      .ExternalClass {
-        width: 100%;
-      }
-
-      .ExternalClass,
-      .ExternalClass p,
-      .ExternalClass span,
-      .ExternalClass font,
-      .ExternalClass td,
-      .ExternalClass div {
-        line-height: 100%;
-      }
-
-      .apple-link a {
-        color: inherit !important;
-        font-family: inherit !important;
-        font-size: inherit !important;
-        font-weight: inherit !important;
-        line-height: inherit !important;
-        text-decoration: none !important;
-      }
-
-      #MessageViewBody a {
-        color: inherit;
-        text-decoration: none;
-        font-size: inherit;
-        font-family: inherit;
-        font-weight: inherit;
-        line-height: inherit;
-      }
-
-      .btn-primary table td:hover {
-        background-color: #34495e !important;
-      }
-
-      .btn-primary a:hover {
-        background-color: #34495e !important;
-        border-color: #34495e !important;
+        margin-bottom: 10px;
       }
     }
   </style>
@@ -465,7 +339,12 @@
         <div class="topbar">
           <table role="presentation" border="0" cellpadding="0" cellspacing="0">
             <tr>
-              <td class="logo">{{logo}} SEO Ai Agent</td>
+              <td class="logo">
+                <a href="https://seo-agent.net" target="_blank"
+                  style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+                  {{logo}} <span style="margin-left: 8px;">SEO Ai Agent</span>
+                </a>
+              </td>
               <td align="right" style="vertical-align: bottom ;">{{currentDate}}</td>
             </tr>
           </table>
@@ -474,11 +353,13 @@
 
           <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="mainhead">
             <tr>
-              <td style="font-weight:bold;">{{domainName}}<span
-                  style="display:inline-block; margin-left:4px; font-size: 12px; padding: 1px 7px; border-radius:4px; background: #5768c7;">{{keywordsCount}}</span>
-                </h3>
+              <td width="60%">
+                <span class="domain-title">{{domainName}}</span>
+                <span class="keyword-badge">{{keywordsCount}} Keywords</span>
               </td>
-              <td class="stat" align="right">{{stat}}</td>
+              <td width="40%" class="stat-wrapper">
+                {{stat}}
+              </td>
             </tr>
           </table>
 
@@ -488,9 +369,14 @@
             <!-- START MAIN CONTENT AREA -->
             <tr>
               <td class="wrapper">
+
+                <!-- TRAFFIC SUMMARY PLACEHOLDER -->
+                {{TrafficSummary}}
+
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                   <tr>
                     <td>
+                      <h3 style="font-size: 16px; margin-bottom: 15px; color: #1E3A8A;">Keyword Rankings</h3>
                       <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="keyword_table">
                         <tbody>
                           <tr align="left">
@@ -514,7 +400,29 @@
 
           {{SCStatsTable}}
 
-          <!-- END CENTERED WHITE CONTAINER -->
+          <!-- START CTA BUTTON -->
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0"
+            style="width: 100%; margin-top: 30px; margin-bottom: 30px;">
+            <tbody>
+              <tr>
+                <td align="center">
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                      <tr>
+                        <td align="center" bgcolor="#2563EB" style="border-radius: 6px;">
+                          <a href="{{dashboardUrl}}" target="_blank"
+                            style="font-size: 16px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 6px; border: 1px solid #2563EB; display: inline-block; font-weight: 700; background-color: #2563EB; mso-padding-alt:0;">
+                            &nbsp; Go to Dashboard &nbsp;
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- END CTA BUTTON -->
 
 
 

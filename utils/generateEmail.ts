@@ -98,38 +98,125 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
    let keywordsTable = '';
 
    keywords.forEach((keyword) => {
-      let positionChangeIcon = '';
-
+      let changeDisplay = '';
       const positionChange = getPositionChange(keyword.history, keyword.position);
-      const countryFlag = `<img class="flag" src="https://flagcdn.com/w20/${keyword.country.toLowerCase()}.png" alt="${keyword.country}" title="${keyword.country}" />`;
+      const countryFlag = `<img class="flag" src="https://flagcdn.com/w20/${keyword.country.toLowerCase()}.png" alt="${keyword.country}" title="${keyword.country}" style="vertical-align: middle; margin-right: 6px;" />`;
 
-      if (positionChange > 0) { positionChangeIcon = '<span style="color:#5ed7c3;">▲</span>'; improved += 1; }
-      if (positionChange < 0) { positionChangeIcon = '<span style="color:#fca5a5;">▼</span>'; declined += 1; }
+      if (positionChange !== 0) {
+         const isImproved = positionChange > 0;
+         const color = isImproved ? '#16a34a' : '#dc2626';
+         const icon = isImproved ? '▲' : '▼';
+         changeDisplay = `<span style="font-size: 10px; margin-left: 5px; color: ${color}; font-weight: 700; background: ${isImproved ? '#dcfce7' : '#fee2e2'}; padding: 1px 4px; border-radius: 4px;">${icon} ${Math.abs(positionChange)}</span>`;
 
-      const posChangeIcon = positionChange ? `<span class="pos_change">${positionChangeIcon} ${positionChange}</span>` : '';
+         if (isImproved) improved += 1;
+         else declined += 1;
+      }
+
       keywordsTable += `<tr class="keyword">
-                           <td>${countryFlag} ${keyword.keyword}</td>
-                           <td>${keyword.position}${posChangeIcon}</td>
-                           <td>${getBestKeywordPosition(keyword.history)}</td>
-                           <td>${timeSince(new Date(keyword.lastUpdated).getTime() / 1000)}</td>
+                           <td style="vertical-align: middle;">${countryFlag} <span style="vertical-align: middle;">${keyword.keyword}</span></td>
+                           <td style="vertical-align: middle;"><span style="font-weight:700; color: #1e293b;">${keyword.position}</span>${changeDisplay}</td>
+                           <td style="vertical-align: middle; color: #64748b;">${getBestKeywordPosition(keyword.history)}</td>
+                           <td style="vertical-align: middle; color: #94a3b8; font-size: 12px;">${timeSince(new Date(keyword.lastUpdated).getTime() / 1000)}</td>
                         </tr>`;
    });
+   const improvedBadge = improved > 0 ? `<span class="stat-badge stat-success">▲ ${improved} Improved</span>` : '';
+   const declinedBadge = declined > 0 ? `<span class="stat-badge stat-danger">▼ ${declined} Declined</span>` : '';
+   const statHtml = `<div class="stat-wrapper">${improvedBadge} ${declinedBadge}</div>`;
 
-   const stat = `${improved > 0 ? `${improved} Improved` : ''} 
-                  ${improved > 0 && declined > 0 ? ', ' : ''} ${declined > 0 ? `${declined} Declined` : ''}`;
+   const isConsoleIntegrated = !!(process.env.SEARCH_CONSOLE_PRIVATE_KEY && process.env.SEARCH_CONSOLE_CLIENT_EMAIL)
+      || (settings.search_console_client_email && settings.search_console_private_key);
+
+   let trafficSummaryHTML = '';
+   // Always try to read local data if available
+   if (true) {
+      try {
+         console.log('Generating Email for', domainName);
+         const localSCData = await readLocalSCData(domainName);
+         if (localSCData && localSCData.stats && localSCData.stats.length > 0) {
+            console.log('Found Local SC Data, items:', localSCData.stats.length);
+            // Clone and reverse to get Newest First
+            const stats = [...localSCData.stats].reverse();
+            const currentPeriod = stats.slice(0, 30);
+            const previousPeriod = stats.slice(30, 60);
+
+            const calcTotal = (arr: any[], key: string) => arr.reduce((sum, item) => sum + (item[key] || 0), 0);
+            const calcAvg = (arr: any[], key: string) => arr.length ? arr.reduce((sum, item) => sum + (item[key] || 0), 0) / arr.length : 0;
+
+            const metrics = [
+               { label: 'Visits', key: 'clicks', type: 'total' },
+               { label: 'Impressions', key: 'impressions', type: 'total' },
+               { label: 'Avg Position', key: 'position', type: 'avg' },
+               { label: 'Avg CTR', key: 'ctr', type: 'avg', isPercent: true }
+            ];
+
+            let cardsHTML = '';
+
+            metrics.forEach((metric) => {
+               const currentVal = metric.type === 'total' ? calcTotal(currentPeriod, metric.key) : calcAvg(currentPeriod, metric.key);
+               const prevVal = metric.type === 'total' ? calcTotal(previousPeriod, metric.key) : calcAvg(previousPeriod, metric.key);
+
+               let diff = 0;
+               if (prevVal > 0) {
+                  diff = ((currentVal - prevVal) / prevVal) * 100;
+               }
+
+               // Color Logic
+               let colorClass = '#64748b'; // Default
+               let diffContent = '';
+
+               if (prevVal === 0) {
+                  colorClass = '#94a3b8';
+                  diffContent = '-';
+               } else {
+                  // For position, lower is better. So negative diff is good (Green).
+                  const isPositive = metric.key === 'position' ? diff < 0 : diff > 0;
+                  colorClass = isPositive ? '#16a34a' : '#dc2626';
+                  const arrow = diff === 0 ? '' : (diff > 0 ? '▲' : '▼');
+                  diffContent = `${arrow} ${Math.abs(diff).toFixed(1)}%`;
+               }
+
+               let displayVal = '';
+               if (metric.isPercent) displayVal = `${(currentVal * 1).toFixed(2)}%`;
+               else if (metric.key === 'position') displayVal = Math.round(currentVal).toString();
+               else displayVal = Math.round(currentVal).toLocaleString();
+
+               cardsHTML += `
+                    <td class="traffic-card" width="23%" style="padding: 10px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
+                        <span class="traffic-label" style="display:block; margin-bottom:5px; font-size:10px; color:#64748B; font-weight:600; text-transform:uppercase;">${metric.label}</span>
+                        <span class="traffic-number" style="font-size: 18px; display:block; margin-bottom:4px; font-weight:700; color:#1E293B;">${displayVal}</span>
+                        <span style="font-size: 11px; font-weight: 600; color: ${colorClass};">
+                           ${diffContent}
+                        </span>
+                    </td>
+                    <td width="2%">&nbsp;</td>
+                `;
+            });
+
+            trafficSummaryHTML = `
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="traffic-summary" style="width:100%; border-spacing: 0;">
+                    <tr>
+                        ${cardsHTML}
+                    </tr>
+                </table>`;
+         }
+      } catch (err) {
+         console.error('Error generating traffic summary:', err);
+      }
+   }
+
    const updatedEmail = emailTemplate
       .replace('{{logo}}', `<img class="logo_img" src="${seoAiAgentLogo}" alt="SEO Ai Agent" width="24" height="24" />`)
       .replace('{{currentDate}}', currentDate)
       .replace('{{domainName}}', domainName)
       .replace('{{keywordsCount}}', keywordsCount.toString())
       .replace('{{keywordsTable}}', keywordsTable)
+      .replace('{{TrafficSummary}}', trafficSummaryHTML)
       .replace('{{appURL}}', process.env.NEXT_PUBLIC_APP_URL || '')
-      .replace('{{stat}}', stat)
-      .replace('{{preheader}}', stat);
+      .replace('{{dashboardUrl}}', 'https://seo-agent.net?utm_source=email_report&utm_medium=email&utm_campaign=daily_rankings')
+      .replace('{{stat}}', statHtml)
+      .replace('{{preheader}}', `${improved} Improved, ${declined} Declined`);
 
-   const isConsoleIntegrated = !!(process.env.SEARCH_CONSOLE_PRIVATE_KEY && process.env.SEARCH_CONSOLE_CLIENT_EMAIL)
-      || (settings.search_console_client_email && settings.search_console_private_key);
-   const htmlWithSCStats = isConsoleIntegrated ? await generateGoogeleConsoleStats(domainName) : '';
+   const htmlWithSCStats = await generateGoogeleConsoleStats(domainName);
    const emailHTML = updatedEmail.replace('{{SCStatsTable}}', htmlWithSCStats);
 
    // await writeFile('testemail.html', emailHTML, { encoding: 'utf-8' });
@@ -147,95 +234,67 @@ const generateGoogeleConsoleStats = async (domainName: string): Promise<string> 
 
    const localSCData = await readLocalSCData(domainName);
    if (!localSCData || !localSCData.stats || !localSCData.stats.length) {
-      return ''; // IF No SC Data Found, Abot the process.
+      return '';
    }
 
-   const scData: SCStatsObject = {
-      stats: { html: '', label: 'Performance for Last 7 Days', clicks: 0, impressions: 0 },
-      keywords: { html: '', label: 'Top 5 Keywords' },
-      pages: { html: '', label: 'Top 5 Pages' },
-   };
-   const SCStats = localSCData && localSCData.stats && Array.isArray(localSCData.stats) ? localSCData.stats.reverse().slice(0, 7) : [];
    const keywords = getKeywordsInsight(localSCData, 'clicks', 'sevenDays');
    const pages = getPagesInsight(localSCData, 'clicks', 'sevenDays');
-   const genColumn = (item: SCInsightItem, firstColumKey: string): string => {
-      return `<tr class="keyword">
-                  <td>${item[firstColumKey as keyof SCInsightItem]}</td>
-                  <td>${item.clicks}</td>
-                  <td>${item.impressions}</td>
-                  <td>${Math.round(item.position)}</td>
-               </tr>`;
-   };
-   if (SCStats.length > 0) {
-      scData.stats.html = SCStats.reduce((acc, item) => acc + genColumn(item, 'date'), '');
-   }
-   if (keywords.length > 0) {
-      scData.keywords.html = keywords.slice(0, 5).reduce((acc, item) => acc + genColumn(item, 'keyword'), '');
-   }
-   if (pages.length > 0) {
-      scData.pages.html = pages.slice(0, 5).reduce((acc, item) => acc + genColumn(item, 'page'), '');
-   }
-   scData.stats.clicks = SCStats.reduce((acc, item) => acc + item.clicks, 0);
-   scData.stats.impressions = SCStats.reduce((acc, item) => acc + item.impressions, 0);
 
-   // Create Stats Start, End Date
-   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-   const endDate = new Date(SCStats[0].date);
-   const startDate = new Date(SCStats[SCStats.length - 1].date);
-
-   // Add the SC header Title
-   let htmlWithSCStats = `<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="console_table">
-                              <tr>
-                                 <td style="font-weight:bold;">
-                                 <td style="font-weight:bold;">
-                                 Google Search Console Stats</h3>
-                                 </td>
-                                 <td class="stat" align="right" style="font-size: 12px;">
-                                 ${startDate.getDate()} ${months[startDate.getMonth()]} -  ${endDate.getDate()} ${months[endDate.getMonth()]} 
-                                 (Last 7 Days)
-                                 </td>
-                              </tr>
-                           </table>
-                           `;
-
-   // Add the SC Data Tables
-   Object.keys(scData).forEach((itemKey) => {
-      const scItem = scData[itemKey as keyof SCStatsObject];
-      const scItemFirstColName = itemKey === 'stats' ? 'Date' : `${itemKey[0].toUpperCase()}${itemKey.slice(1)}`;
-      htmlWithSCStats += `<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="subhead">
-                                 <tr>
-                                    <td style="font-weight:bold;">${scItem.label}</h3></td>
-                                    ${scItem.clicks && scItem.impressions ? (
-            `<td class="stat" align="right">
-                                          <strong>${scItem.clicks}</strong> Clicks | <strong>${scItem.impressions}</strong> Views
-                                       </td>`
-         )
-            : ''
+   const genTableRows = (items: any[], type: 'keyword' | 'page') => {
+      return items.slice(0, 5).reduce((acc, item) => {
+         // For pages, shorten the URL to show only path
+         let col1 = type === 'keyword' ? item.keyword : item.page;
+         if (type === 'page') {
+            try {
+               const urlObj = new URL(col1);
+               col1 = urlObj.pathname === '/' ? '/' : urlObj.pathname;
+            } catch (e) { /* keep original on error */ }
          }
-                                 </tr>
-                              </table>
-                              <table role="presentation" class="main" style="margin-bottom:20px">
-                                 <tbody>
-                                    <tr>
-                                       <td class="wrapper">
-                                       <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="keyword_table keyword_table--sc">
-                                          <tbody>
-                                             <tr align="left">
-                                                <th>${scItemFirstColName}</th>
-                                                <th>Clicks</th>
-                                                <th>Views</th>
-                                                <th>Position</th>
-                                             </tr>
-                                             ${scItem.html}
-                                          </tbody>
-                                       </table>
-                                       </td>
-                                    </tr>
-                                 </tbody>
-                              </table>`;
-   });
 
-   return htmlWithSCStats;
+         return acc + `<tr>
+                <td class="keyword-text" style="font-weight: 500; word-break: break-word;">${col1}</td>
+                <td>${item.clicks}</td>
+                <td>${item.impressions}</td>
+                <td>${Math.round(item.position)}</td>
+            </tr>`;
+      }, '');
+   };
+
+   let html = '';
+
+   // Top Keywords Table
+   if (keywords.length > 0) {
+      html += `
+        <table role="presentation" class="main" style="margin-top: 20px;">
+            <tr>
+                <td class="wrapper">
+                    <h3 style="font-size: 16px; margin-bottom: 15px; color: #1E3A8A;">Top Performing Keywords (Last 7 Days)</h3>
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="keyword_table">
+                        <tr align="left"><th>Keyword</th><th>Clicks</th><th>Views</th><th>Pos</th></tr>
+                        ${genTableRows(keywords, 'keyword')}
+                    </table>
+                </td>
+            </tr>
+        </table>`;
+   }
+
+   // Top Pages Table
+   if (pages.length > 0) {
+      html += `
+        <table role="presentation" class="main" style="margin-top: 20px;">
+            <tr>
+                <td class="wrapper">
+                    <h3 style="font-size: 16px; margin-bottom: 15px; color: #1E3A8A;">Top Performing Pages</h3>
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="keyword_table">
+                        <tr align="left"><th>Page</th><th>Clicks</th><th>Views</th><th>Avg Pos</th></tr>
+                        ${genTableRows(pages, 'page')}
+                    </table>
+                </td>
+            </tr>
+        </table>`;
+   }
+
+   return html;
 };
 
 export default generateEmail;

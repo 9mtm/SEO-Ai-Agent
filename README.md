@@ -1,9 +1,13 @@
 
-# Flowxtra SERP Tracker + SEO Agent (Local SaaS)
+# SEO Agent
+
+website: https://seo-agent.net
+
+
 
 ![License](https://img.shields.io/badge/license-MIT-blue) ![Next.js](https://img.shields.io/badge/Next.js-14-black) ![AI](https://img.shields.io/badge/AI-Powered-purple)
 
-**Flowxtra SERP Tracker** has been upgraded to a **Multi-Tenant SaaS** with a built-in **Local AI SEO Agent**.
+**SEO Agent** has been upgraded to a **Multi-Tenant SaaS** with a built-in **Local AI SEO Agent**.
 This version runs entirely on your local machine using Node.js for the web app and a local Python server for the AI model (Qwen).
 
 ---
