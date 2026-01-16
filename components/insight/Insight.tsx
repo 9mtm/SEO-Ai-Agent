@@ -247,6 +247,7 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                      {setDaysFilter && (
                         <div className='flex gap-2 text-xs'>
                            {[
+                              { label: 'Today', days: 0 },
                               { label: 'Yesterday', days: 1 },
                               { label: '7 Days', days: 7 },
                               { label: '30 Days', days: 30 },
@@ -256,11 +257,10 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                               <button
                                  key={days}
                                  onClick={() => setDaysFilter(days)}
-                                 className={`px-3 py-1 rounded-full transition-all ${
-                                    daysFilter === days
+                                 className={`px-3 py-1 rounded-full transition-all ${daysFilter === days
                                        ? 'bg-violet-600 text-white shadow-sm'
                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                                 }`}
+                                    }`}
                               >
                                  {label}
                               </button>

@@ -104,9 +104,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   if (currentDomain) {
     navigation.push(
       { name: navT.insight, href: `/domain/insight/${currentDomain.slug}`, icon: LineChart },
-      { name: navT.tracking, href: `/tracking/${currentDomain.slug}`, icon: BarChart3 },
-      { name: navT.competitors, href: `/tracking/${currentDomain.slug}/competitors`, icon: Users },
       { name: navT.discover, href: `/domain/console/${currentDomain.slug}`, icon: Search },
+      { name: navT.tracking, href: `/tracking/${currentDomain.slug}`, icon: BarChart3 },
       { name: navT.agent, href: `/domain/agent/${currentDomain.slug}`, icon: Bot },
       { name: navT.posts, href: `/domain/posts/${currentDomain.slug}`, icon: PenTool },
       { name: navT.settings, href: `/domain/settings/${currentDomain.slug}`, icon: Settings }

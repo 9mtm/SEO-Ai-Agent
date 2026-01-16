@@ -125,25 +125,25 @@ const DomainHeader = (
                   </button>
                )}
 
-               {/* Console Date Filter */}
+               {/* Console Date Filter - Pill Buttons Style */}
                {isConsole && (
-                  <div className="relative ml-1">
-                     <span className='block cursor-pointer py-2 px-3 bg-white border border-gray-200 rounded-md hover:border-blue-400 transition-colors text-xs font-medium text-gray-700 shadow-sm flex items-center' onClick={() => setShowSCDates(!ShowSCDates)}>
-                        <Icon type='date' size={14} classes="mr-2 text-gray-500" />
-                        Last {daysName(scFilter).trim()}
-                     </span>
-                     {ShowSCDates && (
-                        <div className='absolute w-40 z-50 mt-1 top-full right-0 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100'>
-                           {['threeDays', 'sevenDays', 'thirtyDays'].map((itemKey) => {
-                              return <button
-                                 key={itemKey}
-                                 className={`w-full text-left px-4 py-2.5 text-xs hover:bg-gray-50 transition-colors border-b last:border-0 border-gray-50 ${scFilter === itemKey ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-600'}`}
-                                 onClick={() => { setShowSCDates(false); if (setScFilter) setScFilter(itemKey); }}
-                              >Last {daysName(itemKey)}
-                              </button>;
-                           })}
-                        </div>
-                     )}
+                  <div className="flex items-center gap-2 ml-2">
+                     {[
+                        { label: '3 Days', value: 'threeDays' },
+                        { label: '7 Days', value: 'sevenDays' },
+                        { label: '30 Days', value: 'thirtyDays' }
+                     ].map((item) => (
+                        <button
+                           key={item.value}
+                           onClick={() => setScFilter && setScFilter(item.value)}
+                           className={`px-3 py-1.5 text-xs font-medium rounded-full transition-all ${scFilter === item.value
+                              ? 'bg-violet-600 text-white shadow-sm'
+                              : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+                              }`}
+                        >
+                           Last {item.label}
+                        </button>
+                     ))}
                   </div>
                )}
             </div>

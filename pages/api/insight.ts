@@ -31,7 +31,13 @@ const getDomainSearchConsoleInsight = async (req: NextApiRequest, res: NextApiRe
       const { stats = [] } = localSCData;
 
       // Filter stats by days
-      const filteredStats = stats.slice(-daysFilter);
+      let filteredStats: any[] = [];
+      if (daysFilter === 0) {
+         const today = new Date().toISOString().split('T')[0];
+         filteredStats = stats.filter(s => s.date === today);
+      } else {
+         filteredStats = stats.slice(-daysFilter);
+      }
 
       const countries = getCountryInsight(localSCData);
       const keywords = getKeywordsInsight(localSCData);
