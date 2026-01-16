@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, Sparkles, Target, Zap, Flag, Loader2, Globe } from 'lucide-react';
 import SelectField from '../common/SelectField';
 import countries from '../../utils/countries';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Step2_5Props {
     onNext: (data: any) => void;
@@ -14,6 +15,7 @@ interface Step2_5Props {
 }
 
 const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
+    const { t } = useLanguage();
     const [focusKeywords, setFocusKeywords] = useState({
         high: ['', '', ''],
         medium: ['', '', ''],
@@ -79,7 +81,7 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
         // At least one keyword should be filled
         const totalKeywords = cleanKeywords.high.length + cleanKeywords.medium.length + cleanKeywords.low.length;
         if (totalKeywords === 0) {
-            setError('Please add at least one focus keyword');
+            setError(t('onboarding.step2_5.errorKeywords'));
             return;
         }
 
@@ -100,10 +102,10 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
             if (res.ok) {
                 onNext(data);
             } else {
-                setError(data.error || 'Failed to save');
+                setError(data.error || t('onboarding.step1.errorSave'));
             }
         } catch (err) {
-            setError('An error occurred');
+            setError(t('onboarding.step1.errorGeneric'));
         } finally {
             setLoading(false);
         }
@@ -126,7 +128,7 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                     className="flex items-center text-gray-600 hover:text-gray-900 text-sm font-medium"
                 >
                     <ChevronLeft size={16} className="mr-1" />
-                    Back
+                    {t('onboarding.step2.back')}
                 </button>
             </div>
 
@@ -134,20 +136,20 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                 <div className="p-2 bg-blue-100 rounded-lg">
                     <Target className="h-6 w-6 text-blue-600" />
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900">Define Your SEO Strategy</h2>
+                <h2 className="text-3xl font-bold text-gray-900">{t('onboarding.step2_5.title')}</h2>
             </div>
 
             <p className="text-gray-500 mb-8">
-                We've analyzed your business and suggested 9 focus keywords. Review and edit them to match your goals.
+                {t('onboarding.step2_5.subtitle')}
             </p>
 
             {suggestedKeywords && (
                 <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
                     <Sparkles className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div>
-                        <h4 className="font-semibold text-blue-900 text-sm mb-1">AI-Generated Keywords</h4>
+                        <h4 className="font-semibold text-blue-900 text-sm mb-1">{t('onboarding.step2_5.aiTitle')}</h4>
                         <p className="text-blue-700 text-sm">
-                            These keywords were automatically generated based on your business description. Feel free to edit them!
+                            {t('onboarding.step2_5.aiDesc')}
                         </p>
                     </div>
                 </div>
@@ -158,7 +160,7 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                 <div className="w-48">
                     <div className="flex items-center gap-2 mb-1 justify-end">
                         <Globe size={14} className="text-gray-500" />
-                        <span className="text-xs font-medium text-gray-500">Target Country</span>
+                        <span className="text-xs font-medium text-gray-500">{t('onboarding.step2_5.targetCountry')}</span>
                     </div>
                     <SelectField
                         multiple={false}
@@ -167,7 +169,7 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                             label: countries[countryISO][0],
                             value: countryISO
                         }))}
-                        defaultLabel='All Countries'
+                        defaultLabel={t('domainSettings.strategy.allCountries')}
                         updateField={handleCountryChange}
                         rounded='rounded-lg'
                         maxHeight={48}
@@ -184,8 +186,8 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                             <Zap className="h-5 w-5 text-red-600" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-gray-900">High Priority (Top 3)</h3>
-                            <p className="text-sm text-gray-500">Critical keywords you must dominate</p>
+                            <h3 className="font-bold text-gray-900">{t('onboarding.step2_5.highPriorityTitle')}</h3>
+                            <p className="text-sm text-gray-500">{t('onboarding.step2_5.highPriorityDesc')}</p>
                         </div>
                     </div>
                     <div className="space-y-3">
@@ -196,7 +198,7 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                                 </div>
                                 <input
                                     type="text"
-                                    placeholder={`Priority Keyword #${i + 1}`}
+                                    placeholder={`${t('onboarding.step2_5.keywordPlaceholder')} #${i + 1}`}
                                     value={focusKeywords.high[i]}
                                     onChange={(e) => handleKeywordChange('high', i, e.target.value)}
                                     className="flex-1 px-4 py-3 rounded-lg border-2 border-red-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all outline-none"
@@ -213,8 +215,8 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                             <Flag className="h-5 w-5 text-yellow-600" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-gray-900">Medium Priority</h3>
-                            <p className="text-sm text-gray-500">Important supporting keywords</p>
+                            <h3 className="font-bold text-gray-900">{t('onboarding.step2_5.mediumPriorityTitle')}</h3>
+                            <p className="text-sm text-gray-500">{t('onboarding.step2_5.mediumPriorityDesc')}</p>
                         </div>
                     </div>
                     <div className="space-y-3">
@@ -225,7 +227,7 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                                 </div>
                                 <input
                                     type="text"
-                                    placeholder={`Keyword #${i + 4}`}
+                                    placeholder={`${t('onboarding.step2_5.keywordPlaceholder')} #${i + 4}`}
                                     value={focusKeywords.medium[i]}
                                     onChange={(e) => handleKeywordChange('medium', i, e.target.value)}
                                     className="flex-1 px-4 py-3 rounded-lg border-2 border-yellow-200 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 transition-all outline-none"
@@ -242,8 +244,8 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                             <Flag className="h-5 w-5 text-blue-600" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-gray-900">Low Priority</h3>
-                            <p className="text-sm text-gray-500">Long-tail & future opportunities</p>
+                            <h3 className="font-bold text-gray-900">{t('onboarding.step2_5.lowPriorityTitle')}</h3>
+                            <p className="text-sm text-gray-500">{t('onboarding.step2_5.lowPriorityDesc')}</p>
                         </div>
                     </div>
                     <div className="space-y-3">
@@ -254,7 +256,7 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                                 </div>
                                 <input
                                     type="text"
-                                    placeholder={`Keyword #${i + 7}`}
+                                    placeholder={`${t('onboarding.step2_5.keywordPlaceholder')} #${i + 7}`}
                                     value={focusKeywords.low[i]}
                                     onChange={(e) => handleKeywordChange('low', i, e.target.value)}
                                     className="flex-1 px-4 py-3 rounded-lg border-2 border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none"
@@ -274,15 +276,14 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                     {loading ? (
                         <>
                             <Loader2 className="h-5 w-5 animate-spin" />
-                            Saving...
+                            {t('onboarding.step1.saving')}
                         </>
                     ) : (
-                        'Continue'
+                        t('onboarding.step1.continue')
                     )}
                 </button>
             </form>
         </div>
     );
 };
-
 export default Step2_5;

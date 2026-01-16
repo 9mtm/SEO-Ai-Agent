@@ -22,19 +22,13 @@ import {
     ChevronUp,
     Info
 } from 'lucide-react';
-
-const AVAILABLE_PERMISSIONS = {
-    'read:domains': { label: 'View Domains', desc: 'See your website information' },
-    'read:keywords': { label: 'View Keywords', desc: 'See your SEO keywords' },
-    'read:posts': { label: 'View Articles', desc: 'See your blog posts' },
-    'read:gsc': { label: 'View Analytics', desc: 'See Google Search data' },
-    'write:posts': { label: 'Create Articles', desc: 'Write and edit blog posts' },
-    'write:keywords': { label: 'Manage Keywords', desc: 'Add and update keywords' },
-    'publish:wordpress': { label: 'Publish to WordPress', desc: 'Publish articles to your website' },
-};
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function ApiKeysPage() {
     const router = useRouter();
+    const { t, locale, setLocale } = useLanguage();
+    const currentLocale = locale || 'en';
+
     const { data: domainsData } = useFetchDomains(router);
 
     const [apiKeys, setApiKeys] = useState<any[]>([]);
@@ -48,6 +42,16 @@ export default function ApiKeysPage() {
     const [keyName, setKeyName] = useState('');
     const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
     const [expiresInDays, setExpiresInDays] = useState(30);
+
+    const AVAILABLE_PERMISSIONS = {
+        'read:domains': { label: t('apiKeys.permLabels.readDomains'), desc: t('apiKeys.permLabels.readDomainsDesc') },
+        'read:keywords': { label: t('apiKeys.permLabels.readKeywords'), desc: t('apiKeys.permLabels.readKeywordsDesc') },
+        'read:posts': { label: t('apiKeys.permLabels.readPosts'), desc: t('apiKeys.permLabels.readPostsDesc') },
+        'read:gsc': { label: t('apiKeys.permLabels.readGsc'), desc: t('apiKeys.permLabels.readGscDesc') },
+        'write:posts': { label: t('apiKeys.permLabels.writePosts'), desc: t('apiKeys.permLabels.writePostsDesc') },
+        'write:keywords': { label: t('apiKeys.permLabels.writeKeywords'), desc: t('apiKeys.permLabels.writeKeywordsDesc') },
+        'publish:wordpress': { label: t('apiKeys.permLabels.publishWordpress'), desc: t('apiKeys.permLabels.publishWordpressDesc') },
+    };
 
     useEffect(() => {
         fetchApiKeys();
@@ -157,7 +161,7 @@ export default function ApiKeysPage() {
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
-        toast.success('Copied to clipboard!', { icon: '📋' });
+        toast.success(t('apiKeys.successModal.copy') + '!', { icon: '📋' });
     };
 
     const togglePermission = (perm: string) => {
@@ -185,9 +189,9 @@ export default function ApiKeysPage() {
     };
 
     return (
-        <DashboardLayout domains={domainsData?.domains || []}>
+        <DashboardLayout selectedLang={currentLocale} onLanguageChange={setLocale} domains={domainsData?.domains || []}>
             <Head>
-                <title>API & MCP Connections</title>
+                <title>{t('apiKeys.title')}</title>
             </Head>
 
             <div className="h-full w-full p-6 space-y-6 max-w-6xl mx-auto">
@@ -195,10 +199,10 @@ export default function ApiKeysPage() {
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
                         <Key className="h-6 w-6" />
-                        API & MCP Connections
+                        {t('apiKeys.title')}
                     </h1>
                     <p className="text-neutral-500 text-sm mt-1">
-                        Connect AI assistants via MCP protocol to manage your SEO data
+                        {t('apiKeys.subtitle')}
                     </p>
                 </div>
 
@@ -208,10 +212,10 @@ export default function ApiKeysPage() {
                         <CardHeader className="border-b border-green-200">
                             <CardTitle className="flex items-center gap-2 text-green-900">
                                 <CheckCircle2 className="h-6 w-6" />
-                                Connection Created Successfully!
+                                {t('apiKeys.successModal.title')}
                             </CardTitle>
                             <CardDescription className="text-green-700">
-                                Follow these steps to connect your AI assistant
+                                {t('apiKeys.successModal.subtitle')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="pt-6 space-y-6">
@@ -219,10 +223,10 @@ export default function ApiKeysPage() {
                             <div className="space-y-3">
                                 <div className="flex items-center gap-2">
                                     <div className="bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                                    <h4 className="font-semibold text-green-900">Copy Your Connection Key</h4>
+                                    <h4 className="font-semibold text-green-900">{t('apiKeys.successModal.step1')}</h4>
                                 </div>
                                 <div className="ml-8">
-                                    <p className="text-sm text-green-700 mb-2">This is your unique key - save it somewhere safe!</p>
+                                    <p className="text-sm text-green-700 mb-2">{t('apiKeys.successModal.step1Desc')}</p>
                                     <div className="flex gap-2">
                                         <code className="flex-1 bg-white border-2 border-green-300 p-4 rounded-lg text-green-900 font-mono text-sm break-all">
                                             {newKeyData.apiKey}
@@ -233,7 +237,7 @@ export default function ApiKeysPage() {
                                             size="lg"
                                         >
                                             <Copy className="h-5 w-5 mr-2" />
-                                            Copy
+                                            {t('apiKeys.successModal.copy')}
                                         </Button>
                                     </div>
                                 </div>
@@ -243,10 +247,10 @@ export default function ApiKeysPage() {
                             <div className="space-y-3">
                                 <div className="flex items-center gap-2">
                                     <div className="bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold">2</div>
-                                    <h4 className="font-semibold text-green-900">Add to Your AI Assistant</h4>
+                                    <h4 className="font-semibold text-green-900">{t('apiKeys.successModal.step2')}</h4>
                                 </div>
                                 <div className="ml-8 space-y-2">
-                                    <p className="text-sm text-green-700">For Claude Desktop, add this to your config file:</p>
+                                    <p className="text-sm text-green-700">{t('apiKeys.successModal.step2Desc')}</p>
                                     <div className="bg-white border-2 border-green-300 rounded-lg p-4">
                                         <code className="text-xs text-green-900 block whitespace-pre">
                                             {`{
@@ -269,7 +273,7 @@ export default function ApiKeysPage() {
                                         className="text-sm text-green-700 hover:text-green-900 flex items-center gap-1 mt-2"
                                     >
                                         <ExternalLink className="h-3 w-3" />
-                                        View detailed setup guide
+                                        {t('apiKeys.viewGuide')}
                                     </a>
                                 </div>
                             </div>
@@ -278,10 +282,10 @@ export default function ApiKeysPage() {
                             <div className="space-y-3">
                                 <div className="flex items-center gap-2">
                                     <div className="bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold">3</div>
-                                    <h4 className="font-semibold text-green-900">Restart & Start Using</h4>
+                                    <h4 className="font-semibold text-green-900">{t('apiKeys.successModal.step3')}</h4>
                                 </div>
                                 <div className="ml-8">
-                                    <p className="text-sm text-green-700">Restart your AI assistant and start chatting!</p>
+                                    <p className="text-sm text-green-700">{t('apiKeys.successModal.step3Desc')}</p>
                                 </div>
                             </div>
 
@@ -289,15 +293,15 @@ export default function ApiKeysPage() {
                                 <div className="flex items-start gap-2">
                                     <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
                                     <div>
-                                        <p className="text-sm font-semibold text-amber-900">Important!</p>
-                                        <p className="text-sm text-amber-800">This key will only be shown once. Make sure to save it securely before closing this message.</p>
+                                        <p className="text-sm font-semibold text-amber-900">{t('apiKeys.successModal.important')}</p>
+                                        <p className="text-sm text-amber-800">{t('apiKeys.successModal.importantDesc')}</p>
                                     </div>
                                 </div>
                             </div>
 
                             <Button onClick={() => setNewKeyData(null)} className="w-full bg-green-600 hover:bg-green-700" size="lg">
                                 <CheckCircle2 className="mr-2 h-5 w-5" />
-                                I've Saved the Key
+                                {t('apiKeys.successModal.saved')}
                             </Button>
                         </CardContent>
                     </Card>
@@ -306,27 +310,27 @@ export default function ApiKeysPage() {
                 {showCreateModal && (
                     <Card className="border-blue-300 shadow-xl">
                         <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
-                            <CardTitle className="text-xl">Create New Connection</CardTitle>
-                            <CardDescription>Set up AI assistant access to your SEO data</CardDescription>
+                            <CardTitle className="text-xl">{t('apiKeys.createModal.title')}</CardTitle>
+                            <CardDescription>{t('apiKeys.createModal.subtitle')}</CardDescription>
                         </CardHeader>
                         <CardContent className="pt-6 space-y-6">
                             {/* Connection Name */}
                             <div className="bg-neutral-50 p-5 rounded-lg">
-                                <label className="text-base font-semibold mb-3 block">1. Name Your Connection</label>
+                                <label className="text-base font-semibold mb-3 block">{t('apiKeys.createModal.nameLabel')}</label>
                                 <input
                                     type="text"
-                                    placeholder="e.g., My Claude Assistant"
+                                    placeholder={t('apiKeys.createModal.namePlaceholder')}
                                     value={keyName}
                                     onChange={(e) => setKeyName(e.target.value)}
                                     className="w-full px-4 py-3 border-2 border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
                                 />
-                                <p className="text-xs text-neutral-500 mt-2">Choose a name you'll recognize later</p>
+                                <p className="text-xs text-neutral-500 mt-2">{t('apiKeys.createModal.nameHelp')}</p>
                             </div>
 
                             {/* Permissions */}
                             <div className="bg-neutral-50 p-5 rounded-lg">
                                 <div className="flex items-center justify-between mb-3">
-                                    <label className="text-base font-semibold">2. Choose Permissions</label>
+                                    <label className="text-base font-semibold">{t('apiKeys.createModal.permLabel')}</label>
                                     <Button
                                         variant="outline"
                                         size="sm"
@@ -339,7 +343,7 @@ export default function ApiKeysPage() {
                                         }}
                                         className="text-xs"
                                     >
-                                        {selectedPermissions.length === Object.keys(AVAILABLE_PERMISSIONS).length ? 'Deselect All' : 'Select All'}
+                                        {selectedPermissions.length === Object.keys(AVAILABLE_PERMISSIONS).length ? t('apiKeys.createModal.deselectAll') : t('apiKeys.createModal.selectAll')}
                                     </Button>
                                 </div>
                                 <div className="space-y-2 max-h-96 overflow-y-auto">
@@ -368,29 +372,29 @@ export default function ApiKeysPage() {
 
                             {/* Expiration */}
                             <div className="bg-neutral-50 p-5 rounded-lg">
-                                <label className="text-base font-semibold mb-3 block">3. Set Expiration</label>
+                                <label className="text-base font-semibold mb-3 block">{t('apiKeys.createModal.expiryLabel')}</label>
                                 <select
                                     value={expiresInDays}
                                     onChange={(e) => setExpiresInDays(Number(e.target.value))}
                                     className="w-full px-4 py-3 border-2 border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
                                 >
-                                    <option value={7}>7 days</option>
-                                    <option value={30}>30 days (Recommended)</option>
-                                    <option value={90}>90 days</option>
-                                    <option value={365}>1 year</option>
-                                    <option value={0}>Never expires</option>
+                                    <option value={7}>{t('apiKeys.expiryOptions.7')}</option>
+                                    <option value={30}>{t('apiKeys.expiryOptions.30')}</option>
+                                    <option value={90}>{t('apiKeys.expiryOptions.90')}</option>
+                                    <option value={365}>{t('apiKeys.expiryOptions.365')}</option>
+                                    <option value={0}>{t('apiKeys.expiryOptions.0')}</option>
                                 </select>
-                                <p className="text-xs text-neutral-500 mt-2">For security, we recommend 30 days</p>
+                                <p className="text-xs text-neutral-500 mt-2">{t('apiKeys.createModal.expiryHelp')}</p>
                             </div>
 
                             {/* Actions */}
                             <div className="flex gap-3 pt-4 border-t">
                                 <Button onClick={handleCreateKey} className="flex-1 bg-blue-600 hover:bg-blue-700" size="lg">
                                     <Plus className="mr-2 h-5 w-5" />
-                                    Create Connection
+                                    {t('apiKeys.createModal.create')}
                                 </Button>
                                 <Button onClick={() => setShowCreateModal(false)} variant="outline" className="flex-1" size="lg">
-                                    Cancel
+                                    {t('apiKeys.createModal.cancel')}
                                 </Button>
                             </div>
                         </CardContent>
@@ -402,7 +406,7 @@ export default function ApiKeysPage() {
                     <div className="flex justify-end">
                         <Button onClick={() => setShowCreateModal(true)} className="bg-blue-600 hover:bg-blue-700" size="lg">
                             <Plus className="mr-2 h-5 w-5" />
-                            Create New Connection
+                            {t('apiKeys.create')}
                         </Button>
                     </div>
                 )}
@@ -411,14 +415,14 @@ export default function ApiKeysPage() {
                 <div>
                     <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                         <Activity className="h-5 w-5" />
-                        Your Active Connections ({apiKeys.length})
+                        {t('apiKeys.activeConnections', { count: apiKeys.length })}
                     </h2>
 
                     {isLoading ? (
                         <Card>
                             <CardContent className="flex flex-col items-center justify-center py-12">
                                 <Activity className="h-8 w-8 animate-spin text-blue-600 mb-3" />
-                                <p className="text-neutral-500">Loading your connections...</p>
+                                <p className="text-neutral-500">{t('common.loading')}</p>
                             </CardContent>
                         </Card>
                     ) : apiKeys.length === 0 ? (
@@ -427,13 +431,13 @@ export default function ApiKeysPage() {
                                 <div className="bg-neutral-100 p-4 rounded-full mb-4">
                                     <Key className="h-12 w-12 text-neutral-400" />
                                 </div>
-                                <h3 className="text-xl font-semibold mb-2">No Connections Yet</h3>
+                                <h3 className="text-xl font-semibold mb-2">{t('apiKeys.noConnections')}</h3>
                                 <p className="text-neutral-500 text-center max-w-md mb-6">
-                                    Create your first AI connection to start managing your SEO data through conversation with AI assistants like Claude or ChatGPT.
+                                    {t('apiKeys.noConnectionsDesc')}
                                 </p>
                                 <Button onClick={() => setShowCreateModal(true)} className="bg-blue-600 hover:bg-blue-700" size="lg">
                                     <Plus className="mr-2 h-5 w-5" />
-                                    Create Your First Connection
+                                    {t('apiKeys.createFirst')}
                                 </Button>
                             </CardContent>
                         </Card>
@@ -450,31 +454,31 @@ export default function ApiKeysPage() {
                                                     </div>
                                                     <div>
                                                         <h3 className="font-semibold text-lg">{key.name}</h3>
-                                                        {key.revoked && <Badge variant="destructive" className="mt-1">Disabled</Badge>}
+                                                        {key.revoked && <Badge variant="destructive" className="mt-1">{t('apiKeys.disabled')}</Badge>}
                                                     </div>
                                                 </div>
 
                                                 <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
                                                     <div className="flex items-center gap-2 text-neutral-600">
                                                         <Clock className="h-4 w-4" />
-                                                        <span>Created {new Date(key.created_at).toLocaleDateString()}</span>
+                                                        <span>{t('apiKeys.created', { date: new Date(key.created_at).toLocaleDateString() })}</span>
                                                     </div>
                                                     {key.last_used_at && (
                                                         <div className="flex items-center gap-2 text-neutral-600">
                                                             <Activity className="h-4 w-4" />
-                                                            <span>Last used {new Date(key.last_used_at).toLocaleDateString()}</span>
+                                                            <span>{t('apiKeys.lastUsed', { date: new Date(key.last_used_at).toLocaleDateString() })}</span>
                                                         </div>
                                                     )}
                                                     {key.expires_at && (
                                                         <div className="flex items-center gap-2 text-neutral-600">
                                                             <AlertCircle className="h-4 w-4" />
-                                                            <span>Expires {new Date(key.expires_at).toLocaleDateString()}</span>
+                                                            <span>{t('apiKeys.expires', { date: new Date(key.expires_at).toLocaleDateString() })}</span>
                                                         </div>
                                                     )}
                                                 </div>
 
                                                 <div>
-                                                    <p className="text-xs font-semibold text-neutral-500 mb-2">PERMISSIONS:</p>
+                                                    <p className="text-xs font-semibold text-neutral-500 mb-2">{t('apiKeys.permissions')}</p>
                                                     <div className="flex flex-wrap gap-2">
                                                         {key.permissions.map((perm: string) => {
                                                             const permInfo = AVAILABLE_PERMISSIONS[perm as keyof typeof AVAILABLE_PERMISSIONS];
@@ -499,12 +503,12 @@ export default function ApiKeysPage() {
                                                     {expandedKeyId === key.id ? (
                                                         <>
                                                             <ChevronUp className="h-4 w-4 mr-1" />
-                                                            Hide Setup
+                                                            {t('apiKeys.hideSetup')}
                                                         </>
                                                     ) : (
                                                         <>
                                                             <Info className="h-4 w-4 mr-1" />
-                                                            View Setup
+                                                            {t('apiKeys.viewSetup')}
                                                         </>
                                                     )}
                                                 </Button>
@@ -515,7 +519,7 @@ export default function ApiKeysPage() {
                                                         onClick={() => handleRevokeKey(key.id)}
                                                         className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
                                                     >
-                                                        Disable
+                                                        {t('apiKeys.disable')}
                                                     </Button>
                                                 )}
                                                 <Button
@@ -525,7 +529,7 @@ export default function ApiKeysPage() {
                                                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
                                                 >
                                                     <Trash2 className="h-4 w-4 mr-1" />
-                                                    Delete
+                                                    {t('apiKeys.delete')}
                                                 </Button>
                                             </div>
                                         </div>
@@ -538,10 +542,9 @@ export default function ApiKeysPage() {
                                                     <div className="flex items-start gap-2">
                                                         <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
                                                         <div>
-                                                            <p className="text-sm font-semibold text-amber-900">API Key Not Retrievable</p>
+                                                            <p className="text-sm font-semibold text-amber-900">{t('apiKeys.securityNotice')}</p>
                                                             <p className="text-sm text-amber-800 mt-1">
-                                                                For security reasons, API keys are only shown once during creation.
-                                                                If you lost your key, create a new connection and delete this one.
+                                                                {t('apiKeys.securityDesc')}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -550,12 +553,12 @@ export default function ApiKeysPage() {
                                                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                                                     <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
                                                         <Info className="h-4 w-4" />
-                                                        How to Use This Connection
+                                                        {t('apiKeys.setupTitle')}
                                                     </h4>
                                                     <div className="space-y-3 text-sm">
                                                         <div>
-                                                            <p className="font-medium text-blue-900 mb-1">For Claude Desktop:</p>
-                                                            <p className="text-blue-700 mb-2">Add this to your config file (replace with your actual API key):</p>
+                                                            <p className="font-medium text-blue-900 mb-1">{t('apiKeys.setupClaude')}</p>
+                                                            <p className="text-blue-700 mb-2">{t('apiKeys.setupConfig')}</p>
                                                             <div className="relative bg-white border border-blue-300 rounded p-3">
                                                                 <Button
                                                                     variant="ghost"
@@ -597,7 +600,7 @@ export default function ApiKeysPage() {
                                                             className="text-sm text-blue-700 hover:text-blue-900 flex items-center gap-1"
                                                         >
                                                             <ExternalLink className="h-3 w-3" />
-                                                            View detailed setup guide
+                                                            {t('apiKeys.viewGuide')}
                                                         </a>
                                                     </div>
                                                 </div>

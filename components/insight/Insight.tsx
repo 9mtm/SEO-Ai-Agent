@@ -5,6 +5,7 @@ import { sortInsightItems } from '../../utils/insight';
 import SelectField from '../common/SelectField';
 import InsightItem from './InsightItem';
 import InsightStats from './InsightStats';
+import { useLanguage } from '../../context/LanguageContext';
 
 type SCInsightProps = {
    domain: DomainType | null,
@@ -16,6 +17,7 @@ type SCInsightProps = {
 }
 
 const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, domain, daysFilter = 30, setDaysFilter }: SCInsightProps) => {
+   const { t, locale } = useLanguage();
    const [activeTab, setActiveTab] = useState<string>('stats');
    const [sortBy, setSortBy] = useState<string>('clicks');
    const [searchQuery, setSearchQuery] = useState<string>('');
@@ -23,17 +25,19 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
    const itemsPerPage = 20;
 
    const insightItems = insight[activeTab as keyof InsightDataType];
+   // Use locale for date parsing if needed, but here dates are strings from API usually
    const startDate = insight && insight.stats && insight.stats.length > 0 ? new Date(insight.stats[0].date) : null;
    const endDate = insight && insight.stats && insight.stats.length > 0 ? new Date(insight.stats[insight.stats.length - 1].date) : null;
 
    // Get period label dynamically
    const getPeriodLabel = (days: number) => {
-      if (days === 1) return 'Yesterday';
-      if (days === 7) return 'Last 7 Days';
-      if (days === 30) return 'Last 30 Days';
-      if (days === 90) return 'Last 90 Days';
-      if (days === 365) return 'Last Year';
-      return `Last ${days} Days`;
+      if (days === 1) return t('periods.yesterday'); // Or 'today' depending on logic, keeping existing default
+      if (days === 0) return t('periods.today');
+      if (days === 7) return t('periods.last7Days');
+      if (days === 30) return t('periods.last30Days');
+      if (days === 90) return t('periods.last90Days');
+      if (days === 365) return t('periods.lastYear');
+      return t('periods.lastDays', { days });
    };
 
    const switchTab = (tab: string) => {
@@ -68,9 +72,10 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
 
       // Filter by search query
       if (searchQuery && activeTab !== 'stats') {
+         const qLower = searchQuery.toLowerCase();
          items = items.filter((item: SCInsightItem) => {
             const searchText = (item.keyword || item.page || item.country || '').toLowerCase();
-            return searchText.includes(searchQuery.toLowerCase());
+            return searchText.includes(qLower);
          });
       }
 
@@ -90,36 +95,36 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
    const renderTableHeader = () => {
       const headerNames: { [key: string]: { label: string, key: string }[] } = {
          stats: [
-            { label: 'Date', key: 'date' },
-            { label: 'Avg Position', key: 'position' },
-            { label: 'Visits', key: 'clicks' },
-            { label: 'Impressions', key: 'impressions' },
-            { label: 'CTR', key: 'ctr' }
+            { label: t('insight.date'), key: 'date' },
+            { label: t('insight.avgPosition'), key: 'position' },
+            { label: t('insight.visits'), key: 'clicks' },
+            { label: t('insight.impressions'), key: 'impressions' },
+            { label: t('insight.ctr'), key: 'ctr' }
          ],
          keywords: [
-            { label: 'Keyword', key: 'keyword' },
-            { label: 'Avg Position', key: 'position' },
-            { label: 'Visits', key: 'clicks' },
-            { label: 'Impressions', key: 'impressions' },
-            { label: 'CTR', key: 'ctr' },
-            { label: 'Countries', key: 'countries' }
+            { label: t('insight.keywords'), key: 'keyword' }, // "Keyword" singular or plural? Using generic label
+            { label: t('insight.avgPosition'), key: 'position' },
+            { label: t('insight.visits'), key: 'clicks' },
+            { label: t('insight.impressions'), key: 'impressions' },
+            { label: t('insight.ctr'), key: 'ctr' },
+            { label: t('insight.countries'), key: 'countries' }
          ],
          countries: [
-            { label: 'Country', key: 'country' },
-            { label: 'Avg Position', key: 'position' },
-            { label: 'Visits', key: 'clicks' },
-            { label: 'Impressions', key: 'impressions' },
-            { label: 'CTR', key: 'ctr' },
-            { label: 'Keywords', key: 'keywords' }
+            { label: t('insight.countries'), key: 'country' }, // Singular "Country" vs "Countries" header
+            { label: t('insight.avgPosition'), key: 'position' },
+            { label: t('insight.visits'), key: 'clicks' },
+            { label: t('insight.impressions'), key: 'impressions' },
+            { label: t('insight.ctr'), key: 'ctr' },
+            { label: t('insight.keywords'), key: 'keywords' }
          ],
          pages: [
-            { label: 'Page', key: 'page' },
-            { label: 'Avg Position', key: 'position' },
-            { label: 'Visits', key: 'clicks' },
-            { label: 'Impressions', key: 'impressions' },
-            { label: 'CTR', key: 'ctr' },
-            { label: 'Countries', key: 'countries' },
-            { label: 'Keywords', key: 'keywords' }
+            { label: t('insight.pages'), key: 'page' },
+            { label: t('insight.avgPosition'), key: 'position' },
+            { label: t('insight.visits'), key: 'clicks' },
+            { label: t('insight.impressions'), key: 'impressions' },
+            { label: t('insight.ctr'), key: 'ctr' },
+            { label: t('insight.countries'), key: 'countries' },
+            { label: t('insight.keywords'), key: 'keywords' }
          ],
       };
 
@@ -186,6 +191,8 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
    const deviceTabStyle = 'select-none cursor-pointer px-4 py-2.5 rounded-lg mr-2 transition-all duration-200 font-medium';
    const deviceTabCountStyle = 'px-2 py-0.5 rounded-full bg-violet-100 text-[0.7rem] font-bold ml-2 text-violet-700';
 
+   const tabsList = ['stats', 'keywords', 'countries', 'pages'];
+
    return (
       <div>
          <div className='domKeywords flex flex-col bg-[white] rounded-md text-sm border mb-5 shadow-sm'>
@@ -193,14 +200,14 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
             text-sm text-gray-500 font-semibold border-b-[1px] lg:border-0 lg:flex-row'>
                <div className='flex items-center justify-between w-full lg:w-auto'>
                   <ul className='text-xs hidden lg:flex'>
-                     {['stats', 'keywords', 'countries', 'pages'].map((tabItem) => {
+                     {tabsList.map((tabItem) => {
                         const tabInsightItem = insight[tabItem as keyof InsightDataType];
                         const isActive = activeTab === tabItem;
                         return <li
                            key={`tab-${tabItem}`}
                            className={`${deviceTabStyle} ${isActive ? 'bg-violet-100 text-violet-700 shadow-sm' : 'hover:bg-gray-100'}`}
                            onClick={() => switchTab(tabItem)}>
-                           <i className='hidden not-italic lg:inline-block capitalize'>{tabItem}</i>
+                           <i className='hidden not-italic lg:inline-block capitalize'>{t(`insight.${tabItem}`)}</i>
                            {tabItem !== 'stats' && (
                               <span className={`${deviceTabCountStyle}`}>
                                  {tabInsightItem && tabInsightItem.length ? tabInsightItem.length : 0}
@@ -219,15 +226,15 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                         <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' />
                         </svg>
-                        Export CSV
+                        {t('insight.exportCSV')}
                      </button>
                   )}
 
                   <div className='insight_selector lg:hidden'>
                      <SelectField
-                        options={['stats', 'keywords', 'countries', 'pages'].map((d) => { return { label: d, value: d }; })}
+                        options={tabsList.map((d) => { return { label: t(`insight.${d}`), value: d }; })}
                         selected={[activeTab]}
-                        defaultLabel="Select Tab"
+                        defaultLabel={t('insight.selectTab')}
                         updateField={(updatedTab: [string]) => switchTab(updatedTab[0])}
                         multiple={false}
                         rounded={'rounded'}
@@ -238,28 +245,28 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                   <div className='py-2 text-xs text-center mt-2 lg:text-sm lg:mt-0 flex flex-col lg:flex-row items-center gap-3'>
                      {/* Date Range Display */}
                      <div>
-                        {startDate && new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(startDate))}
+                        {startDate && new Intl.DateTimeFormat(locale || 'en-US', { dateStyle: 'medium' }).format(new Date(startDate))}
                         <span className='px-2 inline-block'>-</span>
-                        {endDate && new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(endDate))}
+                        {endDate && new Intl.DateTimeFormat(locale || 'en-US', { dateStyle: 'medium' }).format(new Date(endDate))}
                      </div>
 
                      {/* Time Range Filter */}
                      {setDaysFilter && (
                         <div className='flex gap-2 text-xs'>
                            {[
-                              { label: 'Today', days: 0 },
-                              { label: 'Yesterday', days: 1 },
-                              { label: '7 Days', days: 7 },
-                              { label: '30 Days', days: 30 },
-                              { label: '90 Days', days: 90 },
-                              { label: '1 Year', days: 365 }
+                              { label: t('periods.today'), days: 0 },
+                              { label: t('periods.yesterday'), days: 1 },
+                              { label: t('periods.last7Days'), days: 7 },
+                              { label: t('periods.last30Days'), days: 30 },
+                              { label: t('periods.last90Days'), days: 90 },
+                              { label: t('periods.lastYear'), days: 365 }
                            ].map(({ label, days }) => (
                               <button
                                  key={days}
                                  onClick={() => setDaysFilter(days)}
                                  className={`px-3 py-1 rounded-full transition-all ${daysFilter === days
-                                       ? 'bg-violet-600 text-white shadow-sm'
-                                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    ? 'bg-violet-600 text-white shadow-sm'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                     }`}
                               >
                                  {label}
@@ -277,7 +284,7 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                   <div className='relative'>
                      <input
                         type='text'
-                        placeholder={`Search ${activeTab}...`}
+                        placeholder={`${t('common.search')} ${t(`insight.${activeTab}`)}...`}
                         value={searchQuery}
                         onChange={(e) => {
                            setSearchQuery(e.target.value);
@@ -308,7 +315,7 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                      <svg className='w-5 h-5 mr-2' fill='currentColor' viewBox='0 0 20 20'>
                         <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
                      </svg>
-                     Top 5 Performers
+                     {t('insight.topPerformers')}
                   </h3>
                   <div className='flex gap-2 overflow-x-auto pb-2'>
                      {topPerformers.map((item: SCInsightItem, idx: number) => (
@@ -317,7 +324,7 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                               {item.keyword || item.page || item.country}
                            </div>
                            <div className='flex items-center justify-between text-xs'>
-                              <span className='text-violet-600 font-bold'>{item.clicks} visits</span>
+                              <span className='text-violet-600 font-bold'>{item.clicks} {t('insight.visits').toLowerCase()}</span>
                               <span className='text-gray-500'>Pos: {Math.round(item.position)}</span>
                            </div>
                         </div>
@@ -356,14 +363,14 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-1.07 3.97-2.9 5.4z" />
                               </svg>
                            </div>
-                           <p className="text-lg font-medium text-gray-900">Google Search Console Not Integrated</p>
-                           <p className="text-sm mt-2 mb-6 text-gray-500">Connect your account in Settings to see insights.</p>
+                           <p className="text-lg font-medium text-gray-900">{t('insight.connectTitle')}</p>
+                           <p className="text-sm mt-2 mb-6 text-gray-500">{t('insight.connectDesc')}</p>
 
                            <Link
                               href="/settings?tab=search_console"
                               className="px-6 py-2.5 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center"
                            >
-                              Connect Google Search Console
+                              {t('insight.connectBtn')}
                            </Link>
                         </div>
                      )}
@@ -372,7 +379,7 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                            <svg className="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                            </svg>
-                           <p>No results found for "{searchQuery}"</p>
+                           <p>{t('insight.noResults', { query: searchQuery })}</p>
                         </div>
                      )}
                   </div>
@@ -383,7 +390,7 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
             {totalPages > 1 && (
                <div className='px-6 py-4 border-t border-gray-200 flex items-center justify-between'>
                   <div className='text-sm text-gray-600'>
-                     Page {currentPage} of {totalPages}
+                     {t('insight.pageInfo', { current: currentPage, total: totalPages })}
                   </div>
                   <div className='flex gap-2'>
                      <button
@@ -391,14 +398,14 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
                         disabled={currentPage === 1}
                         className='px-3 py-1.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed'
                      >
-                        Previous
+                        {t('insight.previous')}
                      </button>
                      <button
                         onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                         disabled={currentPage === totalPages}
                         className='px-3 py-1.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed'
                      >
-                        Next
+                        {t('insight.next')}
                      </button>
                   </div>
                </div>

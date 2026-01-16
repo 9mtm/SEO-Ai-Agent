@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const defaultSettings: SettingsType = {
    scraper_type: 'none',
@@ -38,12 +39,14 @@ export const defaultSettings: SettingsType = {
 
 const ScraperPage: NextPage = () => {
    const router = useRouter();
-   const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
+   const { t, locale, setLocale } = useLanguage();
+   const currentLocale = locale || 'en';
+
    const [settings, setSettings] = useState<SettingsType>(defaultSettings);
    const { data: domainsData } = useFetchDomains(router);
    const { data: appSettings, isPending } = useFetchSettings();
    const { mutate: updateMutate, isPending: isUpdating } = useUpdateSettings(() => {
-      toast.success('Settings updated successfully!');
+      toast.success(t('scraperSettings.success') || 'Settings updated successfully!');
    });
 
    useEffect(() => {
@@ -61,8 +64,6 @@ const ScraperPage: NextPage = () => {
          router.replace({ pathname, query }, undefined, { shallow: true });
       }
    }, [router.query]);
-
-
 
    const updateSettings = (key: string, value: string | number | boolean) => {
       setSettings({ ...settings, [key]: value });
@@ -94,86 +95,43 @@ const ScraperPage: NextPage = () => {
       }
    };
 
-
-
-   const translations = {
-      en: {
-         title: 'Scraper Configuration',
-         description: 'Manage your scraping settings and integrations',
-         scraper: 'Scraper',
-         notifications: 'Notifications',
-         integrations: 'Integrations',
-         save: 'Save Changes',
-         saving: 'Saving...',
-         googleConnected: 'Connected to Google',
-         disconnect: 'Disconnect',
-         importSites: 'Import Verified Sites',
-         importingSites: 'Loading Sites...',
-         connectGoogle: 'Connect Google Account',
-         sitesModalTitle: 'Import Sites from Google Search Console',
-         noSites: 'No verified sites found',
-         import: 'Import',
-         close: 'Close'
-      },
-      de: {
-         title: 'Einstellungen',
-         description: 'Verwalten Sie Ihre Anwendungseinstellungen',
-         scraper: 'Scraper',
-         notifications: 'Benachrichtigungen',
-         integrations: 'Integrationen',
-         save: 'Änderungen speichern',
-         saving: 'Wird gespeichert...',
-         googleConnected: 'Mit Google verbunden',
-         disconnect: 'Trennen',
-         importSites: 'Verifizierte Websites importieren',
-         importingSites: 'Websites werden geladen...',
-         connectGoogle: 'Google-Konto verbinden',
-         sitesModalTitle: 'Websites aus Google Search Console importieren',
-         noSites: 'Keine verifizierten Websites gefunden',
-         import: 'Importieren',
-         close: 'Schließen'
-      }
-   };
-
-   const t = translations[selectedLang];
-
    return (
-      <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang} domains={domainsData?.domains || []}>
+      <DashboardLayout selectedLang={currentLocale} onLanguageChange={setLocale} domains={domainsData?.domains || []}>
          <Head>
-            <title>{t.title} - SEO AI Agent</title>
+            <title>{t('scraperSettings.title')} - SEO AI Agent</title>
          </Head>
 
          <div className="max-w-5xl">
             <div className="mb-8">
-               <h1 className="text-3xl font-bold text-neutral-900 mb-2">{t.title}</h1>
-               <p className="text-neutral-600">{t.description}</p>
+               <h1 className="text-3xl font-bold text-neutral-900 mb-2">{t('scraperSettings.title')}</h1>
+               <p className="text-neutral-600">{t('scraperSettings.desc')}</p>
             </div>
 
             {/* Scraper Settings */}
             <div className="space-y-4">
                <Card>
                   <CardHeader>
-                     <CardTitle>Scraper Configuration</CardTitle>
-                     <CardDescription>Configure your scraper settings and proxy options</CardDescription>
+                     <CardTitle>{t('scraperSettings.configTitle')}</CardTitle>
+                     <CardDescription>{t('scraperSettings.configDesc')}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                      <div className="space-y-2">
-                        <Label htmlFor="scraper_type">Scraper Type</Label>
+                        <Label htmlFor="scraper_type">{t('scraperSettings.type')}</Label>
                         <Select
                            value={settings.scraper_type}
                            onValueChange={(value) => updateSettings('scraper_type', value)}
                         >
                            <SelectTrigger id="scraper_type">
-                              <SelectValue placeholder="Select scraper type" />
+                              <SelectValue placeholder={t('scraperSettings.typePlaceholder')} />
                            </SelectTrigger>
                            <SelectContent>
-                              <SelectItem value="none">None</SelectItem>
+                              <SelectItem value="none">{t('scraperSettings.none')}</SelectItem>
                               {settings.available_scapers?.map((scraper) => (
                                  <SelectItem key={scraper.value} value={scraper.value}>
                                     {scraper.label}
                                     {scraper.value === 'scrapingrobot' && (
                                        <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">
-                                          Recommended
+                                          {t('scraperSettings.recommended')}
                                        </span>
                                     )}
                                  </SelectItem>
@@ -184,7 +142,7 @@ const ScraperPage: NextPage = () => {
                         {settings.scraper_type !== 'none' && settings.scraper_type !== 'proxy' && (
                            <div className="bg-green-50 border border-green-200 rounded-md p-3 mt-2">
                               <p className="text-sm text-green-800">
-                                 Don't have an API key? {' '}
+                                 {t('scraperSettings.noKey')} {' '}
                                  <a
                                     href={
                                        settings.scraper_type === 'scrapingrobot'
@@ -211,7 +169,7 @@ const ScraperPage: NextPage = () => {
                                     rel="noopener noreferrer"
                                     className="font-semibold text-green-700 hover:text-green-900 underline"
                                  >
-                                    Sign up for {settings.available_scapers?.find(s => s.value === settings.scraper_type)?.label || 'this service'}
+                                    {t('scraperSettings.signUp', { service: settings.available_scapers?.find(s => s.value === settings.scraper_type)?.label || 'this service' })}
                                  </a>
                               </p>
                            </div>
@@ -220,19 +178,19 @@ const ScraperPage: NextPage = () => {
 
                      {settings.scraper_type !== 'none' && settings.scraper_type !== 'proxy' && (
                         <div className="space-y-2">
-                           <Label htmlFor="scaping_api">API Key</Label>
+                           <Label htmlFor="scaping_api">{t('scraperSettings.apiKey')}</Label>
                            <Input
                               id="scaping_api"
                               type="text"
                               value={settings.scaping_api || ''}
                               onChange={(e) => updateSettings('scaping_api', e.target.value)}
-                              placeholder="Enter your API key"
+                              placeholder={t('scraperSettings.apiKeyPlaceholder')}
                            />
                         </div>
                      )}
 
                      <div className="space-y-2">
-                        <Label htmlFor="scrape_delay">Scrape Delay</Label>
+                        <Label htmlFor="scrape_delay">{t('scraperSettings.delay')}</Label>
                         <Select
                            value={settings.scrape_delay}
                            onValueChange={(value) => updateSettings('scrape_delay', value)}
@@ -241,10 +199,10 @@ const ScraperPage: NextPage = () => {
                               <SelectValue />
                            </SelectTrigger>
                            <SelectContent>
-                              <SelectItem value="none">None</SelectItem>
-                              <SelectItem value="5">5 seconds</SelectItem>
-                              <SelectItem value="10">10 seconds</SelectItem>
-                              <SelectItem value="30">30 seconds</SelectItem>
+                              <SelectItem value="none">{t('scraperSettings.delayNone')}</SelectItem>
+                              <SelectItem value="5">{t('scraperSettings.delay5')}</SelectItem>
+                              <SelectItem value="10">{t('scraperSettings.delay10')}</SelectItem>
+                              <SelectItem value="30">{t('scraperSettings.delay30')}</SelectItem>
                            </SelectContent>
                         </Select>
                      </div>
@@ -256,7 +214,7 @@ const ScraperPage: NextPage = () => {
                            onCheckedChange={(checked) => updateSettings('scrape_retry', checked)}
                         />
                         <Label htmlFor="scrape_retry" className="font-normal cursor-pointer">
-                           Enable retry on failure
+                           {t('scraperSettings.retry')}
                         </Label>
                      </div>
                   </CardContent>
@@ -274,12 +232,12 @@ const ScraperPage: NextPage = () => {
                   {isUpdating ? (
                      <>
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        {t.saving}
+                        {t('scraperSettings.saving')}
                      </>
                   ) : (
                      <>
                         <Save className="h-4 w-4" />
-                        {t.save}
+                        {t('scraperSettings.save')}
                      </>
                   )}
                </Button>

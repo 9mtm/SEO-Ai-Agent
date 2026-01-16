@@ -14,11 +14,14 @@ import { Switch } from "@/components/ui/switch";
 
 import { useRouter } from 'next/router';
 import { useFetchDomains } from '../../services/domains';
+import { useLanguage } from '../../context/LanguageContext';
 
 const BillingPage: NextPage = () => {
     const router = useRouter();
+    const { t, locale, setLocale } = useLanguage();
+    const currentLocale = locale || 'en';
+
     const { data: domainsData } = useFetchDomains(router);
-    const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState<any>(null);
@@ -47,63 +50,63 @@ const BillingPage: NextPage = () => {
     const plans = [
         {
             id: 'free',
-            name: 'Free',
-            description: 'Forever free',
+            name: t('billing.planNames.free'),
+            description: t('billing.planDesc.free'),
             price: { monthly: 0, yearly: 0 },
             features: [
-                '1 Domain',
-                '9 Keywords',
-                'Limited Updates'
+                t('billing.features.domain', { count: 1 }),
+                t('billing.features.keywords', { count: 9 }),
+                t('billing.features.updates'),
             ],
             current: true,
-            buttonText: 'Current Plan',
+            buttonText: t('billing.buttons.current'),
             disabled: true
         },
         {
             id: 'basic',
-            name: 'Basic',
-            description: 'For getting started',
+            name: t('billing.planNames.basic'),
+            description: t('billing.planDesc.basic'),
             price: { monthly: null, yearly: 9 }, // Monthly price shown, but billed yearly
             features: [
-                '1 Domain',
-                '25 Keywords',
-                'Weekly Updates',
-                'MCP Access'
+                t('billing.features.domain', { count: 1 }),
+                t('billing.features.keywords', { count: 25 }),
+                t('billing.features.weekly'),
+                t('billing.features.mcp')
             ],
             current: false,
-            buttonText: 'Upgrade',
-            note: 'Billed yearly only'
+            buttonText: t('billing.buttons.upgrade'),
+            note: t('billing.checkout.billedYearly')
         },
         {
             id: 'pro',
-            name: 'Pro',
-            description: 'For growing businesses',
-            price: { monthly: 35, yearly: 29 }, // Discounted yearly? Assuming $29/mo if yearly
+            name: t('billing.planNames.pro'),
+            description: t('billing.planDesc.pro'),
+            price: { monthly: 35, yearly: 29 },
             features: [
-                '5 Domains',
-                '500 Keywords',
-                'Daily Updates',
-                'AI Content',
-                'MCP Access'
+                t('billing.features.domains', { count: 5 }),
+                t('billing.features.keywords', { count: 500 }),
+                t('billing.features.daily'),
+                t('billing.features.ai'),
+                t('billing.features.mcp')
             ],
             current: false,
-            buttonText: 'Upgrade',
+            buttonText: t('billing.buttons.upgrade'),
             popular: true
         },
         {
             id: 'premium',
-            name: 'Premium',
-            description: 'For power users & teams',
-            price: { monthly: 99, yearly: 79 }, // Discounted yearly
+            name: t('billing.planNames.premium'),
+            description: t('billing.planDesc.premium'),
+            price: { monthly: 99, yearly: 79 },
             features: [
-                'Unlimited Domains',
-                '5,000 Keywords',
-                'Priority Support',
-                'API Access',
-                'MCP Access'
+                t('billing.features.unlimitedDomains'),
+                t('billing.features.keywords', { count: 5000 }),
+                t('billing.features.priority'),
+                t('billing.features.api'),
+                t('billing.features.mcp')
             ],
             current: false,
-            buttonText: 'Upgrade'
+            buttonText: t('billing.buttons.upgrade')
         }
     ];
 
@@ -111,7 +114,7 @@ const BillingPage: NextPage = () => {
         <div className="space-y-4">
             {/* Account Type Selection */}
             <div className="space-y-3">
-                <Label>Account Type</Label>
+                <Label>{t('billing.invoice.accountType')}</Label>
                 <RadioGroup
                     defaultValue="company"
                     value={invoiceInfo.type}
@@ -125,7 +128,7 @@ const BillingPage: NextPage = () => {
                             className={`cursor-pointer flex items-center gap-2 ${invoiceInfo.type === 'company' ? 'text-primary' : ''}`}
                         >
                             <Building2 className={`h-4 w-4 ${invoiceInfo.type === 'company' ? 'text-primary' : 'text-gray-500'}`} />
-                            Company
+                            {t('billing.invoice.company')}
                         </Label>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -135,7 +138,7 @@ const BillingPage: NextPage = () => {
                             className={`cursor-pointer flex items-center gap-2 ${invoiceInfo.type === 'individual' ? 'text-primary' : ''}`}
                         >
                             <User className={`h-4 w-4 ${invoiceInfo.type === 'individual' ? 'text-primary' : 'text-gray-500'}`} />
-                            Individual
+                            {t('billing.invoice.individual')}
                         </Label>
                     </div>
                 </RadioGroup>
@@ -144,7 +147,7 @@ const BillingPage: NextPage = () => {
             <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="companyName">
-                        {invoiceInfo.type === 'company' ? 'Company Name' : 'Full Name'}
+                        {invoiceInfo.type === 'company' ? t('billing.invoice.nameCompany') : t('billing.invoice.nameIndividual')}
                     </Label>
                     <Input
                         id="companyName"
@@ -156,7 +159,7 @@ const BillingPage: NextPage = () => {
 
                 {invoiceInfo.type === 'company' && (
                     <div className="space-y-2">
-                        <Label htmlFor="vatId">VAT ID (Optional)</Label>
+                        <Label htmlFor="vatId">{t('billing.invoice.vat')}</Label>
                         <Input
                             id="vatId"
                             placeholder="e.g. DE123456789"
@@ -167,7 +170,7 @@ const BillingPage: NextPage = () => {
                 )}
 
                 <div className="space-y-2">
-                    <Label htmlFor="address">Billing Address</Label>
+                    <Label htmlFor="address">{t('billing.invoice.address')}</Label>
                     <Input
                         id="address"
                         placeholder="Street, City, Zip Code, Country"
@@ -176,7 +179,7 @@ const BillingPage: NextPage = () => {
                     />
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="email">Billing Email</Label>
+                    <Label htmlFor="email">{t('billing.invoice.email')}</Label>
                     <Input
                         id="email"
                         type="email"
@@ -190,30 +193,30 @@ const BillingPage: NextPage = () => {
     );
 
     return (
-        <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang} domains={domainsData?.domains || []}>
+        <DashboardLayout selectedLang={currentLocale} onLanguageChange={setLocale} domains={domainsData?.domains || []}>
             <Head>
-                <title>Billing - SEO AI Agent</title>
+                <title>{t('billing.title')} - SEO AI Agent</title>
             </Head>
 
             <div className="max-w-5xl">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-neutral-900 mb-2">Billing & Subscription</h1>
-                    <p className="text-neutral-600">Manage your billing details and subscription plan</p>
+                    <h1 className="text-3xl font-bold text-neutral-900 mb-2">{t('billing.title')}</h1>
+                    <p className="text-neutral-600">{t('billing.desc')}</p>
                 </div>
 
                 <Tabs defaultValue="subscription" className="space-y-6">
                     <TabsList>
                         <TabsTrigger value="subscription" className="gap-2">
                             <CreditCard className="h-4 w-4" />
-                            Subscription Plan
+                            {t('billing.tabs.subscription')}
                         </TabsTrigger>
                         <TabsTrigger value="invoices" className="gap-2">
                             <FileText className="h-4 w-4" />
-                            Invoice Details
+                            {t('billing.tabs.details')}
                         </TabsTrigger>
                         <TabsTrigger value="history" className="gap-2">
                             <Download className="h-4 w-4" />
-                            Invoices
+                            {t('billing.tabs.history')}
                         </TabsTrigger>
                     </TabsList>
 
@@ -224,10 +227,10 @@ const BillingPage: NextPage = () => {
                             <CardHeader>
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <CardTitle className="text-blue-900">Current Plan: Free</CardTitle>
-                                        <CardDescription className="text-blue-700">You are on the free plan</CardDescription>
+                                        <CardTitle className="text-blue-900">{t('billing.currentPlan', { plan: 'Free' })}</CardTitle>
+                                        <CardDescription className="text-blue-700">{t('billing.planDesc.free')}</CardDescription>
                                     </div>
-                                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase">Active</span>
+                                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase">{t('billing.active')}</span>
                                 </div>
                             </CardHeader>
                         </Card>
@@ -238,17 +241,21 @@ const BillingPage: NextPage = () => {
                                 // Show monthly price by default, or yearly if only available yearly
                                 let price = plan.price.monthly || plan.price.yearly;
                                 let period = 'mo';
-                                let subtext = 'billed monthly';
+                                let subtext = t('billing.checkout.monthly');
+
+                                if (currentLocale === 'de') {
+                                    // simple manual override for period
+                                    period = 'Monat';
+                                }
 
                                 if (plan.id === 'basic') {
-                                    // Basic is yearly only, so we show the yearly price (monthly equivalent is confusing if shown as main price without context, 
-                                    // but usually plans show monthly cost billed yearly. Let's show yearly price per month if we want, or total?
-                                    // User previously had $9. If that's monthly cost, total is 108.
-                                    // Let's show $9 / mo
                                     price = plan.price.yearly;
-                                    subtext = 'billed yearly';
+                                    subtext = t('billing.checkout.billedYearly');
                                 } else if (plan.id === 'free') {
-                                    subtext = 'forever free';
+                                    subtext = t('billing.planDesc.free');
+                                } else {
+                                    // For normal plans, show "billed monthly" if not yearly forced
+                                    subtext = t('billing.checkout.monthly');
                                 }
 
                                 return (
@@ -271,7 +278,7 @@ const BillingPage: NextPage = () => {
                                             ))}
                                             {plan.id === 'basic' && (
                                                 <div className="flex gap-2 text-amber-600 mt-2 text-xs font-medium">
-                                                    <AlertCircle className="h-4 w-4" /> Billed Yearly Only
+                                                    <AlertCircle className="h-4 w-4" /> {t('billing.checkout.billedYearly')}
                                                 </div>
                                             )}
                                         </CardContent>
@@ -295,14 +302,14 @@ const BillingPage: NextPage = () => {
                     <TabsContent value="invoices">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Global Invoice Information</CardTitle>
-                                <CardDescription>Set default details for all your invoices</CardDescription>
+                                <CardTitle>{t('billing.invoice.title')}</CardTitle>
+                                <CardDescription>{t('billing.invoice.desc')}</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <InvoiceForm />
                             </CardContent>
                             <CardFooter className="flex justify-end">
-                                <Button>Save Defaults</Button>
+                                <Button>{t('billing.invoice.save')}</Button>
                             </CardFooter>
                         </Card>
                     </TabsContent>
@@ -311,18 +318,18 @@ const BillingPage: NextPage = () => {
                     <TabsContent value="history">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Invoice History</CardTitle>
-                                <CardDescription>Download your past invoices</CardDescription>
+                                <CardTitle>{t('billing.history.title')}</CardTitle>
+                                <CardDescription>{t('billing.history.desc')}</CardDescription>
                             </CardHeader>
                             <CardContent className="p-0">
                                 <div className="relative w-full overflow-auto">
                                     <table className="w-full caption-bottom text-sm text-left">
                                         <thead className="[&_tr]:border-b">
                                             <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                                <th className="h-12 px-4 align-middle font-medium text-muted-foreground">Date</th>
-                                                <th className="h-12 px-4 align-middle font-medium text-muted-foreground">Amount</th>
-                                                <th className="h-12 px-4 align-middle font-medium text-muted-foreground">Status</th>
-                                                <th className="h-12 px-4 align-middle font-medium text-muted-foreground text-right">Download</th>
+                                                <th className="h-12 px-4 align-middle font-medium text-muted-foreground">{t('billing.history.date')}</th>
+                                                <th className="h-12 px-4 align-middle font-medium text-muted-foreground">{t('billing.history.amount')}</th>
+                                                <th className="h-12 px-4 align-middle font-medium text-muted-foreground">{t('billing.history.status')}</th>
+                                                <th className="h-12 px-4 align-middle font-medium text-muted-foreground text-right">{t('billing.history.download')}</th>
                                             </tr>
                                         </thead>
                                         <tbody className="[&_tr:last-child]:border-0">
@@ -360,10 +367,10 @@ const BillingPage: NextPage = () => {
                 <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>
-                            Complete {selectedPlan?.id === 'basic' ? 'Yearly' : (billingCycle === 'yearly' ? 'Yearly' : 'Monthly')} Subscription
+                            {t('billing.checkout.title', { cycle: selectedPlan?.id === 'basic' ? 'Yearly' : (billingCycle === 'yearly' ? 'Yearly' : 'Monthly') })}
                         </DialogTitle>
                         <DialogDescription>
-                            Review your plan and confirm invoice details.
+                            {t('billing.checkout.desc')}
                         </DialogDescription>
                     </DialogHeader>
 
@@ -372,13 +379,13 @@ const BillingPage: NextPage = () => {
                             {/* Billing Cycle Selection (Inside Dialog) */}
                             {selectedPlan.id !== 'basic' && selectedPlan.id !== 'free' && (
                                 <div className="flex items-center justify-center gap-4 p-4 bg-muted/50 rounded-lg">
-                                    <span className={`text-sm font-medium ${billingCycle === 'monthly' ? 'text-primary' : 'text-gray-500'}`}>Monthly</span>
+                                    <span className={`text-sm font-medium ${billingCycle === 'monthly' ? 'text-primary' : 'text-gray-500'}`}>{t('billing.checkout.monthly')}</span>
                                     <Switch
                                         checked={billingCycle === 'yearly'}
                                         onCheckedChange={(checked) => setBillingCycle(checked ? 'yearly' : 'monthly')}
                                     />
                                     <span className={`text-sm font-medium ${billingCycle === 'yearly' ? 'text-primary' : 'text-gray-500'}`}>
-                                        Yearly <span className="text-xs text-green-600 font-normal">(Save ~20%)</span>
+                                        {t('billing.checkout.yearly')} <span className="text-xs text-green-600 font-normal">({t('billing.checkout.save')})</span>
                                     </span>
                                 </div>
                             )}
@@ -386,20 +393,20 @@ const BillingPage: NextPage = () => {
                             {/* Plan Summary */}
                             <div className="bg-neutral-50 p-4 rounded-lg border border-neutral-200">
                                 <div className="flex justify-between items-center mb-2">
-                                    <h3 className="font-bold text-lg">{selectedPlan.name} Plan</h3>
+                                    <h3 className="font-bold text-lg">{t('billing.checkout.planSummary', { plan: selectedPlan.name })}</h3>
                                     <span className="text-xl font-bold font-mono">
                                         ${selectedPlan.id === 'basic' ? selectedPlan.price.yearly : (billingCycle === 'yearly' ? selectedPlan.price.yearly : selectedPlan.price.monthly)}
                                         <span className="text-sm text-gray-500 font-normal">/mo</span>
                                     </span>
                                 </div>
                                 <div className="text-sm text-gray-600 flex justify-between">
-                                    <span>Billing Cycle:</span>
+                                    <span>{t('billing.checkout.cycle')}:</span>
                                     <span className="font-medium capitalize">
-                                        {selectedPlan.id === 'basic' ? 'Yearly' : billingCycle}
+                                        {selectedPlan.id === 'basic' ? t('billing.checkout.yearly') : (billingCycle === 'yearly' ? t('billing.checkout.yearly') : t('billing.checkout.monthly'))}
                                     </span>
                                 </div>
                                 <div className="text-sm text-gray-600 flex justify-between mt-1">
-                                    <span>Total due today:</span>
+                                    <span>{t('billing.checkout.total')}:</span>
                                     <span className="font-bold text-neutral-900">
                                         {/* Calculate Total: Price * 12 if yearly, else Price * 1 */}
                                         ${selectedPlan.id === 'basic'
@@ -412,7 +419,7 @@ const BillingPage: NextPage = () => {
                             {/* Invoice Details Form (Reusable) */}
                             <div>
                                 <h4 className="font-semibold mb-3 flex items-center gap-2">
-                                    <FileText className="h-4 w-4" /> Invoice Information
+                                    <FileText className="h-4 w-4" /> {t('billing.tabs.details')}
                                 </h4>
                                 <InvoiceForm />
                             </div>
@@ -420,12 +427,12 @@ const BillingPage: NextPage = () => {
                     )}
 
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsCheckoutOpen(false)}>Cancel</Button>
+                        <Button variant="outline" onClick={() => setIsCheckoutOpen(false)}>{t('billing.checkout.cancel')}</Button>
                         <Button onClick={() => {
                             // Handle payment logic here
                             setIsCheckoutOpen(false);
                             alert("Redirecting to payment provider...");
-                        }}>Confirm & Pay</Button>
+                        }}>{t('billing.checkout.confirm')}</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

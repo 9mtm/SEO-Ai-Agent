@@ -3,13 +3,11 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Settings, LogOut, Plus, Globe, User } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useLanguage } from '../../context/LanguageContext';
 
 type AccountMenuProps = {
-
     domains?: DomainType[];
     currentDomain?: DomainType | null;
-    selectedLang?: 'en' | 'de';
-    onLanguageChange?: (lang: 'en' | 'de') => void;
 };
 
 type UserInfo = {
@@ -18,16 +16,23 @@ type UserInfo = {
     picture?: string;
 };
 
-const AccountMenu = ({ domains = [], currentDomain, selectedLang = 'en', onLanguageChange }: AccountMenuProps) => {
-    const [isOpen, setIsOpen] = useState(false);
+const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
+    const { locale: selectedLang, setLocale, t } = useLanguage();
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isLangOpen, setIsLangOpen] = useState(false);
     const [userInfo, setUserInfo] = useState<UserInfo>({ name: 'User', email: 'user@example.com' });
     const menuRef = useRef<HTMLDivElement>(null);
+    const langRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
+                setIsMenuOpen(false);
+            }
+            if (langRef.current && !langRef.current.contains(event.target as Node)) {
+                setIsLangOpen(false);
             }
         };
 
@@ -72,7 +77,7 @@ const AccountMenu = ({ domains = [], currentDomain, selectedLang = 'en', onLangu
 
     const handleDomainChange = (slug: string) => {
         router.push(`/domain/${slug}`);
-        setIsOpen(false);
+        setIsMenuOpen(false);
     };
 
     const getInitials = (name: string) => {
@@ -84,95 +89,115 @@ const AccountMenu = ({ domains = [], currentDomain, selectedLang = 'en', onLangu
             .substring(0, 2);
     };
 
+    const currentLangLabel = selectedLang === 'de' ? 'DE' : 'EN';
+    const currentLangFlag = selectedLang === 'de' ? '🇩🇪' : '🇺🇸';
+
     return (
-        <div className="relative" ref={menuRef}>
-            {/* Account Button */}
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-neutral-100 transition-colors"
-            >
-                {userInfo.picture ? (
-                    <img
-                        src={userInfo.picture}
-                        alt={userInfo.name}
-                        className="w-8 h-8 rounded-full"
-                    />
-                ) : (
-                    <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold text-sm">
-                        {getInitials(userInfo.name)}
+        <div className="flex items-center gap-4">
+            {/* Language Switcher Standalone */}
+            <div className="relative" ref={langRef}>
+                <button
+                    onClick={() => setIsLangOpen(!isLangOpen)}
+                    className="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-neutral-100 transition-colors text-neutral-600 font-medium text-sm"
+                    title="Change Language"
+                >
+                    <span className="text-lg leading-none">{currentLangFlag}</span>
+                    <span className="hidden sm:inline">{currentLangLabel}</span>
+                    <svg
+                        className={`w-3 h-3 text-neutral-400 transition-transform ${isLangOpen ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                {isLangOpen && (
+                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-neutral-200 py-1 z-50 overflow-hidden">
+                        <button
+                            onClick={() => { setLocale('en'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'en' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                        >
+                            <span className="text-lg">🇺🇸</span>
+                            <span>English</span>
+                        </button>
+                        <button
+                            onClick={() => { setLocale('de'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'de' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                        >
+                            <span className="text-lg">🇩🇪</span>
+                            <span>Deutsch</span>
+                        </button>
                     </div>
                 )}
-                <div className="hidden lg:flex flex-col items-start">
-                    <span className="text-sm font-semibold text-neutral-900">{userInfo.name}</span>
-                </div>
-                <svg
-                    className={`w-4 h-4 text-neutral-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+            </div>
+
+            {/* Account Button */}
+            <div className="relative" ref={menuRef}>
+                <button
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-neutral-100 transition-colors"
                 >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
-
-            {/* Dropdown Menu */}
-            {isOpen && (
-                <div className="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-neutral-200 py-2 z-50">
-                    {/* Account Header */}
-                    <div className="px-4 py-3 border-b border-neutral-200">
-                        <p className="text-sm font-semibold text-neutral-900">Account</p>
+                    {userInfo.picture ? (
+                        <img
+                            src={userInfo.picture}
+                            alt={userInfo.name}
+                            className="w-8 h-8 rounded-full border border-neutral-200"
+                        />
+                    ) : (
+                        <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold text-xs shadow-sm">
+                            {getInitials(userInfo.name)}
+                        </div>
+                    )}
+                    <div className="hidden lg:flex flex-col items-start">
+                        <span className="text-sm font-semibold text-neutral-900 leading-tight">{userInfo.name}</span>
                     </div>
+                </button>
 
-                    {/* Language Switcher */}
-                    <div className="px-4 py-2 border-b border-neutral-200">
-                        <div className="text-xs font-semibold text-neutral-500 uppercase mb-2">Language</div>
-                        <div className="flex bg-neutral-100 rounded-lg p-1">
-                            <button
-                                onClick={() => onLanguageChange?.('en')}
-                                className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${selectedLang === 'en'
-                                    ? 'bg-white text-neutral-900 shadow-sm'
-                                    : 'text-neutral-500 hover:text-neutral-900'
-                                    }`}
+                {/* Dropdown Menu */}
+                {isMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-neutral-200 py-2 z-50">
+                        {/* Account Header */}
+                        <div className="px-4 py-3 border-b border-neutral-200 bg-neutral-50/50">
+                            <p className="text-sm font-semibold text-neutral-900">{userInfo.name}</p>
+                            <p className="text-xs text-neutral-500 truncate">{userInfo.email}</p>
+                        </div>
+
+                        <div className="py-1">
+                            <Link
+                                href="/profile"
+                                onClick={() => setIsMenuOpen(false)}
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
                             >
-                                English
-                            </button>
-                            <button
-                                onClick={() => onLanguageChange?.('de')}
-                                className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${selectedLang === 'de'
-                                    ? 'bg-white text-neutral-900 shadow-sm'
-                                    : 'text-neutral-500 hover:text-neutral-900'
-                                    }`}
+                                <User className="h-4 w-4 text-neutral-500" />
+                                <span>{t('sidebar.profile')}</span>
+                            </Link>
+                            <Link
+                                href="/profile/notifications"
+                                onClick={() => setIsMenuOpen(false)}
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
                             >
-                                Deutsch
+                                <Settings className="h-4 w-4 text-neutral-500" />
+                                <span>{t('sidebar.notifications')}</span>
+                            </Link>
+                        </div>
+
+                        <div className="border-t border-neutral-200 py-1">
+                            <button
+                                onClick={() => {
+                                    logoutUser();
+                                    setIsMenuOpen(false);
+                                }}
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                            >
+                                <LogOut className="h-4 w-4" />
+                                <span>{t('common.logout')}</span>
                             </button>
                         </div>
                     </div>
-
-
-
-                    {/* Profile */}
-                    <Link
-                        href="/profile"
-                        onClick={() => setIsOpen(false)}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-100 transition-colors"
-                    >
-                        <User className="h-4 w-4" />
-                        <span>Profile</span>
-                    </Link>
-
-                    {/* Logout */}
-                    <button
-                        onClick={() => {
-                            logoutUser();
-                            setIsOpen(false);
-                        }}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                    >
-                        <LogOut className="h-4 w-4" />
-                        <span>Logout</span>
-                    </button>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };

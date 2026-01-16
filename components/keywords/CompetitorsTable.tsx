@@ -8,6 +8,7 @@ import useWindowResize from '../../hooks/useWindowResize';
 import useIsMobile from '../../hooks/useIsMobile';
 import Modal from '../common/Modal';
 import TableSkeleton from '../common/TableSkeleton';
+import { useLanguage } from '../../context/LanguageContext';
 
 type CompetitorsTableProps = {
     domain: DomainType | null;
@@ -18,6 +19,7 @@ type CompetitorsTableProps = {
 };
 
 const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, settings }: CompetitorsTableProps) => {
+    const { t } = useLanguage();
     const titleColumnRef = useRef(null);
     const { mutate: refreshCompetitorsMutate } = useRefreshCompetitors(() => { });
     const { mutate: deleteMutate } = useDeleteKeywords(() => { });
@@ -175,7 +177,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                 <p className='p-9 pt-[10%] text-center text-gray-500'>
                     <Icon type="info" size={48} color="#999" />
                     <br /><br />
-                    No keywords added yet. Add keywords from the Keywords tab.
+                    {t('trackingTable.noKeywordsMsg')}
                 </p>
             </div>
         );
@@ -187,7 +189,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                 <p className='p-9 pt-[10%] text-center text-gray-500'>
                     <Icon type="users" size={48} color="#999" />
                     <br /><br />
-                    No competitors added yet. Add competitors from domain settings.
+                    {t('trackingTable.noCompetitorsMsg')}
                 </p>
             </div>
         );
@@ -204,7 +206,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                                     className='block px-2 py-2 cursor-pointer hover:text-indigo-600'
                                     onClick={handleRefreshSelected}
                                 >
-                                    <span className='bg-indigo-100 text-blue-700 px-1 rounded'><Icon type="reload" size={11} /></span> Refresh Competitors
+                                    <span className='bg-indigo-100 text-blue-700 px-1 rounded'><Icon type="reload" size={11} /></span> {t('trackingTable.refreshCompetitors')}
                                 </a>
                             </li>
                             <li className='inline-block mr-4'>
@@ -212,7 +214,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                                     className='block px-2 py-2 cursor-pointer hover:text-indigo-600'
                                     onClick={() => setShowRemoveModal(true)}
                                 >
-                                    <span className='bg-red-100 text-red-600 px-1 rounded'><Icon type="trash" size={14} /></span> Remove Keywords
+                                    <span className='bg-red-100 text-red-600 px-1 rounded'><Icon type="trash" size={14} /></span> {t('trackingTable.removeKeywords')}
                                 </a>
                             </li>
                         </ul>
@@ -232,11 +234,11 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                                     </button>
                                 )}
                                 <span className='inline-block lg:flex lg:items-center lg:max-w-[235px]'>
-                                    Keyword
+                                    {t('trackingTable.keyword')}
                                 </span>
                             </span>
                             <span className='domKeywords_head_position flex-1 basis-24 grow-0 text-center'>
-                                Your Position
+                                {t('trackingTable.yourPosition')}
                             </span>
                             {competitors.map((competitor: string, index: number) => (
                                 <span key={index} className='flex-1 basis-24 grow-0 text-center'>
@@ -260,7 +262,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                                 </List>
                             )}
                             {!isPending && processedKeywords.length === 0 && (
-                                <p className='p-9 pt-[10%] text-center text-gray-500'>No Keywords Added for this Device Type.</p>
+                                <p className='p-9 pt-[10%] text-center text-gray-500'>{t('trackingTable.noKeywordsDevice')}</p>
                             )}
                             {isPending && (
                                 <TableSkeleton rows={8} />
@@ -270,21 +272,21 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                 </div>
             </div>
             {showRemoveModal && selectedKeywords.length > 0 && (
-                <Modal closeModal={() => { setSelectedKeywords([]); setShowRemoveModal(false); }} title={'Remove Keywords'}>
+                <Modal closeModal={() => { setSelectedKeywords([]); setShowRemoveModal(false); }} title={t('trackingTable.removeTitle')}>
                     <div className='text-sm'>
-                        <p>Are you sure you want to remove {selectedKeywords.length > 1 ? 'these' : 'this'} Keyword?</p>
+                        <p>{t('trackingTable.removeConfirm', { count: selectedKeywords.length > 1 ? selectedKeywords.length : '' })}</p>
                         <div className='mt-6 text-right font-semibold'>
                             <button
                                 className='py-1 px-5 rounded cursor-pointer bg-indigo-50 text-slate-500 mr-3'
                                 onClick={() => { setSelectedKeywords([]); setShowRemoveModal(false); }}
                             >
-                                Cancel
+                                {t('common.cancel')}
                             </button>
                             <button
                                 className='py-1 px-5 rounded cursor-pointer bg-red-400 text-white'
                                 onClick={() => { deleteMutate(selectedKeywords); setShowRemoveModal(false); setSelectedKeywords([]); }}
                             >
-                                Remove
+                                {t('common.delete')}
                             </button>
                         </div>
                     </div>

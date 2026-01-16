@@ -20,30 +20,38 @@ type SCStatsObject = {
    },
 }
 
-/**
- * Generate Human readable Time string.
- * @param {number} date - Keywords to scrape
- * @returns {string}
- */
-const timeSince = (date: number): string => {
-   const seconds = Math.floor(((new Date().getTime() / 1000) - date));
-   let interval = Math.floor(seconds / 31536000);
+// Helper to load translations
+const loadTranslations = async (locale: string) => {
+   try {
+      const filePath = path.join(process.cwd(), 'locales', locale, 'common.json');
+      const fileContent = await readFile(filePath, 'utf-8');
+      return JSON.parse(fileContent);
+   } catch (error) {
+      console.error(`Error loading translations for ${locale}:`, error);
+      if (locale !== 'en') {
+         // Fallback to english
+         try {
+            const enPath = path.join(process.cwd(), 'locales', 'en', 'common.json');
+            return JSON.parse(await readFile(enPath, 'utf-8'));
+         } catch (e) { return {}; }
+      }
+      return {};
+   }
+};
 
-   if (interval > 1) return `${interval} years ago`;
+// Helper for translation lookup
+const getTranslation = (translations: any, keyPath: string, variables: Record<string, any> = {}) => {
+   const keysArray = keyPath.split('.');
+   let value = translations;
+   for (const k of keysArray) {
+      value = value?.[k];
+   }
+   if (typeof value !== 'string') return keyPath;
 
-   interval = Math.floor(seconds / 2592000);
-   if (interval > 1) return `${interval} months ago`;
-
-   interval = Math.floor(seconds / 86400);
-   if (interval >= 1) return `${interval} days ago`;
-
-   interval = Math.floor(seconds / 3600);
-   if (interval >= 1) return `${interval} hrs ago`;
-
-   interval = Math.floor(seconds / 60);
-   if (interval > 1) return `${interval} mins ago`;
-
-   return `${Math.floor(seconds)} secs ago`;
+   Object.keys(variables).forEach(varName => {
+      value = value.replace(new RegExp(`{{${varName}}}`, 'g'), String(variables[varName]));
+   });
+   return value;
 };
 
 /**
@@ -89,8 +97,13 @@ const getBestKeywordPosition = (history: KeywordHistory) => {
  * @param {keywords[]} keywords - Keywords to scrape
  * @returns {Promise}
  */
-const generateEmail = async (domainName: string, keywords: KeywordType[], settings: SettingsType): Promise<string> => {
+const generateEmail = async (domainName: string, keywords: KeywordType[], settings: SettingsType, locale: string = 'en'): Promise<string> => {
+   const translations = await loadTranslations(locale);
+   const t = (key: string, vars: any = {}) => getTranslation(translations, key, vars);
+
    const emailTemplate = await readFile(path.join(process.cwd(), 'email', 'email.html'), { encoding: 'utf-8' });
+
+   // We might need localized date format later, for now keeping English format for date
    const currentDate = dayjs(new Date()).format('MMMM D, YYYY');
    const keywordsCount = keywords.length;
    let improved = 0; let declined = 0;
@@ -104,8 +117,6 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
       }
    });
 
-   let keywordsTable = '';
-
    // 2. Sort and Generate HTML for Top 10
    // Prioritize ranked keywords (position > 0), then sort by position (ascending/best first)
    const sortedKeywords = [...keywords].sort((a, b) => {
@@ -115,6 +126,7 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
    });
 
    const displayedKeywords = sortedKeywords.slice(0, 10);
+   let keywordsTable = '';
 
    displayedKeywords.forEach((keyword) => {
       let changeDisplay = '';
@@ -126,30 +138,38 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
          const color = isImproved ? '#16a34a' : '#dc2626';
          const icon = isImproved ? '▲' : '▼';
          changeDisplay = `<span style="font-size: 10px; margin-left: 5px; color: ${color}; font-weight: 700; background: ${isImproved ? '#dcfce7' : '#fee2e2'}; padding: 1px 4px; border-radius: 4px;">${icon} ${Math.abs(positionChange)}</span>`;
-         // Note: Stats are already calculated above
       }
+
+      // Time since translation logic inline
+      const secondsC = (new Date().getTime() / 1000) - (new Date(keyword.lastUpdated).getTime() / 1000);
+      let timeString = '';
+      if (secondsC < 60) timeString = t('email.secsAgo', { count: Math.floor(secondsC) });
+      else if (secondsC < 3600) timeString = t('email.minsAgo', { count: Math.floor(secondsC / 60) });
+      else if (secondsC < 86400) timeString = t('email.hrsAgo', { count: Math.floor(secondsC / 3600) });
+      else if (secondsC < 2592000) timeString = t('email.daysAgo', { count: Math.floor(secondsC / 86400) });
+      else if (secondsC < 31536000) timeString = t('email.monthsAgo', { count: Math.floor(secondsC / 2592000) });
+      else timeString = t('email.yearsAgo', { count: Math.floor(secondsC / 31536000) });
+
 
       keywordsTable += `<tr class="keyword">
                            <td style="vertical-align: middle;">${countryFlag} <span style="vertical-align: middle;">${keyword.keyword}</span></td>
                            <td style="vertical-align: middle;"><span style="font-weight:700; color: #1e293b;">${keyword.position}</span>${changeDisplay}</td>
                            <td style="vertical-align: middle; color: #64748b;">${getBestKeywordPosition(keyword.history)}</td>
-                           <td style="vertical-align: middle; color: #94a3b8; font-size: 12px;">${timeSince(new Date(keyword.lastUpdated).getTime() / 1000)}</td>
+                           <td style="vertical-align: middle; color: #94a3b8; font-size: 12px;">${timeString}</td>
                         </tr>`;
    });
 
    if (keywords.length > 10) {
       keywordsTable += `<tr>
           <td colspan="4" style="text-align: center; padding: 12px; color: #64748b; font-size: 12px; border-top: 1px solid #e2e8f0;">
-             <a href="https://seo-agent.net/domain/tracking/${domainName}" target="_blank" style="color: #2563eb; text-decoration: none; font-weight: 600;">View ${keywords.length - 10} more all keywords on dashboard →</a>
+             <a href="https://seo-agent.net/domain/tracking/${domainName}" target="_blank" style="color: #2563eb; text-decoration: none; font-weight: 600;">${t('email.viewMore', { count: keywords.length - 10 })} →</a>
           </td>
        </tr>`;
    }
-   const improvedBadge = improved > 0 ? `<span class="stat-badge stat-success">▲ ${improved} Improved</span>` : '';
-   const declinedBadge = declined > 0 ? `<span class="stat-badge stat-danger">▼ ${declined} Declined</span>` : '';
-   const statHtml = `<div class="stat-wrapper">${improvedBadge} ${declinedBadge}</div>`;
 
-   const isConsoleIntegrated = !!(process.env.SEARCH_CONSOLE_PRIVATE_KEY && process.env.SEARCH_CONSOLE_CLIENT_EMAIL)
-      || (settings.search_console_client_email && settings.search_console_private_key);
+   const improvedBadge = improved > 0 ? `<span class="stat-badge stat-success">▲ ${improved} ${t('email.improved')}</span>` : '';
+   const declinedBadge = declined > 0 ? `<span class="stat-badge stat-danger">▼ ${declined} ${t('email.declined')}</span>` : '';
+   const statHtml = `<div class="stat-wrapper">${improvedBadge} ${declinedBadge}</div>`;
 
    let trafficSummaryHTML = '';
    // Always try to read local data if available
@@ -169,19 +189,19 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
 
             const metrics = [
                {
-                  label: 'Visits', key: 'clicks', type: 'total',
+                  label: t('email.visits'), key: 'clicks', type: 'total',
                   bg: '#f5f3ff', border: '#ddd6fe', text: '#5b21b6', labelColor: '#7c3aed'
                },
                {
-                  label: 'Impressions', key: 'impressions', type: 'total',
+                  label: t('email.impressions'), key: 'impressions', type: 'total',
                   bg: '#ecfdf5', border: '#a7f3d0', text: '#065f46', labelColor: '#059669'
                },
                {
-                  label: 'Avg Position', key: 'position', type: 'avg',
+                  label: t('email.avgPosition'), key: 'position', type: 'avg',
                   bg: '#eff6ff', border: '#bfdbfe', text: '#1e40af', labelColor: '#2563eb'
                },
                {
-                  label: 'Avg CTR', key: 'ctr', type: 'avg', isPercent: true,
+                  label: t('email.avgCtr'), key: 'ctr', type: 'avg', isPercent: true,
                   bg: '#fffbeb', border: '#fde68a', text: '#92400e', labelColor: '#d97706'
                }
             ];
@@ -197,17 +217,16 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
                   diff = ((currentVal - prevVal) / prevVal) * 100;
                }
 
-               // Color Logic regarding the background of the card
-               // We keep the trend indicator logic separately
+               // Color Logic
+               let trendColor = '#64748b';
                let diffContent = '';
-               let trendColor = '#64748b'; // Default gray for trend text if needed
 
                if (prevVal === 0) {
                   diffContent = '-';
                   trendColor = '#94a3b8';
                } else {
                   const isPositive = metric.key === 'position' ? diff < 0 : diff > 0;
-                  trendColor = isPositive ? '#16a34a' : '#dc2626'; // Green or Red for the trend arrow
+                  trendColor = isPositive ? '#16a34a' : '#dc2626';
                   const arrow = diff === 0 ? '' : (diff > 0 ? '▲' : '▼');
                   diffContent = `${arrow} ${Math.abs(diff).toFixed(1)}%`;
                }
@@ -251,12 +270,10 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
       .replace('{{appURL}}', process.env.NEXT_PUBLIC_APP_URL || '')
       .replace('{{dashboardUrl}}', 'https://seo-agent.net?utm_source=email_report&utm_medium=email&utm_campaign=daily_rankings')
       .replace('{{stat}}', statHtml)
-      .replace('{{preheader}}', `${improved} Improved, ${declined} Declined`);
+      .replace('{{preheader}}', `${improved} ${t('email.improved')}, ${declined} ${t('email.declined')}`);
 
-   const htmlWithSCStats = await generateGoogeleConsoleStats(domainName);
+   const htmlWithSCStats = await generateGoogeleConsoleStats(domainName, t);
    const emailHTML = updatedEmail.replace('{{SCStatsTable}}', htmlWithSCStats);
-
-   // await writeFile('testemail.html', emailHTML, { encoding: 'utf-8' });
 
    return emailHTML;
 };
@@ -266,7 +283,7 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
  * @param {string} domainName - The Domain name for which to generate the HTML.
  * @returns {Promise<string>}
  */
-const generateGoogeleConsoleStats = async (domainName: string): Promise<string> => {
+const generateGoogeleConsoleStats = async (domainName: string, t: any): Promise<string> => {
    if (!domainName) return '';
 
    const localSCData = await readLocalSCData(domainName);
@@ -305,9 +322,9 @@ const generateGoogeleConsoleStats = async (domainName: string): Promise<string> 
         <table role="presentation" class="main" style="margin-top: 20px;">
             <tr>
                 <td class="wrapper">
-                    <h3 style="font-size: 16px; margin-bottom: 15px; color: #1E3A8A;">Top Performing Keywords (Last 7 Days)</h3>
+                    <h3 style="font-size: 16px; margin-bottom: 15px; color: #1E3A8A;">${t('email.topKeywords', { days: 7 })}</h3>
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="keyword_table">
-                        <tr align="left"><th>Keyword</th><th>Clicks</th><th>Views</th><th>Pos</th></tr>
+                        <tr align="left"><th>${t('email.keyword')}</th><th>${t('email.clicks')}</th><th>${t('email.views')}</th><th>${t('email.pos')}</th></tr>
                         ${genTableRows(keywords, 'keyword')}
                     </table>
                 </td>
@@ -321,9 +338,9 @@ const generateGoogeleConsoleStats = async (domainName: string): Promise<string> 
         <table role="presentation" class="main" style="margin-top: 20px;">
             <tr>
                 <td class="wrapper">
-                    <h3 style="font-size: 16px; margin-bottom: 15px; color: #1E3A8A;">Top Performing Pages</h3>
+                    <h3 style="font-size: 16px; margin-bottom: 15px; color: #1E3A8A;">${t('email.topPages')}</h3>
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="keyword_table">
-                        <tr align="left"><th>Page</th><th>Clicks</th><th>Views</th><th>Avg Pos</th></tr>
+                        <tr align="left"><th>${t('email.page')}</th><th>${t('email.clicks')}</th><th>${t('email.views')}</th><th>${t('email.avgPos')}</th></tr>
                         ${genTableRows(pages, 'page')}
                     </table>
                 </td>

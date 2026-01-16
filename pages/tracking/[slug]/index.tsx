@@ -18,9 +18,11 @@ import CompetitorsTable from '../../../components/keywords/CompetitorsTable';
 import ManageCompetitors from '../../../components/domains/ManageCompetitors';
 import { useRefreshCompetitors } from '../../../services/competitors';
 import toast, { Toaster } from 'react-hot-toast';
+import { useLanguage } from '../../../context/LanguageContext';
 
 const SingleDomain: NextPage = () => {
     const router = useRouter();
+    const { t } = useLanguage();
     const [showAddKeywords, setShowAddKeywords] = useState(false);
     const [showManageCompetitors, setShowManageCompetitors] = useState(false);
     const [activeTab, setActiveTab] = useState<'keywords' | 'competitors'>('keywords');
@@ -85,7 +87,7 @@ const SingleDomain: NextPage = () => {
                     <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
                         <p className="text-sm text-red-800 font-medium">
-                            A Scrapper/Proxy has not been set up yet. Open Settings to set it up and start using the app.
+                            {t('tracking.scraperAlert')}
                         </p>
                     </div>
                 </div>
@@ -115,7 +117,7 @@ const SingleDomain: NextPage = () => {
                             }`}
                         onClick={() => setActiveTab('keywords')}
                     >
-                        Keywords
+                        {t('tracking.tabs.keywords')}
                     </button>
                     <button
                         className={`px-4 py-2 font-medium text-sm transition-colors ${activeTab === 'competitors'
@@ -124,7 +126,7 @@ const SingleDomain: NextPage = () => {
                             }`}
                         onClick={() => setActiveTab('competitors')}
                     >
-                        Competitors
+                        {t('tracking.tabs.competitors')}
                     </button>
                 </div>
 

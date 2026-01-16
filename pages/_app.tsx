@@ -3,21 +3,24 @@ import React from 'react';
 import type { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { LanguageProvider } from '../context/LanguageContext';
 
 function MyApp({ Component, pageProps }: AppProps) {
-   const [queryClient] = React.useState(() => new QueryClient({
-      defaultOptions: {
-        queries: {
-          refetchOnWindowFocus: false,
-          staleTime: 1000 * 60 * 5, // 5 minutes
-          gcTime: 1000 * 60 * 10, // 10 minutes (كان cacheTime في v3)
-        },
+  const [queryClient] = React.useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        gcTime: 1000 * 60 * 10, // 10 minutes
       },
-    }));
-   return <QueryClientProvider client={queryClient}>
-            <Component {...pageProps} />
-            <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>;
+    },
+  }));
+  return <QueryClientProvider client={queryClient}>
+    <LanguageProvider>
+      <Component {...pageProps} />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </LanguageProvider>
+  </QueryClientProvider>;
 }
 
 export default MyApp;

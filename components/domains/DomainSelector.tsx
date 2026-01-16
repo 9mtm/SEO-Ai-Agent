@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Plus, Globe, ChevronDown } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 type DomainSelectorProps = {
     domains?: DomainType[];
@@ -8,6 +9,7 @@ type DomainSelectorProps = {
 };
 
 const DomainSelector = ({ domains = [], currentDomain }: DomainSelectorProps) => {
+    const { t } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
@@ -49,9 +51,9 @@ const DomainSelector = ({ domains = [], currentDomain }: DomainSelectorProps) =>
                         )}
                     </div>
                     <div className="flex flex-col items-start truncate">
-                        <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider leading-none mb-0.5">Current Domain</span>
+                        <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider leading-none mb-0.5">{t('domainSelector.current')}</span>
                         <span className="text-sm font-semibold text-gray-800 truncate max-w-[140px]">
-                            {currentDomain ? currentDomain.domain : 'Select Domain'}
+                            {currentDomain ? currentDomain.domain : t('domainSelector.select')}
                         </span>
                     </div>
                 </div>
@@ -62,7 +64,7 @@ const DomainSelector = ({ domains = [], currentDomain }: DomainSelectorProps) =>
             {isOpen && (
                 <div className="absolute left-0 bottom-full mb-2 w-full min-w-[240px] bg-white rounded-lg shadow-xl border border-neutral-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-100 slide-in-from-bottom-2">
                     <div className="px-4 py-2 text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">
-                        Switch Domain
+                        {t('domainSelector.switch')}
                     </div>
 
                     <div className="max-h-64 overflow-y-auto px-2 space-y-0.5">
@@ -92,7 +94,7 @@ const DomainSelector = ({ domains = [], currentDomain }: DomainSelectorProps) =>
                                 </button>
                             ))
                         ) : (
-                            <div className="px-3 py-4 text-sm text-gray-500 text-center italic">No domains found</div>
+                            <div className="px-3 py-4 text-sm text-gray-500 text-center italic">{t('domainSelector.empty')}</div>
                         )}
                     </div>
 
@@ -105,7 +107,7 @@ const DomainSelector = ({ domains = [], currentDomain }: DomainSelectorProps) =>
                             className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-md text-sm bg-blue-600 text-white hover:bg-blue-700 font-medium transition-colors shadow-sm"
                         >
                             <Plus className="h-4 w-4" />
-                            <span>Add New Domain</span>
+                            <span>{t('domainSelector.add')}</span>
                         </button>
                     </div>
                 </div>

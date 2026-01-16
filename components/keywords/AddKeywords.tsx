@@ -4,6 +4,7 @@ import Modal from '../common/Modal';
 import SelectField from '../common/SelectField';
 import countries from '../../utils/countries';
 import { useAddKeywords } from '../../services/keywords';
+import { useLanguage } from '../../context/LanguageContext';
 
 type AddKeywordsProps = {
    keywords: KeywordType[],
@@ -24,6 +25,7 @@ type KeywordsInput = {
 }
 
 const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCity = false }: AddKeywordsProps) => {
+   const { t } = useLanguage();
    const inputRef = useRef(null);
    const defCountry = localStorage.getItem('default_country') || 'US';
 
@@ -60,7 +62,7 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
          );
 
          if (!multiDevice && (keywordsArray.length === 1 || currentKeywords.length === keywordExist.length) && keywordExist.length > 0) {
-            setError(`Keywords ${keywordExist.join(',')} already Exist`);
+            setError(t('tracking.addKeywords.errorExist', { keywords: keywordExist.join(',') }));
             setTimeout(() => { setError(''); }, 3000);
          } else {
             const newKeywords = keywordsArray.flatMap((k) =>
@@ -79,7 +81,7 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
             addMutate(newKeywords);
          }
       } else {
-         setError('Please Insert a Keyword');
+         setError(t('tracking.addKeywords.errorEmpty'));
          setTimeout(() => { setError(''); }, 3000);
       }
    };
@@ -87,13 +89,13 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
    const deviceTabStyle = 'cursor-pointer px-2 py-2 rounded';
 
    return (
-      <Modal closeModal={() => { closeModal(false); }} title={'Add New Keywords'} width="[420px]">
+      <Modal closeModal={() => { closeModal(false); }} title={t('tracking.addKeywords.title')} width="[420px]">
          <div data-testid="addkeywords_modal">
             <div>
                <div>
                   <textarea
                      className='w-full h-40 border rounded border-gray-200 p-4 outline-none focus:border-indigo-300'
-                     placeholder="Type or Paste Keywords here. Insert Each keyword in a New line."
+                     placeholder={t('tracking.addKeywords.placeholder')}
                      value={newKeywordsData.keywords}
                      onChange={(e) => setNewKeywordsData({ ...newKeywordsData, keywords: e.target.value })}>
                   </textarea>
@@ -133,7 +135,7 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
                <div className='relative'>
                   <input
                      className='w-full border rounded border-gray-200 py-2 px-4 pl-12 outline-none focus:border-indigo-300'
-                     placeholder='Insert Tags (Optional)'
+                     placeholder={t('tracking.addKeywords.tagsPlaceholder')}
                      value={newKeywordsData.tags}
                      onChange={(e) => setNewKeywordsData({ ...newKeywordsData, tags: e.target.value })}
                   />
@@ -143,7 +145,7 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
                   </span>
                   {showTagSuggestions && (
                      <ul className={`absolute z-50
-                     bg-white border border-t-0 border-gray-200 rounded rounded-t-none w-full`}>
+                      bg-white border border-t-0 border-gray-200 rounded rounded-t-none w-full`}>
                         {existingTags.length > 0 && existingTags.map((tag, index) => {
                            return newKeywordsData.tags.split(',').map((t) => t.trim()).includes(tag) === false && <li
                               className=' p-2 cursor-pointer hover:text-indigo-600 hover:bg-indigo-50 transition'
@@ -159,17 +161,17 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
                               <Icon type='tags' size={14} color='#bbb' /> {tag}
                            </li>;
                         })}
-                        {existingTags.length === 0 && <p>No Existing Tags Found... </p>}
+                        {existingTags.length === 0 && <p className="p-2 text-sm text-gray-500">{t('tracking.addKeywords.noTags')}</p>}
                      </ul>
                   )}
                </div>
                <div className='relative mt-2'>
                   <input
                      className={`w-full border rounded border-gray-200 py-2 px-4 pl-8 
-                     outline-none focus:border-indigo-300 ${!allowsCity ? ' cursor-not-allowed' : ''} `}
+                      outline-none focus:border-indigo-300 ${!allowsCity ? ' cursor-not-allowed' : ''} `}
                      disabled={!allowsCity}
-                     title={!allowsCity ? `Your scraper ${scraperName} doesn't have city level scraping feature.` : ''}
-                     placeholder={`City (Optional)${!allowsCity ? `. Not avaialable for ${scraperName}.` : ''}`}
+                     title={!allowsCity ? t('tracking.addKeywords.cityTooltip', { scraper: scraperName }) : ''}
+                     placeholder={!allowsCity ? t('tracking.addKeywords.cityDisabled', { scraper: scraperName }) : t('tracking.addKeywords.cityPlaceholder')}
                      value={newKeywordsData.city}
                      onChange={(e) => setNewKeywordsData({ ...newKeywordsData, city: e.target.value })}
                   />
@@ -187,7 +189,7 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
                   />
                   <label htmlFor="track_competitors" className='text-sm text-gray-700 cursor-pointer select-none'>
                      <Icon type="users" size={14} classes="inline mr-1" />
-                     Track Competitors (will automatically check competitor rankings)
+                     {t('tracking.addKeywords.trackCompetitors')}
                   </label>
                </div>
             </div>
@@ -196,12 +198,12 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
                <button
                   className=' py-2 px-5 rounded cursor-pointer bg-indigo-50 text-slate-500 mr-3'
                   onClick={() => closeModal(false)}>
-                  Cancel
+                  {t('tracking.addKeywords.cancel')}
                </button>
                <button
                   className=' py-2 px-5 rounded cursor-pointer bg-blue-700 text-white'
                   onClick={() => !isAdding && addKeywords()}>
-                  {isAdding ? 'Adding....' : 'Add Keywords'}
+                  {isAdding ? t('tracking.addKeywords.adding') : t('tracking.addKeywords.add')}
                </button>
             </div>
          </div>

@@ -38,10 +38,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       throw new Error('Failed to retrieve access token from Google');
     }
 
+    // Parse State
+    let flow = state;
+    let returnUrl = null;
+
+    try {
+      if (typeof state === 'string' && state.startsWith('{')) {
+        const stateObj = JSON.parse(state);
+        flow = stateObj.flow;
+        returnUrl = stateObj.returnUrl;
+      }
+    } catch (e) {
+      console.error('Error parsing state:', e);
+    }
+
     // ---------------------------------------------------------
     // FLOW A: CONNECT ACCOUNT (Authenticated User adding GSC)
     // ---------------------------------------------------------
-    if (state === 'connect_flow') {
+    if (flow === 'connect_flow') {
       const cookies = new Cookies(req, res);
       const connectingUserId = cookies.get('oauth_connecting_user');
 
@@ -66,18 +80,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       // Clean up cookies
-      const returnUrl = cookies.get('oauth_return_url');
+      const cookieReturnUrl = cookies.get('oauth_return_url');
       cookies.set('oauth_connecting_user', '', { maxAge: 0 });
       cookies.set('oauth_return_url', '', { maxAge: 0 });
 
       // Redirect to return URL or default to Settings page
-      return res.redirect(returnUrl || '/settings?success=google_connected');
+      return res.redirect(cookieReturnUrl || '/settings?success=google_connected');
     }
 
     // ---------------------------------------------------------
     // FLOW B: LOGIN / REGISTER (New or Existing User)
     // ---------------------------------------------------------
-    if (state === 'login_flow') {
+    if (flow === 'login_flow') {
       // Get User Info from Google
       const userResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
         headers: { Authorization: `Bearer ${tokens.access_token}` },
@@ -131,6 +145,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         await user.update({ last_login: new Date() });
+
+        // Redirect based on returnUrl first, then onboarding step
+        if (returnUrl) {
+          return res.redirect(returnUrl);
+        }
 
         // Check onboarding status
         // Cast to any because onboarding_step might not be in the strict TS type definition yet

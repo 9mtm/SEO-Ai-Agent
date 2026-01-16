@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import Icon from '../common/Icon';
 import SelectField, { SelectionOption } from '../common/SelectField';
 import countries from '../../utils/countries';
+import { useLanguage } from '../../context/LanguageContext';
 
 type KeywordFilterProps = {
    device: string,
@@ -22,6 +23,7 @@ type KeywordFilterProps = {
 }
 
 const KeywordFilters = (props: KeywordFilterProps) => {
+   const { t, locale } = useLanguage();
    const {
       device,
       setDevice,
@@ -84,37 +86,40 @@ const KeywordFilters = (props: KeywordFilterProps) => {
       return optionObject;
    }, [SCcountries, isConsole, keywords]);
 
+   const defaultText = locale === 'de' ? ' (Standard)' : ' (Default)';
+
    const sortOptionChoices: SelectionOption[] = [
-      { value: 'pos_asc', label: 'Top Position' },
-      { value: 'pos_desc', label: 'Lowest Position' },
-      { value: 'date_asc', label: 'Most Recent (Default)' },
-      { value: 'date_desc', label: 'Oldest' },
-      { value: 'alpha_asc', label: 'Alphabetically(A-Z)' },
-      { value: 'alpha_desc', label: 'Alphabetically(Z-A)' },
-      { value: 'vol_asc', label: 'Lowest Search Volume' },
-      { value: 'vol_desc', label: 'Highest Search Volume' },
+      { value: 'pos_asc', label: t('sortOptions.pos_asc') },
+      { value: 'pos_desc', label: t('sortOptions.pos_desc') },
+      { value: 'date_asc', label: `${t('sortOptions.date_asc')}${defaultText}` },
+      { value: 'date_desc', label: t('sortOptions.date_desc') },
+      { value: 'alpha_asc', label: t('sortOptions.alpha_asc') },
+      { value: 'alpha_desc', label: t('sortOptions.alpha_desc') },
+      { value: 'vol_asc', label: t('sortOptions.vol_asc') },
+      { value: 'vol_desc', label: t('sortOptions.vol_desc') },
    ];
 
    const columnOptionChoices: { label: string, value: string, locked: boolean }[] = [
-      { value: 'Keyword', label: 'Keyword', locked: true },
-      { value: 'Position', label: 'Position', locked: true },
-      { value: 'URL', label: 'URL', locked: true },
-      { value: 'Updated', label: 'Updated', locked: true },
-      { value: 'Best', label: 'Best', locked: false },
-      { value: 'History', label: 'History', locked: false },
-      { value: 'Volume', label: 'Volume', locked: false },
-      { value: 'Search Console', label: 'Search Console', locked: false },
+      { value: 'Keyword', label: t('columns.keyword'), locked: true },
+      { value: 'Position', label: t('columns.position'), locked: true },
+      { value: 'URL', label: t('columns.url'), locked: true },
+      { value: 'Updated', label: t('columns.updated'), locked: true },
+      { value: 'Best', label: t('columns.best'), locked: false },
+      { value: 'History', label: t('columns.history'), locked: false },
+      { value: 'Volume', label: t('columns.volume'), locked: false },
+      { value: 'Search Console', label: t('columns.searchConsole'), locked: false },
    ];
+
    if (integratedConsole) {
-      sortOptionChoices.push({ value: 'imp_desc', label: `Most Viewed${isConsole ? ' (Default)' : ''}` });
-      sortOptionChoices.push({ value: 'imp_asc', label: 'Least Viewed' });
-      sortOptionChoices.push({ value: 'visits_desc', label: 'Most Visited' });
-      sortOptionChoices.push({ value: 'visits_asc', label: 'Least Visited' });
+      sortOptionChoices.push({ value: 'imp_desc', label: `${t('sortOptions.imp_desc')}${isConsole ? defaultText : ''}` });
+      sortOptionChoices.push({ value: 'imp_asc', label: t('sortOptions.imp_asc') });
+      sortOptionChoices.push({ value: 'visits_desc', label: t('sortOptions.visits_desc') });
+      sortOptionChoices.push({ value: 'visits_asc', label: t('sortOptions.visits_asc') });
    }
    if (isConsole) {
       sortOptionChoices.splice(2, 2);
-      sortOptionChoices.push({ value: 'ctr_asc', label: 'Highest CTR' });
-      sortOptionChoices.push({ value: 'ctr_desc', label: 'Lowest CTR' });
+      sortOptionChoices.push({ value: 'ctr_asc', label: t('sortOptions.ctr_asc') });
+      sortOptionChoices.push({ value: 'ctr_desc', label: t('sortOptions.ctr_desc') });
    }
    const sortItemStyle = (sortType: string) => {
       return `cursor-pointer py-2 px-3 hover:bg-[#FCFCFF] ${sortBy === sortType ? 'bg-indigo-50 text-indigo-600 hover:bg-indigo-50' : ''}`;
@@ -132,7 +137,7 @@ const KeywordFilters = (props: KeywordFilterProps) => {
                   className={`${deviceTabStyle} ${device === 'desktop' ? ' bg-[#F8F9FF] text-gray-700' : ''}`}
                   onClick={() => setDevice('desktop')}>
                   <Icon type='desktop' classes='top-[3px]' size={15} />
-                  <i className='hidden not-italic lg:inline-block ml-1'>Desktop</i>
+                  <i className='hidden not-italic lg:inline-block ml-1'>{t('keywordFilter.desktop')}</i>
                   <span className={`${deviceTabCountStyle}`}>{keywordCounts.desktop}</span>
                </li>
                <li
@@ -140,7 +145,7 @@ const KeywordFilters = (props: KeywordFilterProps) => {
                   className={`${deviceTabStyle} ${device === 'mobile' ? ' bg-[#F8F9FF] text-gray-700' : ''}`}
                   onClick={() => setDevice('mobile')}>
                   <Icon type='mobile' />
-                  <i className='hidden not-italic lg:inline-block ml-1'>Mobile</i>
+                  <i className='hidden not-italic lg:inline-block ml-1'>{t('keywordFilter.mobile')}</i>
                   <span className={`${deviceTabCountStyle}`}>{keywordCounts.mobile}</span>
                </li>
             </ul>
@@ -150,7 +155,7 @@ const KeywordFilters = (props: KeywordFilterProps) => {
                <button
                   data-testid="filter_button"
                   className={`px-2 py-1 rounded ${filterOptions ? ' bg-indigo-100 text-blue-700' : ''}`}
-                  title='Filter'
+                  title={t('keywordFilter.filter')}
                   onClick={() => showFilterOptions(!filterOptions)}>
                   <Icon type="filter" size={18} />
                </button>
@@ -162,7 +167,7 @@ const KeywordFilters = (props: KeywordFilterProps) => {
                   <button
                      onClick={props.onReload}
                      className="hidden lg:flex p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors items-center h-[34px]"
-                     title="Reload All Serps"
+                     title={t('keywordFilter.reloadSerps')}
                   >
                      <Icon type='reload' size={16} />
                   </button>
@@ -172,7 +177,7 @@ const KeywordFilters = (props: KeywordFilterProps) => {
                      className={'hidden lg:flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-xs font-semibold h-[34px]'}
                      onClick={props.onAddKeyword}
                   >
-                     <span className="text-lg leading-none mb-0.5">+</span> Add Keyword
+                     <span className="text-lg leading-none mb-0.5">+</span> {t('keywordFilter.addKeyword')}
                   </button>
                )}
 
@@ -180,7 +185,7 @@ const KeywordFilters = (props: KeywordFilterProps) => {
                   <SelectField
                      selected={filterParams.countries}
                      options={countryOptions}
-                     defaultLabel='All Countries'
+                     defaultLabel={t('keywordFilter.allCountries')}
                      updateField={(updated: string[]) => filterCountry(updated)}
                      flags={true}
                   />
@@ -191,9 +196,9 @@ const KeywordFilters = (props: KeywordFilterProps) => {
                      <SelectField
                         selected={filterParams.tags}
                         options={allTags.map((tag: string) => ({ label: tag, value: tag }))}
-                        defaultLabel='All Tags'
+                        defaultLabel={t('keywordFilter.allTags')}
                         updateField={(updated: string[]) => filterTags(updated)}
-                        emptyMsg="No Tags Found for this Domain"
+                        emptyMsg={t('keywordFilter.noTags')}
                      />
                   </div>
                )}
@@ -202,7 +207,7 @@ const KeywordFilters = (props: KeywordFilterProps) => {
                      data-testid="filter_input"
                      className={'border w-44 lg:w-36 focus:w-44 transition-all rounded-3xl p-1.5 px-4 outline-none ring-0 focus:border-indigo-200'}
                      type="text"
-                     placeholder='Filter Keywords...'
+                     placeholder={t('keywordFilter.filterKeywords')}
                      onChange={searchKeywords}
                      value={filterParams.search}
                   />
@@ -212,7 +217,7 @@ const KeywordFilters = (props: KeywordFilterProps) => {
                <button
                   data-testid="sort_button"
                   className={`px-2 py-1 rounded ${sortOptions ? ' bg-indigo-100 text-blue-700' : ''}`}
-                  title='Sort'
+                  title={t('keywordFilter.sort')}
                   onClick={() => showSortOptions(!sortOptions)}>
                   <Icon type="sort" size={18} />
                </button>
@@ -237,7 +242,7 @@ const KeywordFilters = (props: KeywordFilterProps) => {
                   <button
                      data-testid="columns_button"
                      className={`px-2 py-1 rounded ${columnOptions ? ' bg-indigo-100 text-blue-700' : ''}`}
-                     title='Show/Hide Columns'
+                     title={t('keywordFilter.columns')}
                      onClick={() => showColumnOptions(!columnOptions)}
                   >
                      <Icon type='eye-closed' size={18} />

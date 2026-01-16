@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { ChevronLeft } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Step2Props {
     onNext: (data: any) => void;
@@ -13,6 +14,7 @@ interface Step2Props {
 }
 
 const Step2 = ({ onNext, onBack, initialData }: Step2Props) => {
+    const { t } = useLanguage();
     const [formData, setFormData] = useState({
         businessName: '',
         niche: '',
@@ -38,12 +40,12 @@ const Step2 = ({ onNext, onBack, initialData }: Step2Props) => {
         setError('');
 
         if (!formData.businessName || !formData.niche || !formData.description) {
-            setError('Please fill in all required fields');
+            setError(t('onboarding.step2.errorFields'));
             return;
         }
 
         if (formData.niche.split(' ').length > 3) {
-            setError('Niche should be max 3 words');
+            setError(t('onboarding.step2.errorNiche'));
             return;
         }
 
@@ -58,10 +60,10 @@ const Step2 = ({ onNext, onBack, initialData }: Step2Props) => {
             if (res.ok) {
                 onNext(data);
             } else {
-                setError(data.error || 'Failed to save');
+                setError(data.error || t('onboarding.step1.errorSave'));
             }
         } catch (err) {
-            setError('An error occurred');
+            setError(t('onboarding.step1.errorGeneric'));
         } finally {
             setLoading(false);
         }
@@ -87,53 +89,53 @@ const Step2 = ({ onNext, onBack, initialData }: Step2Props) => {
                     className="flex items-center text-gray-600 hover:text-gray-900 text-sm font-medium"
                 >
                     <ChevronLeft size={16} className="mr-1" />
-                    Back
+                    {t('onboarding.step2.back')}
                 </button>
             </div>
 
-            <h2 className="text-3xl font-bold mb-2 text-gray-900">Tell us about your business</h2>
-            <p className="text-gray-500 mb-8">Share some details about your business.</p>
+            <h2 className="text-3xl font-bold mb-2 text-gray-900">{t('onboarding.step2.title')}</h2>
+            <p className="text-gray-500 mb-8">{t('onboarding.step2.subtitle')}</p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Name and Niche Row */}
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">{t('onboarding.step2.nameLabel')}</label>
                         <input
                             type="text"
-                            placeholder="Flowxtra"
+                            placeholder={t('onboarding.step2.namePlaceholder')}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                             value={formData.businessName}
                             onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
                         />
-                        <p className="text-xs text-gray-500 mt-1">Your business name</p>
+                        <p className="text-xs text-gray-500 mt-1">{t('onboarding.step2.nameHelp')}</p>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Niche</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">{t('onboarding.step2.nicheLabel')}</label>
                         <input
                             type="text"
-                            placeholder="recruiting software"
+                            placeholder={t('onboarding.step2.nichePlaceholder')}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                             value={formData.niche}
                             onChange={(e) => setFormData({ ...formData, niche: e.target.value })}
                         />
-                        <p className="text-xs text-gray-500 mt-1">Short and focused (max 3 words)</p>
+                        <p className="text-xs text-gray-500 mt-1">{t('onboarding.step2.nicheHelp')}</p>
                     </div>
                 </div>
 
                 {/* Description */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('onboarding.step2.descLabel')}</label>
                     <textarea
                         rows={6}
-                        placeholder="Flowxtra offers a free Applicant Tracking System (ATS) that allows unlimited job postings and helps streamline the hiring process with AI-powered recruitment solutions..."
+                        placeholder={t('onboarding.step2.descPlaceholder')}
                         className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                         maxLength={maxChars}
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                        A brief description of what your business is about ({charCount}/{maxChars})
+                        {t('onboarding.step2.descHelp')} ({charCount}/{maxChars})
                     </p>
                 </div>
 
@@ -146,9 +148,9 @@ const Step2 = ({ onNext, onBack, initialData }: Step2Props) => {
                             i
                         </div>
                         <div>
-                            <h4 className="font-semibold text-gray-900 text-sm mb-1">Important (Read for best results)</h4>
+                            <h4 className="font-semibold text-gray-900 text-sm mb-1">{t('onboarding.step2.importantTitle')}</h4>
                             <p className="text-gray-600 text-sm">
-                                Review all fields. If unsure, just keep the auto-filled suggestion. Make sure that everything is written in selected language.
+                                {t('onboarding.step2.importantDesc')}
                             </p>
                         </div>
                     </div>
@@ -161,7 +163,7 @@ const Step2 = ({ onNext, onBack, initialData }: Step2Props) => {
                     disabled={loading}
                     className="w-full py-3 px-4 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-70"
                 >
-                    {loading ? 'Saving...' : 'Continue'}
+                    {loading ? t('onboarding.step1.saving') : t('onboarding.step1.continue')}
                 </button>
             </form>
         </div>

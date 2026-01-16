@@ -1,30 +1,83 @@
 {
-  "landing": {
-    "title": "SEO AI Agent",
-    "subtitle": "Your Professional SEO Tracking Solution",
-    "description": "Track your keywords, monitor rankings, and grow your business with our powerful SEO tools.",
-    "cta": "Get Started",
-    "features": {
-      "tracking": "Keyword Tracking",
-      "analytics": "Advanced Analytics",
-      "reports": "Detailed Reports"
-    }
-  },
-  "auth": {
-    "login": "Sign In",
-    "signInWith": "Sign in with {{provider}}",
-    "logout": "Sign Out",
-    "welcome": "Welcome back!",
-    "loginDescription": "Sign in to access your dashboard"
-  },
   "onboarding": {
-    "welcome": "Welcome to SEO AI Agent",
-    "step1": "Tell us about your business",
-    "step2": "Connect your Google account",
-    "step3": "Add your domains",
-    "skip": "Skip",
-    "next": "Next",
-    "finish": "Finish"
+    "layout": {
+      "title": "All-in-One Traffic Solution",
+      "subtitle": "Everything you need to rank and get traffic on autopilot",
+      "feature1_title": "Rank on Google & AI Search",
+      "feature1_desc": "Optimized to rank on Google, ChatGPT, and AI engines",
+      "feature2_title": "Daily Article Generation",
+      "feature2_desc": "SEO-optimized content generated daily with internal linking",
+      "feature3_title": "Auto-Publish to Your Website",
+      "feature3_desc": "Seamless publishing to WordPress, Webflow, and Shopify",
+      "feature4_title": "Personalized Plan",
+      "feature4_desc": "Tailored strategy with keyword ideas and content roadmap"
+    },
+    "step1": {
+      "title": "Connect Google Search Console",
+      "subtitle": "Select your verified website from Google Search Console to get started.",
+      "checking": "Checking connection...",
+      "connectGoogleTitle": "Connect Your Google Account",
+      "connectGoogleDesc": "Link your Google Search Console to automatically verify your website and access performance data.",
+      "connectBtn": "Connect Google Search Console",
+      "connected": "Google Search Console Connected",
+      "selectSiteLabel": "Select Your Website",
+      "loadingSites": "Loading your sites...",
+      "noSitesTitle": "No verified sites found in your Google Search Console.",
+      "noSitesDesc": "Please verify your domain in Google Search Console first, then refresh this page.",
+      "chooseSite": "-- Choose a verified site --",
+      "owner": "(Owner)",
+      "websiteUrlLabel": "Website URL",
+      "websiteUrlPlaceholder": "Select a site above",
+      "websiteUrlHelp": "This field is automatically filled from your selected site",
+      "errorSelectSite": "Please select a website from Google Search Console",
+      "errorVerifySite": "Please select a verified site from Google Search Console",
+      "errorSave": "Failed to save",
+      "errorGeneric": "An error occurred",
+      "saving": "Saving...",
+      "continue": "Continue"
+    },
+    "step2": {
+      "title": "Tell us about your business",
+      "subtitle": "Share some details about your business.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Flowxtra",
+      "nameHelp": "Your business name",
+      "nicheLabel": "Niche",
+      "nichePlaceholder": "recruiting software",
+      "nicheHelp": "Short and focused (max 3 words)",
+      "descLabel": "Description",
+      "descPlaceholder": "Flowxtra offers a free Applicant Tracking System (ATS)...",
+      "descHelp": "A brief description of what your business is about",
+      "importantTitle": "Important (Read for best results)",
+      "importantDesc": "Review all fields. If unsure, just keep the auto-filled suggestion. Make sure that everything is written in selected language.",
+      "errorFields": "Please fill in all required fields",
+      "errorNiche": "Niche should be max 3 words",
+      "back": "Back"
+    },
+    "step2_5": {
+      "title": "Define Your SEO Strategy",
+      "subtitle": "We've analyzed your business and suggested 9 focus keywords. Review and edit them to match your goals.",
+      "aiTitle": "AI-Generated Keywords",
+      "aiDesc": "These keywords were automatically generated based on your business description. Feel free to edit them!",
+      "targetCountry": "Target Country",
+      "highPriorityTitle": "High Priority (Top 3)",
+      "highPriorityDesc": "Critical keywords you must dominate",
+      "mediumPriorityTitle": "Medium Priority",
+      "mediumPriorityDesc": "Important supporting keywords",
+      "lowPriorityTitle": "Low Priority",
+      "lowPriorityDesc": "Long-tail & future opportunities",
+      "keywordPlaceholder": "Keyword",
+      "errorKeywords": "Please add at least one focus keyword"
+    },
+    "step3": {
+      "title": "Add your competitors",
+      "subtitle": "Primary competitors to analyze.",
+      "placeholder": "Enter competitor URL...",
+      "help": "Enter your competitor's website URL to analyze their content strategy",
+      "add": "Add",
+      "maxReached": "(Max 3 reached)",
+      "suggestions": "Suggestions:"
+    }
   },
   "dashboard": {
     "title": "Dashboard",
@@ -40,6 +93,1134 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
-    "search": "Search"
+    "search": "Search",
+    "logout": "Logout",
+    "changeLanguage": "Change Language"
+  },
+  "email": {
+    "visits": "Visits",
+    "impressions": "Impressions",
+    "avgPosition": "Avg Position",
+    "avgCtr": "Avg CTR",
+    "improved": "Improved",
+    "declined": "Declined",
+    "topKeywords": "Top Performing Keywords (Last {{days}} Days)",
+    "topPages": "Top Performing Pages",
+    "keyword": "Keyword",
+    "page": "Page",
+    "clicks": "Clicks",
+    "views": "Views",
+    "pos": "Pos",
+    "avgPos": "Avg Pos",
+    "viewMore": "View {{count}} more keywords on dashboard",
+    "yearsAgo": "{{count}} years ago",
+    "monthsAgo": "{{count}} months ago",
+    "daysAgo": "{{count}} days ago",
+    "hrsAgo": "{{count}} hrs ago",
+    "minsAgo": "{{count}} mins ago",
+    "secsAgo": "{{count}} secs ago",
+    "subject": "[{{domain}}] Monthly Keyword Positions Update"
+  },
+  "sidebar": {
+    "insight": "Insight",
+    "tracking": "Tracking",
+    "competitors": "Competitors",
+    "discover": "Discover",
+    "agent": "Seo Agent",
+    "settings": "Settings",
+    "profile": "Profile",
+    "scraper": "Scraper",
+    "connections": "Connect",
+    "billing": "Billing",
+    "myDomains": "My Domains",
+    "posts": "Posts",
+    "apiKeys": "API & MCP",
+    "notifications": "Notifications"
+  },
+  "profile": {
+    "title": "Personal Profile",
+    "description": "Manage your personal information and account security",
+    "cardTitle": "Profile Information",
+    "cardDesc": "Update your photo and personal details",
+    "photoTitle": "Profile Photo",
+    "photoDesc": "This will be displayed on your profile.",
+    "changePhoto": "Change Photo",
+    "fullName": "Full Name",
+    "email": "Email Address",
+    "emailNote": "Email address cannot be changed directly. Contact support.",
+    "languageSettingsTitle": "Language Preferences",
+    "languageSettingsDesc": "Choose your preferred language for the interface",
+    "language": "System Language",
+    "save": "Save Changes",
+    "saving": "Saving...",
+    "success": "Profile updated successfully",
+    "error": "Failed to update profile",
+    "deleteAccountTitle": "Delete Account",
+    "deleteAccountDesc": "Permanently delete your account and all associated data.",
+    "deleteWarning": "This action is irreversible. Please type \"DELETE\" to confirm.",
+    "deletePlaceholder": "Type DELETE to confirm",
+    "deleteButton": "Delete Account",
+    "deleting": "Deleting...",
+    "deleteSuccess": "Account deleted successfully",
+    "deleteError": "Failed to delete account"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Manage how and when you want to be notified.",
+    "generalTitle": "Email Notifications",
+    "generalDesc": "Configure your email preferences.",
+    "emailAlerts": "Email Alerts",
+    "emailAlertsDesc": "Receive alerts about your account activity.",
+    "weeklyReport": "Weekly Report",
+    "weeklyReportDesc": "Get a weekly summary of your domains performance.",
+    "marketingEmails": "Marketing Emails",
+    "marketingEmailsDesc": "Receive news, updates, and special offers.",
+    "securityAlerts": "Security Alerts",
+    "securityAlertsDesc": "Get notified about important security events.",
+    "save": "Save Changes",
+    "saving": "Saving...",
+    "success": "Preferences updated successfully",
+    "emailSettingsTitle": "Notification Channel",
+    "emailSettingsDesc": "Where should we send your notifications?",
+    "notificationEmailLabel": "Notification Email",
+    "notificationEmailPlaceholder": "e.g. notifications@company.com",
+    "notificationEmailHelp": "We will send notifications to this email address.",
+    "domainTitle": "Domain Notifications",
+    "domainDesc": "Enable or disable notifications for specific domains.",
+    "domainLabel": "Receive updates for"
+  },
+  "billing": {
+    "title": "Billing & Subscription",
+    "desc": "Manage your billing details and subscription plan",
+    "tabs": {
+      "subscription": "Subscription Plan",
+      "details": "Invoice Details",
+      "history": "Invoices"
+    },
+    "currentPlan": "Current Plan: {{plan}}",
+    "active": "Active",
+    "planNames": {
+      "free": "Free",
+      "basic": "Basic",
+      "pro": "Pro",
+      "premium": "Premium"
+    },
+    "planDesc": {
+      "free": "Forever free",
+      "basic": "For getting started",
+      "pro": "For growing businesses",
+      "premium": "For power users & teams"
+    },
+    "features": {
+      "domain": "{{count}} Domain",
+      "domains": "{{count}} Domains",
+      "unlimitedDomains": "Unlimited Domains",
+      "keywords": "{{count}} Keywords",
+      "updates": "Limited Updates",
+      "weekly": "Weekly Updates",
+      "daily": "Daily Updates",
+      "mcp": "MCP Access",
+      "ai": "AI Content",
+      "priority": "Priority Support",
+      "api": "API Access"
+    },
+    "buttons": {
+      "current": "Current Plan",
+      "upgrade": "Upgrade"
+    },
+    "invoice": {
+      "title": "Global Invoice Information",
+      "desc": "Set default details for all your invoices",
+      "accountType": "Account Type",
+      "company": "Company",
+      "individual": "Individual",
+      "nameCompany": "Company Name",
+      "nameIndividual": "Full Name",
+      "vat": "VAT ID (Optional)",
+      "address": "Billing Address",
+      "email": "Billing Email",
+      "save": "Save Defaults"
+    },
+    "history": {
+      "title": "Invoice History",
+      "desc": "Download your past invoices",
+      "date": "Date",
+      "amount": "Amount",
+      "status": "Status",
+      "download": "Download"
+    },
+    "checkout": {
+      "title": "Complete {{cycle}} Subscription",
+      "desc": "Review your plan and confirm invoice details.",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "save": "Save ~20%",
+      "planSummary": "{{plan}} Plan",
+      "cycle": "Billing Cycle",
+      "total": "Total due today",
+      "confirm": "Confirm & Pay",
+      "cancel": "Cancel",
+      "billedYearly": "Billed Yearly Only"
+    }
+  },
+  "apiKeys": {
+    "title": "API & MCP Connections",
+    "subtitle": "Connect AI assistants via MCP protocol to manage your SEO data",
+    "activeConnections": "Your Active Connections ({{count}})",
+    "noConnections": "No Connections Yet",
+    "noConnectionsDesc": "Create your first AI connection to start managing your SEO data through conversation with AI assistants like Claude or ChatGPT.",
+    "createFirst": "Create Your First Connection",
+    "create": "Create New Connection",
+    "permissions": "PERMISSIONS:",
+    "created": "Created {{date}}",
+    "lastUsed": "Last used {{date}}",
+    "expires": "Expires {{date}}",
+    "viewSetup": "View Setup",
+    "hideSetup": "Hide Setup",
+    "disable": "Disable",
+    "delete": "Delete",
+    "disabled": "Disabled",
+    "setupTitle": "How to Use This Connection",
+    "setupClaude": "For Claude Desktop:",
+    "setupConfig": "Add this to your config file (replace with your actual API key):",
+    "viewGuide": "View detailed setup guide",
+    "securityNotice": "API Key Not Retrievable",
+    "securityDesc": "For security reasons, API keys are only shown once during creation. If you lost your key, create a new connection and delete this one.",
+    "createModal": {
+      "title": "Create New Connection",
+      "subtitle": "Set up AI assistant access to your SEO data",
+      "nameLabel": "1. Name Your Connection",
+      "namePlaceholder": "e.g., My Claude Assistant",
+      "nameHelp": "Choose a name you'll recognize later",
+      "permLabel": "2. Choose Permissions",
+      "selectAll": "Select All",
+      "deselectAll": "Deselect All",
+      "expiryLabel": "3. Set Expiration",
+      "expiryHelp": "For security, we recommend 30 days",
+      "cancel": "Cancel",
+      "create": "Create Connection"
+    },
+    "successModal": {
+      "title": "Connection Created Successfully!",
+      "subtitle": "Follow these steps to connect your AI assistant",
+      "step1": "Copy Your Connection Key",
+      "step1Desc": "This is your unique key - save it somewhere safe!",
+      "copy": "Copy",
+      "step2": "Add to Your AI Assistant",
+      "step2Desc": "For Claude Desktop, add this to your config file:",
+      "step3": "Restart & Start Using",
+      "step3Desc": "Restart your AI assistant and start chatting!",
+      "important": "Important!",
+      "importantDesc": "This key will only be shown once. Make sure to save it securely before closing this message.",
+      "saved": "I've Saved the Key"
+    },
+    "permLabels": {
+      "readDomains": "View Domains",
+      "readDomainsDesc": "See your website information",
+      "readKeywords": "View Keywords",
+      "readKeywordsDesc": "See your SEO keywords",
+      "readPosts": "View Articles",
+      "readPostsDesc": "See your blog posts",
+      "readGsc": "View Analytics",
+      "readGscDesc": "See Google Search data",
+      "writePosts": "Create Articles",
+      "writePostsDesc": "Write and edit blog posts",
+      "writeKeywords": "Manage Keywords",
+      "writeKeywordsDesc": "Add and update keywords",
+      "publishWordpress": "Publish to WordPress",
+      "publishWordpressDesc": "Publish articles to your website"
+    },
+    "expiryOptions": {
+      "7": "7 days",
+      "30": "30 days (Recommended)",
+      "90": "90 days",
+      "365": "1 year",
+      "0": "Never expires"
+    }
+  },
+  "scraperSettings": {
+    "title": "Scraper Configuration",
+    "desc": "Manage your scraping settings and integrations",
+    "configTitle": "Scraper Configuration",
+    "configDesc": "Configure your scraper settings and proxy options",
+    "type": "Scraper Type",
+    "typePlaceholder": "Select scraper type",
+    "none": "None",
+    "recommended": "Recommended",
+    "apiKey": "API Key",
+    "apiKeyPlaceholder": "Enter your API key",
+    "delay": "Scrape Delay",
+    "delayNone": "None",
+    "delay5": "5 seconds",
+    "delay10": "10 seconds",
+    "delay30": "30 seconds",
+    "retry": "Enable retry on failure",
+    "save": "Save Changes",
+    "saving": "Saving...",
+    "noKey": "Don't have an API key?",
+    "signUp": "Sign up for {{service}}",
+    "notificationInterval": "Notification Interval",
+    "notificationEmail": "Notification Email"
+  },
+  "periods": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "last7Days": "Last 7 Days",
+    "last30Days": "Last 30 Days",
+    "last90Days": "Last 90 Days",
+    "lastYear": "Last Year",
+    "lastDays": "Last {{days}} Days"
+  },
+  "insight": {
+    "stats": "Stats",
+    "keywords": "Keywords",
+    "countries": "Countries",
+    "pages": "Pages",
+    "performanceOverview": "Performance Overview",
+    "both": "Both",
+    "visits": "Visits",
+    "impressions": "Impressions",
+    "avgPosition": "Avg Position",
+    "avgCtr": "Avg CTR",
+    "date": "Date",
+    "ctr": "CTR",
+    "position": "Position",
+    "clicks": "Clicks",
+    "connectTitle": "Google Search Console Not Integrated",
+    "connectDesc": "Connect your Google Search Console account to view real performance data including impressions, clicks, and average position.",
+    "connectBtn": "Connect Google Account",
+    "last30Days": "Last 30 Days",
+    "pageInfo": "Page {{current}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next",
+    "noResults": "No results found for \"{{query}}\"",
+    "topPerformers": "Top Performers",
+    "exportCSV": "Export CSV",
+    "selectTab": "Select View"
+  },
+  "domainHeader": {
+    "last3Days": "Last 3 Days",
+    "last7Days": "Last 7 Days",
+    "last30Days": "Last 30 Days",
+    "reloadSerps": "Reload SERPs",
+    "reloadAllSerps": "Reload All SERPs",
+    "deleteDomain": "Delete Domain",
+    "updating": "Updating...",
+    "reload": "Reload",
+    "addKeyword": "Add Keyword",
+    "loadIdeas": "Load Ideas"
+  },
+  "keywordFilter": {
+    "filterKeywords": "Filter Keywords...",
+    "allCountries": "All Countries",
+    "allTags": "All Tags",
+    "noTags": "No Tags Found for this Domain",
+    "addKeyword": "Add Keyword",
+    "reloadSerps": "Reload All SERPs",
+    "desktop": "Desktop",
+    "mobile": "Mobile",
+    "filter": "Filter",
+    "sort": "Sort",
+    "columns": "Show/Hide Columns"
+  },
+  "sortOptions": {
+    "pos_asc": "Top Position",
+    "pos_desc": "Lowest Position",
+    "date_asc": "Most Recent",
+    "date_desc": "Oldest",
+    "alpha_asc": "Alphabetically (A-Z)",
+    "alpha_desc": "Alphabetically (Z-A)",
+    "vol_asc": "Lowest Search Volume",
+    "vol_desc": "Highest Search Volume",
+    "imp_desc": "Most Viewed",
+    "imp_asc": "Least Viewed",
+    "visits_desc": "Most Visited",
+    "visits_asc": "Least Visited",
+    "ctr_desc": "Lowest CTR"
+  },
+  "columns": {
+    "keyword": "Keyword",
+    "position": "Position",
+    "url": "URL",
+    "updated": "Updated",
+    "best": "Best",
+    "history": "History",
+    "volume": "Volume",
+    "searchConsole": "Search Console"
+  },
+  "scTable": {
+    "totalVisits": "Total Visits",
+    "addToTracker": "Add {{count}} Keywords to Tracker",
+    "noKeywords": "No keywords found",
+    "adjustFilters": "Try adjusting your filters."
+  },
+  "tracking": {
+    "addKeywords": {
+      "title": "Add New Keywords",
+      "placeholder": "Type or Paste Keywords here. Insert Each keyword in a New line.",
+      "tagsPlaceholder": "Insert Tags (Optional)",
+      "cityPlaceholder": "City (Optional)",
+      "cityDisabled": "Not available for {{scraper}}",
+      "cityTooltip": "Your scraper {{scraper}} doesn't have city level scraping feature.",
+      "trackCompetitors": "Track Competitors (will automatically check competitor rankings)",
+      "cancel": "Cancel",
+      "add": "Add Keywords",
+      "adding": "Adding...",
+      "errorExist": "Keywords {{keywords}} already Exist",
+      "errorEmpty": "Please Insert a Keyword",
+      "noTags": "No Existing Tags Found..."
+    },
+    "manageCompetitors": {
+      "title": "Manage Competitors",
+      "addLabel": "Add Competitor URL",
+      "placeholder": "https://example.com",
+      "add": "Add",
+      "count": "{{count}}/{{max}} competitors added",
+      "currentTitle": "Current Competitors",
+      "empty": "No competitors added yet",
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "errorEmpty": "Please enter a competitor URL",
+      "errorMax": "Maximum {{max}} competitors allowed",
+      "errorExists": "This competitor already exists",
+      "success": "Competitors updated successfully!",
+      "error": "Failed to update competitors"
+    },
+    "tabs": {
+      "keywords": "Keywords",
+      "competitors": "Competitors"
+    },
+    "scraperAlert": "A Scrapper/Proxy has not been set up yet. Open Settings to set it up and start using the app."
+  },
+  "trackingTable": {
+    "keyword": "Keyword",
+    "best": "Best",
+    "history": "History (7d)",
+    "volume": "Volume",
+    "url": "URL",
+    "updated": "Updated",
+    "scPos": "Pos",
+    "scImp": "Imp",
+    "scVisits": "Visits",
+    "refreshKeywords": "Refresh Keywords",
+    "removeKeywords": "Remove Keywords",
+    "tagKeywords": "Tag Keywords",
+    "noKeywordsDevice": "No Keywords Added for this Device Type.",
+    "removeTitle": "Remove Keywords",
+    "removeConfirm": "Are you sure you want to remove {{count}} Keyword(s)?",
+    "refreshCompetitors": "Refresh Competitors",
+    "yourPosition": "Your Position",
+    "noKeywordsMsg": "No keywords added yet. Add keywords from the Keywords tab.",
+    "noCompetitorsMsg": "No competitors added yet. Add competitors from domain settings."
+  },
+  "domainSelector": {
+    "current": "Current Domain",
+    "select": "Select Domain",
+    "switch": "Switch Domain",
+    "add": "Add New Domain",
+    "empty": "No domains found"
+  },
+  "domainSettings": {
+    "title": "Domain Settings",
+    "myApp": "My App",
+    "tabs": {
+      "general": "General",
+      "integrations": "Integrations",
+      "searchConsole": "Google Search Console",
+      "delete": "Delete"
+    },
+    "general": {
+      "cardTitle": "General Information",
+      "cardDesc": "Update your domain's business information and niche details.",
+      "businessName": "Business Name",
+      "businessNameDesc": "The official name of your business or brand.",
+      "niche": "Niche / Industry",
+      "nicheDesc": "The primary industry or topic of your website.",
+      "description": "Business Description",
+      "descriptionDesc": "A short description used for AI context generation.",
+      "save": "Save Changes",
+      "saving": "Saving..."
+    },
+    "strategy": {
+      "cardTitle": "Target Keywords Strategy",
+      "country": "Target Country",
+      "allCountries": "All Countries",
+      "cardDesc": "Define up to 9 focus keywords ranked by importance. These guide your SEO strategy for the next 6 months.",
+      "high": "High Importance (Top 3)",
+      "highDesc": "Critical keywords you must dominate to drive core business.",
+      "medium": "Medium Importance",
+      "mediumDesc": "Important keywords that support your main services.",
+      "low": "Low Importance",
+      "lowDesc": "Long-tail or future opportunity keywords."
+    },
+    "competitors": {
+      "cardTitle": "Competitors",
+      "cardDesc": "Track your competitors to benchmark your performance.",
+      "tracked": "Tracked Competitors",
+      "add": "Add",
+      "empty": "No competitors added yet.",
+      "exists": "Competitor already added"
+    },
+    "integrations": {
+      "cardTitle": "CMS Integrations",
+      "cardDesc": "Connect your website CMS to enable auto-blogging features.",
+      "wpDesc": "Connect your self-hosted WordPress site using Application Passwords.",
+      "shopifyDesc": "Connect your Shopify store using Access Tokens.",
+      "webflowDesc": "Connect your Webflow site seamlessly.",
+      "wixDesc": "Connect your Wix website easily.",
+      "comingSoon": "Coming Soon",
+      "settingsTitle": "WordPress Settings",
+      "helpTitle": "How to Get Your WordPress Credentials",
+      "help": {
+        "urlLabel": "1. Website URL:",
+        "urlDesc": "Enter the exact URL of your WordPress site (e.g., https://yoursite.com). Make sure it matches exactly - including http/https and www/non-www.",
+        "usernameLabel": "2. Username:",
+        "usernameDesc": "Use your WordPress login username (not your display name or email). Find it in: WP Admin → Users → Your Profile → Username field.",
+        "appPassLabel": "3. Application Password:",
+        "appPassStep1": "Go to: WP Admin → Users → Profile (your account)",
+        "appPassStep2": "Scroll down to \"Application Passwords\" section",
+        "appPassStep3": "Enter a name (e.g., \"SEO Agent\") and click \"Add New Application Password\"",
+        "appPassStep4": "Copy the generated password (format: xxxx xxxx xxxx xxxx)",
+        "appPassStep5": "Paste it in the field below"
+      },
+      "url": "Website URL",
+      "urlPlaceholder": "https://yourwebsite.com",
+      "urlHelper": "The full URL of your WordPress site.",
+      "username": "Username",
+      "usernamePlaceholder": "admin",
+      "usernameHelper": "Your WordPress username (not email).",
+      "appPass": "Application Password",
+      "appPassPlaceholder": "xxxx xxxx xxxx xxxx",
+      "appPassHelper": "Create this in WP Admin > Users > Profile > Application Passwords.",
+      "refreshCats": "Refresh Categories",
+      "availCats": "Available Categories based on your website",
+      "catsHelper": "Connect above, then click \"Refresh\" to see your categories.",
+      "test": "Test Connection",
+      "saveInt": "Save Integration",
+      "connected": "Connected as {{user}}",
+      "failed": "Connection failed",
+      "enterCreds": "Please enter credentials first",
+      "foundCats": "Found {{count}} categories",
+      "fetchCatsError": "Failed to fetch categories",
+      "testing": "Testing connection..."
+    },
+    "gsc": {
+      "cardTitle": "Google Search Console",
+      "cardDesc": "Connect your Google Search Console account",
+      "connected": "Google Account Connected",
+      "disconnect": "Disconnect",
+      "verifiedSites": "Verified Sites",
+      "refreshSites": "Refresh Sites",
+      "loading": "Loading...",
+      "noSites": "No verified sites found",
+      "owner": "Owner",
+      "full": "Full Access",
+      "restricted": "Restricted",
+      "unverified": "Unverified",
+      "imported": "Imported",
+      "add": "Add",
+      "notesTitle": "Important Notes:",
+      "note1": "Only sites where you are the Owner in Google Search Console will appear and work properly.",
+      "connectBtn": "Connect Google Account",
+      "connectDesc": "Link your Google account to automatically verify sites and fetch performance data directly into your dashboard."
+    },
+    "delete": {
+      "cardTitle": "Delete Site",
+      "cardDesc": "Irreversible actions for your site.",
+      "msg": "Permanently remove this site and all its data. This action cannot be undone.",
+      "confirm": "Please type {{domain}} to confirm.",
+      "btn": "Delete Site",
+      "deleting": "Deleting..."
+    }
+  },
+  "posts": {
+    "pageTitle": "Posts",
+    "newArticleTitle": "New Article",
+    "editArticleTitle": "Edit Article",
+    "list": {
+      "title": "Articles",
+      "description": "Manage and optimize your blog content.",
+      "newArticle": "New Article",
+      "emptyTitle": "No articles found",
+      "emptyDesc": "Get started by creating your first AI-optimized article.",
+      "createBtn": "Create Article",
+      "wordpress": "WordPress"
+    },
+    "tabs": {
+      "all": "All Posts",
+      "drafts": "Drafts",
+      "published": "Published"
+    },
+    "table": {
+      "article": "Article",
+      "status": "Status",
+      "lastUpdated": "Last Updated",
+      "actions": "Actions"
+    },
+    "status": {
+      "published": "Published",
+      "draft": "Draft"
+    },
+    "editor": {
+      "back": "Back to Posts",
+      "generate": "Generate",
+      "generating": "Generating...",
+      "save": "Save",
+      "saving": "Saving...",
+      "saved": "Save (Saved)",
+      "newTitle": "New Article",
+      "editTitle": "Edit Article",
+      "description": "Generate SEO-optimized content for your blog",
+      "contentEditor": "Content Editor",
+      "topicLabel": "Article Topic/Idea",
+      "ready": "Ready",
+      "topicPlaceholder": "Enter your article topic or main idea... e.g., 'How to improve SEO rankings in 2026'",
+      "topicHelp": "This will be used by AI to generate your article. Be specific for better results.",
+      "titleLabel": "Article Title",
+      "titlePlaceholder": "Enter your article title...",
+      "titleShort": "Title is too short for optimal SEO (aim for 50-60 characters)",
+      "titleLong": "Title may be truncated in search results (keep it under 60 characters)",
+      "featuredImage": "Featured Image",
+      "clickToChange": "Click to change",
+      "clickToUpload": "Click to upload image",
+      "aiImageComingSoon": "or AI will generate one (coming soon)",
+      "bodyContent": "Body Content",
+      "visualEditor": "Switch to Visual Editor",
+      "sourceCode": "Edit Source Code"
+    },
+    "seo": {
+      "score": "SEO Score",
+      "scoreDesc": {
+        "excellent": "You're doing an excellent job! Your content is well optimized",
+        "good": "You're doing a good effort to reach your goal",
+        "improve": "Keep working on your content to improve your SEO score"
+      },
+      "optimized": "Article Optimized",
+      "suggestionsTitle": "Suggestions to Improve",
+      "suggestions": {
+        "addWords": "Add {{count}} more words to reach optimal length",
+        "addKeywords": "Include your keywords {{count}} more times naturally",
+        "addHeadings": "Add {{count}} more heading(s) (H2 or H3)",
+        "addImage": "Add a featured image to improve engagement",
+        "addMeta": "Write a meta description (150-160 chars)",
+        "titleLength": "Optimize title length to 50-60 characters",
+        "includeAllKeywords": "Include all selected keywords in your content ({{current}}/{{total}} found)",
+        "addPrimaryTitle": "Add your primary keyword \"{{keyword}}\" to the title",
+        "addPrimaryMeta": "Include primary keyword in meta description",
+        "addInternalLinks": "Add at least 2-3 internal links to other pages on your site",
+        "moreInternalLinks": "Add 1-2 more internal links to improve SEO",
+        "addAllAlt": "Add alt text to all {{count}} images for better SEO and accessibility",
+        "addRemainingAlt": "Add alt text to the remaining {{count}} images",
+        "addH1": "Add one H1 heading as the main article title",
+        "singleH1": "Use only one H1 heading (currently: {{count}}). Multiple H1s hurt SEO",
+        "addH2": "Add {{count}} more H2 headings to structure content (optimal: 3-6)",
+        "addH3": "Consider adding {{count}} more H3 sub-headings for better content hierarchy (optimal: 6-12)"
+      },
+      "metrics": {
+        "wordCount": "Word Count",
+        "keywordDensity": "Keyword Density",
+        "headingStructure": "Heading Structure",
+        "images": "Images",
+        "keywordsInContent": "Keywords in Content",
+        "keywordInTitle": "Keyword in Title",
+        "keywordInMeta": "Keyword in Meta",
+        "internalLinks": "Internal Links",
+        "externalLinks": "External Links",
+        "imagesInContent": "Images in Content",
+        "withAltText": "With Alt Text"
+      }
+    },
+    "meta": {
+      "title": "Meta Data",
+      "targetKeywords": "Target Keywords",
+      "editStrategy": "Edit Strategy",
+      "customKeyword": "Or add custom keyword:",
+      "keywordPlaceholder": "Enter keyword...",
+      "addBtn": "Add",
+      "addHelp": "Press Enter or click Add to include a custom keyword",
+      "selectedKeywords": "Selected Keywords:",
+      "metaDescription": "Meta Description",
+      "metaPlaceholder": "Description for search engines..."
+    },
+    "publish": {
+      "wordpress": "Publish to WordPress",
+      "publishing": "Publishing..."
+    },
+    "modal": {
+      "altTitle": "Edit Image Alt Text",
+      "altLabel": "Alt Text (for SEO & Accessibility)",
+      "altHelp": "Describe what's in the image for screen readers and search engines",
+      "updateAlt": "Update Alt Text",
+      "linkTitle": "Edit Link Title",
+      "linkText": "Link Text",
+      "linkUrl": "Link URL",
+      "linkTooltip": "Link Title (Tooltip)",
+      "linkHelp": "This appears when users hover over the link",
+      "updateLink": "Update Title"
+    },
+    "common": {
+      "cancel": "Cancel"
+    }
+  },
+  "landing": {
+    "title": "SEO AI Agent",
+    "subtitle": "Your Professional SEO Tracking Solution",
+    "description": "Track your keywords, monitor rankings, and grow your business with our powerful SEO tools.",
+    "cta": "Get Started",
+    "login": "Sign In",
+    "stats": {
+      "title": "Trusted by Thousands of SEO Professionals",
+      "activeUsers": "Active Users",
+      "keywordsTracked": "Keywords Tracked Daily",
+      "reportsGenerated": "Reports Generated",
+      "customerSatisfaction": "Customer Satisfaction"
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Complete SEO workflow from tracking to publishing - all in one platform",
+      "step1": {
+        "title": "Track Your Rankings Across All Countries",
+        "description": "Monitor your position in any Google region worldwide",
+        "feature1": "Add your website and target keywords",
+        "feature2": "Track rankings in Google Austria, Germany, USA, and any country",
+        "feature3": "Connect with Google Search Console for official data",
+        "feature4": "Compare with up to 3 competitors automatically"
+      },
+      "step2": {
+        "title": "Analyze & Understand Your Data",
+        "description": "Get comprehensive insights with visual analytics",
+        "feature1": "Complete dashboard with interactive charts",
+        "feature2": "Accurate statistics: visits, impressions, CTR",
+        "feature3": "Discover which keywords bring you visitors",
+        "feature4": "Identify gaps and opportunities"
+      },
+      "step3": {
+        "title": "Create Targeted Content with AI",
+        "description": "Generate SEO-optimized articles using leading AI models",
+        "feature1": "Choose from 5+ AI models: GPT-5.2, Claude 3.5 Sonnet, Gemini 2.0",
+        "feature2": "Or use ChatGPT/Claude directly via MCP API",
+        "feature3": "Content optimized for your important keywords",
+        "feature4": "Automatic SEO scoring (100 points) with improvement suggestions"
+      },
+      "step4": {
+        "title": "Publish Directly to Your Website",
+        "description": "One-click publishing to your CMS platform",
+        "feature1": "One-click publishing to WordPress",
+        "feature2": "Support for Shopify, Webflow, Wix (coming soon)",
+        "feature3": "Complete content management from one place",
+        "feature4": "Monitor your ranking improvements after publishing"
+      }
+    },
+    "features": {
+      "title": "Powerful Features for Complete SEO Management",
+      "subtitle": "Everything you need to dominate search rankings and create winning content",
+      "categoryTracking": "Tracking & Analysis",
+      "categoryAI": "AI Content Creation",
+      "categoryPublishing": "Publishing & Integration",
+      "multiCountry": {
+        "title": "Multi-Country Keyword Tracking",
+        "description": "Track your rankings in 200+ countries with real-time updates",
+        "benefit1": "Track rankings in 200+ countries",
+        "benefit2": "Google Austria, Germany, USA, and more",
+        "benefit3": "Track on Desktop & Mobile",
+        "benefit4": "Daily or hourly updates"
+      },
+      "gscIntegration": {
+        "title": "Google Search Console Integration",
+        "description": "Connect directly with Google for official performance data",
+        "benefit1": "Direct connection with Google",
+        "benefit2": "Official data: visits, impressions, CTR",
+        "benefit3": "Analyze top-performing keywords",
+        "benefit4": "Auto-import keywords"
+      },
+      "competitorAnalysis": {
+        "title": "Competitor Analysis",
+        "description": "Track up to 3 competitors and benchmark your performance",
+        "benefit1": "Track up to 3 competitors",
+        "benefit2": "Compare rankings for same keywords",
+        "benefit3": "Discover content gaps",
+        "benefit4": "Alerts when competitors outrank you"
+      },
+      "aiContent": {
+        "title": "AI Content Generation",
+        "description": "Create SEO-optimized content with leading AI models",
+        "benefit1": "Choose from 5+ AI models",
+        "benefit2": "GPT-5.2, Claude 3.5 Sonnet, Gemini 2.0",
+        "benefit3": "Content automatically optimized for SEO",
+        "benefit4": "SEO scoring (100 points)"
+      },
+      "chatIntegration": {
+        "title": "ChatGPT & Claude Integration",
+        "description": "Integrate with your favorite AI chat assistants via MCP API",
+        "benefit1": "MCP API for direct integration",
+        "benefit2": "SEO checks from chat",
+        "benefit3": "Write content from ChatGPT/Claude",
+        "benefit4": "Automate your workflow"
+      },
+      "seoScoring": {
+        "title": "SEO Scoring & Optimization",
+        "description": "Automatic content evaluation with actionable suggestions",
+        "benefit1": "Automatic content evaluation",
+        "benefit2": "Keyword density analysis",
+        "benefit3": "Headings and links analysis",
+        "benefit4": "Smart optimization suggestions"
+      },
+      "wordpressPublishing": {
+        "title": "WordPress Direct Publishing",
+        "description": "Publish your content directly to WordPress with one click",
+        "benefit1": "One-click publishing",
+        "benefit2": "Select categories and tags",
+        "benefit3": "Schedule publishing",
+        "benefit4": "Support for Shopify, Webflow, Wix (coming soon)"
+      },
+      "analytics": {
+        "title": "Advanced Analytics Dashboard",
+        "description": "Interactive charts and comprehensive reporting",
+        "benefit1": "Interactive charts",
+        "benefit2": "Analysis by keywords, pages, countries",
+        "benefit3": "CSV export",
+        "benefit4": "Custom reports"
+      },
+      "apiWebhooks": {
+        "title": "Powerful API & Webhooks",
+        "description": "Complete API with granular permissions and webhooks",
+        "benefit1": "Complete API with granular permissions",
+        "benefit2": "Webhooks for instant notifications",
+        "benefit3": "Integrate with external tools",
+        "benefit4": "Automatic data export"
+      }
+    },
+    "integrations": {
+      "title": "Powered by Leading AI Models & Platforms",
+      "subtitle": "Choose from 5+ AI models and publish directly to your favorite platforms",
+      "aiModels": "AI Content Generation",
+      "directPublishing": "Direct Publishing",
+      "multiEngine": "Multi-Engine Tracking",
+      "comingSoon": "Coming Soon",
+      "seoFooter": "Integrate your SEO workflow with ChatGPT, Claude AI, Google Gemini for content generation. Publish directly to WordPress, Shopify, Webflow. Track rankings on Google, Bing, Yahoo, and DuckDuckGo across 200+ countries."
+    },
+    "testimonials": {
+      "title": "What Our Customers Say",
+      "subtitle": "Join thousands of satisfied customers growing their online presence",
+      "trustBadge": "Rated 5.0 based on 100+ reviews",
+      "testimonial1": {
+        "position": "Digital Marketing Manager",
+        "review": "An amazing tool that helped us improve our website ranking by 150% in just 3 months. The multi-country tracking feature is a game-changer!"
+      },
+      "testimonial2": {
+        "position": "SEO Specialist",
+        "review": "The detailed reports and daily tracking made my job so much easier. The AI content generation is incredibly accurate and saves hours of work."
+      },
+      "testimonial3": {
+        "position": "Founder",
+        "review": "Best SEO tool I've ever used. The interface is simple and the results are accurate. The WordPress integration is seamless!"
+      }
+    },
+    "pricing": {
+      "title": "Simple, Transparent Pricing",
+      "subtitle": "Choose the plan that fits your needs. No hidden fees.",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "perMonth": "month",
+      "saveYearly": "Save up to 17% with yearly billing",
+      "mostPopular": "Most Popular",
+      "noCreditCard": "No credit card required to start",
+      "cancelAnytime": "Cancel anytime. No questions asked.",
+      "seoFooter": "Affordable SEO tracking and AI content platform. Free plan available. Track keyword rankings, analyze Google Search Console data, generate AI content with GPT-5.2 and Claude, publish to WordPress.",
+      "free": {
+        "name": "Free",
+        "description": "Perfect for trying out",
+        "feature1": "1 website",
+        "feature2": "10 keywords",
+        "feature3": "Daily updates",
+        "feature4": "Basic reports",
+        "cta": "Start Free"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "For growing businesses",
+        "feature1": "5 websites",
+        "feature2": "100 keywords",
+        "feature3": "Updates every 6 hours",
+        "feature4": "Advanced reports",
+        "feature5": "API Access",
+        "feature6": "Competitor tracking",
+        "feature7": "AI content generation",
+        "cta": "Start Now"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "For power users",
+        "feature1": "Unlimited websites",
+        "feature2": "500 keywords",
+        "feature3": "Hourly updates",
+        "feature4": "Custom reports",
+        "feature5": "Webhooks",
+        "feature6": "Priority support",
+        "feature7": "White-label",
+        "feature8": "Dedicated account manager",
+        "cta": "Contact Us"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about SEO Agent",
+      "stillHaveQuestions": "Still have questions?",
+      "contactUs": "Contact Us",
+      "q1": {
+        "question": "Do I need a credit card to start?",
+        "answer": "No, you can start with the free plan without needing a credit card. Upgrade anytime when you need more features."
+      },
+      "q2": {
+        "question": "How often is the data updated?",
+        "answer": "Data is updated daily for the Free plan, every 6 hours for Pro, and hourly for Enterprise plans."
+      },
+      "q3": {
+        "question": "Can I track multiple websites?",
+        "answer": "Yes, depending on your plan: 1 website for Free, 5 websites for Pro, and unlimited for Enterprise."
+      },
+      "q4": {
+        "question": "How does multi-country tracking work?",
+        "answer": "You can select from over 200 countries (like Google Austria, Germany, USA). The system checks your ranking in each local Google separately, giving you accurate country-specific data."
+      },
+      "q5": {
+        "question": "Which AI models are supported?",
+        "answer": "We support OpenAI (GPT-5.2, GPT-4.1), Claude (3.5 Sonnet, 3 Opus), Google Gemini (2.0 Flash, 1.5 Pro), Perplexity Sonar, and our local Dpro model."
+      },
+      "q6": {
+        "question": "How do I connect the system with ChatGPT or Claude?",
+        "answer": "We provide MCP API that allows you to connect the system with Claude Desktop or ChatGPT. You can check SEO and write content directly from the chat. Visit our MCP Setup page for detailed instructions."
+      },
+      "q7": {
+        "question": "Can I publish directly to WordPress?",
+        "answer": "Yes! You can connect your WordPress site and publish with one click. Support for Shopify, Webflow, and Wix is coming soon."
+      },
+      "q8": {
+        "question": "Do you support search engines other than Google?",
+        "answer": "Yes, we support Google, Bing, Yahoo, and DuckDuckGo."
+      },
+      "q9": {
+        "question": "How is the SEO score for content calculated?",
+        "answer": "We check more than 15 factors: word count, keyword density, heading structure, internal and external links, image alt text, meta description, and more. The score is out of 100."
+      },
+      "q10": {
+        "question": "Can I cancel my subscription anytime?",
+        "answer": "Absolutely! You can cancel your subscription at any time without additional fees or conditions."
+      }
+    },
+    "finalCTA": {
+      "title": "Ready to Dominate Search Rankings?",
+      "description": "Join thousands of businesses using SEO Agent to track rankings, create AI content, and grow their online presence.",
+      "primaryCTA": "Start Free Trial",
+      "secondaryCTA": "Contact Sales",
+      "noCreditCard": "No credit card required",
+      "users": "Users",
+      "keywords": "Keywords",
+      "satisfaction": "Satisfaction"
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    }
+  },
+  "mcp": {
+    "meta": {
+      "title": "MCP SEO Integration - Connect ChatGPT & Claude Desktop",
+      "description": "Integrate SEO Agent with ChatGPT and Claude Desktop using MCP API. Track rankings, analyze keywords, and generate content directly from your AI chat."
+    },
+    "hero": {
+      "title": "Connect SEO Agent with ChatGPT & Claude Desktop",
+      "description": "Use our MCP API to check SEO, track rankings, and write optimized content directly from your favorite AI chat - ChatGPT, Claude, or any MCP-compatible tool.",
+      "getAPIKey": "Get Your API Key",
+      "viewDocs": "View Documentation"
+    },
+    "whatIs": {
+      "title": "What is MCP (Model Context Protocol)?",
+      "description1": "MCP is a standard protocol that allows AI assistants like ChatGPT and Claude to connect with external tools and services.",
+      "description2": "With our MCP integration, you can access your SEO data, check rankings, analyze keywords, and generate optimized content - all from within your AI chat.",
+      "benefit1Title": "Direct Claude Desktop Integration",
+      "benefit1": "Built-in official MCP support",
+      "benefit2Title": "Compatible with ChatGPT",
+      "benefit2": "Via custom actions",
+      "benefit3Title": "Secure Authentication",
+      "benefit3": "With API keys",
+      "benefit4Title": "Real-time Data Access",
+      "benefit4": "No code required for basic setup"
+    },
+    "platforms": {
+      "title": "Supported Chat Platforms",
+      "recommended": "Recommended",
+      "advanced": "Advanced",
+      "comingSoon": "Coming Soon",
+      "claude1": "Official MCP support built-in",
+      "claude2": "Add our MCP server in settings",
+      "claude3": "Start chatting with SEO data instantly",
+      "chatgpt1": "Create a custom GPT with our API",
+      "chatgpt2": "Configure actions to access SEO data",
+      "chatgpt3": "Use in ChatGPT Plus or Team",
+      "otherTools": "Other MCP Tools",
+      "moreTools": "And more coming soon"
+    },
+    "setup": {
+      "title": "Setup Guide - Step by Step",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "claude": {
+        "step1Title": "Step 1: Generate API Key",
+        "step1": {
+          "1": "Go to Profile → API Keys",
+          "2": "Click 'Create New Key'",
+          "3": "Select permissions: read:domains, read:keywords, read:gsc, write:posts",
+          "4": "Copy your API key securely"
+        },
+        "step2Title": "Step 2: Add MCP Server to Claude Desktop",
+        "step2": "Paste this in Claude Desktop config, restart Claude Desktop, and you're done! Start chatting."
+      },
+      "chatgpt": {
+        "title": "For ChatGPT (Create Custom GPT)",
+        "step1": "Go to ChatGPT → Create a GPT",
+        "step2": "Configure Actions with our OpenAPI schema",
+        "step3": "Add API key in authentication",
+        "step4": "Test with sample queries"
+      },
+      "api": {
+        "title": "Direct API Call (for developers)",
+        "description": "You can also use the API directly without MCP:"
+      }
+    },
+    "functions": {
+      "title": "Available MCP Tools/Functions",
+      "functionName": "Function Name",
+      "description": "Description",
+      "exampleQuery": "Example Query",
+      "listDomains": {
+        "description": "Get all your tracked domains",
+        "example": "Show my domains"
+      },
+      "getKeywords": {
+        "description": "Fetch keywords for a domain",
+        "example": "Get keywords for example.com"
+      },
+      "getRankings": {
+        "description": "Check ranking for keyword",
+        "example": "What's my ranking for 'SEO tools'?"
+      },
+      "getGSC": {
+        "description": "Google Search Console data",
+        "example": "Show GSC stats for last 30 days"
+      },
+      "analyzeSEO": {
+        "description": "Analyze content SEO score",
+        "example": "Check SEO of this article"
+      },
+      "createPost": {
+        "description": "Generate SEO-optimized post",
+        "example": "Write article about X"
+      },
+      "publishPost": {
+        "description": "Publish to WordPress",
+        "example": "Publish to WordPress"
+      },
+      "getCompetitors": {
+        "description": "Get competitor rankings",
+        "example": "How are my competitors ranking?"
+      }
+    },
+    "benefits": {
+      "title": "Why Use MCP Integration?",
+      "speed": {
+        "title": "Speed & Efficiency",
+        "point1": "Get SEO insights in seconds",
+        "point2": "No need to switch between tools",
+        "point3": "Natural language queries"
+      },
+      "ai": {
+        "title": "AI-Powered Insights",
+        "point1": "Let AI analyze your data",
+        "point2": "Get recommendations automatically",
+        "point3": "Generate content on the fly"
+      },
+      "security": {
+        "title": "Secure & Private",
+        "point1": "Your data stays secure",
+        "point2": "API keys with specific permissions",
+        "point3": "Audit logs for all actions"
+      },
+      "updates": {
+        "title": "Continuous Updates",
+        "point1": "Always use latest data",
+        "point2": "Real-time ranking checks",
+        "point3": "Automatic sync with GSC"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "What is MCP and why should I use it?",
+        "answer": "MCP lets you access your SEO data directly from AI chats like Claude or ChatGPT, making your workflow faster and more efficient."
+      },
+      "q2": {
+        "question": "Is MCP free to use?",
+        "answer": "Yes! MCP integration is included in all plans. You just need an API key."
+      },
+      "q3": {
+        "question": "Does this work with the free ChatGPT?",
+        "answer": "Custom GPTs require ChatGPT Plus or Team subscription. Claude Desktop works with any plan."
+      },
+      "q4": {
+        "question": "How do I get an API key?",
+        "answer": "Go to Profile → API Keys and generate a new key with the permissions you need."
+      },
+      "q5": {
+        "question": "Can I revoke API access?",
+        "answer": "Yes, you can delete or revoke API keys anytime from your profile."
+      },
+      "q6": {
+        "question": "What data can I access via MCP?",
+        "answer": "All your domains, keywords, rankings, GSC data, posts, and competitor information."
+      },
+      "q7": {
+        "question": "Can I publish directly to WordPress via MCP?",
+        "answer": "Yes! If you've connected WordPress in settings, you can publish from the chat."
+      },
+      "q8": {
+        "question": "Is there a rate limit?",
+        "answer": "API rate limits depend on your plan: Free (100/day), Pro (1000/day), Enterprise (unlimited)."
+      }
+    },
+    "finalCTA": {
+      "title": "Ready to Supercharge Your SEO Workflow?",
+      "description": "Start using MCP to automate your SEO tasks with AI",
+      "getAPIKey": "Generate API Key Now",
+      "readDocs": "Read Full Documentation",
+      "joinUsers": "Join 1,000+ users automating SEO with MCP"
+    }
+  },
+  "impressum": {
+    "title": "Impressum - Legal Information",
+    "description": "Legal information and company details for Dpro GmbH, operator of SEO Agent",
+    "heading": "Impressum",
+    "subtitle": "Legal Information & Company Details",
+    "companyInfo": "Company Information",
+    "contactInfo": "Contact Information",
+    "legalInfo": "Legal Information",
+    "uid": "VAT ID",
+    "fn": "Company Register Number",
+    "gericht": "Commercial Register Court",
+    "kur": "Commercial Register",
+    "businessActivities": "Business Activities",
+    "businessDescription": "Software development, web applications, SEO tools, and digital marketing solutions",
+    "responsibleContent": "Responsible for Content",
+    "managingDirector": "Managing Director",
+    "disputeResolution": "EU Dispute Resolution",
+    "disputeText": "The European Commission provides a platform for online dispute resolution (OS):",
+    "disclaimer": "Disclaimer",
+    "disclaimerContent": "Content Liability",
+    "disclaimerContentText": "The content of our pages has been created with great care. However, we cannot guarantee the accuracy, completeness, and timeliness of the content.",
+    "disclaimerLinks": "Links Liability",
+    "disclaimerLinksText": "Our site contains links to external websites. We have no influence on the content of these websites and cannot accept any responsibility for them.",
+    "disclaimerCopyright": "Copyright",
+    "disclaimerCopyrightText": "The content and works created by the site operators are subject to Austrian copyright law.",
+    "lastUpdated": "Last Updated"
   }
 }

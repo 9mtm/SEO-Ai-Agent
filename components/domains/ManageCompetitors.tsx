@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { useLanguage } from '../../context/LanguageContext';
 
 type ManageCompetitorsProps = {
     domain: DomainType;
@@ -8,6 +9,7 @@ type ManageCompetitorsProps = {
 };
 
 const ManageCompetitors = ({ domain, closeModal }: ManageCompetitorsProps) => {
+    const { t } = useLanguage();
     const queryClient = useQueryClient();
     const [competitors, setCompetitors] = useState<string[]>(domain.competitors || []);
     const [newCompetitor, setNewCompetitor] = useState('');
@@ -28,27 +30,27 @@ const ManageCompetitors = ({ domain, closeModal }: ManageCompetitorsProps) => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['domains'] });
-            toast.success('Competitors updated successfully!');
+            toast.success(t('tracking.manageCompetitors.success'));
             closeModal();
         },
         onError: () => {
-            toast.error('Failed to update competitors');
+            toast.error(t('tracking.manageCompetitors.error'));
         },
     });
 
     const handleAddCompetitor = () => {
         if (!newCompetitor.trim()) {
-            toast.error('Please enter a competitor URL');
+            toast.error(t('tracking.manageCompetitors.errorEmpty'));
             return;
         }
         if (competitors.length >= MAX_COMPETITORS) {
-            toast.error(`Maximum ${MAX_COMPETITORS} competitors allowed`);
+            toast.error(t('tracking.manageCompetitors.errorMax', { max: MAX_COMPETITORS }));
             return;
         }
 
         const cleanUrl = newCompetitor.trim();
         if (competitors.includes(cleanUrl)) {
-            toast.error('This competitor already exists');
+            toast.error(t('tracking.manageCompetitors.errorExists'));
             return;
         }
 
@@ -73,17 +75,17 @@ const ManageCompetitors = ({ domain, closeModal }: ManageCompetitorsProps) => {
                     </svg>
                 </button>
 
-                <h3 className="text-2xl font-bold mb-6">Manage Competitors</h3>
+                <h3 className="text-2xl font-bold mb-6">{t('tracking.manageCompetitors.title')}</h3>
 
                 {/* Add Competitor */}
                 <div className="mb-6">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Add Competitor URL
+                        {t('tracking.manageCompetitors.addLabel')}
                     </label>
                     <div className="flex gap-2">
                         <input
                             type="url"
-                            placeholder="https://example.com"
+                            placeholder={t('tracking.manageCompetitors.placeholder')}
                             className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             value={newCompetitor}
                             onChange={(e) => setNewCompetitor(e.target.value)}
@@ -95,20 +97,20 @@ const ManageCompetitors = ({ domain, closeModal }: ManageCompetitorsProps) => {
                             disabled={competitors.length >= MAX_COMPETITORS}
                             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            Add
+                            {t('tracking.manageCompetitors.add')}
                         </button>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                        {competitors.length}/{MAX_COMPETITORS} competitors added
+                        {t('tracking.manageCompetitors.count', { count: competitors.length, max: MAX_COMPETITORS })}
                     </p>
                 </div>
 
                 {/* Current Competitors */}
                 <div className="mb-6">
-                    <h4 className="text-sm font-medium text-gray-700 mb-3">Current Competitors</h4>
+                    <h4 className="text-sm font-medium text-gray-700 mb-3">{t('tracking.manageCompetitors.currentTitle')}</h4>
                     {competitors.length === 0 ? (
                         <p className="text-sm text-gray-500 py-4 text-center border border-dashed border-gray-300 rounded-md">
-                            No competitors added yet
+                            {t('tracking.manageCompetitors.empty')}
                         </p>
                     ) : (
                         <div className="space-y-2">
@@ -135,14 +137,14 @@ const ManageCompetitors = ({ domain, closeModal }: ManageCompetitorsProps) => {
                         onClick={closeModal}
                         className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
                     >
-                        Cancel
+                        {t('tracking.manageCompetitors.cancel')}
                     </button>
                     <button
                         onClick={handleSave}
                         disabled={updateMutation.isPending}
                         className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
                     >
-                        {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+                        {updateMutation.isPending ? t('tracking.manageCompetitors.saving') : t('tracking.manageCompetitors.save')}
                     </button>
                 </div>
             </div>

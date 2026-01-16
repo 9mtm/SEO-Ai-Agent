@@ -11,6 +11,7 @@ import SCKeyword from './SCKeyword';
 import useWindowResize from '../../hooks/useWindowResize';
 import useIsMobile from '../../hooks/useIsMobile';
 import { formattedNum } from '../../utils/client/helpers';
+import { useLanguage } from '../../context/LanguageContext';
 
 type SCKeywordsTableProps = {
    domain: DomainType | null,
@@ -27,6 +28,7 @@ type SCCountryDataType = {
 
 const SCKeywordsTable = ({ domain, keywords = [], isPending = true, isConsoleIntegrated = true }: SCKeywordsTableProps) => {
    const router = useRouter();
+   const { t } = useLanguage();
    const [device, setDevice] = useState<string>('desktop');
    const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
    const [filterParams, setFilterParams] = useState<KeywordFilters>({ countries: [], tags: [], search: '' });
@@ -155,28 +157,28 @@ const SCKeywordsTable = ({ domain, keywords = [], isPending = true, isConsoleInt
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-6 py-4 bg-gray-50 border-b border-gray-200'>
          <div className='bg-white p-4 rounded-lg border border-gray-200 shadow-sm'>
             <div className='flex items-center justify-between mb-2'>
-               <span className='text-xs font-medium text-gray-500 uppercase'>Keywords</span>
+               <span className='text-xs font-medium text-gray-500 uppercase'>{t('insight.keywords')}</span>
                <Icon type="search" size={16} color="#6B7280" />
             </div>
             <div className='text-2xl font-bold text-gray-800'>{formattedNum(finalKeywords[device]?.length || 0)}</div>
          </div>
          <div className='bg-white p-4 rounded-lg border border-gray-200 shadow-sm'>
             <div className='flex items-center justify-between mb-2'>
-               <span className='text-xs font-medium text-gray-500 uppercase'>Avg Position</span>
+               <span className='text-xs font-medium text-gray-500 uppercase'>{t('insight.avgPosition')}</span>
                <Icon type="tracking" size={16} color="#6B7280" />
             </div>
             <div className='text-2xl font-bold text-blue-600'>{Math.round(viewSummary.position)}</div>
          </div>
          <div className='bg-white p-4 rounded-lg border border-gray-200 shadow-sm'>
             <div className='flex items-center justify-between mb-2'>
-               <span className='text-xs font-medium text-gray-500 uppercase'>Total Visits</span>
+               <span className='text-xs font-medium text-gray-500 uppercase'>{t('scTable.totalVisits')}</span>
                <Icon type="mouse-pointer" size={16} color="#6B7280" />
             </div>
             <div className='text-2xl font-bold text-violet-600'>{formattedNum(viewSummary.visits)}</div>
          </div>
          <div className='bg-white p-4 rounded-lg border border-gray-200 shadow-sm'>
             <div className='flex items-center justify-between mb-2'>
-               <span className='text-xs font-medium text-gray-500 uppercase'>Avg CTR</span>
+               <span className='text-xs font-medium text-gray-500 uppercase'>{t('insight.avgCtr')}</span>
                <Icon type="percent" size={16} color="#6B7280" />
             </div>
             <div className='text-2xl font-bold text-emerald-600'>
@@ -201,7 +203,7 @@ const SCKeywordsTable = ({ domain, keywords = [], isPending = true, isConsoleInt
                            onClick={() => addSCKeywordsToTracker()}
                         >
                            <span className='bg-indigo-100 text-blue-700 px-1.5 py-0.5 rounded font-black mr-2 text-xs'>+</span>
-                           Add {selectedKeywords.length} Keywords to Tracker
+                           {t('scTable.addToTracker', { count: selectedKeywords.length })}
                         </a>
                      </li>
                   </ul>
@@ -240,32 +242,32 @@ const SCKeywordsTable = ({ domain, keywords = [], isPending = true, isConsoleInt
                            className='cursor-pointer hover:text-blue-700 select-none flex items-center'
                            onClick={() => handleColumnSort('keyword')}
                         >
-                           Keyword{getSortIcon('keyword')}
+                           {t('insight.keywords')}{getSortIcon('keyword')}
                         </span>
                      </span>
                      <span
                         className='domKeywords_head_position flex-1 basis-40 grow-0 text-center cursor-pointer hover:text-blue-700 select-none'
                         onClick={() => handleColumnSort('position')}
                      >
-                        Position{getSortIcon('position')}
+                        {t('insight.position')}{getSortIcon('position')}
                      </span>
                      <span
                         className='domKeywords_head_imp flex-1 text-center cursor-pointer hover:text-blue-700 select-none'
                         onClick={() => handleColumnSort('impressions')}
                      >
-                        Impressions{getSortIcon('impressions')}
+                        {t('insight.impressions')}{getSortIcon('impressions')}
                      </span>
                      <span
                         className='domKeywords_head_visits flex-1 text-center cursor-pointer hover:text-blue-700 select-none'
                         onClick={() => handleColumnSort('visits')}
                      >
-                        Visits{getSortIcon('visits')}
+                        {t('insight.visits')}{getSortIcon('visits')}
                      </span>
                      <span
                         className='domKeywords_head_ctr flex-1 text-center cursor-pointer hover:text-blue-700 select-none'
                         onClick={() => handleColumnSort('ctr')}
                      >
-                        CTR{getSortIcon('ctr')}
+                        {t('insight.ctr')}{getSortIcon('ctr')}
                      </span>
                   </div>
                   <div className='domKeywords_keywords border-gray-200 min-h-[55vh] relative' data-domain={domain?.domain}>
@@ -289,8 +291,8 @@ const SCKeywordsTable = ({ domain, keywords = [], isPending = true, isConsoleInt
                            <svg className="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                            </svg>
-                           <p className="text-lg font-medium">No keywords found</p>
-                           <p className="text-sm mt-2">Try adjusting your filters.</p>
+                           <p className="text-lg font-medium">{t('scTable.noKeywords')}</p>
+                           <p className="text-sm mt-2">{t('scTable.adjustFilters')}</p>
                         </div>
                      )}
                      {!isConsoleIntegrated && (
@@ -300,14 +302,14 @@ const SCKeywordsTable = ({ domain, keywords = [], isPending = true, isConsoleInt
                                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-1.07 3.97-2.9 5.4z" />
                               </svg>
                            </div>
-                           <p className="text-lg font-medium text-gray-900">Google Search Console Not Integrated</p>
-                           <p className="text-sm mt-2 mb-6 text-gray-500">Connect your account in Settings to see keywords.</p>
+                           <p className="text-lg font-medium text-gray-900">{t('insight.connectTitle')}</p>
+                           <p className="text-sm mt-2 mb-6 text-gray-500">{t('insight.connectDesc')}</p>
 
                            <Link
                               href="/settings?tab=search_console"
                               className="px-6 py-2.5 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center"
                            >
-                              Connect Google Search Console
+                              {t('insight.connectBtn')}
                            </Link>
                         </div>
                      )}

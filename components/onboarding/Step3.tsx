@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronLeft, Plus, X } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Step3Props {
     onNext: (data: any) => void;
@@ -8,6 +9,7 @@ interface Step3Props {
 }
 
 const Step3 = ({ onNext, onBack, suggestedCompetitors }: Step3Props) => {
+    const { t } = useLanguage();
     const [competitors, setCompetitors] = useState<string[]>(['']);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -63,10 +65,10 @@ const Step3 = ({ onNext, onBack, suggestedCompetitors }: Step3Props) => {
             if (res.ok) {
                 onNext(data);
             } else {
-                setError(data.error || 'Failed to save');
+                setError(data.error || t('onboarding.step1.errorSave'));
             }
         } catch (err) {
-            setError('An error occurred');
+            setError(t('onboarding.step1.errorGeneric'));
         } finally {
             setLoading(false);
         }
@@ -89,12 +91,12 @@ const Step3 = ({ onNext, onBack, suggestedCompetitors }: Step3Props) => {
                     className="flex items-center text-gray-600 hover:text-gray-900 text-sm font-medium"
                 >
                     <ChevronLeft size={16} className="mr-1" />
-                    Back
+                    {t('onboarding.step2.back')}
                 </button>
             </div>
 
-            <h2 className="text-3xl font-bold mb-2 text-gray-900">Add your competitors</h2>
-            <p className="text-gray-500 mb-8">Primary competitors to analyze.</p>
+            <h2 className="text-3xl font-bold mb-2 text-gray-900">{t('onboarding.step3.title')}</h2>
+            <p className="text-gray-500 mb-8">{t('onboarding.step3.subtitle')}</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 {competitors.map((competitor, index) => (
@@ -102,14 +104,14 @@ const Step3 = ({ onNext, onBack, suggestedCompetitors }: Step3Props) => {
                         <div className="flex-1">
                             <input
                                 type="url"
-                                placeholder="Enter competitor URL..."
+                                placeholder={t('onboarding.step3.placeholder')}
                                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                 value={competitor}
                                 onChange={(e) => handleCompetitorChange(index, e.target.value)}
                             />
                             {index === 0 && (
                                 <p className="text-xs text-gray-500 mt-1">
-                                    Enter your competitor's website URL to analyze their content strategy
+                                    {t('onboarding.step3.help')}
                                 </p>
                             )}
                         </div>
@@ -132,13 +134,13 @@ const Step3 = ({ onNext, onBack, suggestedCompetitors }: Step3Props) => {
                     className="flex items-center text-blue-600 hover:text-blue-700 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <Plus size={16} className="mr-1" />
-                    Add {competitors.length >= MAX_COMPETITORS && '(Max 3 reached)'}
+                    {t('onboarding.step3.add')} {competitors.length >= MAX_COMPETITORS && t('onboarding.step3.maxReached')}
                 </button>
 
                 {/* Proposed Competitors */}
                 {suggestedCompetitors && suggestedCompetitors.length > 0 && (
                     <div className="mt-4">
-                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Suggestions:</p>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{t('onboarding.step3.suggestions')}</p>
                         <div className="flex flex-wrap gap-2">
                             {suggestedCompetitors.map((site, i) => (
                                 <button
@@ -171,7 +173,7 @@ const Step3 = ({ onNext, onBack, suggestedCompetitors }: Step3Props) => {
                         disabled={loading}
                         className="w-full py-3 px-4 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-70"
                     >
-                        {loading ? 'Saving...' : 'Continue'}
+                        {loading ? t('onboarding.step1.saving') : t('onboarding.step1.continue')}
                     </button>
                 </div>
             </form>

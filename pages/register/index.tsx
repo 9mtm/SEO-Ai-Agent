@@ -178,7 +178,7 @@ const Register = () => {
               </div>
 
               <a
-                href="/api/auth/google/login"
+                href="/api/auth/google/login?returnUrl=/onboarding"
                 className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
               >
                 <Image src="/icon/google-logo.svg" alt="Google" width={18} height={18} className="h-[18px] w-[18px]" />

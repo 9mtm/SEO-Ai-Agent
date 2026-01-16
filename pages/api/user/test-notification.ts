@@ -73,7 +73,8 @@ const sendNotificationEmail = async (domain: Domain, settings: any) => {
     const domainKeywords = await Keyword.findAll(query);
     const keywordsArray = domainKeywords.map((el) => el.get({ plain: true }));
     const keywords = parseKeywords(keywordsArray);
-    const emailHTML = await generateEmail(domainName, keywords, settings);
+    // Default to 'en' for now, can be fetched from user settings later
+    const emailHTML = await generateEmail(domainName, keywords, settings, 'en');
 
     const userId = domain.user_id || null;
     let recipientEmail = domain.notification_emails || notification_email;
@@ -102,7 +103,7 @@ const sendNotificationEmail = async (domain: Domain, settings: any) => {
     await transporter.sendMail({
         from: fromEmail,
         to: recipientEmail,
-        subject: `[TEST] ${domainName} Keyword Positions Update`,
+        subject: `${domainName} Keyword Positions Update`,
         html: emailHTML,
     });
 

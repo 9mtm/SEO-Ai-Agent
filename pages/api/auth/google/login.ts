@@ -12,6 +12,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         'openid'
     ];
 
+    const { returnUrl } = req.query;
+
+    const stateObj = {
+        flow: 'login_flow',
+        returnUrl: returnUrl ? String(returnUrl) : undefined
+    };
+
     const params = new URLSearchParams({
         client_id: process.env.GOOGLE_CLIENT_ID,
         redirect_uri: process.env.GOOGLE_REDIRECT_URI || '', // Make sure this matches env
@@ -19,7 +26,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         scope: scopes.join(' '),
         access_type: 'online', // No need for refresh token for just login, unless we want to keep user info updated
         prompt: 'select_account',
-        state: 'login_flow' // To distinguish from 'connect_flow' in callback
+        state: JSON.stringify(stateObj) // To distinguish from 'connect_flow' in callback and carry returnUrl
     });
 
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;

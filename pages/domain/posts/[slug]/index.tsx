@@ -43,6 +43,7 @@ import {
     BarChart
 } from 'lucide-react';
 import 'react-quill/dist/quill.snow.css';
+import { useLanguage } from '../../../../context/LanguageContext';
 
 // Dynamic import for ReactQuill to avoid SSR issues
 const ReactQuill = dynamic(() => import('react-quill').then((mod) => {
@@ -115,6 +116,7 @@ const ReactQuill = dynamic(() => import('react-quill').then((mod) => {
 
 export default function ArticleWriterPage() {
     const router = useRouter();
+    const { t } = useLanguage();
     const { slug } = router.query;
     const { data: domainsData } = useFetchDomains(router);
     const domain = domainsData?.domains?.find((d: any) => d.slug === slug) ||
@@ -1036,23 +1038,23 @@ export default function ArticleWriterPage() {
     if (view === 'list') {
         return (
             <DashboardLayout domains={domainsData?.domains || []}>
-                <Head><title>{`Posts - ${domain?.domain || 'SEO Agent'}`}</title></Head>
+                <Head><title>{`${t('posts.list.title')} - ${domain?.domain || 'SEO Agent'}`}</title></Head>
                 <div className="h-full w-full p-6 space-y-6">
                     <div className="flex justify-between items-center">
                         <div>
-                            <h1 className="text-2xl font-bold tracking-tight">Articles</h1>
-                            <p className="text-neutral-500">Manage and optimize your blog content.</p>
+                            <h1 className="text-2xl font-bold tracking-tight">{t('posts.list.title')}</h1>
+                            <p className="text-neutral-500">{t('posts.list.description')}</p>
                         </div>
                         <Button onClick={handleCreateNew} className="bg-black text-white hover:bg-neutral-800">
-                            <PenTool className="mr-2 h-4 w-4" /> New Article
+                            <PenTool className="mr-2 h-4 w-4" /> {t('posts.list.createBtn')}
                         </Button>
                     </div>
 
                     <Tabs defaultValue="All" className="w-full mb-6" onValueChange={(v) => setListFilter(v as any)}>
                         <TabsList>
-                            <TabsTrigger value="All">All Posts</TabsTrigger>
-                            <TabsTrigger value="Draft">Drafts</TabsTrigger>
-                            <TabsTrigger value="Published">Published</TabsTrigger>
+                            <TabsTrigger value="All">{t('posts.tabs.all')}</TabsTrigger>
+                            <TabsTrigger value="Draft">{t('posts.tabs.drafts')}</TabsTrigger>
+                            <TabsTrigger value="Published">{t('posts.tabs.published')}</TabsTrigger>
                         </TabsList>
                     </Tabs>
 
@@ -1063,17 +1065,17 @@ export default function ArticleWriterPage() {
                             <div className="mx-auto bg-white p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4 shadow-sm">
                                 <PenTool className="h-8 w-8 text-neutral-400" />
                             </div>
-                            <h3 className="text-lg font-medium text-neutral-900">No articles found</h3>
-                            <p className="text-neutral-500 mb-6 max-w-sm mx-auto">Get started by creating your first AI-optimized article.</p>
-                            <Button onClick={handleCreateNew} variant="outline">Create Article</Button>
+                            <h3 className="text-lg font-medium text-neutral-900">{t('posts.list.emptyTitle')}</h3>
+                            <p className="text-neutral-500 mb-6 max-w-sm mx-auto">{t('posts.list.emptyDesc')}</p>
+                            <Button onClick={handleCreateNew} variant="outline">{t('posts.list.createBtn')}</Button>
                         </div>
                     ) : (
                         <div className="bg-white rounded-lg border border-neutral-200 shadow-sm overflow-hidden">
                             <div className="grid grid-cols-12 gap-4 p-4 border-b bg-neutral-50 font-medium text-sm text-neutral-500">
-                                <div className="col-span-12 lg:col-span-6">Article</div>
-                                <div className="col-span-2 hidden lg:block">Status</div>
-                                <div className="col-span-2 hidden lg:block">Last Updated</div>
-                                <div className="col-span-2 hidden lg:block text-right">Actions</div>
+                                <div className="col-span-12 lg:col-span-6">{t('posts.table.article')}</div>
+                                <div className="col-span-2 hidden lg:block">{t('posts.table.status')}</div>
+                                <div className="col-span-2 hidden lg:block">{t('posts.table.lastUpdated')}</div>
+                                <div className="col-span-2 hidden lg:block text-right">{t('posts.table.actions')}</div>
                             </div>
                             <div className="divide-y divide-neutral-100">
                                 {postsList.map((post) => (
@@ -1138,7 +1140,7 @@ export default function ArticleWriterPage() {
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
                         <Button variant="ghost" size="sm" onClick={() => setView('list')} className="text-neutral-500 hover:text-neutral-900 -ml-2">
-                            ← Back to Posts
+                            ← {t('posts.editor.back')}
                         </Button>
                         <div className="flex items-center gap-3">
                             <DropdownMenu>
@@ -1233,12 +1235,12 @@ export default function ArticleWriterPage() {
                                 {isGenerating ? (
                                     <>
                                         <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                                        Generating...
+                                        {t('posts.editor.generating')}
                                     </>
                                 ) : (
                                     <>
                                         <Sparkles className="mr-2 h-4 w-4" />
-                                        Generate
+                                        {t('posts.editor.generate')}
                                     </>
                                 )}
                             </Button>
@@ -1250,20 +1252,20 @@ export default function ArticleWriterPage() {
                                 {isSaving ? (
                                     <>
                                         <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                                        Saving...
+                                        {t('posts.editor.saving')}
                                     </>
                                 ) : (
                                     <>
                                         <Save className="mr-2 h-4 w-4" />
-                                        Save{savedPost ? ' (Saved)' : ''}
+                                        {savedPost ? t('posts.editor.saved') : t('posts.editor.save')}
                                     </>
                                 )}
                             </Button>
                         </div>
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">{savedPost ? 'Edit Article' : 'New Article'}</h1>
-                        <p className="text-neutral-500 text-sm">Generate SEO-optimized content for your blog</p>
+                        <h1 className="text-2xl font-bold tracking-tight">{savedPost ? t('posts.editor.editTitle') : t('posts.editor.newTitle')}</h1>
+                        <p className="text-neutral-500 text-sm">{t('posts.editor.description')}</p>
                     </div>
                 </div>
 
@@ -1277,7 +1279,7 @@ export default function ArticleWriterPage() {
                             <CardHeader className="pb-3 border-b bg-neutral-50/50">
                                 <CardTitle className="text-sm font-medium flex items-center gap-2">
                                     <PenTool className="h-4 w-4 text-neutral-500" />
-                                    Content Editor
+                                    {t('posts.editor.contentEditor')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="pt-6 space-y-6">
@@ -1285,24 +1287,24 @@ export default function ArticleWriterPage() {
                                 {/* Topic Input - for AI Generation */}
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-between">
-                                        <label className="text-xs font-semibold text-neutral-500 uppercase">Article Topic/Idea</label>
-                                        {topic && <span className="text-xs text-green-600 flex items-center"><CheckCircle2 className="h-3 w-3 mr-1" /> Ready</span>}
+                                        <label className="text-xs font-semibold text-neutral-500 uppercase">{t('posts.editor.topicLabel')}</label>
+                                        {topic && <span className="text-xs text-green-600 flex items-center"><CheckCircle2 className="h-3 w-3 mr-1" /> {t('posts.editor.ready')}</span>}
                                     </div>
                                     <Textarea
-                                        placeholder="Enter your article topic or main idea... e.g., 'How to improve SEO rankings in 2026'"
+                                        placeholder={t('posts.editor.topicPlaceholder')}
                                         value={topic}
                                         onChange={(e) => setTopic(e.target.value)}
                                         className="min-h-[80px] text-sm"
                                     />
                                     <p className="text-xs text-neutral-500">
-                                        This will be used by AI to generate your article. Be specific for better results.
+                                        {t('posts.editor.topicHelp')}
                                     </p>
                                 </div>
 
                                 {/* Title Input */}
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-between">
-                                        <label className="text-xs font-semibold text-neutral-500 uppercase">Article Title</label>
+                                        <label className="text-xs font-semibold text-neutral-500 uppercase">{t('posts.editor.titleLabel')}</label>
                                         <span className={`text-xs ${article.title.length >= 50 && article.title.length <= 60
                                             ? 'text-green-600'
                                             : article.title.length > 0
@@ -1314,7 +1316,7 @@ export default function ArticleWriterPage() {
                                     </div>
                                     <input
                                         type="text"
-                                        placeholder="Enter your article title..."
+                                        placeholder={t('posts.editor.titlePlaceholder')}
                                         value={article.title}
                                         onChange={(e) => setArticle(prev => ({ ...prev, title: e.target.value }))}
                                         className="w-full px-4 py-3 text-lg font-semibold border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
@@ -1322,21 +1324,21 @@ export default function ArticleWriterPage() {
                                     {article.title.length > 0 && article.title.length < 50 && (
                                         <p className="text-xs text-amber-600 flex items-center gap-1">
                                             <AlertCircle className="h-3 w-3" />
-                                            Title is too short for optimal SEO (aim for 50-60 characters)
+                                            {t('posts.editor.titleShort')}
                                         </p>
                                     )}
                                     {article.title.length > 60 && (
                                         <p className="text-xs text-amber-600 flex items-center gap-1">
                                             <AlertCircle className="h-3 w-3" />
-                                            Title may be truncated in search results (keep it under 60 characters)
+                                            {t('posts.editor.titleLong')}
                                         </p>
                                     )}
                                 </div>
 
                                 <div className="space-y-2">
                                     <label className="text-xs font-semibold text-neutral-500 uppercase flex justify-between">
-                                        <span>Featured Image</span>
-                                        {article.imageUrl && <span className="text-green-600 text-[10px] flex items-center"><CheckCircle2 className="h-3 w-3 mr-1" /> Ready</span>}
+                                        <span>{t('posts.editor.featuredImage')}</span>
+                                        {article.imageUrl && <span className="text-green-600 text-[10px] flex items-center"><CheckCircle2 className="h-3 w-3 mr-1" /> {t('posts.editor.ready')}</span>}
                                     </label>
                                     <div
                                         onClick={handleImageInput}
@@ -1352,7 +1354,7 @@ export default function ArticleWriterPage() {
                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img src={article.imageUrl} alt="Featured" className="max-h-64 rounded-md object-cover" />
                                                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md">
-                                                    <p className="text-white text-sm">Click to change</p>
+                                                    <p className="text-white text-sm">{t('posts.editor.clickToChange')}</p>
                                                 </div>
                                             </div>
                                         ) : (
@@ -1360,8 +1362,8 @@ export default function ArticleWriterPage() {
                                                 <div className="bg-neutral-100 p-3 rounded-full mb-3 group-hover:scale-110 transition-transform">
                                                     <ImageIcon className="h-6 w-6 text-neutral-400" />
                                                 </div>
-                                                <p className="text-sm font-medium">Click to upload image</p>
-                                                <p className="text-xs text-neutral-400 mt-1">or AI will generate one (coming soon)</p>
+                                                <p className="text-sm font-medium">{t('posts.editor.clickToUpload')}</p>
+                                                <p className="text-xs text-neutral-400 mt-1">{t('posts.editor.aiImageComingSoon')}</p>
                                             </>
                                         )}
                                     </div>
@@ -1369,7 +1371,7 @@ export default function ArticleWriterPage() {
 
                                 <div className="space-y-2 h-[500px] flex flex-col">
                                     <div className="flex justify-between items-center">
-                                        <label className="text-xs font-semibold text-neutral-500 uppercase">Body Content</label>
+                                        <label className="text-xs font-semibold text-neutral-500 uppercase">{t('posts.editor.bodyContent')}</label>
                                         <div className="flex items-center gap-4">
                                             <span className={`text-xs ${seoMetrics.wordCount >= 600
                                                 ? 'text-green-600 font-medium'
@@ -1384,7 +1386,7 @@ export default function ArticleWriterPage() {
                                                 className="text-xs text-blue-600 hover:underline flex items-center gap-1"
                                             >
                                                 <Code className="h-3 w-3" />
-                                                {showHtml ? 'Switch to Visual Editor' : 'Edit Source Code'}
+                                                {showHtml ? t('posts.editor.visualEditor') : t('posts.editor.sourceCode')}
                                             </button>
                                         </div>
                                     </div>
@@ -1421,7 +1423,7 @@ export default function ArticleWriterPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <Globe className="h-5 w-5 text-blue-600" />
-                                    SEO Score
+                                    {t('posts.seo.score')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-6">
@@ -1475,36 +1477,36 @@ export default function ArticleWriterPage() {
                                     {/* Description */}
                                     <p className="text-[11px] text-center text-neutral-400 max-w-[180px] leading-relaxed">
                                         {seoScore >= 80
-                                            ? "You're doing an excellent job! Your content is well optimized"
+                                            ? t('posts.seo.scoreDesc.excellent')
                                             : seoScore >= 50
-                                                ? "You're doing a good effort to reach your goal"
-                                                : "Keep working on your content to improve your SEO score"}
+                                                ? t('posts.seo.scoreDesc.good')
+                                                : t('posts.seo.scoreDesc.improve')}
                                     </p>
                                 </div>
 
                                 <div className="space-y-4">
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-neutral-500">Article Optimized</span>
+                                        <span className="text-neutral-500">{t('posts.seo.optimized')}</span>
                                         {seoScore >= 80 ? <CheckCircle2 className="h-4 w-4 text-green-500" /> : <AlertCircle className="h-4 w-4 text-amber-500" />}
                                     </div>
 
                                     <div className="space-y-3 pt-2 border-t border-neutral-200">
                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="flex items-center gap-2 text-neutral-600"><AlignLeft className="h-3 w-3" /> Word Count</span>
+                                            <span className="flex items-center gap-2 text-neutral-600"><AlignLeft className="h-3 w-3" /> {t('posts.seo.metrics.wordCount')}</span>
                                             <div className="flex items-center gap-2">
                                                 <span className="font-mono text-neutral-700">{seoMetrics.wordCount}</span>
                                                 <div className={`h-2 w-2 rounded-full ${seoMetrics.wordCount > 600 ? 'bg-green-500' : 'bg-red-500'}`} />
                                             </div>
                                         </div>
                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="flex items-center gap-2 text-neutral-600"><Hash className="h-3 w-3" /> Keyword Density</span>
+                                            <span className="flex items-center gap-2 text-neutral-600"><Hash className="h-3 w-3" /> {t('posts.seo.metrics.keywordDensity')}</span>
                                             <div className="flex items-center gap-2">
                                                 <span className="font-mono text-neutral-700">{seoMetrics.keywordDensity}%</span>
                                                 <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordDensity >= 0.5 && seoMetrics.keywordDensity <= 2.5 ? 'bg-green-500' : 'bg-red-500'}`} />
                                             </div>
                                         </div>
                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="flex items-center gap-2 text-neutral-600"><Type className="h-3 w-3" /> Heading Structure</span>
+                                            <span className="flex items-center gap-2 text-neutral-600"><Type className="h-3 w-3" /> {t('posts.seo.metrics.headingStructure')}</span>
                                             <div className="flex items-center gap-2">
                                                 <span className="font-mono text-xs text-neutral-600">
                                                     H1:<span className={`font-semibold ml-0.5 ${seoMetrics.h1Count === 1 ? 'text-green-600' : 'text-red-600'}`}>{seoMetrics.h1Count}</span>
@@ -1520,7 +1522,7 @@ export default function ArticleWriterPage() {
                                             </div>
                                         </div>
                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="flex items-center gap-2 text-neutral-600"><ImageIcon className="h-3 w-3" /> Images</span>
+                                            <span className="flex items-center gap-2 text-neutral-600"><ImageIcon className="h-3 w-3" /> {t('posts.seo.metrics.images')}</span>
                                             <div className="flex items-center gap-2">
                                                 <span className="font-mono text-neutral-700">{seoMetrics.hasImage ? 1 : 0}</span>
                                                 <div className={`h-2 w-2 rounded-full ${seoMetrics.hasImage ? 'bg-green-500' : 'bg-red-500'}`} />
@@ -1529,42 +1531,42 @@ export default function ArticleWriterPage() {
 
                                         {/* New Professional SEO Metrics */}
                                         <div className="flex justify-between items-center text-sm pt-2 border-t border-neutral-100">
-                                            <span className="flex items-center gap-2 text-neutral-600"><Hash className="h-3 w-3" /> Keywords in Content</span>
+                                            <span className="flex items-center gap-2 text-neutral-600"><Hash className="h-3 w-3" /> {t('posts.seo.metrics.keywordsInContent')}</span>
                                             <div className="flex items-center gap-2">
                                                 <span className="font-mono text-neutral-700">{seoMetrics.keywordsInContent}/{selectedKeywords.length}</span>
                                                 <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordsInContent === selectedKeywords.length && selectedKeywords.length > 0 ? 'bg-green-500' : 'bg-amber-500'}`} />
                                             </div>
                                         </div>
                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="flex items-center gap-2 text-neutral-600"><CheckCircle2 className="h-3 w-3" /> Keyword in Title</span>
+                                            <span className="flex items-center gap-2 text-neutral-600"><CheckCircle2 className="h-3 w-3" /> {t('posts.seo.metrics.keywordInTitle')}</span>
                                             <div className="flex items-center gap-2">
                                                 <span className="font-mono text-neutral-700">{seoMetrics.keywordInTitle ? 'Yes' : 'No'}</span>
                                                 <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordInTitle ? 'bg-green-500' : 'bg-red-500'}`} />
                                             </div>
                                         </div>
                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="flex items-center gap-2 text-neutral-600"><CheckCircle2 className="h-3 w-3" /> Keyword in Meta</span>
+                                            <span className="flex items-center gap-2 text-neutral-600"><CheckCircle2 className="h-3 w-3" /> {t('posts.seo.metrics.keywordInMeta')}</span>
                                             <div className="flex items-center gap-2">
                                                 <span className="font-mono text-neutral-700">{seoMetrics.keywordInMeta ? 'Yes' : 'No'}</span>
                                                 <div className={`h-2 w-2 rounded-full ${seoMetrics.keywordInMeta ? 'bg-green-500' : 'bg-red-500'}`} />
                                             </div>
                                         </div>
                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="flex items-center gap-2 text-neutral-600"><LinkIcon className="h-3 w-3" /> Internal Links</span>
+                                            <span className="flex items-center gap-2 text-neutral-600"><LinkIcon className="h-3 w-3" /> {t('posts.seo.metrics.internalLinks')}</span>
                                             <div className="flex items-center gap-2">
                                                 <span className="font-mono text-neutral-700">{seoMetrics.internalLinks}</span>
                                                 <div className={`h-2 w-2 rounded-full ${seoMetrics.internalLinks >= 2 ? 'bg-green-500' : seoMetrics.internalLinks >= 1 ? 'bg-amber-500' : 'bg-red-500'}`} />
                                             </div>
                                         </div>
                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="flex items-center gap-2 text-neutral-600"><Globe className="h-3 w-3" /> External Links</span>
+                                            <span className="flex items-center gap-2 text-neutral-600"><Globe className="h-3 w-3" /> {t('posts.seo.metrics.externalLinks')}</span>
                                             <div className="flex items-center gap-2">
                                                 <span className="font-mono text-neutral-700">{seoMetrics.externalLinks}</span>
                                                 <div className={`h-2 w-2 rounded-full bg-blue-400`} />
                                             </div>
                                         </div>
                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="flex items-center gap-2 text-neutral-600"><ImageIcon className="h-3 w-3" /> Images in Content</span>
+                                            <span className="flex items-center gap-2 text-neutral-600"><ImageIcon className="h-3 w-3" /> {t('posts.seo.metrics.imagesInContent')}</span>
                                             <div className="flex items-center gap-2">
                                                 <span className="font-mono text-neutral-700">{seoMetrics.imagesInContent}</span>
                                                 <div className={`h-2 w-2 rounded-full ${seoMetrics.imagesInContent > 0 ? 'bg-green-500' : 'bg-neutral-300'}`} />
@@ -1573,7 +1575,7 @@ export default function ArticleWriterPage() {
                                         {seoMetrics.imagesInContent > 0 && (
                                             <div className="flex justify-between items-center text-sm">
                                                 <span className="flex items-center gap-2 text-neutral-600 pl-4">
-                                                    <CheckCircle2 className="h-3 w-3" /> With Alt Text
+                                                    <CheckCircle2 className="h-3 w-3" /> {t('posts.seo.metrics.withAltText')}
                                                 </span>
                                                 <div className="flex items-center gap-2">
                                                     <span className="font-mono text-neutral-700">
@@ -1596,43 +1598,43 @@ export default function ArticleWriterPage() {
                                     <div className="pt-4 border-t border-neutral-200">
                                         <h4 className="text-xs font-semibold text-neutral-700 mb-3 flex items-center gap-1">
                                             <Sparkles className="h-3 w-3" />
-                                            Suggestions to Improve
+                                            {t('posts.seo.suggestionsTitle')}
                                         </h4>
                                         <div className="space-y-2">
                                             {seoMetrics.wordCount < 600 && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Add <span className="font-medium text-amber-700">{600 - seoMetrics.wordCount} more words</span> to reach optimal length</span>
+                                                    <span>{t('posts.seo.suggestions.addWords', { count: 600 - seoMetrics.wordCount })}</span>
                                                 </div>
                                             )}
                                             {seoMetrics.keywordDensity < 0.5 && selectedKeywords.length > 0 && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Include your keywords <span className="font-medium text-amber-700">2-3 more times</span> naturally</span>
+                                                    <span>{t('posts.seo.suggestions.addKeywords', { count: 3 })}</span>
                                                 </div>
                                             )}
                                             {seoMetrics.headingCount < 3 && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Add <span className="font-medium text-amber-700">{3 - seoMetrics.headingCount} more heading(s)</span> (H2 or H3)</span>
+                                                    <span>{t('posts.seo.suggestions.addHeadings', { count: 3 - seoMetrics.headingCount })}</span>
                                                 </div>
                                             )}
                                             {!seoMetrics.hasImage && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Add a <span className="font-medium text-amber-700">featured image</span> to improve engagement</span>
+                                                    <span>{t('posts.seo.suggestions.addImage')}</span>
                                                 </div>
                                             )}
                                             {!seoMetrics.hasMeta && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Write a <span className="font-medium text-amber-700">meta description</span> (150-160 chars)</span>
+                                                    <span>{t('posts.seo.suggestions.addMeta')}</span>
                                                 </div>
                                             )}
                                             {article.title.length > 0 && (article.title.length < 50 || article.title.length > 60) && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Optimize title length to <span className="font-medium text-amber-700">50-60 characters</span></span>
+                                                    <span>{t('posts.seo.suggestions.titleLength')}</span>
                                                 </div>
                                             )}
 
@@ -1640,31 +1642,31 @@ export default function ArticleWriterPage() {
                                             {selectedKeywords.length > 0 && seoMetrics.keywordsInContent < selectedKeywords.length && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Include <span className="font-medium text-red-700">all selected keywords</span> in your content ({seoMetrics.keywordsInContent}/{selectedKeywords.length} found)</span>
+                                                    <span>{t('posts.seo.suggestions.includeAllKeywords', { current: seoMetrics.keywordsInContent, total: selectedKeywords.length })}</span>
                                                 </div>
                                             )}
                                             {selectedKeywords.length > 0 && !seoMetrics.keywordInTitle && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Add your <span className="font-medium text-red-700">primary keyword</span> "{selectedKeywords[0]}" to the title</span>
+                                                    <span>{t('posts.seo.suggestions.addPrimaryTitle', { keyword: selectedKeywords[0] })}</span>
                                                 </div>
                                             )}
                                             {selectedKeywords.length > 0 && article.metaDescription && !seoMetrics.keywordInMeta && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Include <span className="font-medium text-amber-700">primary keyword</span> in meta description</span>
+                                                    <span>{t('posts.seo.suggestions.addPrimaryMeta')}</span>
                                                 </div>
                                             )}
                                             {seoMetrics.internalLinks === 0 && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Add at least <span className="font-medium text-red-700">2-3 internal links</span> to other pages on your site</span>
+                                                    <span>{t('posts.seo.suggestions.addInternalLinks')}</span>
                                                 </div>
                                             )}
                                             {seoMetrics.internalLinks === 1 && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Add <span className="font-medium text-amber-700">1-2 more internal links</span> to improve SEO</span>
+                                                    <span>{t('posts.seo.suggestions.moreInternalLinks')}</span>
                                                 </div>
                                             )}
 
@@ -1672,13 +1674,13 @@ export default function ArticleWriterPage() {
                                             {seoMetrics.imagesInContent > 0 && seoMetrics.imagesWithAlt === 0 && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Add <span className="font-medium text-red-700">alt text</span> to all {seoMetrics.imagesInContent} images for better SEO and accessibility</span>
+                                                    <span>{t('posts.seo.suggestions.addAllAlt', { count: seoMetrics.imagesInContent })}</span>
                                                 </div>
                                             )}
                                             {seoMetrics.imagesInContent > 0 && seoMetrics.imagesWithAlt > 0 && seoMetrics.imagesWithAlt < seoMetrics.imagesInContent && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Add <span className="font-medium text-amber-700">alt text</span> to the remaining {seoMetrics.imagesInContent - seoMetrics.imagesWithAlt} images</span>
+                                                    <span>{t('posts.seo.suggestions.addRemainingAlt', { count: seoMetrics.imagesInContent - seoMetrics.imagesWithAlt })}</span>
                                                 </div>
                                             )}
 
@@ -1686,25 +1688,25 @@ export default function ArticleWriterPage() {
                                             {seoMetrics.h1Count === 0 && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Add <span className="font-medium text-red-700">one H1 heading</span> as the main article title</span>
+                                                    <span>{t('posts.seo.suggestions.addH1')}</span>
                                                 </div>
                                             )}
                                             {seoMetrics.h1Count > 1 && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-red-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Use only <span className="font-medium text-red-700">one H1 heading</span> (currently: {seoMetrics.h1Count}). Multiple H1s hurt SEO</span>
+                                                    <span>{t('posts.seo.suggestions.singleH1', { count: seoMetrics.h1Count })}</span>
                                                 </div>
                                             )}
                                             {seoMetrics.h2Count < 3 && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-amber-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Add <span className="font-medium text-amber-700">{3 - seoMetrics.h2Count} more H2 headings</span> to structure content (optimal: 3-6)</span>
+                                                    <span>{t('posts.seo.suggestions.addH2', { count: 3 - seoMetrics.h2Count })}</span>
                                                 </div>
                                             )}
                                             {seoMetrics.h3Count < 6 && seoMetrics.h2Count >= 3 && (
                                                 <div className="text-xs text-neutral-600 flex items-start gap-2 p-2 bg-blue-50 rounded-md">
                                                     <AlertCircle className="h-3 w-3 text-blue-600 mt-0.5 flex-shrink-0" />
-                                                    <span>Consider adding <span className="font-medium text-blue-700">{6 - seoMetrics.h3Count} more H3 sub-headings</span> for better content hierarchy (optimal: 6-12)</span>
+                                                    <span>{t('posts.seo.suggestions.addH3', { count: 6 - seoMetrics.h3Count })}</span>
                                                 </div>
                                             )}
                                         </div>
@@ -1716,15 +1718,15 @@ export default function ArticleWriterPage() {
                         {/* Article Meta Data */}
                         <Card>
                             <CardHeader className="pb-3">
-                                <CardTitle className="text-sm font-medium">Meta Data</CardTitle>
+                                <CardTitle className="text-sm font-medium">{t('posts.meta.title')}</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center">
-                                        <label className="text-xs font-semibold text-neutral-500">Target Keywords ({selectedKeywords.length}/3)</label>
+                                        <label className="text-xs font-semibold text-neutral-500">{t('posts.meta.targetKeywords')} ({selectedKeywords.length}/3)</label>
                                         {domain && (
                                             <Link href={`/domain/settings/${domain.slug}`} className="text-[10px] text-blue-500 hover:underline flex items-center gap-1">
-                                                Edit Strategy <LinkIcon className="h-2 w-2" />
+                                                {t('posts.meta.editStrategy')} <LinkIcon className="h-2 w-2" />
                                             </Link>
                                         )}
                                     </div>
@@ -1775,11 +1777,11 @@ export default function ArticleWriterPage() {
                                     {/* Custom Keyword Input */}
                                     {selectedKeywords.length < 3 && (
                                         <div className="space-y-2 pt-3 border-t border-neutral-100">
-                                            <label className="text-xs font-medium text-neutral-600">Or add custom keyword:</label>
+                                            <label className="text-xs font-medium text-neutral-600">{t('posts.meta.customKeyword')}</label>
                                             <div className="flex gap-2">
                                                 <input
                                                     type="text"
-                                                    placeholder="Enter keyword..."
+                                                    placeholder={t('posts.meta.keywordPlaceholder')}
                                                     className="flex-1 px-3 py-1.5 text-xs border border-neutral-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                     onKeyPress={(e) => {
                                                         if (e.key === 'Enter') {
@@ -1819,17 +1821,17 @@ export default function ArticleWriterPage() {
                                                         }
                                                     }}
                                                 >
-                                                    Add
+                                                    {t('posts.meta.addBtn')}
                                                 </Button>
                                             </div>
-                                            <p className="text-[10px] text-neutral-400">Press Enter or click Add to include a custom keyword</p>
+                                            <p className="text-[10px] text-neutral-400">{t('posts.meta.addHelp')}</p>
                                         </div>
                                     )}
 
                                     {/* Selected Keywords Display */}
                                     {selectedKeywords.length > 0 && (
                                         <div className="space-y-2 pt-3 border-t border-neutral-100">
-                                            <label className="text-xs font-medium text-neutral-600">Selected Keywords:</label>
+                                            <label className="text-xs font-medium text-neutral-600">{t('posts.meta.selectedKeywords')}</label>
                                             <div className="flex flex-wrap gap-2">
                                                 {selectedKeywords.map((kw, i) => (
                                                     <Badge
@@ -1847,10 +1849,10 @@ export default function ArticleWriterPage() {
                                     )}
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-xs font-semibold text-neutral-500">Meta Description</label>
+                                    <label className="text-xs font-semibold text-neutral-500">{t('posts.meta.metaDescription')}</label>
                                     <Textarea
                                         className="h-24 text-xs resize-none"
-                                        placeholder="Description for search engines..."
+                                        placeholder={t('posts.meta.metaPlaceholder')}
                                         value={article.metaDescription}
                                         onChange={(e) => setArticle({ ...article, metaDescription: e.target.value })}
                                     />
@@ -1880,7 +1882,7 @@ export default function ArticleWriterPage() {
                                         ) : (
                                             <>
                                                 <UploadCloud className="mr-2 h-4 w-4" />
-                                                Publish to WordPress
+                                                {t('posts.publish.wordpress')}
                                             </>
                                         )}
                                     </Button>
@@ -1897,7 +1899,7 @@ export default function ArticleWriterPage() {
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowImageEditor(false)}>
                     <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold">Edit Image Alt Text</h3>
+                            <h3 className="text-lg font-semibold">{t('posts.modal.altTitle')}</h3>
                             <button
                                 onClick={() => setShowImageEditor(false)}
                                 className="text-neutral-400 hover:text-neutral-600"
@@ -1915,7 +1917,7 @@ export default function ArticleWriterPage() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                                    Alt Text (for SEO & Accessibility)
+                                    {t('posts.modal.altLabel')}
                                 </label>
                                 <input
                                     type="text"
@@ -1925,7 +1927,7 @@ export default function ArticleWriterPage() {
                                     className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 <p className="text-xs text-neutral-500 mt-1">
-                                    Describe what's in the image for screen readers and search engines
+                                    {t('posts.modal.altHelp')}
                                 </p>
                             </div>
                             <div className="flex gap-3 justify-end">
@@ -1933,13 +1935,13 @@ export default function ArticleWriterPage() {
                                     variant="outline"
                                     onClick={() => setShowImageEditor(false)}
                                 >
-                                    Cancel
+                                    {t('posts.common.cancel')}
                                 </Button>
                                 <Button
                                     onClick={handleUpdateImageAlt}
                                     className="bg-blue-600 hover:bg-blue-700"
                                 >
-                                    Update Alt Text
+                                    {t('posts.modal.updateAlt')}
                                 </Button>
                             </div>
                         </div>
@@ -1952,7 +1954,7 @@ export default function ArticleWriterPage() {
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowLinkEditor(false)}>
                     <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold">Edit Link Title</h3>
+                            <h3 className="text-lg font-semibold">{t('posts.modal.linkTitle')}</h3>
                             <button
                                 onClick={() => setShowLinkEditor(false)}
                                 className="text-neutral-400 hover:text-neutral-600"
@@ -1963,7 +1965,7 @@ export default function ArticleWriterPage() {
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                                    Link Text
+                                    {t('posts.modal.linkText')}
                                 </label>
                                 <div className="px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-md text-sm text-neutral-700">
                                     {currentLinkData.text}
@@ -1971,7 +1973,7 @@ export default function ArticleWriterPage() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                                    Link URL
+                                    {t('posts.modal.linkUrl')}
                                 </label>
                                 <div className="px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-md text-sm text-neutral-700 truncate">
                                     {currentLinkData.href}
@@ -1979,7 +1981,7 @@ export default function ArticleWriterPage() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                                    Link Title (Tooltip)
+                                    {t('posts.modal.linkTooltip')}
                                 </label>
                                 <input
                                     type="text"
@@ -1989,7 +1991,7 @@ export default function ArticleWriterPage() {
                                     className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 <p className="text-xs text-neutral-500 mt-1">
-                                    This appears when users hover over the link
+                                    {t('posts.modal.linkHelp')}
                                 </p>
                             </div>
                             <div className="flex gap-3 justify-end">
@@ -1997,13 +1999,13 @@ export default function ArticleWriterPage() {
                                     variant="outline"
                                     onClick={() => setShowLinkEditor(false)}
                                 >
-                                    Cancel
+                                    {t('posts.common.cancel')}
                                 </Button>
                                 <Button
                                     onClick={handleUpdateLinkTitle}
                                     className="bg-blue-600 hover:bg-blue-700"
                                 >
-                                    Update Title
+                                    {t('posts.modal.updateLink')}
                                 </Button>
                             </div>
                         </div>

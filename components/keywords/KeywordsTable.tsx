@@ -15,6 +15,7 @@ import useIsMobile from '../../hooks/useIsMobile';
 import { useUpdateSettings } from '../../services/settings';
 import { defaultSettings } from '../../pages/profile/scraper';
 import TableSkeleton from '../common/TableSkeleton';
+import { useLanguage } from '../../context/LanguageContext';
 
 type KeywordsTableProps = {
    domain: DomainType | null,
@@ -29,6 +30,7 @@ type KeywordsTableProps = {
 }
 
 const KeywordsTable = (props: KeywordsTableProps) => {
+   const { t } = useLanguage();
    const titleColumnRef = useRef(null);
    const { keywords = [], isPending = true, isConsoleIntegrated = false, settings } = props;
    const showSCData = isConsoleIntegrated;
@@ -66,12 +68,12 @@ const KeywordsTable = (props: KeywordsTableProps) => {
    const { mutate: updateMutate, isPending: isUpdatingSettings } = useUpdateSettings(() => console.log(''));
 
    const scDataObject: { [k: string]: string } = {
-      threeDays: 'Last Three Days',
-      sevenDays: 'Last Seven Days',
-      thirtyDays: 'Last Thirty Days',
-      avgThreeDays: 'Last Three Days Avg',
-      avgSevenDays: 'Last Seven Days Avg',
-      avgThirtyDays: 'Last Thirty Days Avg',
+      threeDays: t('domainHeader.last3Days'),
+      sevenDays: t('domainHeader.last7Days'),
+      thirtyDays: t('domainHeader.last30Days'),
+      avgThreeDays: `${t('domainHeader.last3Days')} Avg`,
+      avgSevenDays: `${t('domainHeader.last7Days')} Avg`,
+      avgThirtyDays: `${t('domainHeader.last30Days')} Avg`,
    };
 
    const processedKeywords: { [key: string]: KeywordType[] } = useMemo(() => {
@@ -175,7 +177,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                            className='block px-2 py-2 cursor-pointer hover:text-indigo-600'
                            onClick={() => { refreshMutate({ ids: selectedKeywords }); setSelectedKeywords([]); }}
                         >
-                           <span className=' bg-indigo-100 text-blue-700 px-1 rounded'><Icon type="reload" size={11} /></span> Refresh Keywords
+                           <span className=' bg-indigo-100 text-blue-700 px-1 rounded'><Icon type="reload" size={11} /></span> {t('trackingTable.refreshKeywords')}
                         </a>
                      </li>
                      <li className='inline-block mr-4'>
@@ -183,14 +185,14 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                            className='block px-2 py-2 cursor-pointer hover:text-indigo-600'
                            onClick={() => setShowRemoveModal(true)}
                         >
-                           <span className=' bg-red-100 text-red-600 px-1 rounded'><Icon type="trash" size={14} /></span> Remove Keywords</a>
+                           <span className=' bg-red-100 text-red-600 px-1 rounded'><Icon type="trash" size={14} /></span> {t('trackingTable.removeKeywords')}</a>
                      </li>
                      <li className='inline-block mr-4'>
                         <a
                            className='block px-2 py-2 cursor-pointer hover:text-indigo-600'
                            onClick={() => setShowAddTags(true)}
                         >
-                           <span className=' bg-green-100 text-green-500  px-1 rounded'><Icon type="tags" size={14} /></span> Tag Keywords</a>
+                           <span className=' bg-green-100 text-green-500  px-1 rounded'><Icon type="tags" size={14} /></span> {t('trackingTable.tagKeywords')}</a>
                      </li>
                   </ul>
                </div>
@@ -231,7 +233,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                         {/* ${showSCData ? 'lg:min-w-[220px]' : 'lg:min-w-[280px]'} */}
                         <span className={`inline-block lg:flex lg:items-center 
                            ${showSCData && tableColumns.includes('Search Console') ? 'lg:max-w-[235px]' : ''}`}>
-                           Keyword
+                           {t('trackingTable.keyword')}
                         </span>
                      </span>
                      <span
@@ -240,21 +242,21 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                      >
                         Position{getSortIcon('position')}
                      </span>
-                     <span className={`domKeywords_head_best flex-1 basis-16 grow-0 text-center  ${shouldHideColumn('Best')}`}>Best</span>
-                     <span className={`domKeywords_head_history flex-1 basis-20 grow-0  ${shouldHideColumn('History')}`}>History (7d)</span>
+                     <span className={`domKeywords_head_best flex-1 basis-16 grow-0 text-center  ${shouldHideColumn('Best')}`}>{t('trackingTable.best')}</span>
+                     <span className={`domKeywords_head_history flex-1 basis-20 grow-0  ${shouldHideColumn('History')}`}>{t('trackingTable.history')}</span>
                      <span
                         className={`domKeywords_head_volume flex-1 basis-24 grow-0 text-center cursor-pointer 
                            hover:text-blue-700 select-none ${shouldHideColumn('Volume')}`}
                         onClick={() => handleColumnSort('volume')}
                      >
-                        Volume{getSortIcon('volume')}
+                        {t('trackingTable.volume')}{getSortIcon('volume')}
                      </span>
-                     <span className='domKeywords_head_url flex-1'>URL</span>
+                     <span className='domKeywords_head_url flex-1'>{t('trackingTable.url')}</span>
                      <span
                         className='domKeywords_head_updated flex-1 relative left-3 max-w-[150px] cursor-pointer hover:text-blue-700 select-none'
                         onClick={() => handleColumnSort('updated')}
                      >
-                        Updated{getSortIcon('updated')}
+                        {t('trackingTable.updated')}{getSortIcon('updated')}
                      </span>
                      {showSCData && tableColumns.includes('Search Console') && (
                         <div className='domKeywords_head_sc flex-1 min-w-[170px] lg:max-w-[170px] mr-7 text-center'>
@@ -286,19 +288,19 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                                  className='min-w-[40px] cursor-pointer hover:text-blue-700 select-none'
                                  onClick={() => handleColumnSort('impressions')}
                               >
-                                 Pos{getSortIcon('impressions')}
+                                 {t('trackingTable.scPos')}{getSortIcon('impressions')}
                               </span>
                               <span
                                  className='min-w-[40px] cursor-pointer hover:text-blue-700 select-none'
                                  onClick={() => handleColumnSort('impressions')}
                               >
-                                 Imp{getSortIcon('impressions')}
+                                 {t('trackingTable.scImp')}{getSortIcon('impressions')}
                               </span>
                               <span
                                  className='min-w-[40px] cursor-pointer hover:text-blue-700 select-none'
                                  onClick={() => handleColumnSort('visits')}
                               >
-                                 Visits{getSortIcon('visits')}
+                                 {t('trackingTable.scVisits')}{getSortIcon('visits')}
                               </span>
                               {/* <span>CTR</span> */}
                            </div>
@@ -320,7 +322,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                         </List>
                      )}
                      {!isPending && processedKeywords[device].length === 0 && (
-                        <p className=' p-9 pt-[10%] text-center text-gray-500'>No Keywords Added for this Device Type.</p>
+                        <p className=' p-9 pt-[10%] text-center text-gray-500'>{t('trackingTable.noKeywordsDevice')}</p>
                      )}
                      {isPending && (
                         <TableSkeleton rows={8} />
@@ -333,19 +335,19 @@ const KeywordsTable = (props: KeywordsTableProps) => {
             <KeywordDetails keyword={showKeyDetails} closeDetails={() => setShowKeyDetails(null)} />
          )}
          {showRemoveModal && selectedKeywords.length > 0 && (
-            <Modal closeModal={() => { setSelectedKeywords([]); setShowRemoveModal(false); }} title={'Remove Keywords'}>
+            <Modal closeModal={() => { setSelectedKeywords([]); setShowRemoveModal(false); }} title={t('trackingTable.removeTitle')}>
                <div className='text-sm'>
-                  <p>Are you sure you want to remove {selectedKeywords.length > 1 ? 'these' : 'this'} Keyword?</p>
+                  <p>{t('trackingTable.removeConfirm', { count: selectedKeywords.length > 1 ? selectedKeywords.length : '' })}</p>
                   <div className='mt-6 text-right font-semibold'>
                      <button
                         className=' py-1 px-5 rounded cursor-pointer bg-indigo-50 text-slate-500 mr-3'
                         onClick={() => { setSelectedKeywords([]); setShowRemoveModal(false); }}>
-                        Cancel
+                        {t('common.cancel')}
                      </button>
                      <button
                         className=' py-1 px-5 rounded cursor-pointer bg-red-400 text-white'
                         onClick={() => { deleteMutate(selectedKeywords); setShowRemoveModal(false); setSelectedKeywords([]); }}>
-                        Remove
+                        {t('common.delete')}
                      </button>
                   </div>
                </div>

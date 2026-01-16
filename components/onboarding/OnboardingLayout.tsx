@@ -1,7 +1,10 @@
 import React from 'react';
 import { FileText, Calendar, Puzzle, TrendingUp } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 const OnboardingLayout = ({ children }: { children: React.ReactNode }) => {
+    const { t } = useLanguage();
+
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl shadow-xl flex w-full max-w-5xl overflow-hidden min-h-[600px]">
@@ -22,8 +25,8 @@ const OnboardingLayout = ({ children }: { children: React.ReactNode }) => {
                             <img src="/icon/perplexity-logo.svg" alt="Perplexity" className="h-6 w-6 object-contain hover:scale-110 transition-transform" />
                             <img src="/icon/bing-logo.svg" alt="Bing" className="h-6 w-6 object-contain hover:scale-110 transition-transform" />
                         </div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">All-in-One Traffic Solution</h3>
-                        <p className="text-gray-500 text-sm">Everything you need to rank and get traffic on autopilot</p>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">{t('onboarding.layout.title')}</h3>
+                        <p className="text-gray-500 text-sm">{t('onboarding.layout.subtitle')}</p>
                     </div>
 
                     <div className="space-y-6">
@@ -33,8 +36,8 @@ const OnboardingLayout = ({ children }: { children: React.ReactNode }) => {
                                 <TrendingUp size={20} />
                             </div>
                             <div>
-                                <h4 className="font-semibold text-gray-900 text-sm">Rank on Google & AI Search</h4>
-                                <p className="text-gray-500 text-xs mt-1">Optimized to rank on Google, ChatGPT, and AI engines</p>
+                                <h4 className="font-semibold text-gray-900 text-sm">{t('onboarding.layout.feature1_title')}</h4>
+                                <p className="text-gray-500 text-xs mt-1">{t('onboarding.layout.feature1_desc')}</p>
                             </div>
                         </div>
 
@@ -44,8 +47,8 @@ const OnboardingLayout = ({ children }: { children: React.ReactNode }) => {
                                 <Calendar size={20} />
                             </div>
                             <div>
-                                <h4 className="font-semibold text-gray-900 text-sm">Daily Article Generation</h4>
-                                <p className="text-gray-500 text-xs mt-1">SEO-optimized content generated daily with internal linking</p>
+                                <h4 className="font-semibold text-gray-900 text-sm">{t('onboarding.layout.feature2_title')}</h4>
+                                <p className="text-gray-500 text-xs mt-1">{t('onboarding.layout.feature2_desc')}</p>
                             </div>
                         </div>
 
@@ -55,8 +58,8 @@ const OnboardingLayout = ({ children }: { children: React.ReactNode }) => {
                                 <Puzzle size={20} />
                             </div>
                             <div>
-                                <h4 className="font-semibold text-gray-900 text-sm">Auto-Publish to Your Website</h4>
-                                <p className="text-gray-500 text-xs mt-1">Seamless publishing to WordPress, Webflow, and Shopify</p>
+                                <h4 className="font-semibold text-gray-900 text-sm">{t('onboarding.layout.feature3_title')}</h4>
+                                <p className="text-gray-500 text-xs mt-1">{t('onboarding.layout.feature3_desc')}</p>
                             </div>
                         </div>
 
@@ -66,8 +69,8 @@ const OnboardingLayout = ({ children }: { children: React.ReactNode }) => {
                                 <FileText size={20} />
                             </div>
                             <div>
-                                <h4 className="font-semibold text-gray-900 text-sm">Personalized Plan</h4>
-                                <p className="text-gray-500 text-xs mt-1">Tailored strategy with keyword ideas and content roadmap</p>
+                                <h4 className="font-semibold text-gray-900 text-sm">{t('onboarding.layout.feature4_title')}</h4>
+                                <p className="text-gray-500 text-xs mt-1">{t('onboarding.layout.feature4_desc')}</p>
                             </div>
                         </div>
 

@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import AccountMenu from '../common/AccountMenu';
 import DomainSelector from '../domains/DomainSelector';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -31,12 +32,11 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
-  selectedLang = 'en',
-  onLanguageChange,
   domains = [],
 }) => {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { t } = useLanguage();
 
   const currentSlug = router.query.slug as string;
   // Try to find domain by slug, and if not found, try by domain name (for backward compatibility)
@@ -44,88 +44,30 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     domains.find(d => d.domain === currentSlug) ||
     null;
 
-  const translations = {
-    en: {
-      dashboard: 'Dashboard',
-      domains: 'Domains',
-      keywords: 'Keywords',
-      settings: 'Settings',
-      logout: 'Logout',
-      account: 'Account'
-    },
-    de: {
-      dashboard: 'Dashboard',
-      domains: 'Domains',
-      keywords: 'Keywords',
-      settings: 'Einstellungen',
-      logout: 'Abmelden',
-      account: 'Konto'
-    }
-  };
-
-  const t = translations[selectedLang];
-
   const navigation: { name: string; href: string; icon: any }[] = [];
-
-  const navTranslations = {
-    en: {
-      insight: 'Insight',
-      tracking: 'Tracking',
-      competitors: 'Competitors',
-      discover: 'Discover',
-      agent: 'Seo Agent',
-      settings: 'Settings',
-      profile: 'Profile',
-      scraper: 'Scraper',
-      connections: 'Connect',
-      billing: 'Billing',
-      myDomains: 'My Domains',
-      posts: 'Posts',
-      apiKeys: 'API & MCP',
-      notifications: 'Notifications',
-    },
-    de: {
-      insight: 'Einblick',
-      tracking: 'Tracking',
-      competitors: 'Wettbewerber',
-      discover: 'Entdecken',
-      agent: 'SEO-Agent',
-      settings: 'Einstellungen',
-      profile: 'Profil',
-      scraper: 'Scraper',
-      connections: 'Verbinden',
-      billing: 'Abrechnung',
-      myDomains: 'Meine Domains',
-      posts: 'Beiträge',
-      apiKeys: 'API & MCP',
-      notifications: 'Benachrichtigungen',
-    }
-  };
-
-  const navT = navTranslations[selectedLang];
 
   if (currentDomain) {
     navigation.push(
-      { name: navT.insight, href: `/domain/insight/${currentDomain.slug}`, icon: LineChart },
-      { name: navT.discover, href: `/domain/console/${currentDomain.slug}`, icon: Search },
-      { name: navT.tracking, href: `/tracking/${currentDomain.slug}`, icon: BarChart3 },
-      { name: navT.agent, href: `/domain/agent/${currentDomain.slug}`, icon: Bot },
-      { name: navT.posts, href: `/domain/posts/${currentDomain.slug}`, icon: PenTool },
-      { name: navT.settings, href: `/domain/settings/${currentDomain.slug}`, icon: Settings }
+      { name: t('sidebar.insight'), href: `/domain/insight/${currentDomain.slug}`, icon: LineChart },
+      { name: t('sidebar.discover'), href: `/domain/console/${currentDomain.slug}`, icon: Search },
+      { name: t('sidebar.tracking'), href: `/tracking/${currentDomain.slug}`, icon: BarChart3 },
+      /* { name: t('sidebar.agent'), href: `/domain/agent/${currentDomain.slug}`, icon: Bot }, */
+      { name: t('sidebar.posts'), href: `/domain/posts/${currentDomain.slug}`, icon: PenTool },
+      { name: t('sidebar.settings'), href: `/domain/settings/${currentDomain.slug}`, icon: Settings }
     );
   } else if (router.pathname.startsWith('/profile')) {
     navigation.push(
-      { name: navT.profile, href: '/profile', icon: User },
-      { name: navT.notifications, href: '/profile/notifications', icon: Bell },
-      { name: navT.billing, href: '/profile/billing', icon: CreditCard },
-      { name: navT.apiKeys, href: '/profile/api-keys', icon: Key },
-      { name: navT.scraper, href: '/profile/scraper', icon: Settings },
+      { name: t('sidebar.profile'), href: '/profile', icon: User },
+      { name: t('sidebar.notifications'), href: '/profile/notifications', icon: Bell },
+      { name: t('sidebar.billing'), href: '/profile/billing', icon: CreditCard },
+      { name: t('sidebar.apiKeys'), href: '/profile/api-keys', icon: Key },
+      { name: t('sidebar.scraper'), href: '/profile/scraper', icon: Settings },
       // Temporarily hidden - Connect option
-      // { name: navT.connections, href: '/profile/connections', icon: LinkIcon }
+      // { name: t('sidebar.connections'), href: '/profile/connections', icon: LinkIcon }
     );
   } else {
     navigation.push(
-      { name: navT.myDomains, href: '/', icon: Globe }
+      { name: t('sidebar.myDomains'), href: '/', icon: Globe }
     );
   }
 
@@ -209,14 +151,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             <div className="flex-1 lg:flex-none"></div>
 
             <div className="flex items-center gap-3">
-
-
               {/* Account Menu in Header - Using the same component */}
               <AccountMenu
                 domains={domains}
                 currentDomain={currentDomain}
-                selectedLang={selectedLang}
-                onLanguageChange={onLanguageChange}
               />
             </div>
           </div>

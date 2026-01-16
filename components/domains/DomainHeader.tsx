@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRefreshKeywords } from '../../services/keywords';
 import Icon from '../common/Icon';
 import SelectField from '../common/SelectField';
+import { useLanguage } from '../../context/LanguageContext';
 
 type DomainHeaderProps = {
    domain: DomainType,
@@ -23,6 +24,7 @@ const DomainHeader = (
    { domain, showAddModal, exportCsv, domains, scFilter = 'thirtyDays', setScFilter, showIdeaUpdateModal, onDeleteDomain, onRefreshCompetitors, isRefreshingCompetitors = false }: DomainHeaderProps,
 ) => {
    const router = useRouter();
+   const { t } = useLanguage();
    const [showOptions, setShowOptions] = useState<boolean>(false);
    const [ShowSCDates, setShowSCDates] = useState<boolean>(false);
    const { mutate: refreshMutate } = useRefreshKeywords(() => { });
@@ -34,6 +36,12 @@ const DomainHeader = (
 
    const daysName = (dayKey: string) => dayKey.replace('three', '3').replace('seven', '7').replace('thirty', '30').replace('Days', ' Days');
    const buttonStyle = 'leading-6 inline-block px-2 py-2 text-gray-500 hover:text-gray-700';
+
+   const dateFilters = [
+      { label: t('domainHeader.last3Days'), value: 'threeDays' },
+      { label: t('domainHeader.last7Days'), value: 'sevenDays' },
+      { label: t('domainHeader.last30Days'), value: 'thirtyDays' }
+   ];
 
    return (
       <div className='domain_kewywords_head w-full '>
@@ -57,7 +65,7 @@ const DomainHeader = (
                      <button
                         className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-sm text-gray-700 w-full text-left border-b border-gray-50 last:border-0"
                         onClick={() => { setShowOptions(false); refreshMutate({ ids: [], domain: domain.domain }); }}>
-                        <Icon type='reload' size={16} /> Reload Serps
+                        <Icon type='reload' size={16} /> {t('domainHeader.reloadSerps')}
                      </button>
                   )}
 
@@ -65,7 +73,7 @@ const DomainHeader = (
                      <button
                         className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-sm text-red-600 w-full text-left"
                         onClick={() => { setShowOptions(false); onDeleteDomain(); }}>
-                        <Icon type='trash' size={16} /> Delete Domain
+                        <Icon type='trash' size={16} /> {t('domainHeader.deleteDomain')}
                      </button>
                   )}
                </div>
@@ -80,7 +88,7 @@ const DomainHeader = (
                   {!isConsole && !isInsight && !isIdeas && !isCompetitors && !isTracking && (
                      <button
                         className={`p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors`}
-                        title="Reload All Serps"
+                        title={t('domainHeader.reloadAllSerps')}
                         onClick={() => refreshMutate({ ids: [], domain: domain.domain })}>
                         <Icon type='reload' size={18} />
                      </button>
@@ -91,14 +99,14 @@ const DomainHeader = (
                         disabled={isRefreshingCompetitors}
                         onClick={() => onRefreshCompetitors && onRefreshCompetitors()}>
                         <Icon type='reload' size={14} classes={isRefreshingCompetitors ? 'animate-spin' : ''} />
-                        {isRefreshingCompetitors ? 'Updating...' : 'Reload'}
+                        {isRefreshingCompetitors ? t('domainHeader.updating') : t('domainHeader.reload')}
                      </button>
                   )}
 
                   {onDeleteDomain && (
                      <button
                         className={`p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors`}
-                        title="Delete Domain"
+                        title={t('domainHeader.deleteDomain')}
                         onClick={() => onDeleteDomain()}>
                         <Icon type='trash' size={20} />
                      </button>
@@ -112,7 +120,7 @@ const DomainHeader = (
                      className={'flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-semibold'}
                      onClick={() => showAddModal && showAddModal(true)}>
                      <span>+</span>
-                     <span className="hidden sm:inline">Add Keyword</span>
+                     <span className="hidden sm:inline">{t('domainHeader.addKeyword')}</span>
                   </button>
                )}
 
@@ -122,18 +130,14 @@ const DomainHeader = (
                      className={'flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-semibold'}
                      onClick={() => showIdeaUpdateModal && showIdeaUpdateModal()}>
                      <Icon type='reload' size={14} />
-                     <span className="hidden sm:inline">Load Ideas</span>
+                     <span className="hidden sm:inline">{t('domainHeader.loadIdeas')}</span>
                   </button>
                )}
 
                {/* Console Date Filter - Pill Buttons Style */}
                {isConsole && (
                   <div className="flex items-center gap-2 ml-2">
-                     {[
-                        { label: '3 Days', value: 'threeDays' },
-                        { label: '7 Days', value: 'sevenDays' },
-                        { label: '30 Days', value: 'thirtyDays' }
-                     ].map((item) => (
+                     {dateFilters.map((item) => (
                         <button
                            key={item.value}
                            onClick={() => setScFilter && setScFilter(item.value)}
@@ -142,7 +146,7 @@ const DomainHeader = (
                               : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
                               }`}
                         >
-                           Last {item.label}
+                           {item.label}
                         </button>
                      ))}
                   </div>

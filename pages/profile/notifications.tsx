@@ -11,10 +11,13 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useFetchDomains } from '../../services/domains';
+import { useLanguage } from '../../context/LanguageContext';
 
 const NotificationsPage: NextPage = () => {
     const router = useRouter();
-    const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
+    const { t, locale, setLocale } = useLanguage();
+    const currentLocale = locale || 'en';
+
     const { data: domainsData } = useFetchDomains(router);
     const [isSaving, setIsSaving] = useState(false);
 
@@ -70,61 +73,6 @@ const NotificationsPage: NextPage = () => {
         }
     }, [domainsData]);
 
-    const translations = {
-        en: {
-            title: 'Notifications',
-            description: 'Manage how and when you want to be notified.',
-            generalTitle: 'Email Notifications',
-            generalDesc: 'Configure your email preferences.',
-            emailAlerts: 'Email Alerts',
-            emailAlertsDesc: 'Receive alerts about your account activity.',
-            weeklyReport: 'Weekly Report',
-            weeklyReportDesc: 'Get a weekly summary of your domains performance.',
-            marketingEmails: 'Marketing Emails',
-            marketingEmailsDesc: 'Receive news, updates, and special offers.',
-            securityAlerts: 'Security Alerts',
-            securityAlertsDesc: 'Get notified about important security events.',
-            save: 'Save Changes',
-            saving: 'Saving...',
-            success: 'Preferences updated successfully',
-            emailSettingsTitle: 'Notification Channel',
-            emailSettingsDesc: 'Where should we send your notifications?',
-            notificationEmailLabel: 'Notification Email',
-            notificationEmailPlaceholder: 'e.g. notifications@company.com',
-            notificationEmailHelp: 'We will send notifications to this email address.',
-            domainTitle: 'Domain Notifications',
-            domainDesc: 'Enable or disable notifications for specific domains.',
-            domainLabel: 'Receive updates for',
-        },
-        de: {
-            title: 'Benachrichtigungen',
-            description: 'Verwalten Sie, wie und wann Sie benachrichtigt werden möchten.',
-            generalTitle: 'E-Mail-Benachrichtigungen',
-            generalDesc: 'Konfigurieren Sie Ihre E-Mail-Einstellungen.',
-            emailAlerts: 'E-Mail-Benachrichtigungen',
-            emailAlertsDesc: 'Erhalten Sie Benachrichtigungen über Ihre Kontoaktivitäten.',
-            weeklyReport: 'Wöchentlicher Bericht',
-            weeklyReportDesc: 'Erhalten Sie eine wöchentliche Zusammenfassung Ihrer Domain-Leistung.',
-            marketingEmails: 'Marketing-E-Mails',
-            marketingEmailsDesc: 'Erhalten Sie Neuigkeiten, Updates und Sonderangebote.',
-            securityAlerts: 'Sicherheitswarnungen',
-            securityAlertsDesc: 'Werden Sie über wichtige Sicherheitsereignisse informiert.',
-            save: 'Änderungen speichern',
-            saving: 'Speichern...',
-            success: 'Einstellungen erfolgreich aktualisiert',
-            emailSettingsTitle: 'Benachrichtigungskanal',
-            emailSettingsDesc: 'Wohin sollen wir Ihre Benachrichtigungen senden?',
-            notificationEmailLabel: 'Benachrichtigungs-E-Mail',
-            notificationEmailPlaceholder: 'z.B. benachrichtigungen@firma.de',
-            notificationEmailHelp: 'Wir senden Benachrichtigungen an diese E-Mail-Adresse.',
-            domainTitle: 'Domain-Benachrichtigungen',
-            domainDesc: 'Aktivieren oder deaktivieren Sie Benachrichtigungen für bestimmte Domains.',
-            domainLabel: 'Updates erhalten für',
-        }
-    };
-
-    const t = translations[selectedLang];
-
     const handleSave = async () => {
         setIsSaving(true);
         try {
@@ -141,13 +89,13 @@ const NotificationsPage: NextPage = () => {
             const data = await response.json();
 
             if (response.ok && data.success) {
-                toast.success(t.success);
+                toast.success(t('notifications.success'));
             } else {
                 throw new Error(data.error || 'Failed manually');
             }
         } catch (error) {
             console.error('Save error:', error);
-            toast.error(selectedLang === 'en' ? 'Failed to save settings' : 'Fehler beim Speichern');
+            toast.error(currentLocale === 'en' ? 'Failed to save settings' : 'Fehler beim Speichern');
         } finally {
             setIsSaving(false);
         }
@@ -181,36 +129,36 @@ const NotificationsPage: NextPage = () => {
     };
 
     return (
-        <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang} domains={domainsData?.domains || []}>
+        <DashboardLayout selectedLang={currentLocale} onLanguageChange={setLocale} domains={domainsData?.domains || []}>
             <Head>
-                <title>{t.title} - SEO AI Agent</title>
+                <title>{t('notifications.title')} - SEO AI Agent</title>
             </Head>
 
             <div className="max-w-4xl">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-neutral-900 mb-2">{t.title}</h1>
-                    <p className="text-neutral-600">{t.description}</p>
+                    <h1 className="text-3xl font-bold text-neutral-900 mb-2">{t('notifications.title')}</h1>
+                    <p className="text-neutral-600">{t('notifications.description')}</p>
                 </div>
 
                 <Card className="mb-8">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Mail className="h-5 w-5" />
-                            {t.emailSettingsTitle}
+                            {t('notifications.emailSettingsTitle')}
                         </CardTitle>
-                        <CardDescription>{t.emailSettingsDesc}</CardDescription>
+                        <CardDescription>{t('notifications.emailSettingsDesc')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-2">
-                            <Label htmlFor="notification-email">{t.notificationEmailLabel}</Label>
+                            <Label htmlFor="notification-email">{t('notifications.notificationEmailLabel')}</Label>
                             <Input
                                 id="notification-email"
                                 value={notificationEmail}
                                 onChange={(e) => setNotificationEmail(e.target.value)}
-                                placeholder={t.notificationEmailPlaceholder}
+                                placeholder={t('notifications.notificationEmailPlaceholder')}
                                 className="max-w-md"
                             />
-                            <p className="text-sm text-neutral-500">{t.notificationEmailHelp}</p>
+                            <p className="text-sm text-neutral-500">{t('notifications.notificationEmailHelp')}</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -219,15 +167,15 @@ const NotificationsPage: NextPage = () => {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Bell className="h-5 w-5" />
-                            {t.generalTitle}
+                            {t('notifications.generalTitle')}
                         </CardTitle>
-                        <CardDescription>{t.generalDesc}</CardDescription>
+                        <CardDescription>{t('notifications.generalDesc')}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <div className="flex items-center justify-between space-x-2">
                             <div className="space-y-0.5">
-                                <Label htmlFor="email-alerts" className='text-base'>{t.emailAlerts}</Label>
-                                <p className="text-sm text-neutral-500">{t.emailAlertsDesc}</p>
+                                <Label htmlFor="email-alerts" className='text-base'>{t('notifications.emailAlerts')}</Label>
+                                <p className="text-sm text-neutral-500">{t('notifications.emailAlertsDesc')}</p>
                             </div>
                             <Switch
                                 id="email-alerts"
@@ -237,8 +185,8 @@ const NotificationsPage: NextPage = () => {
                         </div>
                         <div className="flex items-center justify-between space-x-2">
                             <div className="space-y-0.5">
-                                <Label htmlFor="weekly-report" className='text-base'>{t.weeklyReport}</Label>
-                                <p className="text-sm text-neutral-500">{t.weeklyReportDesc}</p>
+                                <Label htmlFor="weekly-report" className='text-base'>{t('notifications.weeklyReport')}</Label>
+                                <p className="text-sm text-neutral-500">{t('notifications.weeklyReportDesc')}</p>
                             </div>
                             <Switch
                                 id="weekly-report"
@@ -248,8 +196,8 @@ const NotificationsPage: NextPage = () => {
                         </div>
                         <div className="flex items-center justify-between space-x-2">
                             <div className="space-y-0.5">
-                                <Label htmlFor="marketing-emails" className='text-base'>{t.marketingEmails}</Label>
-                                <p className="text-sm text-neutral-500">{t.marketingEmailsDesc}</p>
+                                <Label htmlFor="marketing-emails" className='text-base'>{t('notifications.marketingEmails')}</Label>
+                                <p className="text-sm text-neutral-500">{t('notifications.marketingEmailsDesc')}</p>
                             </div>
                             <Switch
                                 id="marketing-emails"
@@ -259,8 +207,8 @@ const NotificationsPage: NextPage = () => {
                         </div>
                         <div className="flex items-center justify-between space-x-2">
                             <div className="space-y-0.5">
-                                <Label htmlFor="security-alerts" className='text-base'>{t.securityAlerts}</Label>
-                                <p className="text-sm text-neutral-500">{t.securityAlertsDesc}</p>
+                                <Label htmlFor="security-alerts" className='text-base'>{t('notifications.securityAlerts')}</Label>
+                                <p className="text-sm text-neutral-500">{t('notifications.securityAlertsDesc')}</p>
                             </div>
                             <Switch
                                 id="security-alerts"
@@ -276,9 +224,9 @@ const NotificationsPage: NextPage = () => {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Globe className="h-5 w-5" />
-                            {t.domainTitle}
+                            {t('notifications.domainTitle')}
                         </CardTitle>
-                        <CardDescription>{t.domainDesc}</CardDescription>
+                        <CardDescription>{t('notifications.domainDesc')}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         {domainsData?.domains && domainsData.domains.length > 0 ? (
@@ -289,7 +237,7 @@ const NotificationsPage: NextPage = () => {
                                             {domain.favicon && <img src={domain.favicon} alt="" className="w-4 h-4 rounded-sm" />}
                                             <Label htmlFor={`domain-${domain.slug}`} className='text-base cursor-pointer'>{domain.domain}</Label>
                                         </div>
-                                        <p className="text-sm text-neutral-500">{t.domainLabel} {domain.domain}</p>
+                                        <p className="text-sm text-neutral-500">{t('notifications.domainLabel')} {domain.domain}</p>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Button
@@ -322,12 +270,12 @@ const NotificationsPage: NextPage = () => {
                         {isSaving ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                {t.saving}
+                                {t('notifications.saving')}
                             </>
                         ) : (
                             <>
                                 <Save className="mr-2 h-4 w-4" />
-                                {t.save}
+                                {t('notifications.save')}
                             </>
                         )}
                     </Button>

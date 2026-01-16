@@ -14,9 +14,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import SelectField from '../../../../components/common/SelectField';
 import countries from '../../../../utils/countries';
+import { useLanguage } from '../../../../context/LanguageContext';
 
 const DomainSettingsPage: NextPage = () => {
     const router = useRouter();
+    const { t } = useLanguage();
     const { data: domainsData, refetch } = useFetchDomains(router);
     const [activeDomain, setActiveDomain] = useState<DomainType | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -209,7 +211,7 @@ const DomainSettingsPage: NextPage = () => {
         if (!trimmed) return;
 
         if (competitors.includes(trimmed)) {
-            toast.error('Competitor already added');
+            toast.error(t('domainSettings.competitors.exists'));
             return;
         }
 
@@ -318,19 +320,19 @@ const DomainSettingsPage: NextPage = () => {
     return (
         <DashboardLayout domains={domainsData?.domains || []}>
             <Head>
-                <title>Settings - {activeDomain?.domain || 'SEO AI Agent'}</title>
+                <title>{t('domainSettings.title')} - {activeDomain?.domain || 'SEO AI Agent'}</title>
             </Head>
 
             <div className="w-full max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center gap-2 mb-8">
                     <Settings className="h-6 w-6 text-neutral-600" />
-                    <h1 className="text-2xl font-bold text-neutral-900">Domain Settings</h1>
+                    <h1 className="text-2xl font-bold text-neutral-900">{t('domainSettings.title')}</h1>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     {/* Sub-Sidebar */}
                     <div className="lg:col-span-3 space-y-1">
-                        <h3 className="font-semibold text-neutral-900 mb-2 px-1">My App</h3>
+                        <h3 className="font-semibold text-neutral-900 mb-2 px-1">{t('domainSettings.myApp')}</h3>
                         <div className="space-y-1">
                             <button
                                 onClick={() => handleTabChange('general')}
@@ -339,7 +341,7 @@ const DomainSettingsPage: NextPage = () => {
                                     : 'text-neutral-600 hover:bg-neutral-100'
                                     }`}
                             >
-                                General
+                                {t('domainSettings.tabs.general')}
                             </button>
                             <button
                                 onClick={() => handleTabChange('integrations')}
@@ -348,7 +350,7 @@ const DomainSettingsPage: NextPage = () => {
                                     : 'text-neutral-600 hover:bg-neutral-100'
                                     }`}
                             >
-                                Integrations
+                                {t('domainSettings.tabs.integrations')}
                             </button>
                             <button
                                 onClick={() => handleTabChange('search_console')}
@@ -357,7 +359,7 @@ const DomainSettingsPage: NextPage = () => {
                                     : 'text-neutral-600 hover:bg-neutral-100'
                                     }`}
                             >
-                                Google Search Console
+                                {t('domainSettings.tabs.searchConsole')}
                             </button>
                             <button
                                 onClick={() => handleTabChange('danger')}
@@ -366,7 +368,7 @@ const DomainSettingsPage: NextPage = () => {
                                     : 'text-neutral-600 hover:bg-neutral-100'
                                     }`}
                             >
-                                Delete
+                                {t('domainSettings.tabs.delete')}
                             </button>
                         </div>
                     </div>
@@ -378,14 +380,14 @@ const DomainSettingsPage: NextPage = () => {
                                 {/* General Info Card */}
                                 <Card>
                                     <CardHeader>
-                                        <CardTitle>General Information</CardTitle>
+                                        <CardTitle>{t('domainSettings.general.cardTitle')}</CardTitle>
                                         <CardDescription>
-                                            Update your domain's business information and niche details.
+                                            {t('domainSettings.general.cardDesc')}
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent className="space-y-6">
                                         <div className="space-y-2">
-                                            <Label htmlFor="businessName">Business Name</Label>
+                                            <Label htmlFor="businessName">{t('domainSettings.general.businessName')}</Label>
                                             <div className="relative">
                                                 <Briefcase className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                                                 <Input
@@ -396,11 +398,11 @@ const DomainSettingsPage: NextPage = () => {
                                                     className="pl-9"
                                                 />
                                             </div>
-                                            <p className="text-xs text-muted-foreground">The official name of your business or brand.</p>
+                                            <p className="text-xs text-muted-foreground">{t('domainSettings.general.businessNameDesc')}</p>
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="niche">Niche / Industry</Label>
+                                            <Label htmlFor="niche">{t('domainSettings.general.niche')}</Label>
                                             <div className="relative">
                                                 <Info className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                                                 <Input
@@ -411,11 +413,11 @@ const DomainSettingsPage: NextPage = () => {
                                                     className="pl-9"
                                                 />
                                             </div>
-                                            <p className="text-xs text-muted-foreground">The primary industry or topic of your website.</p>
+                                            <p className="text-xs text-muted-foreground">{t('domainSettings.general.nicheDesc')}</p>
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="description">Business Description</Label>
+                                            <Label htmlFor="description">{t('domainSettings.general.description')}</Label>
                                             <div className="relative">
                                                 <FileText className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                                                 <Textarea
@@ -426,7 +428,7 @@ const DomainSettingsPage: NextPage = () => {
                                                     className="pl-9 min-h-[100px]"
                                                 />
                                             </div>
-                                            <p className="text-xs text-muted-foreground">A short description used for AI context generation.</p>
+                                            <p className="text-xs text-muted-foreground">{t('domainSettings.general.descriptionDesc')}</p>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -437,14 +439,14 @@ const DomainSettingsPage: NextPage = () => {
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
                                                 <Target className="h-5 w-5 text-blue-600" />
-                                                <CardTitle>Target Keywords Strategy</CardTitle>
+                                                <CardTitle>{t('domainSettings.strategy.cardTitle')}</CardTitle>
                                             </div>
 
                                             {/* Country Selector */}
                                             <div className="w-48">
                                                 <div className="flex items-center gap-2 mb-1 justify-end">
                                                     <Globe size={14} className="text-gray-500" />
-                                                    <span className="text-xs font-medium text-gray-500">Target Country</span>
+                                                    <span className="text-xs font-medium text-gray-500">{t('domainSettings.strategy.country')}</span>
                                                 </div>
                                                 <SelectField
                                                     multiple={false}
@@ -453,7 +455,7 @@ const DomainSettingsPage: NextPage = () => {
                                                         label: countries[countryISO][0],
                                                         value: countryISO
                                                     }))}
-                                                    defaultLabel='All Countries'
+                                                    defaultLabel={t('domainSettings.strategy.allCountries')}
                                                     updateField={(updated: string[]) => setTargetCountry(updated[0])}
                                                     rounded='rounded-lg'
                                                     maxHeight={48}
@@ -462,7 +464,7 @@ const DomainSettingsPage: NextPage = () => {
                                             </div>
                                         </div>
                                         <CardDescription>
-                                            Define up to 9 focus keywords ranked by importance. These guide your SEO strategy for the next 6 months.
+                                            {t('domainSettings.strategy.cardDesc')}
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent className="space-y-8">
@@ -473,8 +475,8 @@ const DomainSettingsPage: NextPage = () => {
                                                     <Zap className="h-4 w-4 text-red-600" />
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-semibold text-sm text-neutral-900">High Importance (Top 3)</h4>
-                                                    <p className="text-xs text-neutral-500">Critical keywords you must dominate to drive core business.</p>
+                                                    <h4 className="font-semibold text-sm text-neutral-900">{t('domainSettings.strategy.high')}</h4>
+                                                    <p className="text-xs text-neutral-500">{t('domainSettings.strategy.highDesc')}</p>
                                                 </div>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -497,8 +499,8 @@ const DomainSettingsPage: NextPage = () => {
                                                     <Flag className="h-4 w-4 text-yellow-600" />
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-semibold text-sm text-neutral-900">Medium Importance</h4>
-                                                    <p className="text-xs text-neutral-500">Important keywords that support your main services.</p>
+                                                    <h4 className="font-semibold text-sm text-neutral-900">{t('domainSettings.strategy.medium')}</h4>
+                                                    <p className="text-xs text-neutral-500">{t('domainSettings.strategy.mediumDesc')}</p>
                                                 </div>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -521,8 +523,8 @@ const DomainSettingsPage: NextPage = () => {
                                                     <Flag className="h-4 w-4 text-blue-600" />
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-semibold text-sm text-neutral-900">Low Importance</h4>
-                                                    <p className="text-xs text-neutral-500">Long-tail or future opportunity keywords.</p>
+                                                    <h4 className="font-semibold text-sm text-neutral-900">{t('domainSettings.strategy.low')}</h4>
+                                                    <p className="text-xs text-neutral-500">{t('domainSettings.strategy.lowDesc')}</p>
                                                 </div>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -543,9 +545,9 @@ const DomainSettingsPage: NextPage = () => {
                                 {/* Competitors Card */}
                                 <Card>
                                     <CardHeader>
-                                        <CardTitle>Competitors</CardTitle>
+                                        <CardTitle>{t('domainSettings.competitors.cardTitle')}</CardTitle>
                                         <CardDescription>
-                                            Track your competitors to benchmark your performance.
+                                            {t('domainSettings.competitors.cardDesc')}
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent className="space-y-6">
@@ -561,15 +563,15 @@ const DomainSettingsPage: NextPage = () => {
                                             </div>
                                             <Button type="submit" variant="outline" className="gap-2">
                                                 <Plus className="h-4 w-4" />
-                                                Add
+                                                {t('domainSettings.competitors.add')}
                                             </Button>
                                         </form>
 
                                         <div className="space-y-2">
-                                            <Label>Tracked Competitors</Label>
+                                            <Label>{t('domainSettings.competitors.tracked')}</Label>
                                             <div className="bg-neutral-50 rounded-lg p-4 min-h-[100px] border border-neutral-200">
                                                 {!Array.isArray(competitors) || competitors.length === 0 ? (
-                                                    <p className="text-sm text-neutral-400 text-center py-4">No competitors added yet.</p>
+                                                    <p className="text-sm text-neutral-400 text-center py-4">{t('domainSettings.competitors.empty')}</p>
                                                 ) : (
                                                     <div className="flex flex-wrap gap-2">
                                                         {competitors.map((comp, idx) => (
@@ -594,7 +596,7 @@ const DomainSettingsPage: NextPage = () => {
                                 <div className="flex justify-end pt-4 pb-4">
                                     <Button onClick={handleSave} disabled={isLoading} size="lg" className="gap-2 min-w-[150px]">
                                         <Save className="h-4 w-4" />
-                                        {isLoading ? 'Saving...' : 'Save Changes'}
+                                        {isLoading ? t('domainSettings.general.saving') : t('domainSettings.general.save')}
                                     </Button>
                                 </div>
                             </>
@@ -603,9 +605,9 @@ const DomainSettingsPage: NextPage = () => {
                         {activeTab === 'integrations' && (
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>CMS Integrations</CardTitle>
+                                    <CardTitle>{t('domainSettings.integrations.cardTitle')}</CardTitle>
                                     <CardDescription>
-                                        Connect your website CMS to enable auto-blogging features.
+                                        {t('domainSettings.integrations.cardDesc')}
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-8">
@@ -623,7 +625,7 @@ const DomainSettingsPage: NextPage = () => {
                                                 </div>
                                                 {integrationType === 'wordpress' && <CheckCircle className="h-5 w-5 text-blue-600" />}
                                             </div>
-                                            <p className="text-sm text-neutral-600">Connect your self-hosted WordPress site using Application Passwords.</p>
+                                            <p className="text-sm text-neutral-600">{t('domainSettings.integrations.wpDesc')}</p>
                                         </div>
 
                                         <div
@@ -637,9 +639,9 @@ const DomainSettingsPage: NextPage = () => {
                                                     </div>
                                                     <h3 className="font-semibold">Shopify</h3>
                                                 </div>
-                                                <Badge variant="secondary" className="text-xs">Soon</Badge>
+                                                <Badge variant="secondary" className="text-xs">{t('domainSettings.integrations.comingSoon')}</Badge>
                                             </div>
-                                            <p className="text-sm text-neutral-600">Connect your Shopify store using Access Tokens.</p>
+                                            <p className="text-sm text-neutral-600">{t('domainSettings.integrations.shopifyDesc')}</p>
                                         </div>
 
                                         <div
@@ -653,9 +655,9 @@ const DomainSettingsPage: NextPage = () => {
                                                     </div>
                                                     <h3 className="font-semibold">Webflow</h3>
                                                 </div>
-                                                <Badge variant="secondary" className="text-xs">Soon</Badge>
+                                                <Badge variant="secondary" className="text-xs">{t('domainSettings.integrations.comingSoon')}</Badge>
                                             </div>
-                                            <p className="text-sm text-neutral-600">Connect your Webflow site seamlessly.</p>
+                                            <p className="text-sm text-neutral-600">{t('domainSettings.integrations.webflowDesc')}</p>
                                         </div>
 
                                         <div
@@ -669,9 +671,9 @@ const DomainSettingsPage: NextPage = () => {
                                                     </div>
                                                     <h3 className="font-semibold">Wix</h3>
                                                 </div>
-                                                <Badge variant="secondary" className="text-xs">Soon</Badge>
+                                                <Badge variant="secondary" className="text-xs">{t('domainSettings.integrations.comingSoon')}</Badge>
                                             </div>
-                                            <p className="text-sm text-neutral-600">Connect your Wix website easily.</p>
+                                            <p className="text-sm text-neutral-600">{t('domainSettings.integrations.wixDesc')}</p>
                                         </div>
                                     </div>
 
@@ -679,7 +681,7 @@ const DomainSettingsPage: NextPage = () => {
                                         <div className="space-y-4 pt-4 border-t border-neutral-100">
                                             <h4 className="font-medium flex items-center gap-2">
                                                 <Settings className="h-4 w-4" />
-                                                WordPress Settings
+                                                {t('domainSettings.integrations.settingsTitle')}
                                             </h4>
 
                                             {/* Help Section */}
@@ -687,24 +689,24 @@ const DomainSettingsPage: NextPage = () => {
                                                 <div className="flex items-start gap-3">
                                                     <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                                                     <div className="flex-1">
-                                                        <h5 className="font-semibold text-blue-900 mb-2">How to Get Your WordPress Credentials</h5>
+                                                        <h5 className="font-semibold text-blue-900 mb-2">{t('domainSettings.integrations.helpTitle')}</h5>
                                                         <div className="space-y-3 text-sm text-blue-800">
                                                             <div>
-                                                                <strong className="block mb-1">1. Website URL:</strong>
-                                                                <p className="text-blue-700">Enter the exact URL of your WordPress site (e.g., https://yoursite.com). Make sure it matches exactly - including http/https and www/non-www.</p>
+                                                                <strong className="block mb-1">{t('domainSettings.integrations.help.urlLabel')}</strong>
+                                                                <p className="text-blue-700">{t('domainSettings.integrations.help.urlDesc')}</p>
                                                             </div>
                                                             <div>
-                                                                <strong className="block mb-1">2. Username:</strong>
-                                                                <p className="text-blue-700">Use your WordPress <strong>login username</strong> (not your display name or email). Find it in: WP Admin → Users → Your Profile → Username field.</p>
+                                                                <strong className="block mb-1">{t('domainSettings.integrations.help.usernameLabel')}</strong>
+                                                                <p className="text-blue-700"><span dangerouslySetInnerHTML={{ __html: t('domainSettings.integrations.help.usernameDesc').replace('**', '<strong>').replace('**', '</strong>') }} /></p>
                                                             </div>
                                                             <div>
-                                                                <strong className="block mb-1">3. Application Password:</strong>
+                                                                <strong className="block mb-1">{t('domainSettings.integrations.help.appPassLabel')}</strong>
                                                                 <ol className="list-decimal ml-4 space-y-1 text-blue-700">
-                                                                    <li>Go to: WP Admin → Users → Profile (your account)</li>
-                                                                    <li>Scroll down to "Application Passwords" section</li>
-                                                                    <li>Enter a name (e.g., "SEO Agent") and click "Add New Application Password"</li>
-                                                                    <li>Copy the generated password (format: xxxx xxxx xxxx xxxx)</li>
-                                                                    <li>Paste it in the field below</li>
+                                                                    <li>{t('domainSettings.integrations.help.appPassStep1')}</li>
+                                                                    <li>{t('domainSettings.integrations.help.appPassStep2')}</li>
+                                                                    <li>{t('domainSettings.integrations.help.appPassStep3')}</li>
+                                                                    <li>{t('domainSettings.integrations.help.appPassStep4')}</li>
+                                                                    <li>{t('domainSettings.integrations.help.appPassStep5')}</li>
                                                                 </ol>
                                                             </div>
                                                         </div>
@@ -714,48 +716,48 @@ const DomainSettingsPage: NextPage = () => {
 
                                             <div className="grid gap-4">
                                                 <div className="space-y-2">
-                                                    <Label>Website URL</Label>
+                                                    <Label>{t('domainSettings.integrations.url')}</Label>
                                                     <Input
-                                                        placeholder="https://yourwebsite.com"
+                                                        placeholder={t('domainSettings.integrations.urlPlaceholder')}
                                                         value={wpUrl}
                                                         onChange={(e) => setWpUrl(e.target.value)}
                                                     />
-                                                    <p className="text-xs text-neutral-500">The full URL of your WordPress site.</p>
+                                                    <p className="text-xs text-neutral-500">{t('domainSettings.integrations.urlHelper')}</p>
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label>Username</Label>
+                                                    <Label>{t('domainSettings.integrations.username')}</Label>
                                                     <Input
-                                                        placeholder="admin"
+                                                        placeholder={t('domainSettings.integrations.usernamePlaceholder')}
                                                         value={wpUsername}
                                                         onChange={(e) => setWpUsername(e.target.value)}
                                                     />
-                                                    <p className="text-xs text-neutral-500">Your WordPress username (not email).</p>
+                                                    <p className="text-xs text-neutral-500">{t('domainSettings.integrations.usernameHelper')}</p>
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label>Application Password</Label>
+                                                    <Label>{t('domainSettings.integrations.appPass')}</Label>
                                                     <Input
                                                         type="password"
-                                                        placeholder="xxxx xxxx xxxx xxxx"
+                                                        placeholder={t('domainSettings.integrations.appPassPlaceholder')}
                                                         value={wpAppPassword}
                                                         onChange={(e) => setWpAppPassword(e.target.value)}
                                                     />
                                                     <p className="text-xs text-neutral-500">
-                                                        Create this in WP Admin &gt; Users &gt; Profile &gt; Application Passwords.
+                                                        {t('domainSettings.integrations.appPassHelper')}
                                                     </p>
                                                 </div>
 
                                                 {/* Categories Preview */}
                                                 <div className="pt-4 border-t border-neutral-100">
                                                     <div className="flex items-center justify-between mb-2">
-                                                        <Label>Available Categories based on your website</Label>
+                                                        <Label>{t('domainSettings.integrations.availCats')}</Label>
                                                         <Button
                                                             variant="ghost"
                                                             size="sm"
                                                             onClick={async () => {
                                                                 if (!wpUrl || !wpUsername || !wpAppPassword) {
-                                                                    toast.error('Please enter credentials first');
+                                                                    toast.error(t('domainSettings.integrations.enterCreds'));
                                                                     return;
                                                                 }
                                                                 setLoadingCategories(true);
@@ -774,19 +776,19 @@ const DomainSettingsPage: NextPage = () => {
                                                                     const data = await res.json();
                                                                     if (res.ok && data.success) {
                                                                         setCategories(data.categories);
-                                                                        toast.success(`Found ${data.categories.length} categories`);
+                                                                        toast.success(t('domainSettings.integrations.foundCats', { count: data.categories.length }));
                                                                     } else {
-                                                                        toast.error(data.error || 'Failed to fetch categories');
+                                                                        toast.error(data.error || t('domainSettings.integrations.fetchCatsError'));
                                                                     }
                                                                 } catch (e) {
-                                                                    toast.error('Failed to fetch categories');
+                                                                    toast.error(t('domainSettings.integrations.fetchCatsError'));
                                                                 }
                                                                 setLoadingCategories(false);
                                                             }}
                                                             disabled={loadingCategories}
                                                             className="text-xs h-8"
                                                         >
-                                                            {loadingCategories ? 'Loading...' : 'Refresh Categories'}
+                                                            {loadingCategories ? t('domainSettings.gsc.loading') : t('domainSettings.integrations.refreshCats')}
                                                         </Button>
                                                     </div>
 
@@ -806,7 +808,7 @@ const DomainSettingsPage: NextPage = () => {
                                                         ) : (
                                                             <div className="text-center">
                                                                 <p className="text-xs text-neutral-400">
-                                                                    Connect above, then click "Refresh" to see your categories.
+                                                                    {t('domainSettings.integrations.catsHelper')}
                                                                 </p>
                                                             </div>
                                                         )}
@@ -819,7 +821,7 @@ const DomainSettingsPage: NextPage = () => {
                                 <CardFooter className="bg-neutral-50 border-t border-neutral-100 py-4 flex justify-between">
                                     <Button
                                         onClick={async () => {
-                                            const toastId = toast.loading('Testing connection...');
+                                            const toastId = toast.loading(t('domainSettings.integrations.testing'));
                                             try {
                                                 const res = await fetch('/api/cms/wordpress', {
                                                     method: 'POST',
@@ -834,12 +836,12 @@ const DomainSettingsPage: NextPage = () => {
                                                 });
                                                 const data = await res.json();
                                                 if (res.ok && data.success) {
-                                                    toast.success(`Connected as ${data.user.name}`, { id: toastId });
+                                                    toast.success(t('domainSettings.integrations.connected', { user: data.user.name }), { id: toastId });
                                                 } else {
-                                                    toast.error(data.error || 'Connection failed', { id: toastId });
+                                                    toast.error(data.error || t('domainSettings.integrations.failed'), { id: toastId });
                                                 }
                                             } catch (e) {
-                                                toast.error('Connection failed', { id: toastId });
+                                                toast.error(t('domainSettings.integrations.failed'), { id: toastId });
                                             }
                                         }}
                                         variant="outline"
@@ -847,12 +849,12 @@ const DomainSettingsPage: NextPage = () => {
                                         className="gap-2"
                                     >
                                         <Zap className="h-4 w-4" />
-                                        Test Connection
+                                        {t('domainSettings.integrations.test')}
                                     </Button>
 
                                     <Button onClick={handleSave} disabled={isLoading} className="gap-2">
                                         <Save className="h-4 w-4" />
-                                        Save Integration
+                                        {t('domainSettings.integrations.saveInt')}
                                     </Button>
                                 </CardFooter>
                             </Card>
@@ -861,8 +863,8 @@ const DomainSettingsPage: NextPage = () => {
                         {activeTab === 'search_console' && (
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Google Search Console</CardTitle>
-                                    <CardDescription>Connect your Google Search Console account</CardDescription>
+                                    <CardTitle>{t('domainSettings.gsc.cardTitle')}</CardTitle>
+                                    <CardDescription>{t('domainSettings.gsc.cardDesc')}</CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-6">
                                     {settings.google_connected ? (
@@ -871,14 +873,14 @@ const DomainSettingsPage: NextPage = () => {
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex items-center text-green-700 font-semibold gap-2">
                                                         <CheckCircle className="h-5 w-5" />
-                                                        Google Account Connected
+                                                        {t('domainSettings.gsc.connected')}
                                                     </div>
                                                     <Button
                                                         onClick={disconnectGoogle}
                                                         variant="destructive"
                                                         size="sm"
                                                     >
-                                                        Disconnect
+                                                        {t('domainSettings.gsc.disconnect')}
                                                     </Button>
                                                 </div>
                                             </div>
@@ -886,7 +888,7 @@ const DomainSettingsPage: NextPage = () => {
                                             {/* Sites List */}
                                             <div className="space-y-3">
                                                 <div className="flex items-center justify-between">
-                                                    <h3 className="text-sm font-semibold text-gray-900">Verified Sites</h3>
+                                                    <h3 className="text-sm font-semibold text-gray-900">{t('domainSettings.gsc.verifiedSites')}</h3>
                                                     <Button
                                                         onClick={fetchSites}
                                                         disabled={loadingSites}
@@ -897,12 +899,12 @@ const DomainSettingsPage: NextPage = () => {
                                                         {loadingSites ? (
                                                             <>
                                                                 <Loader2 className="h-3 w-3 animate-spin" />
-                                                                Loading...
+                                                                {t('domainSettings.gsc.loading')}
                                                             </>
                                                         ) : (
                                                             <>
                                                                 <Download className="h-3 w-3" />
-                                                                Refresh Sites
+                                                                {t('domainSettings.gsc.refreshSites')}
                                                             </>
                                                         )}
                                                     </Button>
@@ -911,12 +913,12 @@ const DomainSettingsPage: NextPage = () => {
                                                 {loadingSites ? (
                                                     <div className="text-center py-8">
                                                         <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-400" />
-                                                        <p className="text-sm text-gray-500 mt-2">Loading your sites...</p>
+                                                        <p className="text-sm text-gray-500 mt-2">{t('domainSettings.gsc.loading')}</p>
                                                     </div>
                                                 ) : sites.length === 0 ? (
                                                     <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
-                                                        <p className="text-sm text-gray-500">No verified sites found</p>
-                                                        <p className="text-xs text-gray-400 mt-1">Click "Refresh Sites" to load your sites</p>
+                                                        <p className="text-sm text-gray-500">{t('domainSettings.gsc.noSites')}</p>
+                                                        <p className="text-xs text-gray-400 mt-1">Click "{t('domainSettings.gsc.refreshSites')}" to load your sites</p>
                                                     </div>
                                                 ) : (() => {
                                                     // Filter sites to show only the current domain
@@ -956,25 +958,25 @@ const DomainSettingsPage: NextPage = () => {
                                                                         case 'siteOwner':
                                                                             return (
                                                                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                                                    ✓ Owner
+                                                                                    ✓ {t('domainSettings.gsc.owner')}
                                                                                 </span>
                                                                             );
                                                                         case 'siteFullUser':
                                                                             return (
                                                                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                                                    Full Access
+                                                                                    {t('domainSettings.gsc.full')}
                                                                                 </span>
                                                                             );
                                                                         case 'siteRestrictedUser':
                                                                             return (
                                                                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                                                    Restricted
+                                                                                    {t('domainSettings.gsc.restricted')}
                                                                                 </span>
                                                                             );
                                                                         case 'siteUnverifiedUser':
                                                                             return (
                                                                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                                                    ⚠ Unverified
+                                                                                    ⚠ {t('domainSettings.gsc.unverified')}
                                                                                 </span>
                                                                             );
                                                                         default:
@@ -1016,7 +1018,7 @@ const DomainSettingsPage: NextPage = () => {
                                                                                 className="gap-2 bg-green-100 text-green-700 hover:bg-green-100 opacity-100"
                                                                             >
                                                                                 <CheckCircle className="h-3 w-3" />
-                                                                                Imported
+                                                                                {t('domainSettings.gsc.imported')}
                                                                             </Button>
                                                                         ) : (
                                                                             <Button
@@ -1025,7 +1027,7 @@ const DomainSettingsPage: NextPage = () => {
                                                                                 className="gap-2"
                                                                             >
                                                                                 <Plus className="h-3 w-3" />
-                                                                                Add
+                                                                                {t('domainSettings.gsc.add')}
                                                                             </Button>
                                                                         )}
                                                                     </div>
@@ -1038,10 +1040,10 @@ const DomainSettingsPage: NextPage = () => {
 
                                             <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                                                 <p className="text-sm text-yellow-800 mb-2">
-                                                    <strong>Important Notes:</strong>
+                                                    <strong>{t('domainSettings.gsc.notesTitle')}</strong>
                                                 </p>
                                                 <ul className="text-sm text-yellow-800 list-disc list-inside space-y-1">
-                                                    <li>Only sites where you are the <strong>Owner</strong> in Google Search Console will appear and work properly.</li>
+                                                    <li>{t('domainSettings.gsc.note1')}</li>
                                                     <li>If a site has permission errors, check that you have Owner access (not just User) in Google Search Console.</li>
                                                     <li>If you recently changed permissions, try disconnecting and reconnecting your Google account.</li>
                                                 </ul>
@@ -1054,9 +1056,9 @@ const DomainSettingsPage: NextPage = () => {
                                                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-1.07 3.97-2.9 5.4z" />
                                                 </svg>
                                             </div>
-                                            <h3 className="text-lg font-medium text-gray-900 mb-2">Connect Google Search Console</h3>
+                                            <h3 className="text-lg font-medium text-gray-900 mb-2">{t('domainSettings.gsc.cardTitle')}</h3>
                                             <p className="text-sm text-gray-500 mb-6 text-center max-w-md">
-                                                Link your Google account to automatically verify sites and fetch performance data directly into your dashboard.
+                                                {t('domainSettings.gsc.connectDesc')}
                                             </p>
                                             <Button
                                                 onClick={() => {
@@ -1067,7 +1069,7 @@ const DomainSettingsPage: NextPage = () => {
                                                 className="gap-2 bg-black text-white hover:bg-gray-800"
                                             >
                                                 <Plug className="h-4 w-4" />
-                                                Connect Google Account
+                                                {t('domainSettings.gsc.connectBtn')}
                                             </Button>
                                         </div>
                                     )}
@@ -1079,20 +1081,20 @@ const DomainSettingsPage: NextPage = () => {
                         {activeTab === 'danger' && (
                             <Card className="border-red-200">
                                 <CardHeader>
-                                    <CardTitle className="text-red-600">Delete Site</CardTitle>
+                                    <CardTitle className="text-red-600">{t('domainSettings.delete.cardTitle')}</CardTitle>
                                     <CardDescription>
-                                        Irreversible actions for your site.
+                                        {t('domainSettings.delete.cardDesc')}
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-4 p-4 bg-red-50 rounded-lg border border-red-100">
                                         <div>
-                                            <h4 className="font-semibold text-red-900">Delete Site</h4>
+                                            <h4 className="font-semibold text-red-900">{t('domainSettings.delete.cardTitle')}</h4>
                                             <p className="text-sm text-red-700 mb-2">
-                                                Permanently remove this site and all its data. This action cannot be undone.
+                                                {t('domainSettings.delete.msg')}
                                             </p>
                                             <p className="text-sm text-red-700 font-medium">
-                                                Please type <span className="font-mono bg-red-100 px-1 rounded select-all">{activeDomain?.domain}</span> to confirm.
+                                                {t('domainSettings.delete.confirm', { domain: activeDomain?.domain })}
                                             </p>
                                         </div>
                                         <div className="flex gap-2">
@@ -1107,7 +1109,7 @@ const DomainSettingsPage: NextPage = () => {
                                                 onClick={handleDeleteDomain}
                                                 disabled={isDeleting || deleteConfirmation !== activeDomain?.domain}
                                             >
-                                                {isDeleting ? 'Deleting...' : 'Delete Site'}
+                                                {isDeleting ? t('domainSettings.delete.deleting') : t('domainSettings.delete.btn')}
                                             </Button>
                                         </div>
                                     </div>

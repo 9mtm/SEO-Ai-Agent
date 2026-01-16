@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Loader2, CheckCircle, Globe } from 'lucide-react';
 import Image from 'next/image';
+import { useLanguage } from '@/context/LanguageContext';
 
 const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
+    const { t } = useLanguage();
     const [url, setUrl] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -87,12 +89,12 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
         setError('');
 
         if (!url) {
-            setError('Please select a website from Google Search Console');
+            setError(t('onboarding.step1.errorSelectSite'));
             return;
         }
 
         if (!selectedSite) {
-            setError('Please select a verified site from Google Search Console');
+            setError(t('onboarding.step1.errorVerifySite'));
             return;
         }
 
@@ -114,10 +116,10 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
             if (res.ok) {
                 onNext(data);
             } else {
-                setError(data.error || 'Failed to save');
+                setError(data.error || t('onboarding.step1.errorSave'));
             }
         } catch (err) {
-            setError('An error occurred');
+            setError(t('onboarding.step1.errorGeneric'));
         } finally {
             setLoading(false);
         }
@@ -129,29 +131,29 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
                 {/* Progress Bar / Dots could go here */}
             </div>
 
-            <h2 className="text-2xl font-bold mb-2 text-gray-900">Connect Google Search Console</h2>
-            <p className="text-gray-600 mb-6">Select your verified website from Google Search Console to get started.</p>
+            <h2 className="text-2xl font-bold mb-2 text-gray-900">{t('onboarding.step1.title')}</h2>
+            <p className="text-gray-600 mb-6">{t('onboarding.step1.subtitle')}</p>
 
             {checkingConnection ? (
                 <div className="flex items-center justify-center py-12">
                     <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-                    <span className="ml-3 text-gray-500">Checking connection...</span>
+                    <span className="ml-3 text-gray-500">{t('onboarding.step1.checking')}</span>
                 </div>
             ) : !isGoogleConnected ? (
                 <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
                     <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
                         <Globe className="h-8 w-8 text-gray-400" />
                     </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">Connect Your Google Account</h3>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">{t('onboarding.step1.connectGoogleTitle')}</h3>
                     <p className="text-sm text-gray-500 mb-6 max-w-md mx-auto">
-                        Link your Google Search Console to automatically verify your website and access performance data.
+                        {t('onboarding.step1.connectGoogleDesc')}
                     </p>
                     <button
                         onClick={connectGoogle}
                         className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
                     >
                         <Image src="/icon/google-logo.svg" alt="Google" width={20} height={20} />
-                        Connect Google Search Console
+                        {t('onboarding.step1.connectBtn')}
                     </button>
                 </div>
             ) : (
@@ -160,27 +162,27 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
                     <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                         <div className="flex items-center gap-2 text-green-700 font-medium">
                             <CheckCircle className="h-5 w-5" />
-                            Google Search Console Connected
+                            {t('onboarding.step1.connected')}
                         </div>
                     </div>
 
                     {/* Site Selection */}
                     <div className="mb-6">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Select Your Website *
+                            {t('onboarding.step1.selectSiteLabel')} *
                         </label>
                         {loadingSites ? (
                             <div className="flex items-center justify-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
                                 <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-                                <span className="ml-2 text-gray-500">Loading your sites...</span>
+                                <span className="ml-2 text-gray-500">{t('onboarding.step1.loadingSites')}</span>
                             </div>
                         ) : gscSites.length === 0 ? (
                             <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                                 <p className="text-sm text-yellow-800">
-                                    No verified sites found in your Google Search Console.
+                                    {t('onboarding.step1.noSitesTitle')}
                                 </p>
                                 <p className="text-xs text-yellow-700 mt-1">
-                                    Please verify your domain in Google Search Console first, then refresh this page.
+                                    {t('onboarding.step1.noSitesDesc')}
                                 </p>
                             </div>
                         ) : (
@@ -190,11 +192,11 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
                                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                 required
                             >
-                                <option value="">-- Choose a verified site --</option>
+                                <option value="">{t('onboarding.step1.chooseSite')}</option>
                                 {gscSites.map((site) => (
                                     <option key={site.siteUrl} value={site.siteUrl}>
                                         {formatSiteUrl(site.siteUrl)}
-                                        {site.permissionLevel === 'siteOwner' ? ' (Owner)' : ''}
+                                        {site.permissionLevel === 'siteOwner' ? ` ${t('onboarding.step1.owner')}` : ''}
                                     </option>
                                 ))}
                             </select>
@@ -204,12 +206,12 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
                     {/* Website URL (Auto-filled) */}
                     <div className="mb-6 relative">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Website URL *
+                            {t('onboarding.step1.websiteUrlLabel')} *
                         </label>
                         <div className="relative">
                             <input
                                 type="text"
-                                placeholder="Select a site above"
+                                placeholder={t('onboarding.step1.websiteUrlPlaceholder')}
                                 className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                 value={url}
                                 readOnly
@@ -225,7 +227,7 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
                             )}
                         </div>
                         <p className="text-xs text-gray-500 mt-1">
-                            This field is automatically filled from your selected site
+                            {t('onboarding.step1.websiteUrlHelp')}
                         </p>
                         {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
                     </div>
@@ -238,10 +240,10 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
                         {loading ? (
                             <>
                                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                Saving...
+                                {t('onboarding.step1.saving')}
                             </>
                         ) : (
-                            'Continue'
+                            t('onboarding.step1.continue')
                         )}
                     </button>
                 </form>
