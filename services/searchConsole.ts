@@ -17,7 +17,8 @@ export async function fetchSCKeywords(router: NextRouter) {
 
 export function useFetchSCKeywords(router: NextRouter, domainLoaded: boolean = false) {
    // console.log('ROUTER: ', router);
-   return useQuery({ queryKey: ['sckeywords'], queryFn: () => router.query.slug && fetchSCKeywords(router), enabled: domainLoaded });
+   const domain = (router.query.slug as string)?.replace(/_/g, '.');
+   return useQuery({ queryKey: ['sckeywords', domain], queryFn: () => router.query.slug && fetchSCKeywords(router), enabled: domainLoaded });
 }
 
 export async function fetchSCInsight(router: NextRouter, days: number = 30) {
@@ -36,8 +37,9 @@ export async function fetchSCInsight(router: NextRouter, days: number = 30) {
 
 export function useFetchSCInsight(router: NextRouter, domainLoaded: boolean = false, days: number = 30) {
    // console.log('ROUTER: ', router);
+   const domain = (router.query.slug as string)?.replace(/_/g, '.');
    return useQuery({
-      queryKey: ['scinsight', days],
+      queryKey: ['scinsight', domain, days],
       queryFn: () => router.query.slug && fetchSCInsight(router, days),
       enabled: domainLoaded
    });

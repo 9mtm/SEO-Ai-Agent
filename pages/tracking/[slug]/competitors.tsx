@@ -1,9 +1,10 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { CSSTransition } from 'react-transition-group';
 import { AlertCircle } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../components/domains/DomainHeader';
 import CompetitorsTable from '../../../components/keywords/CompetitorsTable';
@@ -21,6 +22,7 @@ const CompetitorsPage: NextPage = () => {
 
     const [showManageCompetitors, setShowManageCompetitors] = useState(false);
     const [keywordSPollInterval, setKeywordSPollInterval] = useState<undefined | number>(undefined);
+    const wasUpdatingRef = useRef(false);
     const { data: appSettingsData, isPending: isAppSettingsLoading } = useFetchSettings();
     const { data: domainsData } = useFetchDomains(router);
 
@@ -45,15 +47,40 @@ const CompetitorsPage: NextPage = () => {
     const theDomains: DomainType[] = (domainsData && domainsData.domains) || [];
     const theKeywords: KeywordType[] = keywordsData && keywordsData.keywords;
 
+
+    // Check if any keyword is currently updating competitors
+    useEffect(() => {
+        if (theKeywords && theKeywords.length > 0) {
+            const hasUpdatingCompetitors = theKeywords.some((keyword: KeywordType) => keyword.updating_competitors);
+
+            if (hasUpdatingCompetitors) {
+                wasUpdatingRef.current = true;
+                if (!keywordSPollInterval) {
+                    // Start polling if not already polling
+                    setKeywordSPollInterval(2000);
+                }
+            } else {
+                // Only show toast if we were updating and now finished
+                if (wasUpdatingRef.current && keywordSPollInterval) {
+                    toast('Competitors Updated!', { icon: '✔️' });
+                    wasUpdatingRef.current = false;
+                    setKeywordSPollInterval(undefined);
+                }
+            }
+        }
+    }, [theKeywords, keywordSPollInterval]);
+
+    // Start polling when refresh is triggered
     useEffect(() => {
         if (isRefreshing) {
-            setKeywordSPollInterval(1000);
-        } else {
-            setKeywordSPollInterval(undefined);
+            setKeywordSPollInterval(2000);
         }
     }, [isRefreshing]);
 
-
+    // Check if any keyword is currently being updated
+    const hasUpdatingCompetitors = useMemo(() => {
+        return theKeywords && theKeywords.length > 0 && theKeywords.some((keyword: KeywordType) => keyword.updating_competitors);
+    }, [theKeywords]);
 
     const handleRefreshCompetitors = () => {
         if (activDomain) {
@@ -94,7 +121,7 @@ const CompetitorsPage: NextPage = () => {
                         exportCsv={() => { }}
 
                         onRefreshCompetitors={handleRefreshCompetitors}
-                        isRefreshingCompetitors={isRefreshing}
+                        isRefreshingCompetitors={hasUpdatingCompetitors || isRefreshing}
                     />
                 ) : (
                     <div className='w-full lg:h-[100px]'></div>
@@ -120,6 +147,7 @@ const CompetitorsPage: NextPage = () => {
                     />
                 )}
             </CSSTransition>
+            <Toaster position='bottom-center' containerClassName="react_toaster" />
         </DashboardLayout>
     );
 };
