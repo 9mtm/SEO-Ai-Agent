@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <!-- Homepage - English -->
+  <url>
+    <loc>https://seo-agent.net/</loc>
+    <lastmod>2024-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://seo-agent.net/de/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://seo-agent.net/" />
+  </url>
+  
+  <!-- Homepage - German -->
+  <url>
+    <loc>https://seo-agent.net/de/</loc>
+    <lastmod>2024-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://seo-agent.net/de/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://seo-agent.net/" />
+  </url>
+  
+  <!-- MCP SEO Page - English -->
+  <url>
+    <loc>https://seo-agent.net/mcp-seo</loc>
+    <lastmod>2024-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://seo-agent.net/de/mcp-seo" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://seo-agent.net/mcp-seo" />
+  </url>
+  
+  <!-- MCP SEO Page - German -->
+  <url>
+    <loc>https://seo-agent.net/de/mcp-seo</loc>
+    <lastmod>2024-01-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://seo-agent.net/de/mcp-seo" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://seo-agent.net/mcp-seo" />
+  </url>
+  
+  <!-- Register Page -->
+  <url>
+    <loc>https://seo-agent.net/register</loc>
+    <lastmod>2024-01-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Login Page -->
+  <url>
+    <loc>https://seo-agent.net/login</loc>
+    <lastmod>2024-01-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>

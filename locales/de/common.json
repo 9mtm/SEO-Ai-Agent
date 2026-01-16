@@ -764,28 +764,482 @@
       "cancel": "Abbrechen"
     }
   },
+  "hero": {
+    "headline": "SEO AI Agent",
+    "subheadline": "Alles in einer KI-gestützten SEO-Plattform",
+    "description": "Überwachen Sie Rankings in 200+ Ländern, generieren Sie KI-Inhalte mit GPT-5 & Claude und veröffentlichen Sie direkt auf WordPress. Die komplette SEO-Lösung für moderne Unternehmen.",
+    "bullet1": "Multi-Country Tracking",
+    "bullet2": "KI-Inhalte mit GPT-5 & Claude",
+    "bullet3": "WordPress Direkt-Veröffentlichung",
+    "bullet4": "ChatGPT & Claude MCP Integration",
+    "trustedBy": "Vertraut von 5.000+ SEO-Profis weltweit"
+  },
   "landing": {
     "title": "SEO AI Agent",
     "subtitle": "Ihre professionelle SEO-Tracking-Lösung",
-    "description": "Verfolgen Sie Ihre Keywords, überwachen Sie Rankings und lassen Sie Ihr Geschäft wachsen.",
+    "description": "Verfolgen Sie Ihre Keywords, überwachen Sie Rankings und lassen Sie Ihr Geschäft wachsen mit unseren leistungsstarken SEO-Tools.",
     "cta": "Jetzt starten",
     "login": "Anmelden",
+    "stats": {
+      "title": "Vertraut von Tausenden von SEO-Profis",
+      "activeUsers": "Aktive Nutzer",
+      "keywordsTracked": "Täglich verfolgte Keywords",
+      "reportsGenerated": "Generierte Berichte",
+      "customerSatisfaction": "Kundenzufriedenheit"
+    },
+    "howItWorks": {
+      "title": "Wie es funktioniert",
+      "subtitle": "Kompletter SEO-Workflow vom Tracking bis zur Veröffentlichung - alles in einer Plattform",
+      "step1": {
+        "title": "Verfolgen Sie Ihre Rankings in allen Ländern",
+        "description": "Überwachen Sie Ihre Position in jeder Google-Region weltweit",
+        "feature1": "Fügen Sie Ihre Website und Ziel-Keywords hinzu",
+        "feature2": "Verfolgen Sie Rankings in Google Österreich, Deutschland, USA und jedem Land",
+        "feature3": "Verbinden Sie sich mit Google Search Console für offizielle Daten",
+        "feature4": "Vergleichen Sie automatisch mit bis zu 3 Wettbewerbern"
+      },
+      "step2": {
+        "title": "Analysieren & Verstehen Sie Ihre Daten",
+        "description": "Erhalten Sie umfassende Einblicke mit visuellen Analysen",
+        "feature1": "Komplettes Dashboard mit interaktiven Diagrammen",
+        "feature2": "Genaue Statistiken: Besuche, Impressionen, CTR",
+        "feature3": "Entdecken Sie, welche Keywords Besucher bringen",
+        "feature4": "Identifizieren Sie Lücken und Chancen"
+      },
+      "step3": {
+        "title": "Erstellen Sie gezielte Inhalte mit KI",
+        "description": "Generieren Sie SEO-optimierte Artikel mit führenden KI-Modellen",
+        "feature1": "Wählen Sie aus 5+ KI-Modellen: GPT-5.2, Claude 3.5 Sonnet, Gemini 2.0",
+        "feature2": "Oder nutzen Sie ChatGPT/Claude direkt über MCP-API",
+        "feature3": "Inhalte optimiert für Ihre wichtigen Keywords",
+        "feature4": "Automatisches SEO-Scoring (100 Punkte) mit Verbesserungsvorschlägen"
+      },
+      "step4": {
+        "title": "Veröffentlichen Sie direkt auf Ihrer Website",
+        "description": "One-Click-Veröffentlichung auf Ihrer CMS-Plattform",
+        "feature1": "One-Click-Veröffentlichung auf WordPress",
+        "feature2": "Unterstützung für Shopify, Webflow, Wix (bald verfügbar)",
+        "feature3": "Komplettes Content-Management an einem Ort",
+        "feature4": "Überwachen Sie Ranking-Verbesserungen nach der Veröffentlichung"
+      }
+    },
     "features": {
-      "tracking": {
-        "title": "Keyword-Tracking",
-        "desc": "Überwachen Sie Ihre Keyword-Positionen in Echtzeit über mehrere Suchmaschinen"
+      "title": "Leistungsstarke Funktionen für komplettes SEO-Management",
+      "subtitle": "Alles, was Sie brauchen, um Suchrankings zu dominieren und gewinnbringende Inhalte zu erstellen",
+      "categoryTracking": "Tracking & Analyse",
+      "categoryAI": "KI-Content-Erstellung",
+      "categoryPublishing": "Veröffentlichung & Integration",
+      "multiCountry": {
+        "title": "Multi-Country Keyword-Tracking",
+        "description": "Verfolgen Sie Ihre Rankings in 200+ Ländern mit Echtzeit-Updates",
+        "benefit1": "Verfolgen Sie Rankings in 200+ Ländern",
+        "benefit2": "Google Österreich, Deutschland, USA und mehr",
+        "benefit3": "Tracking auf Desktop & Mobil",
+        "benefit4": "Tägliche oder stündliche Updates"
+      },
+      "gscIntegration": {
+        "title": "Google Search Console Integration",
+        "description": "Verbinden Sie sich direkt mit Google für offizielle Leistungsdaten",
+        "benefit1": "Direkte Verbindung mit Google",
+        "benefit2": "Offizielle Daten: Besuche, Impressionen, CTR",
+        "benefit3": "Analysieren Sie Top-Performing Keywords",
+        "benefit4": "Keywords automatisch importieren"
+      },
+      "competitorAnalysis": {
+        "title": "Wettbewerber-Analyse",
+        "description": "Verfolgen Sie bis zu 3 Wettbewerber und vergleichen Sie Ihre Leistung",
+        "benefit1": "Verfolgen Sie bis zu 3 Wettbewerber",
+        "benefit2": "Vergleichen Sie Rankings für gleiche Keywords",
+        "benefit3": "Entdecken Sie Content-Lücken",
+        "benefit4": "Warnungen, wenn Wettbewerber Sie überholen"
+      },
+      "aiContent": {
+        "title": "KI-Content-Erstellung",
+        "description": "Erstellen Sie SEO-optimierte Inhalte mit führenden KI-Modellen",
+        "benefit1": "Wählen Sie aus 5+ KI-Modellen",
+        "benefit2": "GPT-5.2, Claude 3.5 Sonnet, Gemini 2.0",
+        "benefit3": "Inhalte automatisch für SEO optimiert",
+        "benefit4": "SEO-Scoring (100 Punkte)"
+      },
+      "chatIntegration": {
+        "title": "ChatGPT & Claude Integration",
+        "description": "Integrieren Sie Ihre bevorzugten KI-Chat-Assistenten über MCP-API",
+        "benefit1": "MCP-API für direkte Integration",
+        "benefit2": "SEO-Checks aus dem Chat",
+        "benefit3": "Inhalte aus ChatGPT/Claude schreiben",
+        "benefit4": "Automatisieren Sie Ihren Workflow"
+      },
+      "seoScoring": {
+        "title": "SEO-Scoring & Optimierung",
+        "description": "Automatische Auswertung von Inhalten mit umsetzbaren Vorschlägen",
+        "benefit1": "Automatische Bewertung von Inhalten",
+        "benefit2": "Analyse der Keyword-Dichte",
+        "benefit3": "Analyse von Überschriften und Links",
+        "benefit4": "Intelligente Optimierungsvorschläge"
+      },
+      "wordpressPublishing": {
+        "title": "WordPress Direktveröffentlichung",
+        "description": "Veröffentlichen Sie Ihre Inhalte mit einem Klick direkt auf WordPress",
+        "benefit1": "One-Click-Veröffentlichung",
+        "benefit2": "Wählen Sie Kategorien und Tags",
+        "benefit3": "Veröffentlichung planen",
+        "benefit4": "Unterstützung für Shopify, Webflow, Wix (bald verfügbar)"
       },
       "analytics": {
-        "title": "Erweiterte Analytik",
-        "desc": "Erhalten Sie detaillierte Einblicke in Ihre SEO-Performance mit umfassenden Berichten"
+        "title": "Erweitertes Analytics-Dashboard",
+        "description": "Interaktive Diagramme und umfassendes Reporting",
+        "benefit1": "Interaktive Diagramme",
+        "benefit2": "Analyse nach Keywords, Seiten, Ländern",
+        "benefit3": "CSV-Export",
+        "benefit4": "Benutzerdefinierte Berichte"
       },
-      "reports": {
-        "title": "Detaillierte Berichte",
-        "desc": "Erstellen Sie professionelle Berichte, um Ihren Fortschritt zu verfolgen"
+      "apiWebhooks": {
+        "title": "Leistungsstarke API & Webhooks",
+        "description": "Komplette API mit granularen Berechtigungen und Webhooks",
+        "benefit1": "Komplette API mit granularen Berechtigungen",
+        "benefit2": "Webhooks für sofortige Benachrichtigungen",
+        "benefit3": "Integration mit externen Tools",
+        "benefit4": "Automatischer Datenexport"
       }
+    },
+    "integrations": {
+      "title": "Unterstützt von führenden KI-Modellen & Plattformen",
+      "subtitle": "Wählen Sie aus 5+ KI-Modellen und veröffentlichen Sie direkt auf Ihren bevorzugten Plattformen",
+      "aiModels": "KI-Content-Erstellung",
+      "directPublishing": "Direktveröffentlichung",
+      "multiEngine": "Multi-Engine Tracking",
+      "comingSoon": "Bald verfügbar",
+      "seoFooter": "Integrieren Sie Ihren SEO-Workflow mit ChatGPT, Claude AI, Google Gemini zur Inhaltserstellung. Veröffentlichen Sie direkt auf WordPress, Shopify, Webflow. Verfolgen Sie Rankings auf Google, Bing, Yahoo und DuckDuckGo in 200+ Ländern."
+    },
+    "testimonials": {
+      "title": "Was unsere Kunden sagen",
+      "subtitle": "Schließen Sie sich Tausenden zufriedener Kunden an, die ihre Online-Präsenz ausbauen",
+      "trustBadge": "Bewertet mit 5.0 basierend auf 100+ Bewertungen",
+      "testimonial1": {
+        "position": "Digital Marketing Manager",
+        "review": "Ein erstaunliches Tool, das uns geholfen hat, unser Website-Ranking in nur 3 Monaten um 150% zu verbessern. Die Multi-Country-Tracking-Funktion ist ein Game-Changer!"
+      },
+      "testimonial2": {
+        "position": "SEO-Spezialist",
+        "review": "Die detaillierten Berichte und das tägliche Tracking haben meinen Job so viel einfacher gemacht. Die KI-Content-Erstellung ist unglaublich genau und spart Stunden an Arbeit."
+      },
+      "testimonial3": {
+        "position": "Gründer",
+        "review": "Bestes SEO-Tool, das ich je benutzt habe. Die Oberfläche ist einfach und die Ergebnisse sind genau. Die WordPress-Integration ist nahtlos!"
+      }
+    },
+    "pricing": {
+      "title": "Einfache, transparente Preise",
+      "subtitle": "Wählen Sie den Plan, der zu Ihren Bedürfnissen passt. Keine versteckten Gebühren.",
+      "monthly": "Monatlich",
+      "yearly": "Jährlich",
+      "perMonth": "Monat",
+      "saveYearly": "Sparen Sie bis zu 17% bei jährlicher Abrechnung",
+      "mostPopular": "Beliebtest",
+      "noCreditCard": "Keine Kreditkarte zum Start erforderlich",
+      "cancelAnytime": "Jederzeit kündbar. Keine Fragen.",
+      "seoFooter": "Erschwingliche SEO-Tracking- und KI-Content-Plattform. Kostenloser Plan verfügbar. Verfolgen Sie Keyword-Rankings, analysieren Sie Google Search Console Daten, generieren Sie KI-Inhalte mit GPT-5.2 und Claude, veröffentlichen Sie auf WordPress.",
+      "free": {
+        "name": "Kostenlos",
+        "description": "Perfekt zum Ausprobieren",
+        "feature1": "1 Website",
+        "feature2": "10 Keywords",
+        "feature3": "Tägliche Updates",
+        "feature4": "Basis-Berichte",
+        "cta": "Kostenlos starten"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Für wachsende Unternehmen",
+        "feature1": "5 Websites",
+        "feature2": "100 Keywords",
+        "feature3": "Updates alle 6 Stunden",
+        "feature4": "Erweiterte Berichte",
+        "feature5": "API-Zugriff",
+        "feature6": "Wettbewerber-Tracking",
+        "feature7": "KI-Content-Erstellung",
+        "cta": "Jetzt starten"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "Für Power-User",
+        "feature1": "Unbegrenzte Websites",
+        "feature2": "500 Keywords",
+        "feature3": "Stündliche Updates",
+        "feature4": "Benutzerdefinierte Berichte",
+        "feature5": "Webhooks",
+        "feature6": "Bevorzugter Support",
+        "feature7": "White-Label",
+        "feature8": "Dedizierter Account Manager",
+        "cta": "Kontaktieren Sie uns"
+      }
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "subtitle": "Alles, was Sie über SEO Agent wissen müssen",
+      "stillHaveQuestions": "Noch Fragen?",
+      "contactUs": "Kontaktieren Sie uns",
+      "q1": {
+        "question": "Brauche ich eine Kreditkarte zum Starten?",
+        "answer": "Nein, Sie können mit dem kostenlosen Plan starten, ohne eine Kreditkarte zu benötigen. Upgraden Sie jederzeit, wenn Sie mehr Funktionen benötigen."
+      },
+      "q2": {
+        "question": "Wie oft werden die Daten aktualisiert?",
+        "answer": "Daten werden täglich für den kostenlosen Plan, alle 6 Stunden für Pro und stündlich für Enterprise-Pläne aktualisiert."
+      },
+      "q3": {
+        "question": "Kann ich mehrere Websites verfolgen?",
+        "answer": "Ja, abhängig von Ihrem Plan: 1 Website für Kostenlos, 5 Websites für Pro und unbegrenzt für Enterprise."
+      },
+      "q4": {
+        "question": "Wie funktioniert das Multi-Country-Tracking?",
+        "answer": "Sie können aus über 200 Ländern wählen (wie Google Österreich, Deutschland, USA). Das System prüft Ihr Ranking in jedem lokalen Google separat und liefert Ihnen genaue länderspezifische Daten."
+      },
+      "q5": {
+        "question": "Welche KI-Modelle werden unterstützt?",
+        "answer": "Wir unterstützen OpenAI (GPT-5.2, GPT-4.1), Claude (3.5 Sonnet, 3 Opus), Google Gemini (2.0 Flash, 1.5 Pro), Perplexity Sonar und unser lokales Dpro-Modell."
+      },
+      "q6": {
+        "question": "Wie verbinde ich das System mit ChatGPT oder Claude?",
+        "answer": "Wir bieten eine MCP-API, mit der Sie das System mit Claude Desktop oder ChatGPT verbinden können. Sie können SEO prüfen und Inhalte direkt aus dem Chat schreiben. Besuchen Sie unsere MCP-Setup-Seite für detaillierte Anweisungen."
+      },
+      "q7": {
+        "question": "Kann ich direkt auf WordPress veröffentlichen?",
+        "answer": "Ja! Sie können Ihre WordPress-Seite verbinden und mit einem Klick veröffentlichen. Unterstützung für Shopify, Webflow und Wix folgt in Kürze."
+      },
+      "q8": {
+        "question": "Unterstützen Sie andere Suchmaschinen als Google?",
+        "answer": "Ja, wir unterstützen Google, Bing, Yahoo und DuckDuckGo."
+      },
+      "q9": {
+        "question": "Wie wird der SEO-Score für Inhalte berechnet?",
+        "answer": "Wir prüfen mehr als 15 Faktoren: Wortanzahl, Keyword-Dichte, Überschriftenstruktur, interne und externe Links, Bild-Alt-Texte, Meta-Beschreibung und mehr. Der Score ist von 100."
+      },
+      "q10": {
+        "question": "Kann ich mein Abonnement jederzeit kündigen?",
+        "answer": "Absolut! Sie können Ihr Abonnement jederzeit ohne zusätzliche Gebühren oder Bedingungen kündigen."
+      }
+    },
+    "finalCTA": {
+      "title": "Bereit, Suchrankings zu dominieren?",
+      "description": "Schließen Sie sich Tausenden von Unternehmen an, die SEO Agent nutzen, um Rankings zu verfolgen, KI-Inhalte zu erstellen und ihre Online-Präsenz auszubauen.",
+      "primaryCTA": "Kostenlose Testversion starten",
+      "secondaryCTA": "Vertrieb kontaktieren",
+      "noCreditCard": "Keine Kreditkarte erforderlich",
+      "users": "Nutzer",
+      "keywords": "Keywords",
+      "satisfaction": "Zufriedenheit"
     },
     "footer": {
       "rights": "Alle Rechte vorbehalten."
+    }
+  },
+  "mcp": {
+    "meta": {
+      "title": "MCP SEO Integration - ChatGPT & Claude Desktop verbinden",
+      "description": "Integrieren Sie SEO Agent mit ChatGPT und Claude Desktop über die MCP-API. Verfolgen Sie Rankings, analysieren Sie Keywords und generieren Sie Inhalte direkt aus Ihrem KI-Chat."
+    },
+    "hero": {
+      "title": "Verbinden Sie SEO Agent mit ChatGPT & Claude Desktop",
+      "description": "Nutzen Sie unsere MCP-API, um SEO zu prüfen, Rankings zu verfolgen und optimierte Inhalte direkt aus Ihrem bevorzugten KI-Chat zu schreiben - ChatGPT, Claude oder jedes MCP-kompatible Tool.",
+      "getAPIKey": "Holen Sie Ihren API-Schlüssel",
+      "viewDocs": "Dokumentation ansehen"
+    },
+    "whatIs": {
+      "title": "Was ist MCP (Model Context Protocol)?",
+      "description1": "MCP ist ein Standardprotokoll, das es KI-Assistenten wie ChatGPT und Claude ermöglicht, sich mit externen Tools und Diensten zu verbinden.",
+      "description2": "Mit unserer MCP-Integration können Sie auf Ihre SEO-Daten zugreifen, Rankings prüfen, Keywords analysieren und optimierte Inhalte generieren - alles aus Ihrem KI-Chat heraus.",
+      "benefit1Title": "Direkte Claude Desktop Integration",
+      "benefit1": "Eingebaute offizielle MCP-Unterstützung",
+      "benefit2Title": "Kompatibel mit ChatGPT",
+      "benefit2": "Über benutzerdefinierte Aktionen (Custom Actions)",
+      "benefit3Title": "Sichere Authentifizierung",
+      "benefit3": "Mit API-Schlüsseln",
+      "benefit4Title": "Echtzeit-Datenzugriff",
+      "benefit4": "Kein Code für die Grundeinrichtung erforderlich"
+    },
+    "platforms": {
+      "title": "Unterstützte Chat-Plattformen",
+      "recommended": "Empfohlen",
+      "advanced": "Fortgeschritten",
+      "comingSoon": "Bald verfügbar",
+      "claude1": "Offizielle MCP-Unterstützung eingebaut",
+      "claude2": "Fügen Sie unseren MCP-Server in den Einstellungen hinzu",
+      "claude3": "Starten Sie sofort den Chat mit SEO-Daten",
+      "chatgpt1": "Erstellen Sie einen benutzerdefinierten GPT mit unserer API",
+      "chatgpt2": "Konfigurieren Sie Aktionen für den Zugriff auf SEO-Daten",
+      "chatgpt3": "Verwendung in ChatGPT Plus oder Team",
+      "otherTools": "Andere MCP-Tools",
+      "moreTools": "Und weitere folgen bald"
+    },
+    "setup": {
+      "title": "Einrichtungsanleitung - Schritt für Schritt",
+      "copy": "Kopieren",
+      "copied": "Kopiert!",
+      "claude": {
+        "step1Title": "Schritt 1: API-Schlüssel generieren",
+        "step1": {
+          "1": "Gehen Sie zu Profil → API-Schlüssel",
+          "2": "Klicken Sie auf 'Neuen Schlüssel erstellen'",
+          "3": "Wählen Sie Berechtigungen: read:domains, read:keywords, read:gsc, write:posts",
+          "4": "Kopieren Sie Ihren API-Schlüssel sicher"
+        },
+        "step2Title": "Schritt 2: MCP-Server zu Claude Desktop hinzufügen",
+        "step2": "Fügen Sie dies in die Claude Desktop-Konfiguration ein, starten Sie Claude Desktop neu, und fertig! Starten Sie den Chat."
+      },
+      "chatgpt": {
+        "title": "Für ChatGPT (Benutzerdefinierten GPT erstellen)",
+        "step1": "Gehen Sie zu ChatGPT → GPT erstellen",
+        "step2": "Konfigurieren Sie Aktionen mit unserem OpenAPI-Schema",
+        "step3": "Fügen Sie den API-Schlüssel in der Authentifizierung hinzu",
+        "step4": "Testen Sie mit Beispielanfragen"
+      },
+      "api": {
+        "title": "Direkter API-Aufruf (für Entwickler)",
+        "description": "Sie können die API auch direkt ohne MCP verwenden:"
+      }
+    },
+    "functions": {
+      "title": "Verfügbare MCP-Tools/Funktionen",
+      "functionName": "Funktionsname",
+      "description": "Beschreibung",
+      "exampleQuery": "Beispielanfrage",
+      "listDomains": {
+        "description": "Alle verfolgten Domains abrufen",
+        "example": "Zeige meine Domains"
+      },
+      "getKeywords": {
+        "description": "Keywords für eine Domain abrufen",
+        "example": "Hole Keywords für beispiel.de"
+      },
+      "getRankings": {
+        "description": "Ranking für Keyword prüfen",
+        "example": "Was ist mein Ranking für 'SEO Tools'?"
+      },
+      "getGSC": {
+        "description": "Google Search Console Daten",
+        "example": "Zeige GSC-Statistiken für die letzten 30 Tage"
+      },
+      "analyzeSEO": {
+        "description": "Content SEO-Score analysieren",
+        "example": "Prüfe SEO dieses Artikels"
+      },
+      "createPost": {
+        "description": "SEO-optimierten Beitrag generieren",
+        "example": "Schreibe einen Artikel über X"
+      },
+      "publishPost": {
+        "description": "Auf WordPress veröffentlichen",
+        "example": "Auf WordPress veröffentlichen"
+      },
+      "getCompetitors": {
+        "description": "Wettbewerber-Rankings abrufen",
+        "example": "Wie ranken meine Wettbewerber?"
+      }
+    },
+    "benefits": {
+      "title": "Warum MCP-Integration nutzen?",
+      "speed": {
+        "title": "Geschwindigkeit & Effizienz",
+        "point1": "Erhalten Sie SEO-Einblicke in Sekunden",
+        "point2": "Kein Wechsel zwischen Tools nötig",
+        "point3": "Abfragen in natürlicher Sprache"
+      },
+      "ai": {
+        "title": "KI-gestützte Einblicke",
+        "point1": "Lassen Sie KI Ihre Daten analysieren",
+        "point2": "Erhalten Sie automatisch Empfehlungen",
+        "point3": "Generieren Sie Inhalte sofort"
+      },
+      "security": {
+        "title": "Sicher & Privat",
+        "point1": "Ihre Daten bleiben sicher",
+        "point2": "API-Schlüssel mit spezifischen Berechtigungen",
+        "point3": "Audit-Logs für alle Aktionen"
+      },
+      "updates": {
+        "title": "Kontinuierliche Updates",
+        "point1": "Immer die neuesten Daten nutzen",
+        "point2": "Echtzeit-Ranking-Checks",
+        "point3": "Automatische Synchronisierung mit GSC"
+      }
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "q1": {
+        "question": "Was ist MCP und warum sollte ich es nutzen?",
+        "answer": "MCP ermöglicht Ihnen den Zugriff auf Ihre SEO-Daten direkt aus KI-Chats wie Claude oder ChatGPT, was Ihren Workflow schneller und effizienter macht."
+      },
+      "q2": {
+        "question": "Ist MCP kostenlos nutzbar?",
+        "answer": "Ja! Die MCP-Integration ist in allen Plänen enthalten. Sie benötigen nur einen API-Schlüssel."
+      },
+      "q3": {
+        "question": "Funktioniert das mit dem kostenlosen ChatGPT?",
+        "answer": "Benutzerdefinierte GPTs erfordern ein ChatGPT Plus oder Team Abonnement. Claude Desktop funktioniert mit jedem Plan."
+      },
+      "q4": {
+        "question": "Wie erhalte ich einen API-Schlüssel?",
+        "answer": "Gehen Sie zu Profil → API-Schlüssel und generieren Sie einen neuen Schlüssel mit den benötigten Berechtigungen."
+      },
+      "q5": {
+        "question": "Kann ich den API-Zugriff widerrufen?",
+        "answer": "Ja, Sie können API-Schlüssel jederzeit in Ihrem Profil löschen oder widerrufen."
+      },
+      "q6": {
+        "question": "Auf welche Daten kann ich über MCP zugreifen?",
+        "answer": "Alle Ihre Domains, Keywords, Rankings, GSC-Daten, Beiträge und Wettbewerber-Informationen."
+      },
+      "q7": {
+        "question": "Kann ich über MCP direkt auf WordPress veröffentlichen?",
+        "answer": "Ja! Wenn Sie WordPress in den Einstellungen verbunden haben, können Sie aus dem Chat heraus veröffentlichen."
+      },
+      "q8": {
+        "question": "Gibt es ein Ratenlimit?",
+        "answer": "API-Ratenlimits hängen von Ihrem Plan ab: Kostenlos (100/Tag), Pro (1000/Tag), Enterprise (unbegrenzt)."
+      }
+    },
+    "finalCTA": {
+      "title": "Bereit, Ihren SEO-Workflow zu verbessern?",
+      "description": "Starten Sie mit MCP, um Ihre SEO-Aufgaben mit KI zu automatisieren",
+      "getAPIKey": "API-Schlüssel jetzt generieren",
+      "readDocs": "Vollständige Dokumentation lesen",
+      "joinUsers": "Schließen Sie sich 1.000+ Nutzern an, die SEO mit MCP automatisieren"
+    }
+  },
+  "nav": {
+    "features": "Funktionen",
+    "mcpIntegration": "MCP Integration",
+    "signIn": "Anmelden",
+    "getStarted": "Jetzt Starten"
+  },
+  "footerMenu": {
+    "companyDesc": "Komplette SEO-Tracking- und KI-Content-Plattform von Dpro GmbH",
+    "product": "Produkt",
+    "resources": "Ressourcen",
+    "legal": "Rechtliches",
+    "talentManagement": "Talentmanagement",
+    "ats": "Bewerbermanagement-Software",
+    "documentation": "Dokumentation"
+  },
+  "seo": {
+    "home": {
+      "title": "SEO Agent - Rankings Verfolgen, KI-Inhalte Erstellen & auf WordPress Veröffentlichen | Multi-Country SEO Tool",
+      "description": "Komplette SEO-Plattform: Verfolgen Sie Keyword-Rankings in 200+ Ländern, analysieren Sie Google Search Console Daten, generieren Sie KI-Inhalte mit GPT-5 & Claude, veröffentlichen Sie direkt auf WordPress. Kostenloser Plan verfügbar.",
+      "keywords": "SEO Tracking Tool, Keyword Rank Tracker, Multi-Country SEO, Google Search Console Integration, KI Content Generator, ChatGPT SEO, Claude AI Content, WordPress Auto-Publish, SEO Analytics, Wettbewerber Tracking, MCP API, SEO Automatisierung",
+      "ogTitle": "SEO Agent - Komplettes SEO Tracking & KI Content Plattform",
+      "ogDescription": "Verfolgen Sie Rankings in 200+ Ländern, generieren Sie KI-Inhalte und veröffentlichen Sie auf WordPress. Integration mit ChatGPT & Claude über MCP API.",
+      "twitterTitle": "SEO Agent - KI-gestützte SEO Plattform",
+      "twitterDescription": "Rankings verfolgen, KI-Inhalte erstellen, auf WordPress veröffentlichen. 200+ Länder unterstützt."
+    },
+    "mcpSeo": {
+      "title": "MCP SEO Integration - ChatGPT & Claude Desktop Verbinden | SEO Agent",
+      "description": "Integrieren Sie SEO Agent mit ChatGPT und Claude Desktop über MCP API. Verfolgen Sie Rankings, analysieren Sie Keywords und generieren Sie Inhalte direkt aus Ihrem KI-Chat. Kostenlose Einrichtungsanleitung inklusive.",
+      "keywords": "MCP SEO, Model Context Protocol, ChatGPT Integration, Claude Desktop, KI SEO Automatisierung, SEO API, Keyword Tracking API, ChatGPT SEO, Claude AI SEO, MCP Server, KI-Assistent SEO, Konversations-SEO",
+      "ogTitle": "MCP SEO Integration - ChatGPT & Claude Desktop | SEO Agent",
+      "ogDescription": "Greifen Sie direkt von ChatGPT und Claude Desktop auf Ihre SEO-Daten zu. Verfolgen Sie Rankings, analysieren Sie Keywords und erstellen Sie Inhalte mit KI. Vollständige MCP-Einrichtungsanleitung.",
+      "twitterTitle": "MCP SEO - ChatGPT & Claude mit SEO Agent Integrieren",
+      "twitterDescription": "Nutzen Sie ChatGPT und Claude Desktop, um auf Ihre SEO-Daten zuzugreifen, Rankings zu verfolgen und Inhalte zu generieren. Vollständige MCP-Integrationsanleitung."
     }
   }
 }

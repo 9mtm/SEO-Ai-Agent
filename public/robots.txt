@@ -1,0 +1,50 @@
+# robots.txt for SEO Agent
+# https://seo-agent.net/robots.txt
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /profile/
+Disallow: /domain/
+Disallow: /domains/
+Disallow: /onboarding/
+Disallow: /auth/
+Disallow: /login
+Disallow: /register
+
+# Allow specific pages
+Allow: /
+Allow: /mcp-seo
+Allow: /de/
+Allow: /de/mcp-seo
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://seo-agent.net/sitemap.xml
+Sitemap: https://seo-agent.net/sitemap-de.xml
+
+# Google
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /profile/
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+# ChatGPT
+User-agent: ChatGPT-User
+Allow: /
+Allow: /mcp-seo
+
+# Claude
+User-agent: Claude-Web
+Allow: /
+Allow: /mcp-seo

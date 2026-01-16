@@ -129,9 +129,8 @@ const FAQ: React.FC = () => {
                 {/* Answer */}
                 <div
                   id={`faq-answer-${index}`}
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    openIndex === index ? 'max-h-96' : 'max-h-0'
-                  }`}
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${openIndex === index ? 'max-h-96' : 'max-h-0'
+                    }`}
                   itemScope
                   itemProp="acceptedAnswer"
                   itemType="https://schema.org/Answer"
@@ -150,31 +149,7 @@ const FAQ: React.FC = () => {
           </div>
         </div>
 
-        {/* Additional Help */}
-        <div className="mt-12 text-center">
-          <p className="text-neutral-600 mb-4">
-            {t('landing.faq.stillHaveQuestions')}
-          </p>
-          <a
-            href="/contact"
-            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-lg hover:shadow-xl"
-          >
-            {t('landing.faq.contactUs')}
-            <svg
-              className="w-5 h-5 ml-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
-            </svg>
-          </a>
-        </div>
+
       </div>
     </section>
   );

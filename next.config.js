@@ -7,6 +7,14 @@ const nextConfig = {
   env: {
     APP_VERSION: version,
   },
+
+  // ✅ Internationalization (i18n) Configuration
+  i18n: {
+    locales: ['en', 'de'],
+    defaultLocale: 'en',
+    localeDetection: true, // Auto-detect browser language
+  },
+
   // ✅ تحسين الصور
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -17,6 +25,7 @@ const nextConfig = {
       },
     ],
   },
+
   // ✅ تحسين الأداء
   compress: true,
   poweredByHeader: false,

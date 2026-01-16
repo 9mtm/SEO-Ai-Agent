@@ -64,7 +64,7 @@ export async function fetchDomainScreenshot(domain: string, forceFetch = false):
 }
 
 export function useFetchDomains(router: NextRouter, withStats: boolean = false, options: any = {}) {
-   return useQuery({ queryKey: ['domains'], queryFn: () => fetchDomains(router, withStats), ...options });
+   return useQuery<{ domains: DomainType[] }>({ queryKey: ['domains'], queryFn: () => fetchDomains(router, withStats), ...options });
 }
 
 export function useFetchDomain(router: NextRouter, domainName: string, onSuccess: Function) {

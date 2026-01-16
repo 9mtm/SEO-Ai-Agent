@@ -1,15 +1,15 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useRouter } from 'next/router';
 import en from '../locales/en/common.json';
 import de from '../locales/de/common.json';
 
 type Locale = 'en' | 'de';
-type Translations = typeof en;
 
 interface LanguageContextType {
     locale: Locale;
     setLocale: (locale: Locale) => void;
     t: (key: string, vars?: Record<string, any>) => string;
-    translations: Translations;
+    translations: any;
 }
 
 const translationsMap = { en, de };
@@ -17,20 +17,22 @@ const translationsMap = { en, de };
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-    const [locale, setLocaleState] = useState<Locale>('en');
+    const router = useRouter();
     const [isLoaded, setIsLoaded] = useState(false);
 
+    // Get current locale from Next.js router
+    const locale = (router.locale || 'en') as Locale;
+
     useEffect(() => {
-        const saved = localStorage.getItem('app_locale') as Locale;
-        if (saved && (saved === 'en' || saved === 'de')) {
-            setLocaleState(saved);
-        }
         setIsLoaded(true);
     }, []);
 
     const setLocale = (newLocale: Locale) => {
-        setLocaleState(newLocale);
+        // Save preference to localStorage
         localStorage.setItem('app_locale', newLocale);
+
+        // Use Next.js router to change locale (this will update the URL)
+        router.push(router.pathname, router.asPath, { locale: newLocale });
     };
 
     const t = (key: string, vars: Record<string, any> = {}) => {

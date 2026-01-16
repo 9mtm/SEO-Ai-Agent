@@ -12,6 +12,32 @@ const Onboarding = () => {
     const [step, setStep] = useState(1);
     const [onboardingData, setOnboardingData] = useState<any>({});
 
+    // Check for newsletter subscription from registration
+    useEffect(() => {
+        const syncNewsletter = async () => {
+            const hasSubscribed = localStorage.getItem('newsletter_subscription');
+            if (hasSubscribed === 'true') {
+                try {
+                    await fetch('/api/user/update-notifications', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            marketingEmails: true,
+                            emailAlerts: true,
+                            weeklyReport: true,
+                            securityAlerts: true
+                        })
+                    });
+                    // Clear the flag so we don't request again
+                    localStorage.removeItem('newsletter_subscription');
+                } catch (error) {
+                    console.error('Failed to sync newsletter subscription:', error);
+                }
+            }
+        };
+        syncNewsletter();
+    }, []);
+
     const handleNext = (data?: any) => {
         if (data) {
             setOnboardingData((prev: any) => ({ ...prev, ...data }));

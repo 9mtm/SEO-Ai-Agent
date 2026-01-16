@@ -22,6 +22,7 @@ import FinalCTA from '../components/landing/FinalCTA';
 const Home: NextPage = () => {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
   const { locale, setLocale, t } = useLanguage();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -70,44 +71,46 @@ const Home: NextPage = () => {
     <div className="min-h-screen bg-white">
       <Head>
         {/* Primary Meta Tags */}
-        <title>SEO Agent - Track Rankings, Create AI Content & Publish to WordPress | Multi-Country SEO Tool</title>
-        <meta
-          name="description"
-          content="Complete SEO platform: Track keyword rankings in 200+ countries, analyze Google Search Console data, generate AI content with GPT-5 & Claude, publish directly to WordPress. Free plan available."
-        />
-        <meta
-          name="keywords"
-          content="SEO tracking tool, keyword rank tracker, multi-country SEO, Google Search Console integration, AI content generator, ChatGPT SEO, Claude AI content, WordPress auto-publish, SEO analytics, competitor tracking, MCP API, SEO automation"
-        />
-        <link rel="canonical" href="https://seo-agent.net/" />
-        <meta name="robots" content="index, follow" />
+        <title>{t('seo.home.title')}</title>
+        <meta name="description" content={t('seo.home.description')} />
+        <meta name="keywords" content={t('seo.home.keywords')} />
+        <link rel="canonical" href={`https://seo-agent.net${router.locale === 'de' ? '/de' : ''}/`} />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="author" content="Dpro GmbH" />
+
+        {/* Hreflang Tags for Multi-language Support */}
+        <link rel="alternate" hrefLang="en" href="https://seo-agent.net/" />
+        <link rel="alternate" hrefLang="de" href="https://seo-agent.net/de/" />
+        <link rel="alternate" hrefLang="x-default" href="https://seo-agent.net/" />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://seo-agent.net/" />
-        <meta property="og:title" content="SEO Agent - Complete SEO Tracking & AI Content Platform" />
-        <meta
-          property="og:description"
-          content="Track rankings in 200+ countries, generate AI content, and publish to WordPress. Integrate with ChatGPT & Claude via MCP API."
-        />
+        <meta property="og:url" content={`https://seo-agent.net${router.locale === 'de' ? '/de' : ''}/`} />
+        <meta property="og:title" content={t('seo.home.ogTitle')} />
+        <meta property="og:description" content={t('seo.home.ogDescription')} />
         <meta property="og:image" content="https://seo-agent.net/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:site_name" content="SEO Agent" />
+        <meta property="og:locale" content={router.locale === 'de' ? 'de_DE' : 'en_US'} />
+        <meta property="og:locale:alternate" content={router.locale === 'de' ? 'en_US' : 'de_DE'} />
 
         {/* Twitter */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://seo-agent.net/" />
-        <meta property="twitter:title" content="SEO Agent - AI-Powered SEO Platform" />
-        <meta
-          property="twitter:description"
-          content="Track rankings, create AI content, publish to WordPress. 200+ countries supported."
-        />
-        <meta property="twitter:image" content="https://seo-agent.net/twitter-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={`https://seo-agent.net${router.locale === 'de' ? '/de' : ''}/`} />
+        <meta name="twitter:title" content={t('seo.home.twitterTitle')} />
+        <meta name="twitter:description" content={t('seo.home.twitterDescription')} />
+        <meta name="twitter:image" content="https://seo-agent.net/twitter-image.png" />
+        <meta name="twitter:creator" content="@DproGmbH" />
+        <meta name="twitter:site" content="@SEOAgent" />
 
         {/* Additional SEO Tags */}
         <meta name="geo.region" content="AT-9" />
         <meta name="geo.placename" content="Vienna" />
-        <meta name="language" content={locale} />
+        <meta name="geo.position" content="48.208176;16.373819" />
+        <meta name="ICBM" content="48.208176, 16.373819" />
+        <meta name="language" content={router.locale} />
+        <meta httpEquiv="content-language" content={router.locale} />
 
         {/* Schema.org structured data */}
         <script
@@ -115,7 +118,24 @@ const Home: NextPage = () => {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
 
-        <link rel="icon" href="/favicon.ico" />
+        {/* Favicons */}
+        <link rel="apple-touch-icon" sizes="57x57" href="/fav/apple-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="60x60" href="/fav/apple-icon-60x60.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/fav/apple-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/fav/apple-icon-76x76.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/fav/apple-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/fav/apple-icon-120x120.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/fav/apple-icon-144x144.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/fav/apple-icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/fav/apple-icon-180x180.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/fav/android-icon-192x192.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/fav/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="96x96" href="/fav/favicon-96x96.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/fav/favicon-16x16.png" />
+        <link rel="manifest" href="/fav/manifest.json" />
+        <meta name="msapplication-TileColor" content="#ffffff" />
+        <meta name="msapplication-TileImage" content="/fav/ms-icon-144x144.png" />
+        <meta name="theme-color" content="#ffffff" />
       </Head>
 
       {/* Navigation */}
@@ -130,35 +150,46 @@ const Home: NextPage = () => {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
               <Link href="#features" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">
-                Features
+                {t('nav.features')}
               </Link>
               <Link href="/mcp-seo" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">
-                MCP Integration
+                {t('nav.mcpIntegration')}
               </Link>
 
               {isLoggedIn ? (
                 <AccountMenu domains={domains} />
               ) : (
                 <>
-                  <div className="relative group">
-                    <button className="flex items-center gap-1 text-sm font-medium text-neutral-600 hover:text-neutral-900">
+                  <div className="relative">
+                    <button
+                      onClick={() => setLangMenuOpen(!langMenuOpen)}
+                      className="flex items-center gap-1 text-sm font-medium text-neutral-600 hover:text-neutral-900"
+                    >
                       <Globe className="h-4 w-4" />
                       {locale === 'de' ? 'DE' : 'EN'}
                     </button>
-                    <div className="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-neutral-200 py-1 hidden group-hover:block">
-                      <button
-                        onClick={() => setLocale('en')}
-                        className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
-                      >
-                        English
-                      </button>
-                      <button
-                        onClick={() => setLocale('de')}
-                        className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
-                      >
-                        Deutsch
-                      </button>
-                    </div>
+                    {langMenuOpen && (
+                      <div className="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-neutral-200 py-1 z-50">
+                        <button
+                          onClick={() => {
+                            setLocale('en');
+                            setLangMenuOpen(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                        >
+                          English
+                        </button>
+                        <button
+                          onClick={() => {
+                            setLocale('de');
+                            setLangMenuOpen(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                        >
+                          Deutsch
+                        </button>
+                      </div>
+                    )}
                   </div>
                   <Link
                     href="/login"
@@ -167,7 +198,7 @@ const Home: NextPage = () => {
                     {t('landing.login')}
                   </Link>
                   <Link
-                    href="/login"
+                    href="/register"
                     className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
                   >
                     {t('landing.cta')}
@@ -196,14 +227,14 @@ const Home: NextPage = () => {
                 className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Features
+                {t('nav.features')}
               </Link>
               <Link
                 href="/mcp-seo"
                 className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                MCP Integration
+                {t('nav.mcpIntegration')}
               </Link>
               <select
                 value={locale}
@@ -221,7 +252,7 @@ const Home: NextPage = () => {
                 {t('landing.login')}
               </Link>
               <Link
-                href="/login"
+                href="/register"
                 className="block px-4 py-2 bg-blue-600 text-white rounded-lg text-center font-semibold hover:bg-blue-700 transition-all active:scale-[0.98]"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -238,22 +269,22 @@ const Home: NextPage = () => {
           <div className="max-w-7xl mx-auto">
             <div className="text-center max-w-4xl mx-auto mb-16">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-neutral-900 mb-6 leading-tight">
-                Track, Analyze, Create & Publish
-                <span className="block text-blue-600 mt-2">All in One AI-Powered SEO Platform</span>
+                {t('hero.headline')}
+                <span className="block text-blue-600 mt-2">{t('hero.subheadline')}</span>
               </h1>
               <p className="text-xl text-neutral-600 mb-8 leading-relaxed">
-                Monitor rankings in 200+ countries, generate AI content with GPT-5 & Claude, and publish directly to WordPress. The complete SEO solution for modern businesses.
+                {t('hero.description')}
               </p>
 
               {/* USP Bullets */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10 max-w-3xl mx-auto">
+              <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-10 max-w-4xl mx-auto">
                 <div className="flex items-center justify-start sm:justify-center text-left gap-3">
                   <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
                     <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-neutral-700 font-medium">Multi-Country Tracking</span>
+                  <span className="text-neutral-700 font-medium">{t('hero.bullet1')}</span>
                 </div>
                 <div className="flex items-center justify-start sm:justify-center text-left gap-3">
                   <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
@@ -261,7 +292,7 @@ const Home: NextPage = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-neutral-700 font-medium">AI Content with GPT-5 & Claude</span>
+                  <span className="text-neutral-700 font-medium">{t('hero.bullet2')}</span>
                 </div>
                 <div className="flex items-center justify-start sm:justify-center text-left gap-3">
                   <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
@@ -269,15 +300,8 @@ const Home: NextPage = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-neutral-700 font-medium">WordPress Direct Publishing</span>
-                </div>
-                <div className="flex items-center justify-start sm:justify-center text-left gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <span className="text-neutral-700 font-medium">ChatGPT & Claude MCP Integration</span>
+                  <span className="text-neutral-700 font-medium">{t('hero.bullet3')}</span>
+
                 </div>
               </div>
 
@@ -294,7 +318,7 @@ const Home: NextPage = () => {
 
               {/* Social Proof - Platform Icons */}
               <div className="mt-12">
-                <p className="text-sm text-neutral-500 mb-4">Trusted by 5,000+ SEO professionals worldwide</p>
+                <p className="text-sm text-neutral-500 mb-4">{t('hero.trustedBy')}</p>
                 <div className="flex space-x-3 mb-4 items-center justify-center">
                   <img src="/icon/google-logo.svg" alt="Google" className="h-6 w-6 object-contain hover:scale-110 transition-transform" />
                   <img src="/icon/chatgpt-logo.svg" alt="ChatGPT" className="h-6 w-6 object-contain hover:scale-110 transition-transform" />
@@ -344,7 +368,7 @@ const Home: NextPage = () => {
                 <span className="text-lg font-bold text-white">SEO Agent</span>
               </div>
               <p className="text-sm text-neutral-400 mb-4">
-                Complete SEO tracking and AI content platform by Dpro GmbH
+                {t('footerMenu.companyDesc')}
               </p>
               <div className="text-sm text-neutral-400">
                 <p>Dpro GmbH</p>
@@ -357,28 +381,28 @@ const Home: NextPage = () => {
 
             {/* Product */}
             <div>
-              <h3 className="text-white font-semibold mb-4">Product</h3>
+              <h3 className="text-white font-semibold mb-4">{t('footerMenu.product')}</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link href="#features" className="hover:text-white transition-colors">Features</Link></li>
-                <li><Link href="/mcp-seo" className="hover:text-white transition-colors">MCP Integration</Link></li>
+                <li><Link href="#features" className="hover:text-white transition-colors">{t('nav.features')}</Link></li>
+                <li><Link href="/mcp-seo" className="hover:text-white transition-colors">{t('nav.mcpIntegration')}</Link></li>
                 <li><Link href="/profile/api-keys" className="hover:text-white transition-colors">API & Webhooks</Link></li>
-                <li><a href="https://flowxtra.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Talent Management</a></li>
-                <li><a href="https://flowxtra.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Applicant Tracking Software</a></li>
+                <li><a href="https://flowxtra.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{t('footerMenu.talentManagement')}</a></li>
+                <li><a href="https://flowxtra.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{t('footerMenu.ats')}</a></li>
               </ul>
             </div>
 
             {/* Resources */}
             <div>
-              <h3 className="text-white font-semibold mb-4">Resources</h3>
+              <h3 className="text-white font-semibold mb-4">{t('footerMenu.resources')}</h3>
               <ul className="space-y-2 text-sm">
-                <li><span className="text-neutral-400">Documentation</span></li>
+                <li><span className="text-neutral-400">{t('footerMenu.documentation')}</span></li>
                 <li><Link href="/#faq" className="hover:text-white transition-colors">FAQ</Link></li>
               </ul>
             </div>
 
             {/* Legal */}
             <div>
-              <h3 className="text-white font-semibold mb-4">Legal</h3>
+              <h3 className="text-white font-semibold mb-4">{t('footerMenu.legal')}</h3>
               <ul className="space-y-2 text-sm">
                 <li><Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link></li>
                 <li><a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a></li>
@@ -392,7 +416,7 @@ const Home: NextPage = () => {
           </div>
         </div>
       </footer>
-    </div>
+    </div >
   );
 };
 

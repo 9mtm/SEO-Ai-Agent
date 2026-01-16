@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import Cookies from 'cookies';
 import jwt from 'jsonwebtoken';
 import User from '../../../../database/models/user';
+import Domain from '../../../../database/models/domain';
 import connection from '../../../../database/database';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -102,8 +103,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         throw new Error('Google User Email not found');
       }
 
-      // Find or Create User
-      let user = await User.findOne({ where: { email: googleUser.email } });
+      // Find or Create User with Domains
+      let user = await User.findOne({
+        where: { email: googleUser.email },
+        include: [{ model: Domain, as: 'domains' }] // Make sure to define alias if needed, usually 'domains' based on User model
+      });
 
       if (!user) {
         // Register new user
@@ -156,11 +160,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const u = user as any;
         const onboardingStep = u.onboarding_step || 0;
 
+        // If user is stuck in onboarding but has domains, fix it
         if (onboardingStep < 3) {
+          if (user.domains && user.domains.length > 0) {
+            // User has content, so they are onboarded.
+            await user.update({ onboarding_step: 3 });
+            // Redirect to first domain
+            const firstDomain = user.domains[0];
+            return res.redirect(`/domain/insight/${firstDomain.slug}`);
+          }
           return res.redirect('/onboarding');
         }
 
-        return res.redirect('/domain/insight/flowxtra_com');
+        // User is onboarded, redirect to their first domain or domains list
+        if (user.domains && user.domains.length > 0) {
+          const firstDomain = user.domains[0];
+          return res.redirect(`/domain/insight/${firstDomain.slug}`);
+        }
+
+        // Fallback to domains list page
+        return res.redirect('/domains');
       }
     }
 

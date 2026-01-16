@@ -1,194 +1,183 @@
-import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/router';
+import type { NextPage } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import Image from 'next/image';
-import Icon from '../../components/common/Icon';
+import { useState } from 'react';
 
-const Register = () => {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    name: '',
-    company: '',
-  });
+const Register: NextPage = () => {
+  const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setError('');
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
+  const translations = {
+    en: {
+      title: 'Sign Up',
+      welcome: 'Create your account',
+      description: 'Get started with SEO AI Agent',
+      googleBtn: 'Continue with Google',
+      backToHome: 'Back to Home',
+      haveAccount: 'Already have an account?',
+      signIn: 'Sign in',
+      termsLabel: 'I agree to the',
+      termsLink: 'Terms of Service',
+      and: 'and',
+      privacyLink: 'Privacy Policy',
+      newsletterLabel: 'I want to receive newsletters, reports, and updates about my website',
+      termsRequired: 'You must accept the Terms of Service and Privacy Policy to continue',
+    },
+    de: {
+      title: 'Registrieren',
+      welcome: 'Erstellen Sie Ihr Konto',
+      description: 'Starten Sie mit SEO AI Agent',
+      googleBtn: 'Mit Google fortfahren',
+      backToHome: 'Zurück zur Startseite',
+      haveAccount: 'Haben Sie bereits ein Konto?',
+      signIn: 'Anmelden',
+      termsLabel: 'Ich stimme den',
+      termsLink: 'Nutzungsbedingungen',
+      and: 'und der',
+      privacyLink: 'Datenschutzerklärung',
+      newsletterLabel: 'Ich möchte Newsletter, Berichte und Updates über meine Website erhalten',
+      termsRequired: 'Sie müssen den Nutzungsbedingungen und der Datenschutzerklärung zustimmen, um fortzufahren',
     }
+  };
 
-    if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters long');
-      return;
+  const t = translations[selectedLang];
+
+  const handleGoogleSignUp = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!acceptTerms) {
+      e.preventDefault();
+      alert(t.termsRequired);
     }
-
-    setLoading(true);
-
-    try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          name: formData.name,
-          company: formData.company,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        router.push('/login?registered=true');
-      } else {
-        setError(data.error || 'Registration failed');
-      }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
+    // If newsletter is checked, store preference
+    if (subscribeNewsletter) {
+      localStorage.setItem('newsletter_subscription', 'true');
     }
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-neutral-100 flex items-center justify-center p-4">
       <Head>
-        <title>Create Account - SEO AI Agent</title>
+        <title>{`${t.title} - SEO AI Agent`}</title>
+        <meta name="description" content="Sign up for SEO AI Agent" />
+
+        {/* Favicons */}
+        <link rel="apple-touch-icon" sizes="57x57" href="/fav/apple-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="60x60" href="/fav/apple-icon-60x60.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/fav/apple-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/fav/apple-icon-76x76.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/fav/apple-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/fav/apple-icon-120x120.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/fav/apple-icon-144x144.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/fav/apple-icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/fav/apple-icon-180x180.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/fav/android-icon-192x192.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/fav/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="96x96" href="/fav/favicon-96x96.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/fav/favicon-16x16.png" />
+        <link rel="manifest" href="/fav/manifest.json" />
+        <meta name="msapplication-TileColor" content="#ffffff" />
+        <meta name="msapplication-TileImage" content="/fav/ms-icon-144x144.png" />
+        <meta name="theme-color" content="#ffffff" />
       </Head>
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-6">
-              <Image src="/dpro_logo.png" alt="Dpro" width={48} height={48} className="h-12 w-12" />
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900">Create Account</h1>
-            <p className="mt-2 text-sm text-gray-600">
-              Already have an account?{' '}
-              <a href="/login" className="font-medium text-blue-600 hover:text-blue-500">
-                Sign in
-              </a>
+
+      {/* Language Selector */}
+      <div className="absolute top-4 right-4">
+        <select
+          value={selectedLang}
+          onChange={(e) => setSelectedLang(e.target.value as 'en' | 'de')}
+          className="px-3 py-2 bg-white border border-neutral-200 rounded-lg text-sm font-medium text-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+        >
+          <option value="en">English</option>
+          <option value="de">Deutsch</option>
+        </select>
+      </div>
+
+      <div className="w-full max-w-md">
+        {/* Logo and Title */}
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-flex items-center space-x-2 mb-6 group">
+            <Image src="/dpro_logo.png" alt="Dpro" width={40} height={40} className="h-10 w-10 group-hover:scale-110 transition-transform" />
+            <span className="text-2xl font-bold text-neutral-900">SEO AI Agent</span>
+          </Link>
+          <h1 className="text-3xl font-bold text-neutral-900 mb-2">{t.welcome}</h1>
+          <p className="text-neutral-600">{t.description}</p>
+        </div>
+
+        {/* Register Card */}
+        <div className="bg-white rounded-2xl shadow-xl border border-neutral-200 p-8">
+          {/* Terms and Conditions Checkbox */}
+          <div className="mb-4">
+            <label className="flex items-start cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={acceptTerms}
+                onChange={(e) => setAcceptTerms(e.target.checked)}
+                className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+              />
+              <span className="ml-2 text-sm text-neutral-700">
+                {t.termsLabel}{' '}
+                <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline">
+                  {t.termsLink}
+                </a>
+                {' '}{t.and}{' '}
+                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline">
+                  {t.privacyLink}
+                </a>
+              </span>
+            </label>
+          </div>
+
+          {/* Newsletter Subscription Checkbox */}
+          <div className="mb-6">
+            <label className="flex items-start cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={subscribeNewsletter}
+                onChange={(e) => setSubscribeNewsletter(e.target.checked)}
+                className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+              />
+              <span className="ml-2 text-sm text-neutral-600">
+                {t.newsletterLabel}
+              </span>
+            </label>
+          </div>
+
+          {/* Google Sign Up */}
+          <a
+            href="/api/auth/google/login?returnUrl=/onboarding"
+            onClick={handleGoogleSignUp}
+            className={`w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white border-2 rounded-xl font-medium transition-all shadow-sm ${acceptTerms
+              ? 'border-neutral-200 text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 hover:shadow-md cursor-pointer'
+              : 'border-neutral-200 text-neutral-400 cursor-not-allowed opacity-60'
+              }`}
+          >
+            <Image src="/icon/google-logo.svg" alt="Google" width={20} height={20} className={`h-5 w-5 ${acceptTerms ? 'group-hover:scale-110' : ''} transition-transform`} />
+            {t.googleBtn}
+          </a>
+
+          {/* Sign In Link */}
+          <div className="mt-6 text-center">
+            <p className="text-sm text-neutral-600">
+              {t.haveAccount}{' '}
+              <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+                {t.signIn}
+              </Link>
             </p>
           </div>
 
-          <div className="bg-white p-8 rounded-lg shadow-md">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded relative text-sm">
-                  {error}
-                </div>
-              )}
-
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="John Doe"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="you@example.com"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
-                  Company (Optional)
-                </label>
-                <input
-                  id="company"
-                  type="text"
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Your Company"
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Min. 8 characters"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                  Confirm Password
-                </label>
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Confirm your password"
-                  value={formData.confirmPassword}
-                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
-              >
-                {loading ? 'Creating Account...' : 'Create Account'}
-              </button>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">Or continue with</span>
-                </div>
-              </div>
-
-              <a
-                href="/api/auth/google/login?returnUrl=/onboarding"
-                className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                <Image src="/icon/google-logo.svg" alt="Google" width={18} height={18} className="h-[18px] w-[18px]" />
-                <span className="ml-2">Google</span>
-              </a>
-            </form>
+          {/* Back to Home */}
+          <div className="mt-4 text-center">
+            <Link
+              href="/"
+              className="text-sm text-neutral-600 hover:text-neutral-900 font-medium transition-colors"
+            >
+              ← {t.backToHome}
+            </Link>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
