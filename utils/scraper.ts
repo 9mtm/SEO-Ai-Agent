@@ -161,52 +161,85 @@ export const scrapeKeywordFromGoogle = async (keyword: KeywordType, settings: Se
  * @returns {SearchResult[]}
  */
 export const extractScrapedResult = (content: string, device: string): SearchResult[] => {
-   const extractedResult = [];
+   const extractedResult: SearchResult[] = [];
 
    const $ = cheerio.load(content);
-   const hasValidContent = [...$('body').find('#search'), ...$('body').find('#rso')];
-   if (hasValidContent.length === 0) {
-      const msg = '[ERROR] Scraped search results do not adhere to expected format. Unable to parse results';
-      console.log(msg);
-      throw new Error(msg);
-   }
 
-   const hasNumberofResult = $('body').find('#search  > div > div');
-   const searchResultItems = hasNumberofResult.find('h3');
-   let lastPosition = 0;
-   console.log('Scraped search results contain ', searchResultItems.length, ' desktop results.');
+   // Try cleaner selectors for generic search results
+   // Google often uses class 'g' for result container
+   let resultContainers = $('div.g');
 
-   for (let i = 0; i < searchResultItems.length; i += 1) {
-      if (searchResultItems[i]) {
-         const title = $(searchResultItems[i]).html();
-         const url = $(searchResultItems[i]).closest('a').attr('href');
-         if (title && url) {
-            lastPosition += 1;
-            extractedResult.push({ title, url, position: lastPosition });
-         }
+   // If .g not found or very few, try finding main result column
+   if (resultContainers.length < 5) {
+      resultContainers = $('div#search div[data-header-feature="0"]');
+      if (resultContainers.length < 5) {
+         // Fallback: look for generic H3 and traverse up
+         resultContainers = $('h3').closest('div').parent();
       }
    }
 
-   // Mobile Scraper
-   if (extractedResult.length === 0 && device === 'mobile') {
+   console.log(`Scraped entries found (DOM elements): ${resultContainers.length}`);
+
+   let positionCounter = 0;
+
+   resultContainers.each((i, element) => {
+      try {
+         const el = $(element);
+
+         // Find title (h3)
+         const titleEl = el.find('h3').first();
+         const title = titleEl.text().trim();
+
+         // Find URL (a href)
+         const linkEl = el.find('a').first();
+         const url = linkEl.attr('href');
+
+         // Validate
+         if (title && url && url.startsWith('http') && !url.includes('google.com/search') && !url.includes('google.com/aclk')) {
+            positionCounter++;
+            extractedResult.push({
+               title: title,
+               url: url,
+               position: positionCounter
+            });
+         }
+      } catch (e) {
+         // Ignore parse error for single item
+      }
+   });
+
+   // Deduplicate by URL
+   const uniqueResults = extractedResult.filter((item, index, self) =>
+      index === self.findIndex((t) => (
+         t.url === item.url
+      ))
+   );
+
+   console.log('Final extracted unique desktop results:', uniqueResults.length);
+
+   // Mobile Scraper Fallback if 0 results
+   if (uniqueResults.length === 0 && device === 'mobile') {
       const items = $('body').find('#rso > div');
-      console.log('Scraped search results contain ', items.length, ' mobile results.');
+      console.log('Mobile Scraper: found ', items.length, ' raw containers');
+      let mobilePos = 0;
       for (let i = 0; i < items.length; i += 1) {
          const item = $(items[i]);
-         const linkDom = item.find('a[role="presentation"]');
-         if (linkDom) {
+         const linkDom = item.find('a[role="presentation"], a');
+         if (linkDom.length > 0) {
             const url = linkDom.attr('href');
-            const titleDom = linkDom.find('[role="link"]');
-            const title = titleDom ? titleDom.text() : '';
-            if (title && url) {
-               lastPosition += 1;
-               extractedResult.push({ title, url, position: lastPosition });
+            const titleDom = linkDom.find('[role="link"], h3, div[role="heading"]');
+            const title = titleDom.length > 0 ? titleDom.text() : 'No Title';
+
+            if (url && url.startsWith('http') && !url.includes('google.com')) {
+               mobilePos += 1;
+               extractedResult.push({ title, url, position: mobilePos });
             }
          }
       }
+      return extractedResult; // No dedup for mobile generic fallback for now, or apply same dedup logic
    }
 
-   return extractedResult;
+   return uniqueResults;
 };
 
 /**

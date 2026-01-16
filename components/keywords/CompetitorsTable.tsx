@@ -42,8 +42,9 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
     }, [titleColumnRef]);
 
     // Show all keywords (no device filtering)
+    // We create a shallow copy to ensure a new reference for react-window to detect changes
     const processedKeywords = useMemo(() => {
-        return keywords || [];
+        return keywords ? [...keywords] : [];
     }, [keywords]);
 
     const selectKeyword = (keywordID: number) => {

@@ -48,35 +48,6 @@ const CompetitorsPage: NextPage = () => {
     const theKeywords: KeywordType[] = keywordsData && keywordsData.keywords;
 
 
-    // Check if any keyword is currently updating competitors
-    useEffect(() => {
-        if (theKeywords && theKeywords.length > 0) {
-            const hasUpdatingCompetitors = theKeywords.some((keyword: KeywordType) => keyword.updating_competitors);
-
-            if (hasUpdatingCompetitors) {
-                wasUpdatingRef.current = true;
-                if (!keywordSPollInterval) {
-                    // Start polling if not already polling
-                    setKeywordSPollInterval(2000);
-                }
-            } else {
-                // Only show toast if we were updating and now finished
-                if (wasUpdatingRef.current && keywordSPollInterval) {
-                    toast('Competitors Updated!', { icon: '✔️' });
-                    wasUpdatingRef.current = false;
-                    setKeywordSPollInterval(undefined);
-                }
-            }
-        }
-    }, [theKeywords, keywordSPollInterval]);
-
-    // Start polling when refresh is triggered
-    useEffect(() => {
-        if (isRefreshing) {
-            setKeywordSPollInterval(2000);
-        }
-    }, [isRefreshing]);
-
     // Check if any keyword is currently being updated
     const hasUpdatingCompetitors = useMemo(() => {
         return theKeywords && theKeywords.length > 0 && theKeywords.some((keyword: KeywordType) => keyword.updating_competitors);

@@ -12,8 +12,8 @@ export const fetchKeywords = async (router: NextRouter, domain: string) => {
 export function useFetchKeywords(
    router: NextRouter,
    domain: string,
-   setKeywordSPollInterval?:Function,
-   keywordSPollInterval:undefined|number = undefined,
+   setKeywordSPollInterval?: Function,
+   keywordSPollInterval: undefined | number = undefined,
 ) {
    const { data: keywordsData, isPending: keywordsLoading, isError } = useQuery({
       queryKey: ['keywords', domain],
@@ -24,7 +24,7 @@ export function useFetchKeywords(
    // Handle polling logic in useEffect instead of onSuccess
    React.useEffect(() => {
       if (keywordsData?.keywords && keywordsData.keywords.length > 0 && setKeywordSPollInterval) {
-         const hasRefreshingKeyword = keywordsData.keywords.some((x:KeywordType) => x.updating);
+         const hasRefreshingKeyword = keywordsData.keywords.some((x: KeywordType) => x.updating || x.updating_competitors);
          if (hasRefreshingKeyword) {
             setKeywordSPollInterval(5000);
          } else {
@@ -39,10 +39,10 @@ export function useFetchKeywords(
    return { keywordsData, keywordsLoading, isError };
 }
 
-export function useAddKeywords(onSuccess:Function) {
+export function useAddKeywords(onSuccess: Function) {
    const queryClient = useQueryClient();
    return useMutation({
-      mutationFn: async (keywords:KeywordAddPayload[]) => {
+      mutationFn: async (keywords: KeywordAddPayload[]) => {
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
          const fetchOpts = { method: 'POST', headers, body: JSON.stringify({ keywords }) };
          const res = await fetch(`${window.location.origin}/api/keywords`, fetchOpts);
@@ -64,10 +64,10 @@ export function useAddKeywords(onSuccess:Function) {
    });
 }
 
-export function useDeleteKeywords(onSuccess:Function) {
+export function useDeleteKeywords(onSuccess: Function) {
    const queryClient = useQueryClient();
    return useMutation({
-      mutationFn: async (keywordIDs:number[]) => {
+      mutationFn: async (keywordIDs: number[]) => {
          const keywordIds = keywordIDs.join(',');
          const res = await fetch(`${window.location.origin}/api/keywords?id=${keywordIds}`, { method: 'DELETE' });
          if (res.status >= 400 && res.status < 600) {
@@ -88,10 +88,10 @@ export function useDeleteKeywords(onSuccess:Function) {
    });
 }
 
-export function useFavKeywords(onSuccess:Function) {
+export function useFavKeywords(onSuccess: Function) {
    const queryClient = useQueryClient();
    return useMutation({
-      mutationFn: async ({ keywordID, sticky }:{keywordID:number, sticky:boolean}) => {
+      mutationFn: async ({ keywordID, sticky }: { keywordID: number, sticky: boolean }) => {
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
          const fetchOpts = { method: 'PUT', headers, body: JSON.stringify({ sticky }) };
          const res = await fetch(`${window.location.origin}/api/keywords?id=${keywordID}`, fetchOpts);
@@ -113,10 +113,10 @@ export function useFavKeywords(onSuccess:Function) {
    });
 }
 
-export function useUpdateKeywordTags(onSuccess:Function) {
+export function useUpdateKeywordTags(onSuccess: Function) {
    const queryClient = useQueryClient();
    return useMutation({
-      mutationFn: async ({ tags }:{tags:{ [ID:number]: string[] }}) => {
+      mutationFn: async ({ tags }: { tags: { [ID: number]: string[] } }) => {
          const keywordIds = Object.keys(tags).join(',');
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
          const fetchOpts = { method: 'PUT', headers, body: JSON.stringify({ tags }) };
@@ -138,10 +138,10 @@ export function useUpdateKeywordTags(onSuccess:Function) {
    });
 }
 
-export function useRefreshKeywords(onSuccess:Function) {
+export function useRefreshKeywords(onSuccess: Function) {
    const queryClient = useQueryClient();
    return useMutation({
-      mutationFn: async ({ ids = [], domain = '' } : {ids?: number[], domain?: string}) => {
+      mutationFn: async ({ ids = [], domain = '' }: { ids?: number[], domain?: string }) => {
          const keywordIds = ids.join(',');
          console.log(keywordIds);
          const query = ids.length === 0 && domain ? `?id=all&domain=${domain}` : `?id=${keywordIds}`;
@@ -164,7 +164,7 @@ export function useRefreshKeywords(onSuccess:Function) {
    });
 }
 
-export function useFetchSingleKeyword(keywordID:number) {
+export function useFetchSingleKeyword(keywordID: number) {
    return useQuery({
       queryKey: ['keyword', keywordID],
       queryFn: async () => {
@@ -182,7 +182,7 @@ export function useFetchSingleKeyword(keywordID:number) {
    });
 }
 
-export async function fetchSearchResults(router:NextRouter, keywordData: Record<string, string>) {
+export async function fetchSearchResults(router: NextRouter, keywordData: Record<string, string>) {
    const { keyword, country, device } = keywordData;
    const res = await fetch(`${window.location.origin}/api/refresh?keyword=${keyword}&country=${country}&device=${device}`, { method: 'GET' });
    if (res.status >= 400 && res.status < 600) {

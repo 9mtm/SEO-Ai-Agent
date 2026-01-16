@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -57,6 +57,15 @@ const SingleDomain: NextPage = () => {
             refreshCompetitors({ domain: activDomain.domain });
         }
     };
+
+
+
+    // Start polling when refresh is triggered
+    useEffect(() => {
+        if (isRefreshing && activeTab === 'competitors') {
+            setKeywordSPollInterval(2000);
+        }
+    }, [isRefreshing, activeTab]);
 
     return (
         <DashboardLayout
