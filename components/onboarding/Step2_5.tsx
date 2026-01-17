@@ -27,22 +27,22 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
 
     // Pre-fill with AI-suggested keywords
     useEffect(() => {
-        if (suggestedKeywords) {
+        if (suggestedKeywords && typeof suggestedKeywords === 'object') {
             setFocusKeywords({
                 high: [
-                    suggestedKeywords.high[0] || '',
-                    suggestedKeywords.high[1] || '',
-                    suggestedKeywords.high[2] || ''
+                    suggestedKeywords.high?.[0] || '',
+                    suggestedKeywords.high?.[1] || '',
+                    suggestedKeywords.high?.[2] || ''
                 ],
                 medium: [
-                    suggestedKeywords.medium[0] || '',
-                    suggestedKeywords.medium[1] || '',
-                    suggestedKeywords.medium[2] || ''
+                    suggestedKeywords.medium?.[0] || '',
+                    suggestedKeywords.medium?.[1] || '',
+                    suggestedKeywords.medium?.[2] || ''
                 ],
                 low: [
-                    suggestedKeywords.low[0] || '',
-                    suggestedKeywords.low[1] || '',
-                    suggestedKeywords.low[2] || ''
+                    suggestedKeywords.low?.[0] || '',
+                    suggestedKeywords.low?.[1] || '',
+                    suggestedKeywords.low?.[2] || ''
                 ]
             });
         }

@@ -8,7 +8,227 @@ import Domain from '../../../database/models/domain';
 import Keyword from '../../../database/models/keyword';
 import refreshAndUpdateKeywords from '../../../utils/refresh';
 import { getAppSettings } from '../settings';
-import { generateBusinessAnalysisPrompt, generateFocusKeywordsPrompt, generateCompetitorsPrompt } from '../../../lib/prompts';
+
+/**
+ * Retry utility for API calls with exponential backoff
+ */
+async function retryWithBackoff<T>(
+    fn: () => Promise<T>,
+    maxRetries: number = 3,
+    initialDelay: number = 1000
+): Promise<T> {
+    let lastError: any;
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+            return await fn();
+        } catch (error) {
+            lastError = error;
+
+            if (attempt < maxRetries - 1) {
+                const delay = initialDelay * Math.pow(2, attempt);
+                console.log(`[RETRY] Attempt ${attempt + 1} failed, retrying in ${delay}ms...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+    }
+
+    throw lastError;
+}
+
+/**
+ * Extract global industry niche (1-2 words max)
+ */
+function extractNicheFromDescription(description: string, title: string, fallback: string): string {
+    const text = `${description} ${title} ${fallback}`.toLowerCase();
+
+    // Map keywords to standard global niches (1-2 words)
+    const nicheMap: { [key: string]: string } = {
+        // HR & Recruiting
+        'recruit': 'Recruiting',
+        'talent': 'Recruiting',
+        'hiring': 'Recruiting',
+        'ats': 'Recruiting',
+        'applicant': 'Recruiting',
+        'hr': 'HR Tech',
+        'human resource': 'HR Tech',
+        'payroll': 'HR Tech',
+
+        // Sales & Marketing
+        'crm': 'CRM',
+        'customer relationship': 'CRM',
+        'sales': 'Sales',
+        'marketing': 'Marketing',
+        'email marketing': 'Marketing',
+        'seo': 'Marketing',
+
+        // E-commerce & Retail
+        'ecommerce': 'E-commerce',
+        'e-commerce': 'E-commerce',
+        'online store': 'E-commerce',
+        'retail': 'Retail',
+        'shopping': 'E-commerce',
+
+        // Finance & Accounting
+        'accounting': 'Accounting',
+        'bookkeeping': 'Accounting',
+        'finance': 'Finance',
+        'invoice': 'Accounting',
+        'payment': 'Payments',
+
+        // Project & Productivity
+        'project management': 'Project Management',
+        'task management': 'Productivity',
+        'productivity': 'Productivity',
+        'collaboration': 'Collaboration',
+        'workflow': 'Productivity',
+
+        // Tech & Development
+        'analytics': 'Analytics',
+        'data': 'Analytics',
+        'software development': 'Dev Tools',
+        'devops': 'DevOps',
+        'cloud': 'Cloud',
+
+        // Design & Creative
+        'design': 'Design',
+        'graphic': 'Design',
+        'video': 'Video',
+        'photo': 'Photography',
+
+        // Communication
+        'communication': 'Communication',
+        'messaging': 'Communication',
+        'video conference': 'Video Conferencing',
+        'chat': 'Communication',
+
+        // Education
+        'education': 'Education',
+        'learning': 'E-learning',
+        'course': 'E-learning',
+        'training': 'Training',
+
+        // Real Estate & Property
+        'real estate': 'Real Estate',
+        'property': 'Real Estate',
+
+        // Healthcare
+        'health': 'Healthcare',
+        'medical': 'Healthcare',
+        'clinic': 'Healthcare',
+
+        // Legal
+        'legal': 'Legal',
+        'law': 'Legal',
+        'contract': 'Legal Tech'
+    };
+
+    // Find matching niche
+    for (const [keyword, niche] of Object.entries(nicheMap)) {
+        if (text.includes(keyword)) {
+            return niche;
+        }
+    }
+
+    // Fallback: Extract first meaningful word
+    const words = text
+        .replace(/[^\w\s]/g, ' ')
+        .split(/\s+/)
+        .filter(w =>
+            w.length > 3 &&
+            !['free', 'best', 'top', 'new', 'the', 'this', 'that', 'with', 'for', 'and'].includes(w)
+        );
+
+    if (words.length > 0) {
+        // Capitalize first word
+        return words[0].charAt(0).toUpperCase() + words[0].slice(1);
+    }
+
+    return 'SaaS';
+}
+
+/**
+ * Generate professional SEO keywords based on business information
+ */
+function generateProfessionalKeywords(
+    businessName: string,
+    niche: string,
+    description: string
+): { high: string[], medium: string[], low: string[] } {
+    const cleanNiche = niche.trim().toLowerCase();
+    const cleanBusiness = businessName.trim().toLowerCase();
+
+    // Extract meaningful feature words from description
+    const descWords = description
+        .toLowerCase()
+        .match(/\b[a-z]{4,}\b/g) || [];
+
+    const stopWords = ['from', 'with', 'your', 'this', 'that', 'they', 'have', 'will',
+                       'been', 'their', 'about', 'which', 'there', 'would', 'could',
+                       'should', 'these', 'those', 'more', 'some', 'than', 'into',
+                       'cutting', 'edge', 'designed', 'help', 'ensure', 'platform',
+                       'solution', 'system', 'tool'];
+
+    const features = [...new Set(descWords)]
+        .filter(w => !stopWords.includes(w) && w.length > 3)
+        .slice(0, 8);
+
+    // HIGH PRIORITY: Core category keywords
+    const high: string[] = [
+        cleanNiche, // "recruiting"
+        `${cleanNiche} software`, // "recruiting software"
+        `best ${cleanNiche} software` // "best recruiting software"
+    ];
+
+    // MEDIUM PRIORITY: Brand + features
+    const medium: string[] = [
+        `${cleanBusiness}`, // "flowxtra"
+        `${cleanNiche} platform`, // "recruiting platform"
+        `free ${cleanNiche} software` // "free recruiting software"
+    ];
+
+    // Add feature if available
+    if (features[0]) {
+        medium.push(`${cleanNiche} ${features[0]}`); // "recruiting management"
+    }
+
+    // LOW PRIORITY: Long-tail variations
+    const low: string[] = [
+        `${cleanNiche} tools`, // "recruiting tools"
+        `${cleanNiche} for small business`, // "recruiting for small business"
+        `top ${cleanNiche} platforms` // "top recruiting platforms"
+    ];
+
+    // Add more features
+    if (features[1]) {
+        low.push(`${features[1]} ${cleanNiche}`); // "talent recruiting"
+    }
+    if (features[2]) {
+        low.push(`${cleanNiche} ${features[2]}`); // "recruiting hiring"
+    }
+
+    return {
+        high: high.filter(k => k && k.length > 2 && k.length < 40).slice(0, 3),
+        medium: medium.filter(k => k && k.length > 2 && k.length < 50).slice(0, 3),
+        low: low.filter(k => k && k.length > 2 && k.length < 60).slice(0, 3)
+    };
+}
+
+/**
+ * Generate competitor search suggestions (generic for any niche)
+ */
+function generateCompetitorSuggestions(niche: string): string[] {
+    const cleanNiche = niche.trim();
+
+    // Return actionable search suggestions that work for ANY niche
+    return [
+        `Search "${cleanNiche}" on G2.com`,
+        `Search "${cleanNiche}" on Capterra.com`,
+        `Google: "best ${cleanNiche}"`,
+        `Search "${cleanNiche}" on AlternativeTo.net`,
+        `Check reviews on Trustpilot for ${cleanNiche}`
+    ];
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     await db.sync();
@@ -81,71 +301,92 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     let fetchUrl = data.website_url;
                     if (!fetchUrl.startsWith('http')) fetchUrl = 'https://' + fetchUrl;
 
-                    const pageRes = await axios.get(fetchUrl, {
-                        timeout: 15000,
-                        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36' }
-                    });
+                    console.log(`[ONBOARDING] Analyzing website: ${fetchUrl}`);
+                    console.log(`[ONBOARDING] Using AI API: ${process.env.SLM_API_URL}/api/onboarding/analyze`);
 
-                    const $ = cheerio.load(pageRes.data);
-                    $('script, style, noscript, svg, img, iframe').remove();
-
-                    const title = $('title').text().trim();
-                    const metaDesc = $('meta[name="description"]').attr('content') || '';
-                    const h1 = $('h1').text().trim();
-                    // Get first 5000 chars of body text
-                    const bodyText = $('body').text().replace(/\s+/g, ' ').trim().substring(0, 5000);
-
-                    const content = `Title: ${title}\nDescription: ${metaDesc}\nH1: ${h1}\nContent: ${bodyText}`;
-
-                    // Call External AI (Enrichment)
-                    console.log(`[ONBOARDING] Enriching data for: ${fetchUrl}`);
-                    console.log(`[ONBOARDING] Using AI URL: ${process.env.SLM_API_URL}/api/company/enrich`);
-
-                    const titleParts = title.split(/[-|]/);
                     let aiData = {
-                        businessName: titleParts[0].trim(),
-                        niche: titleParts[1]?.trim() || h1 || '',
-                        description: metaDesc || ''
+                        businessName: '',
+                        niche: '',
+                        description: ''
                     };
 
-                    try {
-                        const enrichRes = await axios.post(`${process.env.SLM_API_URL}/api/company/enrich`, {
-                            website: fetchUrl
-                        }, {
-                            headers: {
-                                'x-api-key': process.env.SLM_API_KEY,
-                                'Content-Type': 'application/json'
+                    let suggestedKeywords: { high: string[], medium: string[], low: string[] } = { high: [], medium: [], low: [] };
+                    let suggestedCompetitors: string[] = [];
+
+                    if (process.env.SLM_API_URL && process.env.SLM_API_KEY) {
+                        try {
+                            const analyzeRes = await retryWithBackoff(async () => {
+                                return await axios.post(`${process.env.SLM_API_URL}/api/onboarding/analyze`, {
+                                    website: fetchUrl
+                                }, {
+                                    headers: {
+                                        'x-api-key': process.env.SLM_API_KEY,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    timeout: 30000  // 30 seconds for scraping + AI
+                                });
+                            }, 2, 3000);
+
+                            console.log(`[ONBOARDING] ✅ AI Response Status: ${analyzeRes.status}`);
+
+                            if (analyzeRes.data && analyzeRes.data.success) {
+                                aiData.businessName = analyzeRes.data.businessName || '';
+                                aiData.description = analyzeRes.data.description || '';
+                                aiData.niche = analyzeRes.data.niche || '';
+
+                                // Extract keywords and competitors from AI response
+                                suggestedKeywords = analyzeRes.data.keywords || { high: [], medium: [], low: [] };
+                                suggestedCompetitors = analyzeRes.data.competitors || [];
+                            } else {
+                                throw new Error('AI API returned invalid response');
                             }
-                        });
 
-                        console.log(`[ONBOARDING] AI Response Status: ${enrichRes.status}`);
+                        } catch (apiError: any) {
+                            console.error("[ONBOARDING] ⚠️ AI Analysis Failed:", apiError.message);
+                            if (apiError.response) {
+                                console.error("[ONBOARDING] API Error:", apiError.response.data);
+                            }
 
-                        if (enrichRes.data && enrichRes.data.about_company) {
-                            console.log(`[ONBOARDING] AI Data Received:`, enrichRes.data.about_company.substring(0, 50) + "...");
-                            aiData.description = enrichRes.data.about_company;
+                            // Fallback: Basic scraping
+                            console.log('[ONBOARDING] Using fallback scraping...');
+                            try {
+                                const pageRes = await axios.get(fetchUrl, {
+                                    timeout: 15000,
+                                    headers: { 'User-Agent': 'Mozilla/5.0' }
+                                });
 
-                            // If niche is still empty, try to extract it from the new description
-                            if (!aiData.niche) {
-                                const match = enrichRes.data.about_company.match(/(?:is a|is an|provides|specializes in) ([^.]+)/i);
-                                if (match && match[1]) {
-                                    aiData.niche = match[1].split(',')[0].trim().substring(0, 30);
-                                }
+                                const $ = cheerio.load(pageRes.data);
+                                const title = $('title').text().trim();
+                                const metaDesc = $('meta[name="description"]').attr('content') || '';
+                                const h1 = $('h1').text().trim();
+
+                                const titleParts = title.split(/[-|]/);
+                                aiData.businessName = titleParts[0].trim();
+                                aiData.description = metaDesc || h1 || title;
+                                aiData.niche = extractNicheFromDescription(aiData.description, title, titleParts[1]?.trim() || h1);
+
+                                // Generate fallback keywords and competitors
+                                suggestedKeywords = generateProfessionalKeywords(aiData.businessName, aiData.niche, aiData.description);
+                                suggestedCompetitors = generateCompetitorSuggestions(aiData.niche);
+                            } catch (scrapeError) {
+                                console.error('[ONBOARDING] Fallback scraping also failed');
                             }
                         }
-
-                    } catch (apiError: any) {
-                        console.error("[ONBOARDING] Enrichment API Failed:", apiError.message);
-                        if (apiError.response) {
-                            console.error("[ONBOARDING] API Error Body:", apiError.response.data);
-                        }
+                    } else {
+                        console.log('[ONBOARDING] ⚠️ AI API not configured');
+                        return res.status(500).json({ success: false, error: 'AI API not configured' });
                     }
 
-                    return res.status(200).json({ success: true, aiData });
+                    return res.status(200).json({
+                        success: true,
+                        aiData,
+                        suggestedKeywords,
+                        suggestedCompetitors
+                    });
 
-                } catch (scrapeError: any) {
-                    // ... existing error handling
-                    console.error("[ONBOARDING] Scraping/AI Failed:", scrapeError.message);
-                    return res.status(200).json({ success: true });
+                } catch (error: any) {
+                    console.error("[ONBOARDING] Fatal error:", error.message);
+                    return res.status(500).json({ success: false, error: error.message });
                 }
             }
 
@@ -163,52 +404,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         description: data.description,
                     });
 
-                    // Generate Keywords and Competitors locally from available data
-                    try {
-                        console.log('[ONBOARDING] Generating local keyword suggestions...');
-
-                        const text = `${data.businessName} ${data.niche} ${data.description}`.toLowerCase();
-                        const words = text.match(/\b\w{4,}\b/g) || [];
-                        const uniqueWords = [...new Set(words)].filter(w => !['from', 'with', 'your', 'this', 'that', 'they'].includes(w));
-
-                        const suggestedKeywords = {
-                            high: [
-                                data.niche,
-                                `${data.businessName} ${data.niche}`,
-                                uniqueWords[0] || 'Quality Services'
-                            ].map(k => k.trim()).slice(0, 3),
-                            medium: [
-                                uniqueWords[1] || 'SEO Strategy',
-                                uniqueWords[2] || 'Market Growth',
-                                uniqueWords[3] || 'Digital Services'
-                            ].slice(0, 3),
-                            low: [
-                                uniqueWords[4] || 'Online Presence',
-                                uniqueWords[5] || 'Business Growth',
-                                uniqueWords[6] || 'Client Success'
-                            ].slice(0, 3)
-                        };
-
-                        const suggestedCompetitors = [
-                            `${data.niche.replace(/\s+/g, '-')}-pros.com`,
-                            `best-${data.niche.replace(/\s+/g, '-')}.net`,
-                            "industry-leader.com"
-                        ];
-
-                        return res.status(200).json({
-                            success: true,
-                            suggestedKeywords,
-                            suggestedCompetitors
-                        });
-
-                    } catch (e) {
-                        console.error('Local suggestion generation failed:', e);
-                        return res.status(200).json({
-                            success: true,
-                            suggestedKeywords: { high: [], medium: [], low: [] },
-                            suggestedCompetitors: []
-                        });
-                    }
+                    // Keywords and Competitors were already set in Step 1
+                    // Don't return them here to avoid overwriting with empty arrays
+                    return res.status(200).json({
+                        success: true,
+                        niche: data.niche
+                    });
                 }
             }
 
