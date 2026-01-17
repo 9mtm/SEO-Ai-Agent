@@ -17,6 +17,11 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
     const [loadingSites, setLoadingSites] = useState(false);
     const [checkingConnection, setCheckingConnection] = useState(true);
 
+    // Timeout and Manual Fallback States
+    const [showSkipOption, setShowSkipOption] = useState(false);
+    const [elapsedTime, setElapsedTime] = useState(0);
+    const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
+
     // Check if user already connected Google on mount
     useEffect(() => {
         checkGoogleConnection();
@@ -84,6 +89,62 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
             .replace(/\/$/, '');
     };
 
+    // Cleanup timer on unmount
+    useEffect(() => {
+        return () => {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+        };
+    }, [timerInterval]);
+
+    const startTimer = () => {
+        setElapsedTime(0);
+        setShowSkipOption(false);
+
+        const interval = setInterval(() => {
+            setElapsedTime(prev => {
+                const newTime = prev + 1;
+                // Show skip option after 90 seconds
+                if (newTime >= 90) {
+                    setShowSkipOption(true);
+                }
+                return newTime;
+            });
+        }, 1000);
+
+        setTimerInterval(interval);
+    };
+
+    const stopTimer = () => {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            setTimerInterval(null);
+        }
+        setElapsedTime(0);
+        setShowSkipOption(false);
+    };
+
+    const handleSkipAI = () => {
+        stopTimer();
+        setLoading(false);
+        // Proceed to next step with empty AI data
+        onNext({
+            success: true,
+            aiData: {
+                businessName: '',
+                niche: '',
+                description: ''
+            },
+            suggestedKeywords: {
+                high: [],
+                medium: [],
+                low: []
+            },
+            suggestedCompetitors: []
+        });
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
@@ -99,6 +160,8 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
         }
 
         setLoading(true);
+        startTimer();
+
         try {
             // Save data via API
             const res = await fetch('/api/onboarding/save', {
@@ -113,12 +176,15 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
                 }),
             });
             const data = await res.json();
+            stopTimer();
+
             if (res.ok) {
                 onNext(data);
             } else {
                 setError(data.error || t('onboarding.step1.errorSave'));
             }
         } catch (err) {
+            stopTimer();
             setError(t('onboarding.step1.errorGeneric'));
         } finally {
             setLoading(false);
@@ -241,11 +307,42 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
                             <>
                                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                                 {t('onboarding.step1.saving')}
+                                {elapsedTime > 0 && (
+                                    <span className="ml-2 text-sm">({elapsedTime}s)</span>
+                                )}
                             </>
                         ) : (
                             t('onboarding.step1.continue')
                         )}
                     </button>
+
+                    {/* Skip AI Option - Shows after 90 seconds */}
+                    {loading && showSkipOption && (
+                        <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                            <div className="flex items-start gap-3">
+                                <div className="flex-shrink-0">
+                                    <svg className="h-5 w-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div className="flex-1">
+                                    <h4 className="font-semibold text-yellow-900 text-sm mb-1">
+                                        {t('onboarding.step1.takingLonger') || 'AI is taking longer than expected'}
+                                    </h4>
+                                    <p className="text-yellow-700 text-sm mb-3">
+                                        {t('onboarding.step1.skipDescription') || 'You can skip AI generation and manually enter your business information on the next step.'}
+                                    </p>
+                                    <button
+                                        type="button"
+                                        onClick={handleSkipAI}
+                                        className="w-full px-4 py-2 bg-yellow-600 text-white rounded-lg font-medium hover:bg-yellow-700 transition-colors"
+                                    >
+                                        {t('onboarding.step1.skipAndContinue') || 'Skip AI & Continue Manually'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </form>
             )}
         </div>

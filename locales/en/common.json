@@ -33,7 +33,7 @@
       "errorVerifySite": "Please select a verified site from Google Search Console",
       "errorSave": "Failed to save",
       "errorGeneric": "An error occurred",
-      "saving": "Saving...",
+      "saving": "Preparing...",
       "continue": "Continue"
     },
     "step2": {

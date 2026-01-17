@@ -30,7 +30,7 @@ const DomainSettings = ({ domain, closeModal }: DomainSettingsProps) => {
    }));
 
    const { mutate: updateMutate, error: domainUpdateError, isPending: isUpdating } = useUpdateDomain(() => closeModal(false));
-   const { mutate: deleteMutate } = useDeleteDomain(() => { closeModal(false); router.push('/'); });
+   const { mutate: deleteMutate } = useDeleteDomain(() => closeModal(false));
 
    // Get the Full Domain Data along with the Search Console API Data.
    useFetchDomain(router, domain && domain.domain ? domain.domain : '', (domainObj: DomainType) => {

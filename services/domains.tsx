@@ -95,15 +95,21 @@ export function useAddDomain(onSuccess: Function) {
          return res.json();
       },
       onSuccess: async (data) => {
-         console.log('Domain Added!!!', data);
          const newDomain: DomainType[] = data.domains;
          const singleDomain = newDomain.length === 1;
          toast(`${singleDomain ? newDomain[0].domain : `${newDomain.length} domains`} Added Successfully!`, { icon: '✔️' });
-         onSuccess(false);
-         if (singleDomain) {
+
+         // Invalidate and refetch domains list so sidebar updates immediately
+         await queryClient.invalidateQueries({ queryKey: ['domains'] });
+         await queryClient.refetchQueries({ queryKey: ['domains'] });
+
+         // Navigate to the first new domain BEFORE closing modal
+         if (newDomain.length > 0) {
             router.push(`/domain/${newDomain[0].slug}`);
          }
-         queryClient.invalidateQueries({ queryKey: ['domains'] });
+
+         // Close modal after navigation
+         onSuccess(false);
       },
       onError: () => {
          console.log('Error Adding New Domain!!!');
@@ -140,6 +146,8 @@ export function useUpdateDomain(onSuccess: Function) {
 
 export function useDeleteDomain(onSuccess: Function) {
    const queryClient = useQueryClient();
+   const router = useRouter();
+
    return useMutation({
       mutationFn: async (domain: DomainType) => {
          const res = await fetch(`${window.location.origin}/api/domains?domain=${domain.domain}`, { method: 'DELETE' });
@@ -150,8 +158,23 @@ export function useDeleteDomain(onSuccess: Function) {
       },
       onSuccess: async () => {
          toast('Domain Removed Successfully!', { icon: '✔️' });
+
+         // Refetch domains list
+         await queryClient.refetchQueries({ queryKey: ['domains'] });
+
+         // Get updated domains list after refetch
+         const domainsData: any = queryClient.getQueryData(['domains']);
+         const remainingDomains: DomainType[] = domainsData?.domains || [];
+
+         // Navigate to first available domain or profile BEFORE closing modal
+         if (remainingDomains.length > 0) {
+            router.push(`/domain/${remainingDomains[0].slug}`);
+         } else {
+            router.push('/profile');
+         }
+
+         // Close modal after navigation
          onSuccess();
-         queryClient.invalidateQueries({ queryKey: ['domains'] });
       },
       onError: () => {
          console.log('Error Removing Domain!!!');

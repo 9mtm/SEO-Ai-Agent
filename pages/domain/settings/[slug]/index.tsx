@@ -61,7 +61,7 @@ const DomainSettingsPage: NextPage = () => {
     const [loadingCategories, setLoadingCategories] = useState(false);
 
     const { mutate: deleteDomainMutate, isPending: isDeleting } = useDeleteDomain(() => {
-        router.push('/');
+        // Navigation is handled inside useDeleteDomain
     });
 
     useEffect(() => {
