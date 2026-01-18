@@ -9,6 +9,8 @@ import { integrateKeywordSCData, readLocalSCData } from '../../utils/searchConso
 import refreshAndUpdateKeywords from '../../utils/refresh';
 import { getKeywordsVolume, updateKeywordsVolumeData } from '../../utils/adwords';
 import Domain from '../../database/models/domain';
+import User from '../../database/models/user';
+import { getPlanLimits } from '../../utils/planLimits';
 
 type KeywordsGetResponse = {
    keywords?: KeywordType[],
@@ -100,9 +102,21 @@ const addKeywords = async (
 ) => {
    const { keywords } = req.body;
    if (keywords && Array.isArray(keywords) && keywords.length > 0) {
-      // Multi-tenant: user_id is required
       if (!isLegacy && !userId) {
          return res.status(401).json({ error: 'User authentication required' });
+      }
+
+      // Check Plan Limits
+      if (userId && !isLegacy) {
+         const user = await User.findByPk(userId);
+         const limit = getPlanLimits(user?.subscription_plan || 'free').keywords;
+         const currentCount = await Keyword.count({ where: { user_id: userId } });
+
+         if (currentCount + keywords.length > limit) {
+            return res.status(403).json({
+               error: `Plan Limit Reached: Your plan allows ${limit} keywords. You have ${currentCount} and are trying to add ${keywords.length}. (Total: ${currentCount + keywords.length}). Please upgrade your plan.`
+            });
+         }
       }
 
       const keywordsToAdd: any = []; // QuickFIX for bug: https://github.com/sequelize/sequelize-typescript/issues/936

@@ -8,6 +8,7 @@ import Domain from '../../../database/models/domain';
 import Keyword from '../../../database/models/keyword';
 import refreshAndUpdateKeywords from '../../../utils/refresh';
 import { getAppSettings } from '../settings';
+import { getPlanLimits } from '../../../utils/planLimits';
 
 /**
  * Retry utility for API calls with exponential backoff
@@ -164,10 +165,10 @@ function generateProfessionalKeywords(
         .match(/\b[a-z]{4,}\b/g) || [];
 
     const stopWords = ['from', 'with', 'your', 'this', 'that', 'they', 'have', 'will',
-                       'been', 'their', 'about', 'which', 'there', 'would', 'could',
-                       'should', 'these', 'those', 'more', 'some', 'than', 'into',
-                       'cutting', 'edge', 'designed', 'help', 'ensure', 'platform',
-                       'solution', 'system', 'tool'];
+        'been', 'their', 'about', 'which', 'there', 'would', 'could',
+        'should', 'these', 'those', 'more', 'some', 'than', 'into',
+        'cutting', 'edge', 'designed', 'help', 'ensure', 'platform',
+        'solution', 'system', 'tool'];
 
     const features = [...new Set(descWords)]
         .filter(w => !stopWords.includes(w) && w.length > 3)
@@ -247,10 +248,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             await User.update({ onboarding_step: step }, { where: { id: userId } });
 
             if (step === 1 && data.website_url) {
-                let domainUrl = data.website_url.replace(/(^\w+:|^)\/\//, '').replace(/\/$/, '');
-                const slug = domainUrl.replace(/\./g, '_');
+                // Check Domain Limit
+                const user = await User.findByPk(userId);
+                const limit = getPlanLimits(user?.subscription_plan || 'free').domains;
+                const currentCount = await Domain.count({ where: { user_id: userId } });
 
+                // If domain exists, we findOne later, but if we are creating new one...
+                let domainUrl = data.website_url.replace(/(^\w+:|^)\/\//, '').replace(/\/$/, '');
                 const existing = await Domain.findOne({ where: { domain: domainUrl, user_id: userId } });
+
+                if (!existing && currentCount >= limit) {
+                    return res.status(403).json({ error: `Domain limit reached (${limit}). Please upgrade your plan.` });
+                }
+
+                const slug = domainUrl.replace(/\./g, '_');
                 if (!existing) {
                     // Detect property type from GSC site URL
                     let propertyType = 'domain';
@@ -435,6 +446,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         ...(data.focus_keywords.medium || []),
                         ...(data.focus_keywords.low || [])
                     ].filter((k: any) => k && k.trim() !== '');
+
+                    // Check Keyword Limits
+                    const user = await User.findByPk(userId);
+                    const limit = getPlanLimits(user?.subscription_plan || 'free').keywords;
+                    const currentCount = await Keyword.count({ where: { user_id: userId } });
+
+                    if (currentCount + allFocusKeywords.length > limit) {
+                        return res.status(403).json({
+                            error: `Plan Limit Reached: Your plan allows ${limit} keywords. You have ${currentCount} and are trying to add ${allFocusKeywords.length}. (Total: ${currentCount + allFocusKeywords.length}). Please remove some keywords or upgrade.`
+                        });
+                    }
 
                     if (allFocusKeywords.length > 0 && domain.domain) {
                         try {

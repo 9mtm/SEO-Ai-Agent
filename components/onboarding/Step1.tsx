@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { Loader2, CheckCircle, Globe } from 'lucide-react';
 import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
+import UpgradeModal from '../common/UpgradeModal';
 
 const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
     const { t } = useLanguage();
@@ -21,6 +22,10 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
     const [showSkipOption, setShowSkipOption] = useState(false);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
+
+    // Upgrade Modal State
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+    const [upgradeMessage, setUpgradeMessage] = useState('');
 
     // Check if user already connected Google on mount
     useEffect(() => {
@@ -195,7 +200,13 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
             if (res.ok) {
                 onNext(data);
             } else {
-                setError(data.error || t('onboarding.step1.errorSave'));
+                if (res.status === 403) {
+                    // Show Upgrade Modal
+                    setUpgradeMessage(data.error);
+                    setShowUpgradeModal(true);
+                } else {
+                    setError(data.error || t('onboarding.step1.errorSave'));
+                }
             }
         } catch (err) {
             stopTimer();
@@ -359,7 +370,12 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
                     )}
                 </form>
             )}
-        </div>
+            <UpgradeModal
+                isOpen={showUpgradeModal}
+                onClose={() => setShowUpgradeModal(false)}
+                message={upgradeMessage}
+            />
+        </div >
     );
 };
 

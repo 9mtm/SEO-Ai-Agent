@@ -3,6 +3,7 @@ import { ChevronLeft, Sparkles, Target, Zap, Flag, Loader2, Globe } from 'lucide
 import SelectField from '../common/SelectField';
 import countries from '../../utils/countries';
 import { useLanguage } from '@/context/LanguageContext';
+import UpgradeModal from '../common/UpgradeModal';
 
 interface Step2_5Props {
     onNext: (data: any) => void;
@@ -24,6 +25,10 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
     const [targetCountry, setTargetCountry] = useState('US');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    // Upgrade Modal State
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+    const [upgradeMessage, setUpgradeMessage] = useState('');
 
     // Pre-fill with AI-suggested keywords
     useEffect(() => {
@@ -112,7 +117,12 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
             if (res.ok) {
                 onNext(data);
             } else {
-                setError(data.error || t('onboarding.step1.errorSave'));
+                if (res.status === 403) {
+                    setUpgradeMessage(data.error);
+                    setShowUpgradeModal(true);
+                } else {
+                    setError(data.error || t('onboarding.step1.errorSave'));
+                }
             }
         } catch (err) {
             setError(t('onboarding.step1.errorGeneric'));
@@ -293,7 +303,12 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
                     )}
                 </button>
             </form>
-        </div>
+            <UpgradeModal
+                isOpen={showUpgradeModal}
+                onClose={() => setShowUpgradeModal(false)}
+                message={upgradeMessage}
+            />
+        </div >
     );
 };
 export default Step2_5;

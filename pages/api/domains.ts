@@ -3,6 +3,8 @@ import Cryptr from 'cryptr';
 import db from '../../database/database';
 import Domain from '../../database/models/domain';
 import Keyword from '../../database/models/keyword';
+import User from '../../database/models/user';
+import { getPlanLimits } from '../../utils/planLimits';
 import getdomainStats from '../../utils/domains';
 import verifyUser from '../../utils/verifyUser';
 import { checkSerchConsoleIntegration, removeLocalSCData } from '../../utils/searchConsole';
@@ -220,6 +222,20 @@ const addDomain = async (
 
          let newDomains: Domain[] = [];
          if (domainsToAdd.length > 0) {
+            // Check Plan Limits
+            if (userId && !isLegacy) {
+               const user = await User.findByPk(userId);
+               const limit = getPlanLimits(user?.subscription_plan || 'free').domains;
+               const currentCount = await Domain.count({ where: { user_id: userId } });
+
+               if (currentCount + domainsToAdd.length > limit) {
+                  return res.status(403).json({
+                     domains: existingDomainsReturned,
+                     error: `Domain limit reached (${limit}). Please upgrade your plan.`
+                  });
+               }
+            }
+
             newDomains = await Domain.bulkCreate(domainsToAdd);
          }
 

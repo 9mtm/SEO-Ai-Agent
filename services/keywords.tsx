@@ -63,7 +63,10 @@ export function useAddKeywords(onSuccess: Function) {
          const fetchOpts = { method: 'POST', headers: getAuthHeaders(headers), body: JSON.stringify({ keywords }) };
          const res = await fetch(`${window.location.origin}/api/keywords`, fetchOpts);
          if (res.status >= 400 && res.status < 600) {
-            throw new Error('Bad response from server');
+            const data = await res.json();
+            const error = new Error(data.error || 'Bad response from server');
+            (error as any).status = res.status;
+            throw error;
          }
          return res.json();
       },
@@ -73,9 +76,26 @@ export function useAddKeywords(onSuccess: Function) {
          onSuccess();
          queryClient.invalidateQueries({ queryKey: ['keywords'] });
       },
-      onError: () => {
-         console.log('Error Adding New Keywords!!!');
-         toast('Error Adding New Keywords', { icon: '⚠️' });
+      onError: (error: any) => {
+         console.log('Error Adding New Keywords!!!', error);
+         if (error.status === 403 || (error.message && error.message.includes('limit'))) {
+            toast((t) => (
+               <div className="flex flex-col gap-2 min-w-[200px]">
+                  <div className="font-bold flex items-center gap-2 text-gray-900">
+                     <span>👑</span> Upgrade Required
+                  </div>
+                  <div className="text-sm text-gray-600">{error.message}</div>
+                  <button
+                     className="bg-black text-white px-3 py-2 rounded-md text-xs font-medium mt-1 hover:bg-gray-800 transition-colors"
+                     onClick={() => { window.location.href = '/profile/billing'; toast.dismiss(t.id); }}
+                  >
+                     Upgrade Plan
+                  </button>
+               </div>
+            ), { duration: 6000, position: 'top-center' });
+         } else {
+            toast(error.message || 'Error Adding New Keywords', { icon: '⚠️' });
+         }
       },
    });
 }

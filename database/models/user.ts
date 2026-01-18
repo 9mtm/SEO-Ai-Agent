@@ -37,7 +37,7 @@ class User extends Model {
   @Column({ type: DataType.STRING, allowNull: true })
   declare picture?: string;
 
-  @Column({ type: DataType.ENUM('free', 'pro', 'enterprise'), allowNull: false, defaultValue: 'free' })
+  @Column({ type: DataType.ENUM('free', 'basic', 'pro', 'premium', 'enterprise'), allowNull: false, defaultValue: 'free' })
   declare subscription_plan: string;
 
   @Column({ type: DataType.TEXT, allowNull: true })

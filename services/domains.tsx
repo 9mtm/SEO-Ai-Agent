@@ -114,7 +114,10 @@ export function useAddDomain(onSuccess: Function) {
          const fetchOpts = { method: 'POST', headers: getAuthHeaders(headers), body: JSON.stringify({ domains }) };
          const res = await fetch(`${window.location.origin}/api/domains`, fetchOpts);
          if (res.status >= 400 && res.status < 600) {
-            throw new Error('Bad response from server');
+            const data = await res.json();
+            const error = new Error(data.error || 'Bad response from server');
+            (error as any).status = res.status;
+            throw error;
          }
          return res.json();
       },
@@ -129,15 +132,32 @@ export function useAddDomain(onSuccess: Function) {
 
          // Navigate to the first new domain BEFORE closing modal
          if (newDomain.length > 0) {
-            router.push(`/domain/${newDomain[0].slug}`);
+            router.push(`/domain/insight/${newDomain[0].slug}`);
          }
 
          // Close modal after navigation
          onSuccess(false);
       },
-      onError: () => {
-         console.log('Error Adding New Domain!!!');
-         toast('Error Adding New Domain');
+      onError: (error: any) => {
+         console.log('Error Adding New Domain!!!', error);
+         if (error.status === 403 || (error.message && error.message.includes('limit'))) {
+            toast((t) => (
+               <div className="flex flex-col gap-2 min-w-[200px]">
+                  <div className="font-bold flex items-center gap-2 text-gray-900">
+                     <span>👑</span> Upgrade Required
+                  </div>
+                  <div className="text-sm text-gray-600">{error.message}</div>
+                  <button
+                     className="bg-black text-white px-3 py-2 rounded-md text-xs font-medium mt-1 hover:bg-gray-800 transition-colors"
+                     onClick={() => { window.location.href = '/profile/billing'; toast.dismiss(t.id); }}
+                  >
+                     Upgrade Plan
+                  </button>
+               </div>
+            ), { duration: 6000, position: 'top-center' });
+         } else {
+            toast(error.message || 'Error Adding New Domain', { icon: '⚠️' });
+         }
       },
    });
 }
@@ -195,9 +215,9 @@ export function useDeleteDomain(onSuccess: Function) {
 
          // Navigate to first available domain or profile BEFORE closing modal
          if (remainingDomains.length > 0) {
-            router.push(`/domain/${remainingDomains[0].slug}`);
+            router.push(`/domain/insight/${remainingDomains[0].slug}`);
          } else {
-            router.push('/profile');
+            router.push('/');
          }
 
          // Close modal after navigation
