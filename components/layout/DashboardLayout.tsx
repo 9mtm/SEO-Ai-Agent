@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import AccountMenu from '../common/AccountMenu';
 import DomainSelector from '../domains/DomainSelector';
+import SetupProgress from '../setup/SetupProgress';
 import { useLanguage } from '../../context/LanguageContext';
 
 interface DashboardLayoutProps {
@@ -131,6 +132,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 );
               })}
             </nav>
+
+            {/* Setup Progress Widget */}
+            <div className="px-3 mb-2">
+              <SetupProgress />
+            </div>
 
             <div className="p-4 border-t border-neutral-200">
               <DomainSelector

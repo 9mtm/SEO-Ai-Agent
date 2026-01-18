@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Icon from './Icon';
+import SetupProgress from '../setup/SetupProgress';
 
 type SidebarProps = {
    domains: DomainType[],
@@ -19,6 +20,11 @@ const Sidebar = ({ domains, showAddModal }: SidebarProps) => {
             <img src="/dpro_logo.png" alt="Dpro" className="inline-block h-6 mr-2" />
             <span className="align-middle text-blue-700">Dpro</span>
          </h3>
+
+         <div className="mb-2">
+            <SetupProgress />
+         </div>
+
          <div className="sidebar_menu max-h-96 overflow-auto styled-scrollbar">
             <ul className=' font-medium text-sm'>
                {domains.map((d) => <li
