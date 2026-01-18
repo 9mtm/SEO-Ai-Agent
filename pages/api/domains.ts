@@ -295,7 +295,12 @@ export const updateDomain = async (
       description,
       competitors,
       integration_settings,
-      focus_keywords
+      focus_keywords,
+      wordpress_url,
+      wordpress_username,
+      wordpress_app_password,
+      gsc_refresh_token,
+      gsc_scope
    } = req.body;
 
    try {
@@ -338,6 +343,21 @@ export const updateDomain = async (
          if (integration_settings !== undefined) updates.integration_settings = integration_settings;
          if (focus_keywords !== undefined) updates.focus_keywords = focus_keywords;
          if (req.body.target_country !== undefined) updates.target_country = req.body.target_country;
+
+         // Handle new encrypted WordPress fields
+         if (wordpress_url !== undefined) updates.wordpress_url = wordpress_url;
+         if (wordpress_username !== undefined) updates.wordpress_username = wordpress_username;
+         if (wordpress_app_password !== undefined) {
+            // Encrypt password before saving
+            domainToUpdate.setWordPressPassword(wordpress_app_password);
+         }
+
+         // Handle new encrypted GSC fields
+         if (gsc_refresh_token !== undefined) {
+            // Encrypt token before saving
+            domainToUpdate.setGSCRefreshToken(gsc_refresh_token);
+         }
+         if (gsc_scope !== undefined) updates.gsc_scope = gsc_scope;
 
          console.log('[DEBUG] Domain updates payload:', updates);
          domainToUpdate.set(updates);

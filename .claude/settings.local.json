@@ -40,7 +40,8 @@
       "Bash(npm publish:*)",
       "Bash(where:*)",
       "Bash(find:*)",
-      "Bash(php -l:*)"
+      "Bash(php -l:*)",
+      "Bash(mysql:*)"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"

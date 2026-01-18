@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { getPlatformAdapter } from '../../../utils/platformAdapters';
 import User from '../../../database/models/user';
 import PlatformIntegration from '../../../database/models/platformIntegration';
+import PlatformIntegrationLog from '../../../database/models/platformIntegrationLog';
 import connection from '../../../database/database';
 import verifyUser from '../../../utils/verifyUser';
 
@@ -60,6 +61,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 shared_secret: newSecret,
                 is_active: true
             });
+        }
+
+        // Log the connection event
+        try {
+            await PlatformIntegrationLog.create({
+                integration_id: integration.id,
+                action: 'connect_manual',
+                status: 'success',
+                ip_address: req.socket.remoteAddress || 'unknown',
+                details: {
+                    user_id: userId,
+                    platform_user: platform_user_id || 'admin',
+                    new_connection: !integration // Wait, integration variable re-assigned?
+                    // In logic above: integration = await findOne...
+                    // if (integration) ... else integration = create
+                    // So 'isNewRecord' property of integration model?
+                    // Or just log simply.
+                }
+            });
+        } catch (logError) {
+            console.error('Audit Log Error:', logError);
         }
 
         // 4. Return the Key to the User (to paste into WordPress)

@@ -124,14 +124,24 @@ const DomainSettingsPage: NextPage = () => {
                     });
                 }
 
-                // Load integration settings
-                const intSettings = found.integration_settings;
-                if (intSettings && intSettings.type) {
-                    setIntegrationType(intSettings.type);
-                    if (intSettings.type === 'wordpress') {
-                        setWpUrl(intSettings.url || '');
-                        setWpUsername(intSettings.username || '');
-                        setWpAppPassword(intSettings.app_password || '');
+                // Load integration settings - NEW: Use structured fields
+                // Try new fields first, fallback to old integration_settings for backward compatibility
+                if (found.wordpress_url) {
+                    setIntegrationType('wordpress');
+                    setWpUrl(found.wordpress_url || '');
+                    setWpUsername(found.wordpress_username || '');
+                    // Password will be empty (encrypted) - user needs to re-enter if changing
+                    setWpAppPassword('');
+                } else {
+                    // Fallback: Load from old integration_settings JSON (backward compatibility)
+                    const intSettings = found.integration_settings;
+                    if (intSettings && intSettings.type) {
+                        setIntegrationType(intSettings.type);
+                        if (intSettings.type === 'wordpress') {
+                            setWpUrl(intSettings.url || '');
+                            setWpUsername(intSettings.username || '');
+                            setWpAppPassword(intSettings.app_password || '');
+                        }
                     }
                 }
             }
@@ -161,6 +171,7 @@ const DomainSettingsPage: NextPage = () => {
         if (!activeDomain) return;
         setIsLoading(true);
 
+        // Keep old integration_settings for backward compatibility (for now)
         const integrationPayload = integrationType === 'wordpress' ? {
             type: 'wordpress',
             url: wpUrl,
@@ -177,19 +188,32 @@ const DomainSettingsPage: NextPage = () => {
 
         console.log('[DEBUG] Saving focus_keywords:', cleanFocusKeywords);
 
+        // Prepare payload with NEW encrypted fields
+        const payload: any = {
+            business_name: businessName,
+            niche: niche,
+            description: description,
+            competitors: competitors,
+            integration_settings: integrationPayload, // Keep for backward compatibility
+            focus_keywords: cleanFocusKeywords,
+            target_country: targetCountry
+        };
+
+        // Add new WordPress fields (will be encrypted on backend)
+        if (integrationType === 'wordpress') {
+            payload.wordpress_url = wpUrl;
+            payload.wordpress_username = wpUsername;
+            // Only send password if changed (not empty)
+            if (wpAppPassword && wpAppPassword.trim() !== '') {
+                payload.wordpress_app_password = wpAppPassword;
+            }
+        }
+
         try {
             const res = await fetch(`/api/domains?domain=${activeDomain.domain}`, {
                 method: 'PUT',
                 headers: getAuthHeaders(),
-                body: JSON.stringify({
-                    business_name: businessName,
-                    niche: niche,
-                    description: description,
-                    competitors: competitors,
-                    integration_settings: integrationPayload,
-                    focus_keywords: cleanFocusKeywords,
-                    target_country: targetCountry
-                })
+                body: JSON.stringify(payload)
             });
 
             const data = await res.json();

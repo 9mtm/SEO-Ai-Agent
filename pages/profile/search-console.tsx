@@ -3,10 +3,18 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { toast, Toaster } from 'react-hot-toast';
-import { Loader2, Globe, Download } from 'lucide-react';
+
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 
 import { useFetchDomains } from '../../services/domains';
 
@@ -15,10 +23,9 @@ const SearchConsolePage: NextPage = () => {
     const { data: domainsData } = useFetchDomains(router);
     const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
     const [isLoading, setIsLoading] = useState(true);
+    const [showDisconnectDialog, setShowDisconnectDialog] = useState(false);
 
     // Google Search Console States
-    const [sites, setSites] = useState<any[]>([]);
-    const [loadingSites, setLoadingSites] = useState(false);
     const [settings, setSettings] = useState<any>({ google_connected: false });
 
     const getAuthHeaders = () => {
@@ -48,67 +55,27 @@ const SearchConsolePage: NextPage = () => {
         fetchSettings();
     }, []);
 
-    // Auto-fetch sites when Google is connected
-    useEffect(() => {
-        if (settings.google_connected && sites.length === 0 && !loadingSites) {
-            fetchSites();
-        }
-    }, [settings.google_connected]);
 
-    const disconnectGoogle = async () => {
-        if (confirm('Are you sure you want to disconnect your Google Account?')) {
-            try {
-                await fetch('/api/auth/google/disconnect', {
-                    method: 'POST',
-                    headers: getAuthHeaders()
-                });
-                window.location.reload();
-            } catch (e) {
-                toast.error('Failed to disconnect');
-            }
-        }
+
+    const disconnectGoogle = () => {
+        setShowDisconnectDialog(true);
     };
 
-    const fetchSites = async () => {
-        setLoadingSites(true);
+    const confirmDisconnect = async () => {
         try {
-            const res = await fetch('/api/gsc/sites', {
+            await fetch('/api/auth/google/disconnect', {
+                method: 'POST',
                 headers: getAuthHeaders()
             });
-            const data = await res.json();
-            if (data.sites) {
-                // Filter out sc-domain sites to avoid duplicates
-                const filteredSites = data.sites.filter((site: any) =>
-                    !site.siteUrl.startsWith('sc-domain:')
-                );
-                setSites(filteredSites);
-            } else {
-                toast.error('No sites found or error fetching sites.');
-            }
+            window.location.reload();
         } catch (e) {
-            toast.error('Error fetching sites');
+            toast.error('Failed to disconnect');
         } finally {
-            setLoadingSites(false);
+            setShowDisconnectDialog(false);
         }
     };
 
-    const importSite = async (siteUrl: string) => {
-        try {
-            const res = await fetch('/api/domains', {
-                method: 'POST',
-                headers: getAuthHeaders(),
-                body: JSON.stringify({ domains: [siteUrl] })
-            });
-            if (res.ok) {
-                toast.success(`Imported ${siteUrl}`);
-                router.push('/domains');
-            } else {
-                toast.error('Failed to import site');
-            }
-        } catch (e) {
-            toast.error('Error importing site');
-        }
-    };
+
 
     // Translations
     const translations = {
@@ -136,7 +103,7 @@ const SearchConsolePage: NextPage = () => {
                     <p className="text-neutral-600">{t.description}</p>
                 </div>
 
-                    {/* Google Search Console Card */}
+                {/* Google Search Console Card */}
                 <Card>
                     <CardHeader>
                         <CardTitle>Google Search Console</CardTitle>
@@ -155,7 +122,7 @@ const SearchConsolePage: NextPage = () => {
                                     Link your Google account to access your Search Console properties directly.
                                 </p>
                                 <Button
-                                    onClick={() => window.location.href = '/api/auth/google'}
+                                    onClick={() => window.location.href = '/api/auth/google/connect'}
                                     size="lg"
                                     className="gap-2 bg-blue-600 hover:bg-blue-700 text-white"
                                 >
@@ -177,44 +144,29 @@ const SearchConsolePage: NextPage = () => {
                                     </Button>
                                 </div>
 
-                                <div className="space-y-4">
-                                    <div className="flex items-center justify-between">
-                                        <h3 className="font-semibold text-lg">Your Search Console Sites</h3>
-                                        <Button variant="outline" size="sm" onClick={fetchSites} disabled={loadingSites}>
-                                            {loadingSites ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Refresh List'}
-                                        </Button>
-                                    </div>
 
-                                    {loadingSites ? (
-                                        <div className="flex justify-center py-8">
-                                            <Loader2 className="h-8 w-8 animate-spin text-neutral-400" />
-                                        </div>
-                                    ) : sites.length === 0 ? (
-                                        <div className="text-center py-8 border-2 border-dashed border-neutral-200 rounded-lg">
-                                            <p className="text-neutral-500">No sites found in your Search Console account.</p>
-                                        </div>
-                                    ) : (
-                                        <div className="grid gap-3">
-                                            {sites.map((site) => (
-                                                <div key={site.siteUrl} className="flex items-center justify-between p-4 bg-white border border-neutral-200 rounded-lg hover:shadow-sm transition-shadow">
-                                                    <div className="flex items-center gap-3">
-                                                        <Globe className="h-5 w-5 text-neutral-400" />
-                                                        <div className="font-medium">{site.siteUrl}</div>
-                                                    </div>
-                                                    <Button size="sm" variant="secondary" onClick={() => importSite(site.siteUrl)}>
-                                                        Import
-                                                        <Download className="ml-2 h-4 w-4" />
-                                                    </Button>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
                             </div>
                         )}
                     </CardContent>
-                    </Card>
+                </Card>
             </div>
+
+            {/* Disconnect Confirmation Dialog */}
+            <Dialog open={showDisconnectDialog} onOpenChange={setShowDisconnectDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Disconnect Google Account</DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to disconnect your Google Account? This will stop automatic sitemap imports and analytics tracking.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setShowDisconnectDialog(false)}>Cancel</Button>
+                        <Button variant="destructive" onClick={confirmDisconnect}>Disconnect</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
             <Toaster position="bottom-right" />
         </DashboardLayout>
     );

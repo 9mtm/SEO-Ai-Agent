@@ -1,7 +1,9 @@
+
 import type { NextApiRequest, NextApiResponse } from 'next';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import verifyUser from '../../../utils/verifyUser';
+import db from '../../../database/database';
 import ApiKey from '../../../database/models/apiKey';
 import ApiAuditLog from '../../../database/models/apiAuditLog';
 import { encrypt } from '../../../utils/encryption';
@@ -28,6 +30,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!auth.userId) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
+
+        await db.sync();
 
         // GET - List all API keys for user
         if (req.method === 'GET') {

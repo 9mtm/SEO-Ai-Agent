@@ -3,6 +3,15 @@ import InputField from '../common/InputField';
 import Icon from '../common/Icon';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import {
+   Dialog,
+   DialogContent,
+   DialogDescription,
+   DialogFooter,
+   DialogHeader,
+   DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from '@/components/ui/button';
 
 type SearchConsoleSettingsProps = {
    settings: SettingsType,
@@ -17,6 +26,7 @@ const SearchConsoleSettings = ({ settings, settingsError, updateSettings }: Sear
    const [loadingSites, setLoadingSites] = useState(false);
    const [sites, setSites] = useState<{ siteUrl: string, permissionLevel: string }[]>([]);
    const [showSitesModal, setShowSitesModal] = useState(false);
+   const [showDisconnectDialog, setShowDisconnectDialog] = useState(false);
    const router = useRouter();
 
    const connectGoogle = () => {
@@ -24,14 +34,18 @@ const SearchConsoleSettings = ({ settings, settingsError, updateSettings }: Sear
       window.location.href = '/api/auth/google/connect';
    };
 
-   const disconnectGoogle = async () => {
-      if (confirm('Are you sure you want to disconnect your Google Account?')) {
-         try {
-            await fetch('/api/auth/google/disconnect', { method: 'POST' });
-            window.location.reload();
-         } catch (e) {
-            toast.error('Failed to disconnect');
-         }
+   const disconnectGoogle = () => {
+      setShowDisconnectDialog(true);
+   };
+
+   const confirmDisconnect = async () => {
+      try {
+         await fetch('/api/auth/google/disconnect', { method: 'POST' });
+         window.location.reload();
+      } catch (e) {
+         toast.error('Failed to disconnect');
+      } finally {
+         setShowDisconnectDialog(false);
       }
    };
 
@@ -165,6 +179,21 @@ const SearchConsoleSettings = ({ settings, settingsError, updateSettings }: Sear
                />
             </div>
          </div> */}
+         {/* Disconnect Confirmation Dialog */}
+         <Dialog open={showDisconnectDialog} onOpenChange={setShowDisconnectDialog}>
+            <DialogContent>
+               <DialogHeader>
+                  <DialogTitle>Disconnect Google Account</DialogTitle>
+                  <DialogDescription>
+                     Are you sure you want to disconnect your Google Account? This will stop automatic sitemap imports and analytics tracking.
+                  </DialogDescription>
+               </DialogHeader>
+               <DialogFooter>
+                  <Button variant="outline" onClick={() => setShowDisconnectDialog(false)}>Cancel</Button>
+                  <Button variant="destructive" onClick={confirmDisconnect}>Disconnect</Button>
+               </DialogFooter>
+            </DialogContent>
+         </Dialog>
       </div>
    );
 };

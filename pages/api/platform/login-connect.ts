@@ -4,6 +4,7 @@ import Cookies from 'cookies';
 import jwt from 'jsonwebtoken';
 import User from '../../../database/models/user';
 import PlatformIntegration from '../../../database/models/platformIntegration';
+import PlatformIntegrationLog from '../../../database/models/platformIntegrationLog';
 import connection from '../../../database/database';
 
 interface DecodedToken {
@@ -74,6 +75,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 is_active: true
             });
         }
+
+        // Log SSO Connect
+        try {
+            await PlatformIntegrationLog.create({
+                integration_id: integration.id,
+                action: 'connect_sso',
+                status: 'success',
+                ip_address: req.socket.remoteAddress || 'unknown',
+                details: { user_id: userId, platform_user: platform_user_id || 'admin' }
+            });
+        } catch (e) { console.error('Log Error', e); }
 
         // 3. Return the Secret to the Plugin
         return res.status(200).json({

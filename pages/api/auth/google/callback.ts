@@ -86,7 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       cookies.set('oauth_return_url', '', { maxAge: 0 });
 
       // Redirect to return URL or default to Settings page
-      return res.redirect(cookieReturnUrl || '/settings?success=google_connected');
+      return res.redirect(cookieReturnUrl || '/profile/search-console?success=google_connected');
     }
 
     // ---------------------------------------------------------

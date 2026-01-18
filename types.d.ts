@@ -37,6 +37,14 @@ type DomainType = {
       low: string[]
    },
    target_country?: string,
+   // New encrypted WordPress fields
+   wordpress_url?: string,
+   wordpress_username?: string,
+   wordpress_app_password_encrypted?: string,
+   // New encrypted GSC fields
+   gsc_refresh_token_encrypted?: string,
+   gsc_scope?: string,
+   gsc_last_sync?: string,
 }
 
 type KeywordHistory = {

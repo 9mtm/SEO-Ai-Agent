@@ -65,8 +65,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       { name: t('sidebar.billing'), href: '/profile/billing', icon: CreditCard },
       { name: t('sidebar.apiKeys'), href: '/profile/api-keys', icon: Key },
       { name: t('sidebar.scraper'), href: '/profile/scraper', icon: Settings },
-      // Temporarily hidden - Connect option
-      // { name: t('sidebar.connections'), href: '/profile/connections', icon: LinkIcon }
+      { name: t('sidebar.connections'), href: '/profile/connections', icon: LinkIcon }
     );
   } else {
     navigation.push(
