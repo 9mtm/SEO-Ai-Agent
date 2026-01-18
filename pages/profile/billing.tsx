@@ -71,7 +71,7 @@ const BillingPage: NextPage = () => {
             description: t('billing.planDesc.basic'),
             price: { monthly: null, yearly: 9 }, // Monthly price shown, but billed yearly
             features: [
-                t('billing.features.domain', { count: 1 }),
+                t('billing.features.domains', { count: 2 }),
                 t('billing.features.keywords', { count: 25 }),
                 t('billing.features.weekly'),
                 t('billing.features.mcp')
