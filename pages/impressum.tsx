@@ -38,10 +38,16 @@ const ImpressumPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>{t('impressum.title')} | SEO Agent</title>
-        <meta name="description" content={t('impressum.description')} />
+        <title>{t('meta.impressum.title')}</title>
+        <meta name="description" content={t('meta.impressum.description')} />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://seo-agent.net/impressum" />
+        <link rel="canonical" href={`https://seo-agent.net${locale === 'en' ? '' : '/' + locale}/impressum`} />
+
+        {/* Hreflang Tags for Multi-language Support */}
+        <link rel="alternate" hrefLang="en" href="https://seo-agent.net/impressum" />
+        <link rel="alternate" hrefLang="de" href="https://seo-agent.net/de/impressum" />
+        <link rel="alternate" hrefLang="fr" href="https://seo-agent.net/fr/impressum" />
+        <link rel="alternate" hrefLang="x-default" href="https://seo-agent.net/impressum" />
 
         {/* Schema.org */}
         <script

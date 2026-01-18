@@ -1,8 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import en from '../locales/en/common.json';
-import de from '../locales/de/common.json';
-import fr from '../locales/fr/common.json';
+import enCommon from '../locales/en/common.json';
+import deCommon from '../locales/de/common.json';
+import frCommon from '../locales/fr/common.json';
+import enMeta from '../locales/en/metadata.json';
+import deMeta from '../locales/de/metadata.json';
+import frMeta from '../locales/fr/metadata.json';
 
 type Locale = 'en' | 'de' | 'fr';
 
@@ -12,6 +15,10 @@ interface LanguageContextType {
     t: (key: string, vars?: Record<string, any>) => string;
     translations: any;
 }
+
+const en = { ...enCommon, meta: enMeta };
+const de = { ...deCommon, meta: deMeta };
+const fr = { ...frCommon, meta: frMeta };
 
 const translationsMap = { en, de, fr };
 

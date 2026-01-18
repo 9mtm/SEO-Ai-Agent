@@ -1281,25 +1281,5 @@
     "talentManagement": "Gestion des talents",
     "ats": "Logiciel de suivi des candidats",
     "documentation": "Documentation"
-  },
-  "seo": {
-    "home": {
-      "title": "SEO Agent - Suivez les classements, créez du contenu IA & publiez sur WordPress | Outil SEO multi-pays",
-      "description": "Plateforme SEO complète : Suivez les classements de mots-clés dans 200+ pays, analysez les données GSC, générez du contenu IA avec GPT-5 & Claude, publiez directement sur WordPress. Plan gratuit disponible.",
-      "keywords": "outil de suivi seo, tracker de classement mots-clés, seo multi-pays, intégration google search console, générateur de contenu ia, seo chatgpt, contenu claude ai, publication auto wordpress, analyses seo, suivi concurrents, api mcp, automatisation seo",
-      "ogTitle": "SEO Agent - Plateforme complète de suivi SEO & contenu IA",
-      "ogDescription": "Suivez les classements dans 200+ pays, générez du contenu IA et publiez sur WordPress. Intégrez avec ChatGPT & Claude via l'API MCP.",
-      "twitterTitle": "SEO Agent - Plateforme SEO propulsée par IA",
-      "twitterDescription": "Suivez les classements, créez du contenu IA, publiez sur WordPress. 200+ pays supportés."
-    },
-    "mcpSeo": {
-      "title": "Intégration MCP SEO - Connectez ChatGPT & Claude Desktop | SEO Agent",
-      "description": "Intégrez SEO Agent avec ChatGPT et Claude Desktop via l'API MCP. Suivez les classements, analysez les mots-clés et générez du contenu directement depuis votre chat IA. Guide d'installation gratuit inclus.",
-      "keywords": "mcp seo, protocole contexte modèle, intégration chatgpt, claude desktop, automatisation seo ia, api seo, api suivi mots-clés, seo chatgpt, seo claude ai, serveur mcp, assistant ia seo, seo conversationnel",
-      "ogTitle": "Intégration MCP SEO - ChatGPT & Claude Desktop | SEO Agent",
-      "ogDescription": "Accédez à vos données SEO directement depuis ChatGPT et Claude Desktop. Suivez les classements, analysez les mots-clés et créez du contenu avec l'IA. Guide d'installation MCP complet.",
-      "twitterTitle": "MCP SEO - Intégrez ChatGPT & Claude avec SEO Agent",
-      "twitterDescription": "Utilisez ChatGPT et Claude Desktop pour accéder à vos données SEO, suivre les classements et générer du contenu. Guide d'intégration MCP complet."
-    }
   }
 }

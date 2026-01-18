@@ -30,12 +30,6 @@ const AIIntegrationsShowcase: React.FC = () => {
       icon: '/icon/perplexity-logo.svg',
       available: true,
     },
-    {
-      name: 'Dpro',
-      models: ['Local Model'],
-      icon: null,
-      available: true,
-    },
   ];
 
   const cmsPlatforms = [
@@ -78,12 +72,12 @@ const AIIntegrationsShowcase: React.FC = () => {
     },
     {
       name: 'Yahoo',
-      icon: null,
+      icon: '/icon/yahoo-logo.svg',
       available: true,
     },
     {
       name: 'DuckDuckGo',
-      icon: null,
+      icon: '/icon/duckduckgo-logo.svg',
       available: true,
     },
   ];
@@ -189,9 +183,6 @@ const AIIntegrationsShowcase: React.FC = () => {
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-neutral-900 truncate">
                       {model.name}
-                    </p>
-                    <p className="text-xs text-neutral-600 truncate">
-                      {model.models.join(', ')}
                     </p>
                   </div>
                   {model.available && (

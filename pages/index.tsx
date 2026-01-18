@@ -78,24 +78,25 @@ const Home: NextPage = () => {
     <div className="min-h-screen bg-white">
       <Head>
         {/* Primary Meta Tags */}
-        <title>{t('seo.home.title')}</title>
-        <meta name="description" content={t('seo.home.description')} />
-        <meta name="keywords" content={t('seo.home.keywords')} />
-        <link rel="canonical" href={`https://seo-agent.net${router.locale === 'de' ? '/de' : ''}/`} />
+        <title>{t('meta.home.title')}</title>
+        <meta name="description" content={t('meta.home.description')} />
+        <meta name="keywords" content={t('meta.home.keywords')} />
+        <link rel="canonical" href={`https://seo-agent.net${router.locale === 'en' ? '' : '/' + router.locale}/`} />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="author" content="Dpro GmbH" />
 
         {/* Hreflang Tags for Multi-language Support */}
         <link rel="alternate" hrefLang="en" href="https://seo-agent.net/" />
         <link rel="alternate" hrefLang="de" href="https://seo-agent.net/de/" />
+        <link rel="alternate" hrefLang="fr" href="https://seo-agent.net/fr/" />
         <link rel="alternate" hrefLang="x-default" href="https://seo-agent.net/" />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={`https://seo-agent.net${router.locale === 'de' ? '/de' : ''}/`} />
-        <meta property="og:title" content={t('seo.home.ogTitle')} />
-        <meta property="og:description" content={t('seo.home.ogDescription')} />
-        <meta property="og:image" content="https://seo-agent.net/og-image.png" />
+        <meta property="og:url" content={`https://seo-agent.net${router.locale === 'en' ? '' : '/' + router.locale}/`} />
+        <meta property="og:title" content={t('meta.home.ogTitle')} />
+        <meta property="og:description" content={t('meta.home.ogDescription')} />
+        <meta property="og:image" content="https://seo-agent.net/ogImage.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:site_name" content="SEO Agent" />
@@ -285,10 +286,12 @@ const Home: NextPage = () => {
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-50 via-white to-neutral-50">
           <div className="max-w-7xl mx-auto">
             <div className="text-center max-w-4xl mx-auto mb-16">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-neutral-900 mb-6 leading-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-neutral-900 mb-2 leading-tight">
                 {t('hero.headline')}
-                <span className="block text-blue-600 mt-2">{t('hero.subheadline')}</span>
               </h1>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-blue-600 mb-6 leading-tight">
+                {t('hero.subheadline')}
+              </h2>
               <p className="text-xl text-neutral-600 mb-8 leading-relaxed">
                 {t('hero.description')}
               </p>
@@ -338,19 +341,18 @@ const Home: NextPage = () => {
                 <p className="text-sm text-neutral-500 mb-4">{t('hero.trustedBy')}</p>
                 <div className="flex space-x-3 mb-4 items-center justify-center">
                   <img src="/icon/google-logo.svg" alt="Google" className="h-6 w-6 object-contain hover:scale-110 transition-transform" />
+                  <img src="/icon/bing-logo.svg" alt="Bing" className="h-6 w-6 object-contain hover:scale-110 transition-transform" />
                   <img src="/icon/chatgpt-logo.svg" alt="ChatGPT" className="h-6 w-6 object-contain hover:scale-110 transition-transform" />
                   <img src="/icon/claude-logo.svg" alt="Claude" className="h-6 w-6 object-contain hover:scale-110 transition-transform" />
                   <img src="/icon/gemini-logo.svg" alt="Gemini" className="h-6 w-6 object-contain hover:scale-110 transition-transform" />
                   <img src="/icon/perplexity-logo.svg" alt="Perplexity" className="h-6 w-6 object-contain hover:scale-110 transition-transform" />
-                  <img src="/icon/bing-logo.svg" alt="Bing" className="h-6 w-6 object-contain hover:scale-110 transition-transform" />
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Stats Section */}
-        <Stats />
+
 
         {/* How It Works Section */}
         <HowItWorks />

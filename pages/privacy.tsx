@@ -6,20 +6,26 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Shield, Lock, Eye, Database, Cookie, Globe, Menu, X, Mail } from 'lucide-react';
 
 const PrivacyPolicyPage: React.FC = () => {
-    const { locale, setLocale } = useLanguage();
+    const { t, locale, setLocale } = useLanguage();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     return (
         <div className="min-h-screen bg-white">
             <Head>
-                <title>Privacy Policy | SEO Agent</title>
+                <title>{t('meta.privacy.title')}</title>
                 <meta
                     name="description"
-                    content="Privacy Policy for SEO Agent - Learn how we collect, use, and protect your data. GDPR compliant SEO tracking and AI content platform."
+                    content={t('meta.privacy.description')}
                 />
                 <meta name="robots" content="index, follow" />
-                <link rel="canonical" href="https://seo-agent.net/privacy" />
+                <link rel="canonical" href={`https://seo-agent.net${locale === 'en' ? '' : '/' + locale}/privacy`} />
                 <link rel="icon" href="/favicon.ico" />
+
+                {/* Hreflang Tags for Multi-language Support */}
+                <link rel="alternate" hrefLang="en" href="https://seo-agent.net/privacy" />
+                <link rel="alternate" hrefLang="de" href="https://seo-agent.net/de/privacy" />
+                <link rel="alternate" hrefLang="fr" href="https://seo-agent.net/fr/privacy" />
+                <link rel="alternate" hrefLang="x-default" href="https://seo-agent.net/privacy" />
             </Head>
 
             {/* Navigation */}

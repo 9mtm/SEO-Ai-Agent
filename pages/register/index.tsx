@@ -26,8 +26,8 @@ const Register: NextPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-neutral-100 flex items-center justify-center p-4">
       <Head>
-        <title>{`${t('auth.register.title')} - SEO AI Agent`}</title>
-        <meta name="description" content="Sign up for SEO AI Agent" />
+        <title>{t('meta.register.title')}</title>
+        <meta name="description" content={t('meta.register.description')} />
 
         {/* Favicons */}
         <link rel="apple-touch-icon" sizes="57x57" href="/fav/apple-icon-57x57.png" />

@@ -8,13 +8,13 @@ const Stats: React.FC = () => {
   const stats = [
     {
       icon: Users,
-      value: '5,000+',
+      value: '50,000+',
       label: t('landing.stats.activeUsers'),
       color: 'from-blue-500 to-blue-600',
     },
     {
       icon: TrendingUp,
-      value: '50,000+',
+      value: '100,000+',
       label: t('landing.stats.keywordsTracked'),
       color: 'from-emerald-500 to-emerald-600',
     },

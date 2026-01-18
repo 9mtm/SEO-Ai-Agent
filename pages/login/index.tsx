@@ -17,8 +17,8 @@ const Login: NextPage = () => {
    return (
       <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-neutral-100 flex items-center justify-center p-4">
          <Head>
-            <title>{`${t('auth.login.title')} - SEO AI Agent`}</title>
-            <meta name="description" content="Sign in to SEO AI Agent" />
+            <title>{t('meta.login.title')}</title>
+            <meta name="description" content={t('meta.login.description')} />
          </Head>
 
          {/* Language Selector */}

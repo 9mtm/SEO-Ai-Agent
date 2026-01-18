@@ -185,26 +185,7 @@ const HowItWorks: React.FC = () => {
           })}
         </div>
 
-        {/* Visual Flow Indicator - Hidden on mobile */}
-        <div className="hidden md:block max-w-6xl mx-auto mt-12">
-          <div className="flex items-center justify-center space-x-4 text-neutral-400">
-            <div className="flex items-center">
-              <span className="text-sm font-medium">Track</span>
-              <svg className="w-8 h-8 mx-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-              <span className="text-sm font-medium">Analyze</span>
-              <svg className="w-8 h-8 mx-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-              <span className="text-sm font-medium">Create</span>
-              <svg className="w-8 h-8 mx-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-              <span className="text-sm font-medium">Publish</span>
-            </div>
-          </div>
-        </div>
+
       </div>
     </section>
   );

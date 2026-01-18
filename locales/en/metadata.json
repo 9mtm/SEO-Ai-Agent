@@ -1,0 +1,40 @@
+{
+    "home": {
+        "title": "SEO Ai Agent | Rank Google Tracker",
+        "description": "Complete SEO platform: Track keyword rankings in 200+ countries, analyze Google Search Console data, generate AI content with GPT-5 & Claude, publish directly to WordPress. Free plan available.",
+        "keywords": "SEO tracking tool, keyword rank tracker, multi-country SEO, Google Search Console integration, AI content generator, ChatGPT SEO, Claude AI content, WordPress auto-publish, SEO analytics, competitor tracking, MCP API, SEO automation",
+        "ogTitle": "SEO Agent - Complete SEO Tracking & AI Content Platform",
+        "ogDescription": "Track rankings in 200+ countries, generate AI content, and publish to WordPress. Integrate with ChatGPT & Claude via MCP API.",
+        "twitterTitle": "SEO Agent - AI-Powered SEO Platform",
+        "twitterDescription": "Track rankings, create AI content, publish to WordPress. 200+ countries supported."
+    },
+    "mcpSeo": {
+        "title": "MCP SEO | Connect ChatGPT & Claude to SEO Data",
+        "description": "Integrate SEO Agent with ChatGPT and Claude Desktop via MCP API. Track rankings, analyze keywords, and generate content directly from your AI chat. Free setup guide included.",
+        "keywords": "MCP SEO, Model Context Protocol, ChatGPT integration, Claude Desktop, AI SEO automation, SEO API, keyword tracking API, ChatGPT SEO, Claude AI SEO, MCP server, AI assistant SEO, conversational SEO",
+        "ogTitle": "MCP SEO Integration - ChatGPT & Claude Desktop | SEO Agent",
+        "ogDescription": "Access your SEO data directly from ChatGPT and Claude Desktop. Track rankings, analyze keywords, and create content with AI. Complete MCP setup guide.",
+        "twitterTitle": "MCP SEO - Integrate ChatGPT & Claude with SEO Agent",
+        "twitterDescription": "Use ChatGPT and Claude Desktop to access your SEO data, track rankings, and generate content. Full MCP integration guide."
+    },
+    "login": {
+        "title": "Sign In - SEO Agent",
+        "description": "Sign in to SEO AI Agent to access your dashboard, track rankings, and manage your AI content generation."
+    },
+    "register": {
+        "title": "Sign Up - SEO Agent",
+        "description": "Sign up for SEO AI Agent. Start tracking your SEO rankings and generating AI-optimized content for your website today."
+    },
+    "terms": {
+        "title": "Terms of Service | SEO Agent",
+        "description": "Terms of Service for SEO Agent - Read our terms and conditions for using our SEO tracking and AI content generation platform."
+    },
+    "privacy": {
+        "title": "Privacy Policy | SEO Agent",
+        "description": "Privacy Policy for SEO Agent - Learn how we collect, use, and protect your data. GDPR compliant SEO tracking and AI content platform."
+    },
+    "impressum": {
+        "title": "Impressum - Legal Information | SEO Agent",
+        "description": "Legal information and company details for Dpro GmbH, operator of SEO Agent."
+    }
+}

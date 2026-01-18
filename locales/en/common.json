@@ -1281,25 +1281,5 @@
     "talentManagement": "Talent Management",
     "ats": "Applicant Tracking Software",
     "documentation": "Documentation"
-  },
-  "seo": {
-    "home": {
-      "title": "SEO Agent - Track Rankings, Create AI Content & Publish to WordPress | Multi-Country SEO Tool",
-      "description": "Complete SEO platform: Track keyword rankings in 200+ countries, analyze Google Search Console data, generate AI content with GPT-5 & Claude, publish directly to WordPress. Free plan available.",
-      "keywords": "SEO tracking tool, keyword rank tracker, multi-country SEO, Google Search Console integration, AI content generator, ChatGPT SEO, Claude AI content, WordPress auto-publish, SEO analytics, competitor tracking, MCP API, SEO automation",
-      "ogTitle": "SEO Agent - Complete SEO Tracking & AI Content Platform",
-      "ogDescription": "Track rankings in 200+ countries, generate AI content, and publish to WordPress. Integrate with ChatGPT & Claude via MCP API.",
-      "twitterTitle": "SEO Agent - AI-Powered SEO Platform",
-      "twitterDescription": "Track rankings, create AI content, publish to WordPress. 200+ countries supported."
-    },
-    "mcpSeo": {
-      "title": "MCP SEO Integration - Connect ChatGPT & Claude Desktop | SEO Agent",
-      "description": "Integrate SEO Agent with ChatGPT and Claude Desktop via MCP API. Track rankings, analyze keywords, and generate content directly from your AI chat. Free setup guide included.",
-      "keywords": "MCP SEO, Model Context Protocol, ChatGPT integration, Claude Desktop, AI SEO automation, SEO API, keyword tracking API, ChatGPT SEO, Claude AI SEO, MCP server, AI assistant SEO, conversational SEO",
-      "ogTitle": "MCP SEO Integration - ChatGPT & Claude Desktop | SEO Agent",
-      "ogDescription": "Access your SEO data directly from ChatGPT and Claude Desktop. Track rankings, analyze keywords, and create content with AI. Complete MCP setup guide.",
-      "twitterTitle": "MCP SEO - Integrate ChatGPT & Claude with SEO Agent",
-      "twitterDescription": "Use ChatGPT and Claude Desktop to access your SEO data, track rankings, and generate content. Full MCP integration guide."
-    }
   }
 }

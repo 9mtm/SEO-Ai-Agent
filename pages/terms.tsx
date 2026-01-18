@@ -6,20 +6,26 @@ import { useLanguage } from '@/context/LanguageContext';
 import { FileText, AlertTriangle, CheckCircle, XCircle, Globe, Menu, X, Mail } from 'lucide-react';
 
 const TermsOfServicePage: React.FC = () => {
-    const { locale, setLocale } = useLanguage();
+    const { t, locale, setLocale } = useLanguage();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     return (
         <div className="min-h-screen bg-white">
             <Head>
-                <title>Terms of Service | SEO Agent</title>
+                <title>{t('meta.terms.title')}</title>
                 <meta
                     name="description"
-                    content="Terms of Service for SEO Agent - Read our terms and conditions for using our SEO tracking and AI content generation platform."
+                    content={t('meta.terms.description')}
                 />
                 <meta name="robots" content="index, follow" />
-                <link rel="canonical" href="https://seo-agent.net/terms" />
+                <link rel="canonical" href={`https://seo-agent.net${locale === 'en' ? '' : '/' + locale}/terms`} />
                 <link rel="icon" href="/favicon.ico" />
+
+                {/* Hreflang Tags for Multi-language Support */}
+                <link rel="alternate" hrefLang="en" href="https://seo-agent.net/terms" />
+                <link rel="alternate" hrefLang="de" href="https://seo-agent.net/de/terms" />
+                <link rel="alternate" hrefLang="fr" href="https://seo-agent.net/fr/terms" />
+                <link rel="alternate" hrefLang="x-default" href="https://seo-agent.net/terms" />
             </Head>
 
             {/* Navigation */}

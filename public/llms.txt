@@ -1,0 +1,43 @@
+# SEO Ai Agent - Project Context
+
+## Project Overview
+**Name:** SEO Ai Agent
+**URL:** https://seo-agent.net
+**Primary Purpose:** A comprehensive, AI-powered SEO platform that combines rank tracking in 200+ countries with advanced AI content generation and automated publishing.
+
+## Core Features & Capabilities
+
+### 1. Global Rank Tracking
+- **Multi-Country Tracking:** Track keyword positions in 200+ countries (e.g., Google US, Google DE, Google FR).
+- **Competitor Analysis:** Automatically track and compare performance against 3 competitors.
+- **Search Console Integration:** Direct integration with Google Search Console for official traffic data.
+
+### 2. AI Content Generation
+- **Advanced Models:** Utilizes GPT-5.2, Claude 3.5 Sonnet, and Gemini 2.0.
+- **SEO Optimization:** Content is auto-optimized for target keywords with a 100-point scoring system.
+- **Human-Like Writing:** Designed to produce high-quality, engaging content that ranks.
+
+### 3. MCP SEO Integration (Model Context Protocol)
+- **ChatGPT & Claude Connection:** Connects SEO data directly to ChatGPT and Claude Desktop via MCP API.
+- **Real-time Access:** Users can check rankings and generate content within their preferred AI chat interface.
+
+### 4. CMS Publishing
+- **WordPress Integration:** One-click publishing to WordPress sites.
+- **Upcoming Platforms:** Shopify, Webflow, and Wix integration coming soon.
+
+## Target Audience
+- SEO Professionals and Agencies
+- Content Marketers
+- Business Owners looking for automated growth
+- Developers integrating SEO data via MCP
+
+## Technical Stack
+- **Frontend:** Next.js (React), Tailwind CSS
+- **Backend:** Node.js
+- **Key Integrations:** Google Search Console API, OpenAI API, Anthropic API, MCP API
+
+## Documentation & Links
+- **Home:** https://seo-agent.net
+- **MCP Integration:** https://seo-agent.net/mcp-seo
+- **Login:** https://seo-agent.net/login
+- **Register:** https://seo-agent.net/register

@@ -128,10 +128,10 @@ const MCPSEOPage: React.FC = () => {
   "mcpServers": {
     "seo-agent": {
       "command": "npx",
-      "args": ["-y", "@dpro/seo-agent-mcp"],
+      "args": ["-y", "seo-agent-mcp-server"],
       "env": {
-        "SEO_AGENT_API_KEY": "your-api-key-here",
-        "SEO_AGENT_BASE_URL": "https://seo-agent.net"
+        "SEO_API_KEY": "your_api_key_here",
+        "API_BASE_URL": "https://seo-agent.net"
       }
     }
   }
@@ -157,24 +157,25 @@ const MCPSEOPage: React.FC = () => {
     <div className="min-h-screen bg-white">
       <Head>
         {/* Primary Meta Tags */}
-        <title>{t('seo.mcpSeo.title')}</title>
-        <meta name="description" content={t('seo.mcpSeo.description')} />
-        <meta name="keywords" content={t('seo.mcpSeo.keywords')} />
-        <link rel="canonical" href={`https://seo-agent.net${router.locale === 'de' ? '/de' : ''}/mcp-seo`} />
+        <title>{t('meta.mcpSeo.title')}</title>
+        <meta name="description" content={t('meta.mcpSeo.description')} />
+        <meta name="keywords" content={t('meta.mcpSeo.keywords')} />
+        <link rel="canonical" href={`https://seo-agent.net${router.locale === 'en' ? '' : '/' + router.locale}/mcp-seo`} />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="author" content="Dpro GmbH" />
 
         {/* Hreflang Tags for Multi-language Support */}
         <link rel="alternate" hrefLang="en" href="https://seo-agent.net/mcp-seo" />
         <link rel="alternate" hrefLang="de" href="https://seo-agent.net/de/mcp-seo" />
+        <link rel="alternate" hrefLang="fr" href="https://seo-agent.net/fr/mcp-seo" />
         <link rel="alternate" hrefLang="x-default" href="https://seo-agent.net/mcp-seo" />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={`https://seo-agent.net${router.locale === 'de' ? '/de' : ''}/mcp-seo`} />
-        <meta property="og:title" content={t('seo.mcpSeo.ogTitle')} />
-        <meta property="og:description" content={t('seo.mcpSeo.ogDescription')} />
-        <meta property="og:image" content="https://seo-agent.net/og-image-mcp.png" />
+        <meta property="og:url" content={`https://seo-agent.net${router.locale === 'en' ? '' : '/' + router.locale}/mcp-seo`} />
+        <meta property="og:title" content={t('meta.mcpSeo.ogTitle')} />
+        <meta property="og:description" content={t('meta.mcpSeo.ogDescription')} />
+        <meta property="og:image" content="https://seo-agent.net/ogImage.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:site_name" content="SEO Agent" />
