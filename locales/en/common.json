@@ -1,4 +1,28 @@
 {
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "welcome": "Welcome back!",
+      "description": "Sign in to access your dashboard",
+      "googleBtn": "Continue with Google",
+      "backToHome": "Back to Home"
+    },
+    "register": {
+      "title": "Sign Up",
+      "welcome": "Create your account",
+      "description": "Get started with SEO AI Agent",
+      "googleBtn": "Continue with Google",
+      "backToHome": "Back to Home",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "termsLabel": "I agree to the",
+      "termsLink": "Terms of Service",
+      "and": "and",
+      "privacyLink": "Privacy Policy",
+      "newsletterLabel": "I want to receive newsletters, reports, and updates about my website",
+      "termsRequired": "You must accept the Terms of Service and Privacy Policy to continue"
+    }
+  },
   "onboarding": {
     "layout": {
       "title": "All-in-One Traffic Solution",

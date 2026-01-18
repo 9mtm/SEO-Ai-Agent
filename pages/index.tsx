@@ -173,7 +173,7 @@ const Home: NextPage = () => {
                       className="flex items-center gap-1 text-sm font-medium text-neutral-600 hover:text-neutral-900"
                     >
                       <Globe className="h-4 w-4" />
-                      {locale === 'de' ? 'DE' : 'EN'}
+                      {locale === 'de' ? 'DE' : locale === 'fr' ? 'FR' : 'EN'}
                     </button>
                     {langMenuOpen && (
                       <div className="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-neutral-200 py-1 z-50">
@@ -194,6 +194,15 @@ const Home: NextPage = () => {
                           className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
                         >
                           Deutsch
+                        </button>
+                        <button
+                          onClick={() => {
+                            setLocale('fr');
+                            setLangMenuOpen(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                        >
+                          Français
                         </button>
                       </div>
                     )}
@@ -245,11 +254,12 @@ const Home: NextPage = () => {
               </Link>
               <select
                 value={locale}
-                onChange={(e) => setLocale(e.target.value as 'en' | 'de')}
+                onChange={(e) => setLocale(e.target.value as 'en' | 'de' | 'fr')}
                 className="w-full px-3 py-2 bg-neutral-100 rounded-lg text-sm font-medium text-neutral-700"
               >
                 <option value="en">English</option>
                 <option value="de">Deutsch</option>
+                <option value="fr">Français</option>
               </select>
               <Link
                 href="/login"

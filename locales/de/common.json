@@ -1,4 +1,28 @@
 {
+  "auth": {
+    "login": {
+      "title": "Anmelden",
+      "welcome": "Willkommen zurück!",
+      "description": "Melden Sie sich an, um auf Ihr Dashboard zuzugreifen",
+      "googleBtn": "Mit Google fortfahren",
+      "backToHome": "Zurück zur Startseite"
+    },
+    "register": {
+      "title": "Registrieren",
+      "welcome": "Erstellen Sie Ihr Konto",
+      "description": "Starten Sie mit SEO AI Agent",
+      "googleBtn": "Mit Google fortfahren",
+      "backToHome": "Zurück zur Startseite",
+      "haveAccount": "Haben Sie bereits ein Konto?",
+      "signIn": "Anmelden",
+      "termsLabel": "Ich stimme den",
+      "termsLink": "Nutzungsbedingungen",
+      "and": "und der",
+      "privacyLink": "Datenschutzerklärung",
+      "newsletterLabel": "Ich möchte Newsletter, Berichte und Updates über meine Website erhalten",
+      "termsRequired": "Sie müssen den Nutzungsbedingungen und der Datenschutzerklärung zustimmen, um fortzufahren"
+    }
+  },
   "onboarding": {
     "layout": {
       "title": "All-in-One Traffic-Lösung",

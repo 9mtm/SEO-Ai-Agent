@@ -101,8 +101,8 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
             .substring(0, 2);
     };
 
-    const currentLangLabel = selectedLang === 'de' ? 'DE' : 'EN';
-    const currentLangFlag = selectedLang === 'de' ? '🇩🇪' : '🇺🇸';
+    const currentLangLabel = selectedLang === 'de' ? 'DE' : selectedLang === 'fr' ? 'FR' : 'EN';
+    const currentLangFlag = selectedLang === 'de' ? '🇩🇪' : selectedLang === 'fr' ? '🇫🇷' : '🇺🇸';
 
     return (
         <div className="flex items-center gap-4">
@@ -140,6 +140,13 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                         >
                             <span className="text-lg">🇩🇪</span>
                             <span>Deutsch</span>
+                        </button>
+                        <button
+                            onClick={() => { setLocale('fr'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'fr' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                        >
+                            <span className="text-lg">🇫🇷</span>
+                            <span>Français</span>
                         </button>
                     </div>
                 )}

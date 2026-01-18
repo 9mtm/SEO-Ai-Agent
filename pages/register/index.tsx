@@ -5,51 +5,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useLanguage } from '../../context/LanguageContext';
 
 const Register: NextPage = () => {
-  const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
+  const { t, locale, setLocale } = useLanguage();
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
-
-  const translations = {
-    en: {
-      title: 'Sign Up',
-      welcome: 'Create your account',
-      description: 'Get started with SEO AI Agent',
-      googleBtn: 'Continue with Google',
-      backToHome: 'Back to Home',
-      haveAccount: 'Already have an account?',
-      signIn: 'Sign in',
-      termsLabel: 'I agree to the',
-      termsLink: 'Terms of Service',
-      and: 'and',
-      privacyLink: 'Privacy Policy',
-      newsletterLabel: 'I want to receive newsletters, reports, and updates about my website',
-      termsRequired: 'You must accept the Terms of Service and Privacy Policy to continue',
-    },
-    de: {
-      title: 'Registrieren',
-      welcome: 'Erstellen Sie Ihr Konto',
-      description: 'Starten Sie mit SEO AI Agent',
-      googleBtn: 'Mit Google fortfahren',
-      backToHome: 'Zurück zur Startseite',
-      haveAccount: 'Haben Sie bereits ein Konto?',
-      signIn: 'Anmelden',
-      termsLabel: 'Ich stimme den',
-      termsLink: 'Nutzungsbedingungen',
-      and: 'und der',
-      privacyLink: 'Datenschutzerklärung',
-      newsletterLabel: 'Ich möchte Newsletter, Berichte und Updates über meine Website erhalten',
-      termsRequired: 'Sie müssen den Nutzungsbedingungen und der Datenschutzerklärung zustimmen, um fortzufahren',
-    }
-  };
-
-  const t = translations[selectedLang];
 
   const handleGoogleSignUp = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!acceptTerms) {
       e.preventDefault();
-      toast.error(t.termsRequired);
+      toast.error(t('auth.register.termsRequired'));
     }
     // If newsletter is checked, store preference
     if (subscribeNewsletter) {
@@ -57,11 +23,10 @@ const Register: NextPage = () => {
     }
   };
 
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-neutral-100 flex items-center justify-center p-4">
       <Head>
-        <title>{`${t.title} - SEO AI Agent`}</title>
+        <title>{`${t('auth.register.title')} - SEO AI Agent`}</title>
         <meta name="description" content="Sign up for SEO AI Agent" />
 
         {/* Favicons */}
@@ -87,12 +52,13 @@ const Register: NextPage = () => {
       {/* Language Selector */}
       <div className="absolute top-4 right-4">
         <select
-          value={selectedLang}
-          onChange={(e) => setSelectedLang(e.target.value as 'en' | 'de')}
+          value={locale}
+          onChange={(e) => setLocale(e.target.value as 'en' | 'de' | 'fr')}
           className="px-3 py-2 bg-white border border-neutral-200 rounded-lg text-sm font-medium text-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
         >
           <option value="en">English</option>
           <option value="de">Deutsch</option>
+          <option value="fr">Français</option>
         </select>
       </div>
 
@@ -103,8 +69,8 @@ const Register: NextPage = () => {
             <Image src="/dpro_logo.png" alt="Dpro" width={40} height={40} className="h-10 w-10 group-hover:scale-110 transition-transform" />
             <span className="text-2xl font-bold text-neutral-900">SEO AI Agent</span>
           </Link>
-          <h1 className="text-3xl font-bold text-neutral-900 mb-2">{t.welcome}</h1>
-          <p className="text-neutral-600">{t.description}</p>
+          <h1 className="text-3xl font-bold text-neutral-900 mb-2">{t('auth.register.welcome')}</h1>
+          <p className="text-neutral-600">{t('auth.register.description')}</p>
         </div>
 
         {/* Register Card */}
@@ -119,13 +85,13 @@ const Register: NextPage = () => {
                 className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
               />
               <span className="ml-2 text-sm text-neutral-700">
-                {t.termsLabel}{' '}
+                {t('auth.register.termsLabel')}{' '}
                 <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline">
-                  {t.termsLink}
+                  {t('auth.register.termsLink')}
                 </a>
-                {' '}{t.and}{' '}
+                {' '}{t('auth.register.and')}{' '}
                 <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline">
-                  {t.privacyLink}
+                  {t('auth.register.privacyLink')}
                 </a>
               </span>
             </label>
@@ -141,7 +107,7 @@ const Register: NextPage = () => {
                 className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
               />
               <span className="ml-2 text-sm text-neutral-600">
-                {t.newsletterLabel}
+                {t('auth.register.newsletterLabel')}
               </span>
             </label>
           </div>
@@ -156,15 +122,15 @@ const Register: NextPage = () => {
               }`}
           >
             <Image src="/icon/google-logo.svg" alt="Google" width={20} height={20} className={`h-5 w-5 ${acceptTerms ? 'group-hover:scale-110' : ''} transition-transform`} />
-            {t.googleBtn}
+            {t('auth.register.googleBtn')}
           </a>
 
           {/* Sign In Link */}
           <div className="mt-6 text-center">
             <p className="text-sm text-neutral-600">
-              {t.haveAccount}{' '}
+              {t('auth.register.haveAccount')}{' '}
               <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
-                {t.signIn}
+                {t('auth.register.signIn')}
               </Link>
             </p>
           </div>
@@ -175,7 +141,7 @@ const Register: NextPage = () => {
               href="/"
               className="text-sm text-neutral-600 hover:text-neutral-900 font-medium transition-colors"
             >
-              ← {t.backToHome}
+              ← {t('auth.register.backToHome')}
             </Link>
           </div>
         </div>

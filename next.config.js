@@ -10,7 +10,7 @@ const nextConfig = {
 
   // ✅ Internationalization (i18n) Configuration
   i18n: {
-    locales: ['en', 'de'],
+    locales: ['en', 'de', 'fr'],
     defaultLocale: 'en',
     localeDetection: false, // Auto-detect browser language
   },

@@ -2,8 +2,9 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { useRouter } from 'next/router';
 import en from '../locales/en/common.json';
 import de from '../locales/de/common.json';
+import fr from '../locales/fr/common.json';
 
-type Locale = 'en' | 'de';
+type Locale = 'en' | 'de' | 'fr';
 
 interface LanguageContextType {
     locale: Locale;
@@ -12,7 +13,7 @@ interface LanguageContextType {
     translations: any;
 }
 
-const translationsMap = { en, de };
+const translationsMap = { en, de, fr };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
