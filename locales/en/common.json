@@ -165,7 +165,7 @@
     "title": "Personal Profile",
     "description": "Manage your personal information and account security",
     "cardTitle": "Profile Information",
-    "cardDesc": "Update your photo and personal details",
+    "cardDescription": "Update your photo and personal details",
     "photoTitle": "Profile Photo",
     "photoDesc": "This will be displayed on your profile.",
     "changePhoto": "Change Photo",
@@ -278,6 +278,7 @@
     "checkout": {
       "title": "Complete {{cycle}} Subscription",
       "desc": "Review your plan and confirm invoice details.",
+      "redirecting": "Redirecting to Stripe...",
       "monthly": "Monthly",
       "yearly": "Yearly",
       "save": "Save ~20%",

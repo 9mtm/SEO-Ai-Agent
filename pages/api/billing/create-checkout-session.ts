@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import stripe from '../../../utils/stripe';
 import verifyUser from '../../../utils/verifyUser';
 import User from '../../../database/models/user';
+import InvoiceDetail from '../../../database/models/invoiceDetail';
 import sequelize from '../../../database/database';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -20,13 +21,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const { priceId, planId, successUrl, cancelUrl } = req.body;
 
-        const user = await User.findByPk(verifyResult.userId);
+        const user = await User.findByPk(verifyResult.userId, {
+            include: [InvoiceDetail]
+        });
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
 
         // 1. Get or create Stripe Customer
-        let customerId = user.stripe_customer_id;
+        let customerId = user.invoice_profile?.stripe_customer_id;
 
         if (!customerId) {
             const customer = await stripe.customers.create({
@@ -38,9 +41,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             });
             customerId = customer.id;
 
-            // Save customer ID to user
-            user.stripe_customer_id = customerId;
-            await user.save();
+            // Save customer ID to InvoiceDetail
+            const [invoiceDetail] = await InvoiceDetail.findOrCreate({
+                where: { user_id: user.id },
+                defaults: { user_id: user.id }
+            });
+            invoiceDetail.stripe_customer_id = customerId;
+            await invoiceDetail.save();
         }
 
         // 2. Create Checkout Session

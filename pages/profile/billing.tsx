@@ -298,7 +298,14 @@ const BillingPage: NextPage = () => {
                             <CardHeader>
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <CardTitle className="text-blue-900">{t('billing.currentPlan', { plan: currentPlan.name })}</CardTitle>
+                                        <CardTitle className="text-blue-900">
+                                            {t('billing.currentPlan', { plan: currentPlan.name })}
+                                            {user?.stripe_billing_interval && (
+                                                <span className="ml-2 text-sm font-normal opacity-70">
+                                                    ({user.stripe_billing_interval === 'year' ? t('billing.checkout.yearly') : t('billing.checkout.monthly')})
+                                                </span>
+                                            )}
+                                        </CardTitle>
                                         <CardDescription className="text-blue-700">
                                             {currentPlan.description}
                                             {user?.stripe_current_period_end && (

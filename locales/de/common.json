@@ -165,7 +165,7 @@
     "title": "Persönliches Profil",
     "description": "Verwalten Sie Ihre persönlichen Daten und Kontosicherheit",
     "cardTitle": "Profilinformationen",
-    "cardDesc": "Aktualisieren Sie Ihr Foto und Ihre persönlichen Daten",
+    "cardDescription": "Aktualisieren Sie Ihr Foto und Ihre persönlichen Daten",
     "photoTitle": "Profilbild",
     "photoDesc": "Dies wird in Ihrem Profil angezeigt.",
     "changePhoto": "Foto ändern",
@@ -278,6 +278,7 @@
     "checkout": {
       "title": "{{cycle}} Abonnement abschließen",
       "desc": "Überprüfen Sie Ihren Plan und bestätigen Sie die Rechnungsdetails.",
+      "redirecting": "Weiterleitung zu Stripe...",
       "monthly": "Monatlich",
       "yearly": "Jährlich",
       "save": "Sparen Sie ~20%",

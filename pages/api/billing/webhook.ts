@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { buffer } from 'stream/consumers';
 import stripe from '../../../utils/stripe';
 import User from '../../../database/models/user';
+import InvoiceDetail from '../../../database/models/invoiceDetail';
 import sequelize from '../../../database/database';
 
 export const config = {
@@ -28,8 +29,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // Read the raw body
         const buf = await buffer(req);
-        const rawBody = buf.toString('utf8'); // or simply use buf directly for verify
-
         event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
     } catch (err: any) {
         console.error(`Webhook Error: ${err.message}`);
@@ -50,30 +49,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 if (userId && subscriptionId) {
                     const user = await User.findByPk(userId);
                     if (user) {
-                        user.stripe_customer_id = session.customer;
-                        user.stripe_subscription_id = subscriptionId;
+                        const [invoiceDetail] = await InvoiceDetail.findOrCreate({
+                            where: { user_id: user.id },
+                            defaults: { user_id: user.id }
+                        });
 
-                        // Retrieve subscription to get status and end date
+                        invoiceDetail.stripe_customer_id = session.customer;
+                        invoiceDetail.stripe_subscription_id = subscriptionId;
+
                         const subscription = await stripe.subscriptions.retrieve(subscriptionId) as any;
-                        user.stripe_current_period_end = new Date(subscription.current_period_end * 1000);
+                        invoiceDetail.stripe_current_period_end = new Date(subscription.current_period_end * 1000);
 
-                        // Update plan based on price ID or product
-                        // This logic maps the Price ID back to our internal plan name
-                        // Ideally we store the Plan ID in metadata during checkout
-
-                        // For simplicity, we can just mark them as 'pro' or check metadata from subscription
-                        // We rely on the fact that we sent metadata in checkout session creation?
-                        // Actually in step 3534 we did send metadata: { userId }
-
-                        // We can deduce the plan from the price associated with the line item or subscription
-                        // But for now, let's just save the technical details. 
-                        // To update 'subscription_plan' (enum), we need to map the price.
+                        if (subscription.items.data[0]?.price?.recurring?.interval) {
+                            invoiceDetail.stripe_billing_interval = subscription.items.data[0].price.recurring.interval;
+                        }
 
                         const planId = session.metadata?.planId;
                         if (planId) {
                             user.subscription_plan = planId;
                         }
 
+                        await invoiceDetail.save();
                         await user.save();
                         console.log(`User ${userId} subscription updated to ${subscriptionId}`);
                     }
@@ -84,17 +80,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case 'customer.subscription.updated':
             case 'customer.subscription.deleted': {
                 const subscription = event.data.object as any;
-                // Find user by stripe_subscription_id or customer
-                const user = await User.findOne({ where: { stripe_customer_id: subscription.customer } });
+                const invoiceDetail = await InvoiceDetail.findOne({
+                    where: { stripe_customer_id: subscription.customer }
+                });
 
-                if (user) {
-                    user.stripe_current_period_end = new Date(subscription.current_period_end * 1000);
+                if (invoiceDetail) {
+                    invoiceDetail.stripe_current_period_end = new Date(subscription.current_period_end * 1000);
+
+                    if (subscription.items.data[0]?.price?.recurring?.interval) {
+                        invoiceDetail.stripe_billing_interval = subscription.items.data[0].price.recurring.interval;
+                    }
 
                     if (subscription.status === 'canceled' || subscription.status === 'unpaid') {
-                        // Downgrade to free?
-                        // user.subscription_plan = 'free';
+                        // User model might need update too if we want to change plan name
+                        const user = await User.findByPk(invoiceDetail.user_id);
+                        if (user) {
+                            // user.subscription_plan = 'free';
+                            // await user.save();
+                        }
                     }
-                    await user.save();
+                    await invoiceDetail.save();
                 }
                 break;
             }

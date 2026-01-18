@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import stripe from '../../../utils/stripe';
 import verifyUser from '../../../utils/verifyUser';
 import User from '../../../database/models/user';
+import InvoiceDetail from '../../../database/models/invoiceDetail';
 import sequelize from '../../../database/database';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -31,7 +32,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ status: session.payment_status, error: 'Session not paid' });
         }
 
-        const user = await User.findByPk(verifyResult.userId);
+        const user = await User.findByPk(verifyResult.userId, {
+            include: [InvoiceDetail]
+        });
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -40,16 +43,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const planId = session.metadata?.planId;
 
         if (subscriptionId) {
-            user.stripe_customer_id = session.customer as string;
-            user.stripe_subscription_id = subscriptionId;
+            const [invoiceDetail] = await InvoiceDetail.findOrCreate({
+                where: { user_id: user.id },
+                defaults: { user_id: user.id }
+            });
+
+            invoiceDetail.stripe_customer_id = session.customer as string;
+            invoiceDetail.stripe_subscription_id = subscriptionId;
 
             const subscription = await stripe.subscriptions.retrieve(subscriptionId) as any;
-            user.stripe_current_period_end = new Date(subscription.current_period_end * 1000);
+            invoiceDetail.stripe_current_period_end = new Date(subscription.current_period_end * 1000);
 
             if (planId) {
                 user.subscription_plan = planId;
             }
 
+            // Get billing interval from subscription and save to InvoiceDetail
+            if (subscription.items.data[0]?.price?.recurring?.interval) {
+                invoiceDetail.stripe_billing_interval = subscription.items.data[0].price.recurring.interval;
+            }
+
+            await invoiceDetail.save();
             await user.save();
             return res.status(200).json({ success: true, plan: planId });
         }

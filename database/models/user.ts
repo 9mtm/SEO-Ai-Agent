@@ -106,16 +106,6 @@ class User extends Model {
   @Column({ type: DataType.JSON, allowNull: true })
   declare ai_api_keys?: any;
 
-  // Stripe Fields
-  @Column({ type: DataType.STRING, allowNull: true })
-  declare stripe_customer_id?: string;
-
-  @Column({ type: DataType.STRING, allowNull: true })
-  declare stripe_subscription_id?: string;
-
-  @Column({ type: DataType.DATE, allowNull: true })
-  declare stripe_current_period_end?: Date;
-
   // Platform Integration Fields
   @Column({ type: DataType.STRING, allowNull: true })
   declare platform_user_id?: string;

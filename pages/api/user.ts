@@ -18,6 +18,7 @@ type UserInfoResponse = {
         stripe_customer_id?: string;
         stripe_subscription_id?: string;
         stripe_current_period_end?: Date;
+        stripe_billing_interval?: string;
         invoice_details?: any;
     };
     error?: string;
@@ -59,9 +60,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                     ai_api_keys: userData.ai_api_keys,
                     language: user.language || 'en',
                     subscription_plan: user.subscription_plan || 'free',
-                    stripe_customer_id: user.stripe_customer_id,
-                    stripe_subscription_id: user.stripe_subscription_id,
-                    stripe_current_period_end: user.stripe_current_period_end,
+                    stripe_customer_id: user.invoice_profile?.stripe_customer_id,
+                    stripe_subscription_id: user.invoice_profile?.stripe_subscription_id,
+                    stripe_current_period_end: user.invoice_profile?.stripe_current_period_end,
+                    stripe_billing_interval: user.invoice_profile?.stripe_billing_interval,
                     invoice_details: user.invoice_profile ? {
                         type: user.invoice_profile.type,
                         companyName: user.invoice_profile.name,

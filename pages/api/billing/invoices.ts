@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import stripe from '../../../utils/stripe';
 import verifyUser from '../../../utils/verifyUser';
 import User from '../../../database/models/user';
+import InvoiceDetail from '../../../database/models/invoiceDetail';
 import sequelize from '../../../database/database';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -18,13 +19,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        const user = await User.findByPk(verifyResult.userId);
-        if (!user || !user.stripe_customer_id) {
+        const user = await User.findByPk(verifyResult.userId, {
+            include: [InvoiceDetail]
+        });
+
+        const customerId = user?.invoice_profile?.stripe_customer_id;
+
+        if (!user || !customerId) {
             return res.status(200).json({ invoices: [] });
         }
 
         const invoices = await stripe.invoices.list({
-            customer: user.stripe_customer_id,
+            customer: customerId,
             limit: 10,
         });
 

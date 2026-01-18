@@ -41,6 +41,18 @@ class InvoiceDetail extends Model {
 
     @Column({ type: DataType.STRING, allowNull: true })
     declare email?: string;
+
+    @Column({ type: DataType.STRING, allowNull: true })
+    declare stripe_billing_interval?: string;
+
+    @Column({ type: DataType.STRING, allowNull: true })
+    declare stripe_subscription_id?: string;
+
+    @Column({ type: DataType.DATE, allowNull: true })
+    declare stripe_current_period_end?: Date;
+
+    @Column({ type: DataType.STRING, allowNull: true })
+    declare stripe_customer_id?: string;
 }
 
 export default InvoiceDetail;
