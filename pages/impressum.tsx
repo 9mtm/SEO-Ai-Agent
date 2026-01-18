@@ -1,13 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useLanguage } from '@/context/LanguageContext';
-import { Building2, Mail, Phone, MapPin, Menu, X, Globe } from 'lucide-react';
+import { Building2, Mail, Phone, MapPin, Menu, X } from 'lucide-react';
+import AccountMenu from '../components/common/AccountMenu';
+import { useFetchDomains } from '../services/domains';
 
 const ImpressumPage: React.FC = () => {
-  const { t, locale, setLocale } = useLanguage();
+  const router = useRouter();
+  const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const { data: domainsData } = useFetchDomains(router, false, { enabled: isLoggedIn });
+  const domains = domainsData?.domains || [];
+
+  const getAuthHeaders = () => {
+    const headers: any = { 'Content-Type': 'application/json' };
+    const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+    if (token) headers.Authorization = `Bearer ${token}`;
+    return headers;
+  };
+
+  useEffect(() => {
+    fetch('/api/user', { headers: getAuthHeaders() })
+      .then((res) => {
+        if (res.ok) {
+          setIsLoggedIn(true);
+        }
+      })
+      .catch(() => {
+        // Not logged in
+      });
+  }, []);
 
   // Schema.org for organization
   const organizationSchema = {
@@ -38,23 +65,17 @@ const ImpressumPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>{t('meta.impressum.title')}</title>
-        <meta name="description" content={t('meta.impressum.description')} />
+        <title>Impressum - Legal Information | SEO Agent</title>
+        <meta name="description" content="Legal information and company details for Dpro GmbH, operator of SEO Agent" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href={`https://seo-agent.net${locale === 'en' ? '' : '/' + locale}/impressum`} />
-
-        {/* Hreflang Tags for Multi-language Support */}
-        <link rel="alternate" hrefLang="en" href="https://seo-agent.net/impressum" />
-        <link rel="alternate" hrefLang="de" href="https://seo-agent.net/de/impressum" />
-        <link rel="alternate" hrefLang="fr" href="https://seo-agent.net/fr/impressum" />
-        <link rel="alternate" hrefLang="x-default" href="https://seo-agent.net/impressum" />
+        <link rel="canonical" href="https://seo-agent.net/impressum" />
+        <link rel="icon" href="/favicon.ico" />
 
         {/* Schema.org */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       {/* Navigation */}
@@ -69,30 +90,30 @@ const ImpressumPage: React.FC = () => {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
               <Link href="/#features" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">
-                Features
-              </Link>
-              <Link href="/#pricing" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">
-                Pricing
+                {t('nav.features')}
               </Link>
               <Link href="/mcp-seo" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">
-                MCP Integration
+                {t('nav.mcpIntegration')}
               </Link>
-              <div className="relative group">
-                <button className="flex items-center gap-1 text-sm font-medium text-neutral-600 hover:text-neutral-900">
-                  <Globe className="h-4 w-4" />
-                  {locale === 'de' ? 'DE' : 'EN'}
-                </button>
-                <div className="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-neutral-200 py-1 hidden group-hover:block">
-                  <button onClick={() => setLocale('en')} className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">English</button>
-                  <button onClick={() => setLocale('de')} className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">Deutsch</button>
-                </div>
-              </div>
-              <Link href="/login" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">
-                Sign In
-              </Link>
-              <Link href="/auth/register" className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-[0.98]">
-                Get Started
-              </Link>
+
+              {isLoggedIn ? (
+                <AccountMenu domains={domains} />
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors"
+                  >
+                    {t('landing.login')}
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+                  >
+                    {t('landing.cta')}
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile menu button */}
@@ -110,45 +131,50 @@ const ImpressumPage: React.FC = () => {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-neutral-200 bg-white">
             <div className="px-4 py-4 space-y-3">
-              <Link href="/#features" className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
-                Features
-              </Link>
-              <Link href="/#pricing" className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
-                Pricing
-              </Link>
-              <Link href="/mcp-seo" className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
-                MCP Integration
-              </Link>
-              <select
-                value={locale}
-                onChange={(e) => setLocale(e.target.value as 'en' | 'de')}
-                className="w-full px-3 py-2 bg-neutral-100 rounded-lg text-sm font-medium text-neutral-700"
+              <Link
+                href="/#features"
+                className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
               >
-                <option value="en">English</option>
-                <option value="de">Deutsch</option>
-              </select>
-              <Link href="/login" className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
-                Sign In
+                {t('nav.features')}
               </Link>
-              <Link href="/auth/register" className="block px-4 py-2 bg-blue-600 text-white rounded-lg text-center font-semibold hover:bg-blue-700 transition-all active:scale-[0.98]" onClick={() => setMobileMenuOpen(false)}>
-                Get Started
+              <Link
+                href="/mcp-seo"
+                className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('nav.mcpIntegration')}
+              </Link>
+              <Link
+                href="/login"
+                className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('landing.login')}
+              </Link>
+              <Link
+                href="/register"
+                className="block px-4 py-2 bg-blue-600 text-white rounded-lg text-center font-semibold hover:bg-blue-700 transition-all active:scale-[0.98]"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('landing.cta')}
               </Link>
             </div>
           </div>
         )}
       </nav>
 
-      <main className="pt-16">
+      <main className="pt-24">
         <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-white py-16">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
               {/* Header */}
               <div className="text-center mb-12">
                 <h1 className="text-4xl sm:text-5xl font-bold text-neutral-900 mb-4">
-                  {t('impressum.heading')}
+                  Impressum
                 </h1>
                 <p className="text-lg text-neutral-600">
-                  {t('impressum.subtitle')}
+                  Legal Information & Company Details
                 </p>
               </div>
 
@@ -159,7 +185,7 @@ const ImpressumPage: React.FC = () => {
                   <div className="flex items-center mb-6">
                     <Building2 className="w-8 h-8 text-blue-600 mr-3" />
                     <h2 className="text-2xl font-bold text-neutral-900">
-                      {t('impressum.companyInfo')}
+                      Company Information
                     </h2>
                   </div>
                   <div className="space-y-3 text-neutral-700 text-lg">
@@ -178,7 +204,7 @@ const ImpressumPage: React.FC = () => {
                 {/* Contact Information */}
                 <section className="mb-10 pb-10 border-b border-neutral-200">
                   <h3 className="text-xl font-bold text-neutral-900 mb-4">
-                    {t('impressum.contactInfo')}
+                    Contact Information
                   </h3>
                   <div className="space-y-4">
                     <div className="flex items-center text-neutral-700">
@@ -215,30 +241,30 @@ const ImpressumPage: React.FC = () => {
                 {/* Legal Information */}
                 <section className="mb-10 pb-10 border-b border-neutral-200">
                   <h3 className="text-xl font-bold text-neutral-900 mb-4">
-                    {t('impressum.legalInfo')}
+                    Legal Information
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-neutral-700">
                     <div>
                       <p className="font-semibold text-neutral-900 mb-1">
-                        {t('impressum.uid')}:
+                        VAT ID:
                       </p>
                       <p itemProp="vatID">ATU81090445</p>
                     </div>
                     <div>
                       <p className="font-semibold text-neutral-900 mb-1">
-                        {t('impressum.fn')}:
+                        Company Register Number:
                       </p>
                       <p>631492s</p>
                     </div>
                     <div>
                       <p className="font-semibold text-neutral-900 mb-1">
-                        {t('impressum.gericht')}:
+                        Commercial Register Court:
                       </p>
                       <p>Handelsgericht Wien</p>
                     </div>
                     <div>
                       <p className="font-semibold text-neutral-900 mb-1">
-                        {t('impressum.kur')}:
+                        Commercial Register:
                       </p>
                       <p>R150S0606</p>
                     </div>
@@ -248,21 +274,21 @@ const ImpressumPage: React.FC = () => {
                 {/* Business Activities */}
                 <section className="mb-10 pb-10 border-b border-neutral-200">
                   <h3 className="text-xl font-bold text-neutral-900 mb-4">
-                    {t('impressum.businessActivities')}
+                    Business Activities
                   </h3>
                   <p className="text-neutral-700 leading-relaxed">
-                    {t('impressum.businessDescription')}
+                    Software development, web applications, SEO tools, and digital marketing solutions
                   </p>
                 </section>
 
                 {/* Responsible for Content */}
                 <section className="mb-10 pb-10 border-b border-neutral-200">
                   <h3 className="text-xl font-bold text-neutral-900 mb-4">
-                    {t('impressum.responsibleContent')}
+                    Responsible for Content
                   </h3>
                   <p className="text-neutral-700">
                     <span className="font-semibold">
-                      {t('impressum.managingDirector')}:
+                      Managing Director:
                     </span>{' '}
                     Dpro GmbH Geschäftsführung
                   </p>
@@ -271,10 +297,10 @@ const ImpressumPage: React.FC = () => {
                 {/* Dispute Resolution */}
                 <section className="mb-10 pb-10 border-b border-neutral-200">
                   <h3 className="text-xl font-bold text-neutral-900 mb-4">
-                    {t('impressum.disputeResolution')}
+                    EU Dispute Resolution
                   </h3>
                   <p className="text-neutral-700 leading-relaxed mb-4">
-                    {t('impressum.disputeText')}
+                    The European Commission provides a platform for online dispute resolution (OS):
                   </p>
                   <a
                     href="https://ec.europa.eu/consumers/odr"
@@ -289,26 +315,26 @@ const ImpressumPage: React.FC = () => {
                 {/* Disclaimer */}
                 <section>
                   <h3 className="text-xl font-bold text-neutral-900 mb-4">
-                    {t('impressum.disclaimer')}
+                    Disclaimer
                   </h3>
                   <div className="space-y-4 text-neutral-700 leading-relaxed">
                     <div>
                       <h4 className="font-semibold text-neutral-900 mb-2">
-                        {t('impressum.disclaimerContent')}:
+                        Content Liability:
                       </h4>
-                      <p>{t('impressum.disclaimerContentText')}</p>
+                      <p>The content of our pages has been created with great care. However, we cannot guarantee the accuracy, completeness, and timeliness of the content.</p>
                     </div>
                     <div>
                       <h4 className="font-semibold text-neutral-900 mb-2">
-                        {t('impressum.disclaimerLinks')}:
+                        Links Liability:
                       </h4>
-                      <p>{t('impressum.disclaimerLinksText')}</p>
+                      <p>Our site contains links to external websites. We have no influence on the content of these websites and cannot accept any responsibility for them.</p>
                     </div>
                     <div>
                       <h4 className="font-semibold text-neutral-900 mb-2">
-                        {t('impressum.disclaimerCopyright')}:
+                        Copyright:
                       </h4>
-                      <p>{t('impressum.disclaimerCopyrightText')}</p>
+                      <p>The content and works created by the site operators are subject to Austrian copyright law.</p>
                     </div>
                   </div>
                 </section>
@@ -317,7 +343,7 @@ const ImpressumPage: React.FC = () => {
               {/* Footer Note */}
               <div className="mt-8 text-center">
                 <p className="text-sm text-neutral-500">
-                  {t('impressum.lastUpdated')}: Januar 2026
+                  Last Updated: Januar 2026
                 </p>
               </div>
             </div>

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useLanguage } from '@/context/LanguageContext';
 import { Menu, X, Globe } from 'lucide-react';
+import AccountMenu from '../components/common/AccountMenu';
+import { useFetchDomains } from '../services/domains';
 import {
   Sparkles,
   Bot,
@@ -26,6 +28,29 @@ const MCPSEOPage: React.FC = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const { data: domainsData } = useFetchDomains(router, false, { enabled: isLoggedIn });
+  const domains = domainsData?.domains || [];
+
+  const getAuthHeaders = () => {
+    const headers: any = { 'Content-Type': 'application/json' };
+    const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+    if (token) headers.Authorization = `Bearer ${token}`;
+    return headers;
+  };
+
+  useEffect(() => {
+    fetch('/api/user', { headers: getAuthHeaders() })
+      .then((res) => {
+        if (res.ok) {
+          setIsLoggedIn(true);
+        }
+      })
+      .catch(() => {
+        // Not logged in
+      });
+  }, []);
 
   // Schema.org for the page
   const pageSchema = {
@@ -246,46 +271,68 @@ const MCPSEOPage: React.FC = () => {
               <Link href="/#features" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">
                 {t('nav.features')}
               </Link>
-              <Link href="/mcp-seo" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
+              <Link href="/mcp-seo" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">
                 {t('nav.mcpIntegration')}
               </Link>
-              <div className="relative">
-                <button
-                  onClick={() => setLangMenuOpen(!langMenuOpen)}
-                  className="flex items-center gap-1 text-sm font-medium text-neutral-600 hover:text-neutral-900"
-                >
-                  <Globe className="h-4 w-4" />
-                  {locale === 'de' ? 'DE' : 'EN'}
-                </button>
-                {langMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-neutral-200 py-1 z-50">
+
+              {isLoggedIn ? (
+                <AccountMenu domains={domains} />
+              ) : (
+                <>
+                  <div className="relative">
                     <button
-                      onClick={() => {
-                        setLocale('en');
-                        setLangMenuOpen(false);
-                      }}
-                      className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                      onClick={() => setLangMenuOpen(!langMenuOpen)}
+                      className="flex items-center gap-1 text-sm font-medium text-neutral-600 hover:text-neutral-900"
                     >
-                      English
+                      <Globe className="h-4 w-4" />
+                      {locale === 'de' ? 'DE' : locale === 'fr' ? 'FR' : 'EN'}
                     </button>
-                    <button
-                      onClick={() => {
-                        setLocale('de');
-                        setLangMenuOpen(false);
-                      }}
-                      className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
-                    >
-                      Deutsch
-                    </button>
+                    {langMenuOpen && (
+                      <div className="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-neutral-200 py-1 z-50">
+                        <button
+                          onClick={() => {
+                            setLocale('en');
+                            setLangMenuOpen(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                        >
+                          English
+                        </button>
+                        <button
+                          onClick={() => {
+                            setLocale('de');
+                            setLangMenuOpen(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                        >
+                          Deutsch
+                        </button>
+                        <button
+                          onClick={() => {
+                            setLocale('fr');
+                            setLangMenuOpen(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                        >
+                          Français
+                        </button>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-              <Link href="/login" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">
-                {t('nav.signIn')}
-              </Link>
-              <Link href="/register" className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-[0.98]">
-                {t('nav.getStarted')}
-              </Link>
+                  <Link
+                    href="/login"
+                    className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors"
+                  >
+                    {t('landing.login')}
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+                  >
+                    {t('landing.cta')}
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile menu button */}
@@ -303,25 +350,42 @@ const MCPSEOPage: React.FC = () => {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-neutral-200 bg-white">
             <div className="px-4 py-4 space-y-3">
-              <Link href="/#features" className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+              <Link
+                href="#features"
+                className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
+              >
                 {t('nav.features')}
               </Link>
-              <Link href="/mcp-seo" className="block px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+              <Link
+                href="/mcp-seo"
+                className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
+              >
                 {t('nav.mcpIntegration')}
               </Link>
               <select
                 value={locale}
-                onChange={(e) => setLocale(e.target.value as 'en' | 'de')}
+                onChange={(e) => setLocale(e.target.value as 'en' | 'de' | 'fr')}
                 className="w-full px-3 py-2 bg-neutral-100 rounded-lg text-sm font-medium text-neutral-700"
               >
                 <option value="en">English</option>
                 <option value="de">Deutsch</option>
+                <option value="fr">Français</option>
               </select>
-              <Link href="/login" className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
-                {t('nav.signIn')}
+              <Link
+                href="/login"
+                className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('landing.login')}
               </Link>
-              <Link href="/register" className="block px-4 py-2 bg-blue-600 text-white rounded-lg text-center font-semibold hover:bg-blue-700 transition-all active:scale-[0.98]" onClick={() => setMobileMenuOpen(false)}>
-                {t('nav.getStarted')}
+              <Link
+                href="/register"
+                className="block px-4 py-2 bg-blue-600 text-white rounded-lg text-center font-semibold hover:bg-blue-700 transition-all active:scale-[0.98]"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('landing.cta')}
               </Link>
             </div>
           </div>
