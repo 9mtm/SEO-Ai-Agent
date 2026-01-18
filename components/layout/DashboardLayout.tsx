@@ -26,14 +26,16 @@ import { useLanguage } from '../../context/LanguageContext';
 
 interface DashboardLayoutProps {
   children: ReactNode;
-  selectedLang?: 'en' | 'de';
-  onLanguageChange?: (lang: 'en' | 'de') => void;
+  selectedLang?: 'en' | 'de' | 'fr';
+  onLanguageChange?: (lang: 'en' | 'de' | 'fr') => void;
   domains?: DomainType[];
   hideSidebar?: boolean;
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
+  selectedLang,
+  onLanguageChange,
   domains = [],
   hideSidebar = false,
 }) => {

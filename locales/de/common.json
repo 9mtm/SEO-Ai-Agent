@@ -223,6 +223,7 @@
     },
     "currentPlan": "Aktueller Plan: {{plan}}",
     "active": "Aktiv",
+    "renewsOn": "Verlängert sich am: {{date}}",
     "planNames": {
       "free": "Kostenlos",
       "basic": "Basic",
@@ -250,7 +251,8 @@
     },
     "buttons": {
       "current": "Aktueller Plan",
-      "upgrade": "Upgrade"
+      "upgrade": "Upgrade",
+      "downgrade": "Downgrade"
     },
     "invoice": {
       "title": "Globale Rechnungsinformationen",
@@ -1006,6 +1008,78 @@
         "feature7": "White-Label",
         "feature8": "Dedizierter Account Manager",
         "cta": "Kontaktieren Sie uns"
+      }
+    },
+    "billing": {
+      "title": "Abrechnung & Abonnement",
+      "desc": "Verwalten Sie Ihren Plan, Ihre Zahlungsmethoden und Ihren Rechnungsverlauf.",
+      "currentPlan": "Aktueller Plan: {{plan}}",
+      "active": "Aktiv",
+      "renewsOn": "Verlängert sich am: {{date}}",
+      "tabs": {
+        "subscription": "Plan",
+        "details": "Rechnungsdetails",
+        "history": "Invoices"
+      },
+      "planNames": {
+        "free": "Kostenlos",
+        "basic": "Basis",
+        "pro": "Pro",
+        "premium": "Premium"
+      },
+      "planDesc": {
+        "free": "Grundlegende Funktionen für den Einstieg.",
+        "basic": "Für persönliche Projekte und einfaches Tracking.",
+        "pro": "Für professionelle SEOs und kleine Agenturen.",
+        "premium": "Unbegrenzte Leistung für groß angelegte Operationen."
+      },
+      "features": {
+        "domain": "{{count}} Website",
+        "domains": "{{count}} Websites",
+        "keywords": "{{count}} Keywords",
+        "updates": "Tägliche Updates",
+        "weekly": "Wöchentliche Updates",
+        "daily": "Tägliche Updates",
+        "mcp": "MCP-Integration",
+        "ai": "KI-Artikel-Writer",
+        "api": "API-Zugriff",
+        "unlimitedDomains": "Unbegrenzte Websites",
+        "priority": "Priorisierter Support"
+      },
+      "buttons": {
+        "current": "Aktueller Plan",
+        "upgrade": "Jetzt upgraden",
+        "downgrade": "Downgrade"
+      },
+      "checkout": {
+        "monthly": "Monatlich abrechnen",
+        "billedYearly": "Jährlich abrechnen",
+        "redirecting": "Weiterleitung zu Stripe...",
+        "success": "Abonnement erfolgreich aktualisiert!",
+        "title": "{{cycle}} Abonnement-Einrichtung",
+        "desc": "Schließen Sie Ihr Abonnement-Upgrade ab, um alle professionellen Funktionen freizuschalten."
+      },
+      "invoice": {
+        "title": "Rechnungsinformationen",
+        "desc": "Diese Informationen erscheinen auf Ihren Steuerrechnungen.",
+        "accountType": "Kontotyp",
+        "company": "Unternehmen",
+        "individual": "Privatperson",
+        "nameCompany": "Firmenname",
+        "nameIndividual": "Vollständiger Name",
+        "vat": "USt-IdNr. (Optional)",
+        "address": "Rechnungsadresse",
+        "email": "Rechnungs-E-Mail",
+        "save": "Änderungen speichern",
+        "saved": "Rechnungsdetails gespeichert!"
+      },
+      "history": {
+        "title": "Rechnungsverlauf",
+        "desc": "Anzeigen und Herunterladen Ihrer vergangenen Rechnungen.",
+        "date": "Datum",
+        "amount": "Betrag",
+        "status": "Status",
+        "download": "Herunterladen"
       }
     },
     "faq": {

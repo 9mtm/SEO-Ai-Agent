@@ -223,6 +223,7 @@
     },
     "currentPlan": "Current Plan: {{plan}}",
     "active": "Active",
+    "renewsOn": "Renews on: {{date}}",
     "planNames": {
       "free": "Free",
       "basic": "Basic",
@@ -250,7 +251,8 @@
     },
     "buttons": {
       "current": "Current Plan",
-      "upgrade": "Upgrade"
+      "upgrade": "Upgrade",
+      "downgrade": "Downgrade"
     },
     "invoice": {
       "title": "Global Invoice Information",
@@ -1007,6 +1009,78 @@
         "cta": "Contact Us"
       }
     },
+    "billing": {
+      "title": "Billing & Subscription",
+      "desc": "Manage your plan, payment methods, and invoice history.",
+      "currentPlan": "Current Plan: {{plan}}",
+      "active": "Active",
+      "renewsOn": "Renews on: {{date}}",
+      "tabs": {
+        "subscription": "Plan",
+        "details": "Invoice Details",
+        "history": "Invoices"
+      },
+      "planNames": {
+        "free": "Free",
+        "basic": "Basic",
+        "pro": "Pro",
+        "premium": "Premium"
+      },
+      "planDesc": {
+        "free": "Essential features to get started.",
+        "basic": "For personal projects and simple tracking.",
+        "pro": "For professional SEOs and small agencies.",
+        "premium": "Unlimited power for large scale operations."
+      },
+      "features": {
+        "domain": "{{count}} Website",
+        "domains": "{{count}} Websites",
+        "keywords": "{{count}} Keywords",
+        "updates": "Daily Updates",
+        "weekly": "Weekly Updates",
+        "daily": "Daily Updates",
+        "mcp": "MCP Integration",
+        "ai": "AI Article Writer",
+        "api": "API Access",
+        "unlimitedDomains": "Unlimited Websites",
+        "priority": "Priority Support"
+      },
+      "buttons": {
+        "current": "Current Plan",
+        "upgrade": "Upgrade Now",
+        "downgrade": "Downgrade"
+      },
+      "checkout": {
+        "monthly": "Billed monthly",
+        "billedYearly": "Billed yearly",
+        "redirecting": "Redirecting to Stripe...",
+        "success": "Subscription updated successfully!",
+        "title": "{{cycle}} Subscription Setup",
+        "desc": "Complete your subscription upgrade to unlock all professional features."
+      },
+      "invoice": {
+        "title": "Billing Information",
+        "desc": "This information will appear on your tax invoices.",
+        "accountType": "Account Type",
+        "company": "Company",
+        "individual": "Individual",
+        "nameCompany": "Company Name",
+        "nameIndividual": "Full Name",
+        "vat": "VAT ID (Optional)",
+        "address": "Billing Address",
+        "email": "Billing Email",
+        "save": "Save Changes",
+        "saved": "Billing details saved!"
+      },
+      "history": {
+        "title": "Invoice History",
+        "desc": "View and download your past invoices.",
+        "date": "Date",
+        "amount": "Amount",
+        "status": "Status",
+        "download": "Download"
+      }
+    },
     "faq": {
       "title": "Frequently Asked Questions",
       "subtitle": "Everything you need to know about SEO Agent",
@@ -1274,7 +1348,6 @@
     "getStarted": "Get Started"
   },
   "footerMenu": {
-    "companyDesc": "SEO tracking",
     "product": "Product",
     "resources": "Resources",
     "legal": "Legal",

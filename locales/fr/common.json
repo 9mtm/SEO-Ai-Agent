@@ -223,6 +223,7 @@
     },
     "currentPlan": "Plan actuel : {{plan}}",
     "active": "Actif",
+    "renewsOn": "Renouvellement le : {{date}}",
     "planNames": {
       "free": "Gratuit",
       "basic": "Basique",
@@ -250,7 +251,8 @@
     },
     "buttons": {
       "current": "Plan actuel",
-      "upgrade": "Mettre à niveau"
+      "upgrade": "Mettre à niveau",
+      "downgrade": "Rétrograder"
     },
     "invoice": {
       "title": "Informations de facturation globales",
@@ -1005,6 +1007,78 @@
         "feature7": "Marque blanche",
         "feature8": "Gestionnaire de compte dédié",
         "cta": "Contactez-nous"
+      }
+    },
+    "billing": {
+      "title": "Facturation & Abonnement",
+      "desc": "Gérez votre forfait, vos modes de paiement et l'historique de vos factures.",
+      "currentPlan": "Forfait actuel : {{plan}}",
+      "active": "Actif",
+      "renewsOn": "Renouvellement le : {{date}}",
+      "tabs": {
+        "subscription": "Forfait",
+        "details": "Détails de facturation",
+        "history": "Factures"
+      },
+      "planNames": {
+        "free": "Gratuit",
+        "basic": "Basique",
+        "pro": "Pro",
+        "premium": "Premium"
+      },
+      "planDesc": {
+        "free": "Fonctionnalités essentielles pour commencer.",
+        "basic": "Pour les projets personnels et le suivi simple.",
+        "pro": "Pour les SEO professionnels et les petites agences.",
+        "premium": "Puissance illimitée pour les opérations à grande échelle."
+      },
+      "features": {
+        "domain": "{{count}} Site web",
+        "domains": "{{count}} Sites web",
+        "keywords": "{{count}} Mots-clés",
+        "updates": "Mises à jour quotidiennes",
+        "weekly": "Mises à jour hebdomadaires",
+        "daily": "Mises à jour quotidiennes",
+        "mcp": "Intégration MCP",
+        "ai": "Rédacteur d'articles IA",
+        "api": "Accès API",
+        "unlimitedDomains": "Sites web illimités",
+        "priority": "Support prioritaire"
+      },
+      "buttons": {
+        "current": "Forfait actuel",
+        "upgrade": "Mettre à niveau",
+        "downgrade": "Rétrograder"
+      },
+      "checkout": {
+        "monthly": "Facturé mensuellement",
+        "billedYearly": "Facturé annuellement",
+        "redirecting": "Redirection vers Stripe...",
+        "success": "Abonnement mis à jour avec succès !",
+        "title": "Configuration de l'abonnement {{cycle}}",
+        "desc": "Complétez votre mise à niveau d'abonnement pour débloquer toutes les fonctionnalités professionnelles."
+      },
+      "invoice": {
+        "title": "Informations de facturation",
+        "desc": "Ces informations apparaîtront sur vos factures fiscales.",
+        "accountType": "Type de compte",
+        "company": "Entreprise",
+        "individual": "Particulier",
+        "nameCompany": "Nom de l'entreprise",
+        "nameIndividual": "Nom complet",
+        "vat": "Numéro de TVA (Optionnel)",
+        "address": "Adresse de facturation",
+        "email": "Email de facturation",
+        "save": "Enregistrer les modifications",
+        "saved": "Détails de facturation enregistrés !"
+      },
+      "history": {
+        "title": "Historique des factures",
+        "desc": "Consultez et téléchargez vos factures passées.",
+        "date": "Date",
+        "amount": "Montant",
+        "status": "Statut",
+        "download": "Télécharger"
       }
     },
     "faq": {
