@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import Icon from '../common/Icon';
 import countries from '../../utils/countries';
@@ -174,11 +175,20 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
     if (!keywords || keywords.length === 0) {
         return (
             <div className='domKeywords flex flex-col bg-[white] rounded-md text-sm border mb-5'>
-                <p className='p-9 pt-[10%] text-center text-gray-500'>
+                <div className='p-9 pt-[5%] text-center text-gray-500 flex flex-col items-center justify-center min-h-[250px]'>
                     <Icon type="info" size={48} color="#999" />
-                    <br /><br />
-                    {t('trackingTable.noKeywordsMsg')}
-                </p>
+                    <p className="mt-4 mb-6 text-gray-600 font-medium">{t('trackingTable.noKeywordsMsg')}</p>
+
+                    {(!competitors || competitors.length === 0) && (domain && (domain.slug || domain.domain)) && (
+                        <Link
+                            href={`/domain/settings/${domain.slug || domain.domain}?tab=competitors`}
+                            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm transition-colors shadow-sm inline-flex items-center gap-2"
+                        >
+                            <Icon type="plus" size={12} color="#fff" />
+                            {t('tracking.manageCompetitors.add') || 'Add Competitors'}
+                        </Link>
+                    )}
+                </div>
             </div>
         );
     }
@@ -186,11 +196,19 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
     if (!competitors || competitors.length === 0) {
         return (
             <div className='domKeywords flex flex-col bg-[white] rounded-md text-sm border mb-5'>
-                <p className='p-9 pt-[10%] text-center text-gray-500'>
+                <div className='p-9 pt-[5%] text-center text-gray-500 flex flex-col items-center justify-center min-h-[250px]'>
                     <Icon type="users" size={48} color="#999" />
-                    <br /><br />
-                    {t('trackingTable.noCompetitorsMsg')}
-                </p>
+                    <p className="mt-4 mb-6 text-gray-600 font-medium">{t('trackingTable.noCompetitorsMsg')}</p>
+                    {(domain && (domain.slug || domain.domain)) && (
+                        <Link
+                            href={`/domain/settings/${domain.slug || domain.domain}?tab=competitors`}
+                            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm transition-colors shadow-sm inline-flex items-center gap-2"
+                        >
+                            <Icon type="plus" size={12} color="#fff" />
+                            {t('tracking.manageCompetitors.add') || 'Add Competitors'}
+                        </Link>
+                    )}
+                </div>
             </div>
         );
     }

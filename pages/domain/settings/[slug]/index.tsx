@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Save, Settings, Info, Briefcase, FileText, Plus, X, Globe, CheckCircle, Target, Zap, Flag, Loader2 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
@@ -21,6 +21,7 @@ const DomainSettingsPage: NextPage = () => {
     const { t } = useLanguage();
     const { data: domainsData, refetch } = useFetchDomains(router);
     const [activeDomain, setActiveDomain] = useState<any>(null); // Type loose for now
+    const competitorsRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [activeTab, setActiveTab] = useState<'general' | 'integrations' | 'danger'>('general');
 
@@ -252,7 +253,13 @@ const DomainSettingsPage: NextPage = () => {
     // Sync activeTab with URL query parameter
     useEffect(() => {
         const tab = router.query.tab as string;
-        if (tab && ['general', 'integrations', 'danger'].includes(tab)) {
+        if (tab === 'competitors') {
+            setActiveTab('general');
+            // Give time for the tab to switch and DOM to update
+            setTimeout(() => {
+                competitorsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        } else if (tab && ['general', 'integrations', 'danger'].includes(tab)) {
             setActiveTab(tab as 'general' | 'integrations' | 'danger');
         }
     }, [router.query.tab]);
@@ -487,55 +494,57 @@ const DomainSettingsPage: NextPage = () => {
                                 </Card>
 
                                 {/* Competitors Card */}
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle>{t('domainSettings.competitors.cardTitle')}</CardTitle>
-                                        <CardDescription>
-                                            {t('domainSettings.competitors.cardDesc')}
-                                        </CardDescription>
-                                    </CardHeader>
-                                    <CardContent className="space-y-6">
-                                        <form onSubmit={addCompetitor} className="flex gap-2">
-                                            <div className="relative flex-1">
-                                                <Globe className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-                                                <Input
-                                                    placeholder="e.g. competitor.com"
-                                                    value={newCompetitor}
-                                                    onChange={(e) => setNewCompetitor(e.target.value)}
-                                                    className="pl-9"
-                                                />
-                                            </div>
-                                            <Button type="submit" variant="outline" className="gap-2">
-                                                <Plus className="h-4 w-4" />
-                                                {t('domainSettings.competitors.add')}
-                                            </Button>
-                                        </form>
+                                <div ref={competitorsRef}>
+                                    <Card>
+                                        <CardHeader>
+                                            <CardTitle>{t('domainSettings.competitors.cardTitle')}</CardTitle>
+                                            <CardDescription>
+                                                {t('domainSettings.competitors.cardDesc')}
+                                            </CardDescription>
+                                        </CardHeader>
+                                        <CardContent className="space-y-6">
+                                            <form onSubmit={addCompetitor} className="flex gap-2">
+                                                <div className="relative flex-1">
+                                                    <Globe className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                                                    <Input
+                                                        placeholder="e.g. competitor.com"
+                                                        value={newCompetitor}
+                                                        onChange={(e) => setNewCompetitor(e.target.value)}
+                                                        className="pl-9"
+                                                    />
+                                                </div>
+                                                <Button type="submit" variant="outline" className="gap-2">
+                                                    <Plus className="h-4 w-4" />
+                                                    {t('domainSettings.competitors.add')}
+                                                </Button>
+                                            </form>
 
-                                        <div className="space-y-2">
-                                            <Label>{t('domainSettings.competitors.tracked')}</Label>
-                                            <div className="bg-neutral-50 rounded-lg p-4 min-h-[100px] border border-neutral-200">
-                                                {!Array.isArray(competitors) || competitors.length === 0 ? (
-                                                    <p className="text-sm text-neutral-400 text-center py-4">{t('domainSettings.competitors.empty')}</p>
-                                                ) : (
-                                                    <div className="flex flex-wrap gap-2">
-                                                        {competitors.map((comp, idx) => (
-                                                            <Badge key={idx} variant="secondary" className="px-3 py-1.5 gap-2 text-sm font-normal bg-white border-neutral-200 shadow-sm">
-                                                                {comp}
-                                                                <button
-                                                                    onClick={() => removeCompetitor(comp)}
-                                                                    className="text-neutral-400 hover:text-red-500 transition-colors"
-                                                                    title="Remove competitor"
-                                                                >
-                                                                    <X className="h-3 w-3" />
-                                                                </button>
-                                                            </Badge>
-                                                        ))}
-                                                    </div>
-                                                )}
+                                            <div className="space-y-2">
+                                                <Label>{t('domainSettings.competitors.tracked')}</Label>
+                                                <div className="bg-neutral-50 rounded-lg p-4 min-h-[100px] border border-neutral-200">
+                                                    {!Array.isArray(competitors) || competitors.length === 0 ? (
+                                                        <p className="text-sm text-neutral-400 text-center py-4">{t('domainSettings.competitors.empty')}</p>
+                                                    ) : (
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {competitors.map((comp, idx) => (
+                                                                <Badge key={idx} variant="secondary" className="px-3 py-1.5 gap-2 text-sm font-normal bg-white border-neutral-200 shadow-sm">
+                                                                    {comp}
+                                                                    <button
+                                                                        onClick={() => removeCompetitor(comp)}
+                                                                        className="text-neutral-400 hover:text-red-500 transition-colors"
+                                                                        title="Remove competitor"
+                                                                    >
+                                                                        <X className="h-3 w-3" />
+                                                                    </button>
+                                                                </Badge>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                        </CardContent>
+                                    </Card>
+                                </div>
 
                                 <div className="flex justify-end pt-4 pb-4">
                                     <Button onClick={handleSave} disabled={isLoading} size="lg" className="gap-2 min-w-[150px]">
