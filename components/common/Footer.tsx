@@ -16,9 +16,6 @@ const Footer: React.FC = () => {
                      <Image src="/dpro_logo.png" alt="SEO Agent" width={32} height={32} className="h-8 w-8" />
                      <span className="text-lg font-bold text-white">SEO Agent</span>
                   </div>
-                  <p className="text-sm text-neutral-400 mb-4">
-                     {t('footerMenu.companyDesc')}
-                  </p>
                   <div className="text-sm text-neutral-400">
                      <p>Dpro GmbH</p>
                      <p>Wipplingerstraße 20/18</p>
@@ -53,9 +50,9 @@ const Footer: React.FC = () => {
                <div>
                   <h3 className="text-white font-semibold mb-4">{t('footerMenu.legal')}</h3>
                   <ul className="space-y-2 text-sm">
-                     <li><Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link></li>
-                     <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-                     <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+                     <li><Link href="/imprint" locale="en" className="hover:text-white transition-colors">Imprint</Link></li>
+                     <li><Link href="/privacy" locale="en" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                     <li><Link href="/terms" locale="en" className="hover:text-white transition-colors">Terms of Service</Link></li>
                   </ul>
                </div>
             </div>

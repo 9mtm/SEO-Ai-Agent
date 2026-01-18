@@ -549,7 +549,7 @@
     "current": "Current Domain",
     "select": "Select Domain",
     "switch": "Switch Domain",
-    "add": "Add New Domain",
+    "add": "Add Website",
     "empty": "No domains found"
   },
   "domainSettings": {
@@ -799,7 +799,7 @@
   },
   "hero": {
     "headline": "SEO AI Agent",
-    "subheadline": "All in One AI-Powered SEO Platform",
+    "subheadline": "Push Up your 1# Rank",
     "description": "Monitor rankings in 200+ countries, generate AI content with GPT-5 & Claude, and publish directly to WordPress. The complete SEO solution for modern businesses.",
     "bullet1": "Multi-Country Tracking",
     "bullet2": "AI Content with GPT-5 & Claude",
@@ -1274,7 +1274,7 @@
     "getStarted": "Get Started"
   },
   "footerMenu": {
-    "companyDesc": "Complete SEO tracking and AI content platform by Dpro GmbH",
+    "companyDesc": "SEO tracking",
     "product": "Product",
     "resources": "Resources",
     "legal": "Legal",

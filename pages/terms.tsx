@@ -1,3 +1,4 @@
+import { GetStaticProps } from 'next';
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -8,6 +9,20 @@ import { FileText, AlertTriangle, CheckCircle, XCircle, Menu, X, Mail } from 'lu
 import AccountMenu from '../components/common/AccountMenu';
 import Footer from '../components/common/Footer';
 import { useFetchDomains } from '../services/domains';
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+    if (locale !== 'en') {
+        return {
+            redirect: {
+                destination: '/terms',
+                permanent: true,
+            },
+        };
+    }
+    return {
+        props: {},
+    };
+};
 
 const TermsOfServicePage: React.FC = () => {
     const router = useRouter();

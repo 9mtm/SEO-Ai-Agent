@@ -22,6 +22,9 @@ export default function SetupProgress() {
     // If 100%, hide it from sidebar
     if (status.percentage === 100) return null;
 
+    // Safety check for steps (e.g. on 401 error or malformed response)
+    if (!status.steps) return null;
+
     return (
         <div className="mx-3 mb-6 bg-white border border-blue-100 rounded-xl shadow-sm overflow-hidden">
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 border-b border-blue-100">

@@ -1,3 +1,4 @@
+import { GetStaticProps } from 'next';
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -9,7 +10,21 @@ import AccountMenu from '../components/common/AccountMenu';
 import Footer from '../components/common/Footer';
 import { useFetchDomains } from '../services/domains';
 
-const ImpressumPage: React.FC = () => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  if (locale !== 'en') {
+    return {
+      redirect: {
+        destination: '/imprint', // Redirect to the English (default) version
+        permanent: true,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+};
+
+const ImprintPage: React.FC = () => {
   const router = useRouter();
   const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -66,10 +81,10 @@ const ImpressumPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>Impressum - Legal Information | SEO Agent</title>
+        <title>Imprint - Legal Information | SEO Agent</title>
         <meta name="description" content="Legal information and company details for Dpro GmbH, operator of SEO Agent" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://seo-agent.net/impressum" />
+        <link rel="canonical" href="https://seo-agent.net/imprint" />
         <link rel="icon" href="/favicon.ico" />
 
         {/* Schema.org */}
@@ -172,7 +187,7 @@ const ImpressumPage: React.FC = () => {
               {/* Header */}
               <div className="text-center mb-12">
                 <h1 className="text-4xl sm:text-5xl font-bold text-neutral-900 mb-4">
-                  Impressum
+                  Imprint
                 </h1>
                 <p className="text-lg text-neutral-600">
                   Legal Information & Company Details
@@ -358,4 +373,4 @@ const ImpressumPage: React.FC = () => {
   );
 };
 
-export default ImpressumPage;
+export default ImprintPage;

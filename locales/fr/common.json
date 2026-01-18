@@ -549,7 +549,7 @@
     "current": "Domaine actuel",
     "select": "Sélectionner un domaine",
     "switch": "Changer de domaine",
-    "add": "Ajouter un nouveau domaine",
+    "add": "Ajouter un site web",
     "empty": "Aucun domaine trouvé"
   },
   "domainSettings": {
