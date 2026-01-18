@@ -468,7 +468,14 @@
       "adding": "Adding...",
       "errorExist": "Keywords {{keywords}} already Exist",
       "errorEmpty": "Please Insert a Keyword",
-      "noTags": "No Existing Tags Found..."
+      "noTags": "No Existing Tags Found...",
+      "planUsage": "Plan Usage",
+      "enterKeywords": "Keywords",
+      "country": "Country",
+      "device": "Device",
+      "city": "City",
+      "tags": "Tags",
+      "errorLimit": "Plan limit exceeded. You can add {{remaining}} more keywords (Trying to add {{count}})."
     },
     "manageCompetitors": {
       "title": "Manage Competitors",

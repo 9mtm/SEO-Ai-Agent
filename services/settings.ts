@@ -29,6 +29,21 @@ export function useFetchSettings() {
    });
 }
 
+export async function fetchUserUsage() {
+   const res = await fetch(`${window.location.origin}/api/user/usage`, {
+      method: 'GET',
+      headers: getAuthHeaders()
+   });
+   return res.json();
+}
+
+export function useUserUsage() {
+   return useQuery({
+      queryKey: ['userUsage'],
+      queryFn: fetchUserUsage,
+   });
+}
+
 export const useUpdateSettings = (onSuccess: Function | undefined) => {
    const queryClient = useQueryClient();
 

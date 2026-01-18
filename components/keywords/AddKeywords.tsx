@@ -24,10 +24,13 @@ type KeywordsInput = {
    track_competitors?: boolean,
 }
 
+import { useUserUsage } from '../../services/settings';
+
 const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCity = false }: AddKeywordsProps) => {
    const { t } = useLanguage();
    const inputRef = useRef(null);
    const defCountry = localStorage.getItem('default_country') || 'US';
+   const { data: usageData } = useUserUsage();
 
    const [error, setError] = useState<string>('');
    const [showTagSuggestions, setShowTagSuggestions] = useState(false);
@@ -49,8 +52,22 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
       setNewKeywordsData({ ...newKeywordsData, device: updatedDevice });
    }, [newKeywordsData]);
 
+   // Calculate Counts
+   const devicesCount = newKeywordsData.device.split(',').filter(d => d).length;
+   const keywordsList = useMemo(() => newKeywordsData.keywords.split('\n').filter(k => k.trim()), [newKeywordsData.keywords]);
+   const countToAdd = keywordsList.length * devicesCount;
+
+   const limit = usageData?.limits?.keywords || 0;
+   const currentUsage = usageData?.usage?.keywords || 0;
+   const remaining = Math.max(0, limit - currentUsage);
+   const isOverLimit = countToAdd > remaining;
+
    const addKeywords = () => {
       const nkwrds = newKeywordsData;
+      if (isOverLimit) {
+         setError(t('tracking.addKeywords.errorLimit', { count: countToAdd, remaining }));
+         return;
+      }
       if (nkwrds.keywords) {
          const devices = nkwrds.device.split(',');
          const multiDevice = nkwrds.device.includes(',') && devices.length > 1;
@@ -86,23 +103,62 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
       }
    };
 
-   const deviceTabStyle = 'cursor-pointer px-2 py-2 rounded';
+   const deviceTabStyle = 'cursor-pointer px-3 py-1.5 rounded-md text-sm border transition-all flex items-center gap-1.5';
 
    return (
-      <Modal closeModal={() => { closeModal(false); }} title={t('tracking.addKeywords.title')} width="[420px]">
-         <div data-testid="addkeywords_modal">
-            <div>
+      <Modal closeModal={() => { closeModal(false); }} title={t('tracking.addKeywords.title')} width="full" maxWidth="max-w-3xl">
+         <div data-testid="addkeywords_modal" className="px-1">
+
+            {/* Usage Stats Bar */}
+            <div className="mb-4 bg-gray-50 rounded-lg p-3 border border-gray-100 flex items-center justify-between">
+               <div className="text-xs text-gray-500 font-medium">{t('tracking.addKeywords.planUsage') || 'Plan Usage'}:</div>
+               <div className="flex items-center gap-2">
+                  <div className="text-xs font-bold text-gray-700">
+                     {currentUsage} / {limit === 99999 ? '∞' : limit}
+                  </div>
+                  {limit !== 99999 && (
+                     <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                           className={`h-full rounded-full ${currentUsage >= limit ? 'bg-red-500' : 'bg-blue-500'}`}
+                           style={{ width: `${Math.min(100, (currentUsage / limit) * 100)}%` }}
+                        ></div>
+                     </div>
+                  )}
+               </div>
+            </div>
+
+            <div className="space-y-4">
+               {/* Keywords Input */}
                <div>
-                  <textarea
-                     className='w-full h-40 border rounded border-gray-200 p-4 outline-none focus:border-indigo-300'
-                     placeholder={t('tracking.addKeywords.placeholder')}
-                     value={newKeywordsData.keywords}
-                     onChange={(e) => setNewKeywordsData({ ...newKeywordsData, keywords: e.target.value })}>
-                  </textarea>
+                  <label className="text-xs font-semibold text-gray-500 uppercase mb-1.5 block tracking-wide">
+                     {t('tracking.addKeywords.enterKeywords') || 'Keywords'}
+                  </label>
+                  <div className="relative">
+                     <textarea
+                        className='w-full h-32 border rounded-xl border-gray-200 p-4 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50/50 transition-all resize-none text-sm'
+                        placeholder={t('tracking.addKeywords.placeholder')}
+                        value={newKeywordsData.keywords}
+                        onChange={(e) => setNewKeywordsData({ ...newKeywordsData, keywords: e.target.value })}>
+                     </textarea>
+                     <div className={`absolute bottom-3 right-3 text-xs font-medium px-2 py-1 rounded-md bg-white border shadow-sm
+                        ${isOverLimit ? 'text-red-600 border-red-200 bg-red-50' : 'text-gray-500 border-gray-100'}`}>
+                        {countToAdd} {t('tracking.addKeywords.adding') || 'adding'}
+                     </div>
+                  </div>
+                  {isOverLimit && (
+                     <div className="mt-2 text-xs text-red-600 flex items-center gap-1.5 font-medium">
+                        <Icon type="warning" size={14} />
+                        <span>You can only add {remaining} more keywords.</span>
+                     </div>
+                  )}
                </div>
 
-               <div className=' my-3 flex justify-between text-sm'>
+               {/* Settings Grid */}
+               <div className='grid grid-cols-2 gap-4'>
                   <div>
+                     <label className="text-xs font-semibold text-gray-500 uppercase mb-1.5 block tracking-wide">
+                        {t('tracking.addKeywords.country') || 'Country'}
+                     </label>
                      <SelectField
                         multiple={false}
                         selected={[newKeywordsData.country]}
@@ -112,97 +168,135 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
                            setNewKeywordsData({ ...newKeywordsData, country: updated[0] });
                            localStorage.setItem('default_country', updated[0]);
                         }}
-                        rounded='rounded'
+                        rounded='rounded-lg'
                         maxHeight={48}
                         flags={true}
                      />
                   </div>
-                  <ul className='flex text-xs font-semibold text-gray-500'>
-                     <li
-                        className={`${deviceTabStyle} mr-2 ${newKeywordsData.device.includes('desktop') ? '  bg-indigo-50 text-indigo-700' : ''}`}
-                        onClick={() => setDeviceType('desktop')}>
-                        <Icon type='desktop' classes={'top-[3px]'} size={15} /> <i className='not-italic hidden lg:inline-block'>Desktop</i>
-                        <Icon type='check' classes={'pl-1'} size={12} color={newKeywordsData.device.includes('desktop') ? '#4338ca' : '#bbb'} />
-                     </li>
-                     <li
-                        className={`${deviceTabStyle} ${newKeywordsData.device.includes('mobile') ? '  bg-indigo-50 text-indigo-700' : ''}`}
-                        onClick={() => setDeviceType('mobile')}>
-                        <Icon type='mobile' /> <i className='not-italic hidden lg:inline-block'>Mobile</i>
-                        <Icon type='check' classes={'pl-1'} size={12} color={newKeywordsData.device.includes('mobile') ? '#4338ca' : '#bbb'} />
-                     </li>
-                  </ul>
-               </div>
-               <div className='relative'>
-                  <input
-                     className='w-full border rounded border-gray-200 py-2 px-4 pl-12 outline-none focus:border-indigo-300'
-                     placeholder={t('tracking.addKeywords.tagsPlaceholder')}
-                     value={newKeywordsData.tags}
-                     onChange={(e) => setNewKeywordsData({ ...newKeywordsData, tags: e.target.value })}
-                  />
-                  <span className='absolute text-gray-400 top-3 left-2 cursor-pointer' onClick={() => setShowTagSuggestions(!showTagSuggestions)}>
-                     <Icon type="tags" size={16} color={showTagSuggestions ? '#777' : '#aaa'} />
-                     <Icon type={showTagSuggestions ? 'caret-up' : 'caret-down'} size={14} color={showTagSuggestions ? '#666' : '#aaa'} />
-                  </span>
-                  {showTagSuggestions && (
-                     <ul className={`absolute z-50
-                      bg-white border border-t-0 border-gray-200 rounded rounded-t-none w-full`}>
-                        {existingTags.length > 0 && existingTags.map((tag, index) => {
-                           return newKeywordsData.tags.split(',').map((t) => t.trim()).includes(tag) === false && <li
-                              className=' p-2 cursor-pointer hover:text-indigo-600 hover:bg-indigo-50 transition'
-                              key={index}
-                              onClick={() => {
-                                 const tagInput = newKeywordsData.tags;
-                                 // eslint-disable-next-line no-nested-ternary
-                                 const tagToInsert = tagInput + (tagInput.trim().slice(-1) === ',' ? '' : (tagInput.trim() ? ', ' : '')) + tag;
-                                 setNewKeywordsData({ ...newKeywordsData, tags: tagToInsert });
-                                 setShowTagSuggestions(false);
-                                 if (inputRef?.current) (inputRef.current as HTMLInputElement).focus();
-                              }}>
-                              <Icon type='tags' size={14} color='#bbb' /> {tag}
-                           </li>;
-                        })}
-                        {existingTags.length === 0 && <p className="p-2 text-sm text-gray-500">{t('tracking.addKeywords.noTags')}</p>}
-                     </ul>
-                  )}
-               </div>
-               <div className='relative mt-2'>
-                  <input
-                     className={`w-full border rounded border-gray-200 py-2 px-4 pl-8 
-                      outline-none focus:border-indigo-300 ${!allowsCity ? ' cursor-not-allowed' : ''} `}
-                     disabled={!allowsCity}
-                     title={!allowsCity ? t('tracking.addKeywords.cityTooltip', { scraper: scraperName }) : ''}
-                     placeholder={!allowsCity ? t('tracking.addKeywords.cityDisabled', { scraper: scraperName }) : t('tracking.addKeywords.cityPlaceholder')}
-                     value={newKeywordsData.city}
-                     onChange={(e) => setNewKeywordsData({ ...newKeywordsData, city: e.target.value })}
-                  />
-                  <span className='absolute text-gray-400 top-2 left-2'><Icon type="city" size={16} /></span>
+
+                  <div>
+                     <label className="text-xs font-semibold text-gray-500 uppercase mb-1.5 block tracking-wide">
+                        {t('tracking.addKeywords.device') || 'Device'}
+                     </label>
+                     <div className='flex gap-2'>
+                        <div
+                           className={`${deviceTabStyle} ${newKeywordsData.device.includes('desktop') ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                           onClick={() => setDeviceType('desktop')}>
+                           <Icon type='desktop' size={14} />
+                           <span>Desktop</span>
+                        </div>
+                        <div
+                           className={`${deviceTabStyle} ${newKeywordsData.device.includes('mobile') ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                           onClick={() => setDeviceType('mobile')}>
+                           <Icon type='mobile' size={14} />
+                           <span>Mobile</span>
+                        </div>
+                     </div>
+                  </div>
                </div>
 
-               {/* Track Competitors Checkbox */}
-               <div className='mt-3 flex items-center gap-2'>
-                  <input
-                     type="checkbox"
-                     id="track_competitors"
-                     className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 cursor-pointer'
-                     checked={newKeywordsData.track_competitors}
-                     onChange={(e) => setNewKeywordsData({ ...newKeywordsData, track_competitors: e.target.checked })}
-                  />
-                  <label htmlFor="track_competitors" className='text-sm text-gray-700 cursor-pointer select-none'>
-                     <Icon type="users" size={14} classes="inline mr-1" />
+               {/* Tags & City */}
+               <div className="grid grid-cols-2 gap-4">
+                  <div className='relative'>
+                     <label className="text-xs font-semibold text-gray-500 uppercase mb-1.5 block tracking-wide">
+                        {t('tracking.addKeywords.tags') || 'Tags'}
+                     </label>
+                     <div className="relative">
+                        <input
+                           className='w-full border rounded-lg border-gray-200 py-2.5 pl-9 pr-8 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-50 transition-all text-sm'
+                           placeholder={t('tracking.addKeywords.tagsPlaceholder')}
+                           value={newKeywordsData.tags}
+                           onChange={(e) => setNewKeywordsData({ ...newKeywordsData, tags: e.target.value })}
+                        />
+                        <span className='absolute text-gray-400 top-3 left-3 pointer-events-none'>
+                           <Icon type="tags" size={14} />
+                        </span>
+                        <span className='absolute text-gray-400 top-3 right-3 cursor-pointer hover:text-gray-600' onClick={() => setShowTagSuggestions(!showTagSuggestions)}>
+                           <Icon type={showTagSuggestions ? 'caret-up' : 'caret-down'} size={14} />
+                        </span>
+                     </div>
+                     {showTagSuggestions && (
+                        <ul className={`absolute z-50 mt-1
+                        bg-white border border-gray-100 rounded-lg shadow-xl w-full max-h-48 overflow-y-auto py-1`}>
+                           {existingTags.length > 0 ? existingTags.map((tag, index) => (
+                              !newKeywordsData.tags.split(',').map((t) => t.trim()).includes(tag) && (
+                                 <li
+                                    className='px-3 py-2 cursor-pointer hover:bg-indigo-50 hover:text-indigo-600 transition-colors text-sm flex items-center gap-2'
+                                    key={index}
+                                    onClick={() => {
+                                       const tagInput = newKeywordsData.tags;
+                                       const tagToInsert = tagInput + (tagInput.trim().slice(-1) === ',' ? '' : (tagInput.trim() ? ', ' : '')) + tag;
+                                       setNewKeywordsData({ ...newKeywordsData, tags: tagToInsert });
+                                       setShowTagSuggestions(false);
+                                       if (inputRef?.current) (inputRef.current as HTMLInputElement).focus();
+                                    }}>
+                                    <Icon type='tags' size={12} /> {tag}
+                                 </li>
+                              )
+                           )) : (
+                              <p className="px-3 py-2 text-xs text-gray-500">{t('tracking.addKeywords.noTags')}</p>
+                           )}
+                        </ul>
+                     )}
+                  </div>
+
+                  <div>
+                     <label className="text-xs font-semibold text-gray-500 uppercase mb-1.5 block tracking-wide">
+                        {t('tracking.addKeywords.city') || 'City'}
+                     </label>
+                     <div className='relative'>
+                        <input
+                           className={`w-full border rounded-lg border-gray-200 py-2.5 pl-9 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-50 transition-all text-sm ${!allowsCity ? 'bg-gray-50 text-gray-400 cursor-not-allowed' : ''} `}
+                           disabled={!allowsCity}
+                           title={!allowsCity ? t('tracking.addKeywords.cityTooltip', { scraper: scraperName }) : ''}
+                           placeholder={!allowsCity ? t('tracking.addKeywords.cityDisabled', { scraper: scraperName }) : t('tracking.addKeywords.cityPlaceholder')}
+                           value={newKeywordsData.city}
+                           onChange={(e) => setNewKeywordsData({ ...newKeywordsData, city: e.target.value })}
+                        />
+                        <span className='absolute text-gray-400 top-3 left-3'><Icon type="city" size={14} /></span>
+                     </div>
+                  </div>
+               </div>
+
+               {/* Track Competitors */}
+               <div className='flex items-center gap-2 pt-1'>
+                  <div className="relative flex items-center">
+                     <input
+                        type="checkbox"
+                        id="track_competitors"
+                        className='peer h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer'
+                        checked={newKeywordsData.track_competitors}
+                        onChange={(e) => setNewKeywordsData({ ...newKeywordsData, track_competitors: e.target.checked })}
+                     />
+                  </div>
+                  <label htmlFor="track_competitors" className='text-sm text-gray-700 cursor-pointer select-none font-medium flex items-center gap-1.5'>
+                     <Icon type="users" size={14} classes="text-gray-500" />
                      {t('tracking.addKeywords.trackCompetitors')}
                   </label>
                </div>
             </div>
-            {error && <div className='w-full mt-4 p-3 text-sm bg-red-50 text-red-700'>{error}</div>}
-            <div className='mt-6 text-right text-sm font-semibold flex justify-between'>
+
+            {error && (
+               <div className='mt-4 p-3 text-sm bg-red-50 text-red-600 border border-red-100 rounded-lg flex items-center gap-2 animate-pulse'>
+                  <Icon type="warning" size={16} />
+                  {error}
+               </div>
+            )}
+
+            <div className='mt-8 pt-4 border-t border-gray-100 flex justify-end gap-3'>
                <button
-                  className=' py-2 px-5 rounded cursor-pointer bg-indigo-50 text-slate-500 mr-3'
+                  className='px-5 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors'
                   onClick={() => closeModal(false)}>
                   {t('tracking.addKeywords.cancel')}
                </button>
                <button
-                  className=' py-2 px-5 rounded cursor-pointer bg-blue-700 text-white'
-                  onClick={() => !isAdding && addKeywords()}>
+                  className={`px-6 py-2.5 rounded-lg text-sm font-semibold text-white shadow-sm transition-all flex items-center gap-2
+                     ${isOverLimit || isAdding
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-md'}`}
+                  disabled={isOverLimit || isAdding}
+                  onClick={() => !isAdding && !isOverLimit && addKeywords()}>
+                  {isAdding && <Icon type="reload" size={14} classes="animate-spin" />}
                   {isAdding ? t('tracking.addKeywords.adding') : t('tracking.addKeywords.add')}
                </button>
             </div>

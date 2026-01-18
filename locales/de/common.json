@@ -469,7 +469,14 @@
       "adding": "Hinzufügen...",
       "errorExist": "Keywords {{keywords}} existieren bereits",
       "errorEmpty": "Bitte geben Sie ein Keyword ein",
-      "noTags": "Keine vorhandenen Tags gefunden..."
+      "noTags": "Keine vorhandenen Tags gefunden...",
+      "planUsage": "Plan Nutzung",
+      "enterKeywords": "Keywords",
+      "country": "Land",
+      "device": "Gerät",
+      "city": "Stadt",
+      "tags": "Tags",
+      "errorLimit": "Planlimit erreicht. Sie können noch {{remaining}} Keywords hinzufügen (Sie versuchen {{count}} hinzuzufügen)."
     },
     "manageCompetitors": {
       "title": "Wettbewerber verwalten",
