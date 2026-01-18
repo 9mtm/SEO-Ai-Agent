@@ -19,15 +19,8 @@ export default function SetupProgress() {
     if (!status) return <div className="p-4 mx-4 animate-pulse bg-gray-100 h-32 rounded-lg"></div>;
 
     // If 100%, hide it from sidebar?
-    if (status.percentage === 100) return (
-        <div className="mx-3 mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-center">
-            <div className="flex items-center justify-center gap-2 text-green-700 font-bold mb-1">
-                <CheckCircle2 className="h-5 w-5" />
-                <span>Setup Complete!</span>
-            </div>
-            <p className="text-xs text-green-600">Your system is fully configured.</p>
-        </div>
-    );
+    // If 100%, hide it from sidebar
+    if (status.percentage === 100) return null;
 
     return (
         <div className="mx-3 mb-6 bg-white border border-blue-100 rounded-xl shadow-sm overflow-hidden">
