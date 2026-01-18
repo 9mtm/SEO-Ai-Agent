@@ -2,21 +2,18 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
-import { CSSTransition } from 'react-transition-group';
 import Icon from '../../components/common/Icon';
 import TopBar from '../../components/common/TopBar';
 import KeywordIdeasTable from '../../components/ideas/KeywordIdeasTable';
 import { exportKeywordIdeas } from '../../utils/client/exportcsv';
 import { useFetchKeywordIdeas, useMutateKeywordIdeas } from '../../services/adwords';
 import { useFetchSettings } from '../../services/settings';
-import Settings from '../../components/settings/Settings';
 import SelectField from '../../components/common/SelectField';
 import allCountries, { adwordsLanguages } from '../../utils/countries';
 import Footer from '../../components/common/Footer';
 
 const Research: NextPage = () => {
    const router = useRouter();
-   const [showSettings, setShowSettings] = useState(false);
    const [showFavorites, setShowFavorites] = useState(false);
    const [language, setLanguage] = useState('1000');
    const [country, setCountry] = useState('US');
@@ -61,7 +58,7 @@ const Research: NextPage = () => {
          <Head>
             <title>Research Keywords - Dpro</title>
          </Head>
-         <TopBar showSettings={() => setShowSettings(true)} />
+         <TopBar />
          <div className=" w-full max-w-7xl mx-auto lg:flex lg:flex-row">
             <div className="sidebar w-full p-6 lg:pt-44 lg:w-1/5 lg:block lg:pr-0" data-testid="sidebar">
                <h3 className="hidden py-7 text-base font-bold text-blue-700 lg:block">
@@ -139,9 +136,6 @@ const Research: NextPage = () => {
                />
             </div>
          </div>
-         <CSSTransition in={showSettings} timeout={300} classNames="settings_anim" unmountOnExit mountOnEnter>
-            <Settings closeSettings={() => setShowSettings(false)} />
-         </CSSTransition>
          <Footer currentVersion={appSettings?.settings?.version ? appSettings.settings.version : ''} />
       </div>
    );

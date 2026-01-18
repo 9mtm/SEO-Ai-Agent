@@ -12,6 +12,7 @@ type UserInfoResponse = {
         email: string;
         picture?: string;
         ai_api_keys?: any;
+        language?: string;
     };
     error?: string;
 };
@@ -47,7 +48,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                     name: user.name || user.email?.split('@')[0] || 'User',
                     email: user.email || '',
                     picture: userData.google_picture || userData.picture || undefined,
-                    ai_api_keys: userData.ai_api_keys
+                    ai_api_keys: userData.ai_api_keys,
+                    language: user.language || 'en'
                 }
             });
         }
@@ -67,10 +69,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         }
 
         if (req.method === 'PUT') {
-            const { name, ai_api_keys } = req.body;
+            const { name, ai_api_keys, language } = req.body;
 
             if (name) user.name = name;
             if (ai_api_keys) user.ai_api_keys = ai_api_keys;
+            if (language) user.language = language;
 
             await user.save();
 

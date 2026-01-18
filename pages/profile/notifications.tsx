@@ -29,10 +29,19 @@ const NotificationsPage: NextPage = () => {
     });
     const [notificationEmail, setNotificationEmail] = useState('');
 
+    const getAuthHeaders = () => {
+        const headers: any = { 'Content-Type': 'application/json' };
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+        if (token) headers.Authorization = `Bearer ${token}`;
+        return headers;
+    };
+
     useEffect(() => {
         const fetchSettings = async () => {
             try {
-                const res = await fetch('/api/user/update-notifications');
+                const res = await fetch('/api/user/update-notifications', {
+                    headers: getAuthHeaders()
+                });
                 const data = await res.json();
                 if (data.success && data.settings) {
                     setNotifications({
@@ -78,7 +87,7 @@ const NotificationsPage: NextPage = () => {
         try {
             const response = await fetch('/api/user/update-notifications', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     ...notifications,
                     notificationEmail,
@@ -107,7 +116,7 @@ const NotificationsPage: NextPage = () => {
         try {
             const response = await fetch('/api/user/test-notification', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ slug })
             });
 

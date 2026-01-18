@@ -28,11 +28,21 @@ const ConnectionsPage: NextPage = () => {
         chatgpt: ''
     });
 
+
+    const getAuthHeaders = () => {
+        const headers: any = { 'Content-Type': 'application/json' };
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+        if (token) headers.Authorization = `Bearer ${token}`;
+        return headers;
+    };
+
     // Fetch User Data including keys
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/api/user');
+                const response = await fetch('/api/user', {
+                    headers: getAuthHeaders()
+                });
                 const data = await response.json();
 
                 if (data.success && data.user) {
@@ -57,14 +67,13 @@ const ConnectionsPage: NextPage = () => {
         fetchData();
     }, []);
 
+
     const handleSave = async () => {
         setIsSaving(true);
         try {
             const response = await fetch('/api/user', {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     ai_api_keys: apiKeys
                 })
@@ -84,6 +93,7 @@ const ConnectionsPage: NextPage = () => {
             setIsSaving(false);
         }
     };
+
 
     // Translations
     const translations = {
@@ -150,6 +160,7 @@ const ConnectionsPage: NextPage = () => {
                     <p className="text-neutral-600">{t.description}</p>
                 </div>
 
+                    {/* AI Connections Card */}
                 <Card>
                     <CardHeader>
                         <CardTitle>{t.connectTitle}</CardTitle>
@@ -216,7 +227,7 @@ const ConnectionsPage: NextPage = () => {
                             )}
                         </Button>
                     </CardFooter>
-                </Card>
+                    </Card>
             </div>
             <Toaster position="bottom-right" />
         </DashboardLayout>

@@ -18,9 +18,13 @@ const Onboarding = () => {
             const hasSubscribed = localStorage.getItem('newsletter_subscription');
             if (hasSubscribed === 'true') {
                 try {
+                    const token = localStorage.getItem('auth_token');
+                    const headers: any = { 'Content-Type': 'application/json' };
+                    if (token) headers.Authorization = `Bearer ${token}`;
+
                     await fetch('/api/user/update-notifications', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: headers,
                         body: JSON.stringify({
                             marketingEmails: true,
                             emailAlerts: true,

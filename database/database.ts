@@ -9,6 +9,7 @@ import Post from './models/post';
 import ApiKey from './models/apiKey';
 import ApiAuditLog from './models/apiAuditLog';
 import NotificationSetting from './models/notificationSetting';
+import PlatformIntegration from './models/platformIntegration';
 
 // MySQL connection only (SQLite removed for performance and simplicity)
 // Debugging DB Credentials
@@ -33,7 +34,7 @@ const connection = new Sequelize({
       acquire: 30000,
    },
    logging: false,
-   models: [User, Domain, Keyword, FailedJob, ChatMessage, ChatSession, Post, ApiKey, ApiAuditLog, NotificationSetting],
+   models: [User, Domain, Keyword, FailedJob, ChatMessage, ChatSession, Post, ApiKey, ApiAuditLog, NotificationSetting, PlatformIntegration],
 });
 
 export default connection;

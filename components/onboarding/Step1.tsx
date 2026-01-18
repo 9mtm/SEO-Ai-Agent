@@ -27,10 +27,22 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
         checkGoogleConnection();
     }, []);
 
+    // Helper for auth headers
+    const getAuthHeaders = () => {
+        const headers: any = { 'Content-Type': 'application/json' };
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
+        }
+        return headers;
+    };
+
     const checkGoogleConnection = async () => {
         setCheckingConnection(true);
         try {
-            const res = await fetch('/api/settings');
+            const res = await fetch('/api/settings', {
+                headers: getAuthHeaders()
+            });
             const data = await res.json();
             if (data.settings?.google_connected) {
                 setIsGoogleConnected(true);
@@ -47,7 +59,9 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
     const fetchGscSites = async () => {
         setLoadingSites(true);
         try {
-            const res = await fetch('/api/gsc/sites');
+            const res = await fetch('/api/gsc/sites', {
+                headers: getAuthHeaders()
+            });
             const data = await res.json();
             if (data.sites && Array.isArray(data.sites)) {
                 // Filter out sc-domain sites to avoid duplicates
@@ -166,7 +180,7 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
             // Save data via API
             const res = await fetch('/api/onboarding/save', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     step: 1,
                     data: {

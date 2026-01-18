@@ -8,8 +8,25 @@ type UpdatePayload = {
    domain: DomainType
 }
 
+// Helper for headers
+const getAuthHeaders = (otherHeaders: any = { 'Content-Type': 'application/json' }) => {
+   const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+   if (token) {
+      if (otherHeaders instanceof Headers) {
+         otherHeaders.append('Authorization', `Bearer ${token}`);
+         return otherHeaders;
+      }
+      return { ...otherHeaders, Authorization: `Bearer ${token}` };
+   }
+   return otherHeaders;
+};
+
 export async function fetchDomains(router: NextRouter, withStats: boolean): Promise<{ domains: DomainType[] }> {
-   const res = await fetch(`${window.location.origin}/api/domains${withStats ? '?withstats=true' : ''}`, { method: 'GET' });
+   const res = await fetch(`${window.location.origin}/api/domains${withStats ? '?withstats=true' : ''}`, {
+      method: 'GET',
+      headers: getAuthHeaders()
+   });
+
    if (res.status >= 400 && res.status < 600) {
       if (res.status === 401) {
          console.log('Unauthorized!!');
@@ -22,7 +39,11 @@ export async function fetchDomains(router: NextRouter, withStats: boolean): Prom
 
 export async function fetchDomain(router: NextRouter, domainName: string): Promise<{ domain: DomainType }> {
    if (!domainName) { throw new Error('No Domain Name Provided!'); }
-   const res = await fetch(`${window.location.origin}/api/domain?domain=${domainName}`, { method: 'GET' });
+
+   const res = await fetch(`${window.location.origin}/api/domain?domain=${domainName}`, {
+      method: 'GET',
+      headers: getAuthHeaders()
+   });
    if (res.status >= 400 && res.status < 600) {
       if (res.status === 401) {
          console.log('Unauthorized!!');
@@ -39,7 +60,10 @@ export async function fetchDomainScreenshot(domain: string, forceFetch = false):
    if (!domThumbs[domain] || forceFetch) {
       try {
          const screenshotURL = `${window.location.origin}/api/screenshot?domain=${domain}`;
-         const domainImageRes = await fetch(screenshotURL);
+         // Screenshots are public usually, or fetched via backend proxy. 
+         // If endpoint needs auth, add headers here. Usually screenshots are cached public assets or proxied.
+         // Assuming this might need auth too if it's an API route.
+         const domainImageRes = await fetch(screenshotURL, { headers: getAuthHeaders() });
          const domainImageBlob = domainImageRes.status === 200 ? await domainImageRes.blob() : false;
          if (domainImageBlob) {
             const reader = new FileReader();
@@ -87,7 +111,7 @@ export function useAddDomain(onSuccess: Function) {
    return useMutation({
       mutationFn: async (domains: string[]) => {
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
-         const fetchOpts = { method: 'POST', headers, body: JSON.stringify({ domains }) };
+         const fetchOpts = { method: 'POST', headers: getAuthHeaders(headers), body: JSON.stringify({ domains }) };
          const res = await fetch(`${window.location.origin}/api/domains`, fetchOpts);
          if (res.status >= 400 && res.status < 600) {
             throw new Error('Bad response from server');
@@ -123,7 +147,7 @@ export function useUpdateDomain(onSuccess: Function) {
    return useMutation({
       mutationFn: async ({ domainSettings, domain }: UpdatePayload) => {
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
-         const fetchOpts = { method: 'PUT', headers, body: JSON.stringify(domainSettings) };
+         const fetchOpts = { method: 'PUT', headers: getAuthHeaders(headers), body: JSON.stringify(domainSettings) };
          const res = await fetch(`${window.location.origin}/api/domains?domain=${domain.domain}`, fetchOpts);
          const responseObj = await res.json();
          if (res.status >= 400 && res.status < 600) {
@@ -150,7 +174,10 @@ export function useDeleteDomain(onSuccess: Function) {
 
    return useMutation({
       mutationFn: async (domain: DomainType) => {
-         const res = await fetch(`${window.location.origin}/api/domains?domain=${domain.domain}`, { method: 'DELETE' });
+         const res = await fetch(`${window.location.origin}/api/domains?domain=${domain.domain}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders()
+         });
          if (res.status >= 400 && res.status < 600) {
             throw new Error('Bad response from server');
          }

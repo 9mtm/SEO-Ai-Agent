@@ -38,7 +38,9 @@
       "Bash(timeout:*)",
       "Bash(npm pack:*)",
       "Bash(npm publish:*)",
-      "Bash(where:*)"
+      "Bash(where:*)",
+      "Bash(find:*)",
+      "Bash(php -l:*)"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"

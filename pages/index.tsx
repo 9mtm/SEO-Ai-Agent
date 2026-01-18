@@ -29,8 +29,15 @@ const Home: NextPage = () => {
   const { data: domainsData } = useFetchDomains(router, false, { enabled: isLoggedIn });
   const domains = domainsData?.domains || [];
 
+  const getAuthHeaders = () => {
+    const headers: any = { 'Content-Type': 'application/json' };
+    const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+    if (token) headers.Authorization = `Bearer ${token}`;
+    return headers;
+  };
+
   useEffect(() => {
-    fetch('/api/user')
+    fetch('/api/user', { headers: getAuthHeaders() })
       .then((res) => {
         if (res.ok) {
           setIsLoggedIn(true);

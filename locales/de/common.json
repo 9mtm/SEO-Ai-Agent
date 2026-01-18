@@ -626,11 +626,14 @@
       "connectBtn": "Google-Konto verbinden",
       "connectDesc": "Verknüpfen Sie Ihr Google-Konto, um Websites automatisch zu verifizieren und Leistungsdaten direkt in Ihr Dashboard abzurufen."
     },
-    "delete": {
-      "cardTitle": "Website löschen",
-      "cardDesc": "Unwiderrufliche Aktionen für Ihre Website.",
-      "msg": "Entfernen Sie diese Website und alle Daten dauerhaft. Diese Aktion kann nicht rückgängig gemacht werden.",
-      "confirm": "Bitte geben Sie {{domain}} zur Bestätigung ein.",
+    "danger": {
+      "title": "Website löschen",
+      "desc": "Unwiderrufliche Aktionen für Ihre Website.",
+      "warning": "Entfernen Sie diese Website und alle Daten dauerhaft. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "warning1": "Alle Keyword-Tracking-Daten werden gelöscht",
+      "warning2": "Alle Beiträge und Inhalte werden entfernt",
+      "warning3": "Alle Analyse- und Leistungsdaten gehen verloren",
+      "confirmLabel": "Bitte geben Sie {{domain}} zur Bestätigung ein",
       "btn": "Website löschen",
       "deleting": "Löschen..."
     }

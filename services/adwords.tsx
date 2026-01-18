@@ -2,17 +2,29 @@ import { NextRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+const getAuthHeaders = (otherHeaders: any = { 'Content-Type': 'application/json' }) => {
+   const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+   if (token) {
+      if (otherHeaders instanceof Headers) {
+         otherHeaders.append('Authorization', `Bearer ${token}`);
+         return otherHeaders;
+      }
+      return { ...otherHeaders, Authorization: `Bearer ${token}` };
+   }
+   return otherHeaders;
+};
+
 export function useTestAdwordsIntegration(onSuccess?: Function) {
    return useMutation({
-      mutationFn: async (payload:{developer_token:string, account_id:string}) => {
+      mutationFn: async (payload: { developer_token: string, account_id: string }) => {
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
-      const fetchOpts = { method: 'POST', headers, body: JSON.stringify({ ...payload }) };
-      const res = await fetch(`${window.location.origin}/api/adwords`, fetchOpts);
-      if (res.status >= 400 && res.status < 600) {
-         throw new Error('Bad response from server');
-      }
-      return res.json();
-   },
+         const fetchOpts = { method: 'POST', headers: getAuthHeaders(headers), body: JSON.stringify({ ...payload }) };
+         const res = await fetch(`${window.location.origin}/api/adwords`, fetchOpts);
+         if (res.status >= 400 && res.status < 600) {
+            throw new Error('Bad response from server');
+         }
+         return res.json();
+      },
       onSuccess: async (data) => {
          console.log('Ideas Added:', data);
          toast('Google Ads has been integrated successfully!', { icon: '✔️' });
@@ -29,7 +41,10 @@ export function useTestAdwordsIntegration(onSuccess?: Function) {
 
 export async function fetchAdwordsKeywordIdeas(router: NextRouter, domainSlug: string) {
    // if (!router.query.slug) { throw new Error('Invalid Domain Name'); }
-   const res = await fetch(`${window.location.origin}/api/ideas?domain=${domainSlug}`, { method: 'GET' });
+   const res = await fetch(`${window.location.origin}/api/ideas?domain=${domainSlug}`, {
+      method: 'GET',
+      headers: getAuthHeaders()
+   });
    if (res.status >= 400 && res.status < 600) {
       if (res.status === 401) {
          console.log('Unauthorized!!');
@@ -52,19 +67,19 @@ export function useFetchKeywordIdeas(router: NextRouter, adwordsConnected = fals
    });
 }
 
-export function useMutateKeywordIdeas(router:NextRouter, onSuccess?: Function) {
+export function useMutateKeywordIdeas(router: NextRouter, onSuccess?: Function) {
    const queryClient = useQueryClient();
    const domainSlug = router.pathname === '/research' ? 'research' : router.query.slug as string;
    return useMutation({
-      mutationFn: async (data:Record<string, any>) => {
+      mutationFn: async (data: Record<string, any>) => {
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
-      const fetchOpts = { method: 'POST', headers, body: JSON.stringify({ ...data }) };
-      const res = await fetch(`${window.location.origin}/api/ideas`, fetchOpts);
-      if (res.status >= 400 && res.status < 600) {
-         throw new Error('Bad response from server');
-      }
-      return res.json();
-   },
+         const fetchOpts = { method: 'POST', headers: getAuthHeaders(headers), body: JSON.stringify({ ...data }) };
+         const res = await fetch(`${window.location.origin}/api/ideas`, fetchOpts);
+         if (res.status >= 400 && res.status < 600) {
+            throw new Error('Bad response from server');
+         }
+         return res.json();
+      },
       onSuccess: async (data) => {
          console.log('Ideas Added:', data);
          toast('Keyword Ideas Loaded Successfully!', { icon: '✔️' });
@@ -80,19 +95,19 @@ export function useMutateKeywordIdeas(router:NextRouter, onSuccess?: Function) {
    });
 }
 
-export function useMutateFavKeywordIdeas(router:NextRouter, onSuccess?: Function) {
+export function useMutateFavKeywordIdeas(router: NextRouter, onSuccess?: Function) {
    const queryClient = useQueryClient();
    const domainSlug = router.pathname === '/research' ? 'research' : router.query.slug as string;
    return useMutation({
-      mutationFn: async (payload:Record<string, any>) => {
+      mutationFn: async (payload: Record<string, any>) => {
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
-      const fetchOpts = { method: 'PUT', headers, body: JSON.stringify({ ...payload }) };
-      const res = await fetch(`${window.location.origin}/api/ideas`, fetchOpts);
-      if (res.status >= 400 && res.status < 600) {
-         throw new Error('Bad response from server');
-      }
-      return res.json();
-   },
+         const fetchOpts = { method: 'PUT', headers: getAuthHeaders(headers), body: JSON.stringify({ ...payload }) };
+         const res = await fetch(`${window.location.origin}/api/ideas`, fetchOpts);
+         if (res.status >= 400 && res.status < 600) {
+            throw new Error('Bad response from server');
+         }
+         return res.json();
+      },
       onSuccess: async (data) => {
          console.log('Ideas Added:', data);
          // toast('Keyword Updated!', { icon: '✔️' });
@@ -110,24 +125,24 @@ export function useMutateFavKeywordIdeas(router:NextRouter, onSuccess?: Function
 
 export function useMutateKeywordsVolume(onSuccess?: Function) {
    return useMutation({
-      mutationFn: async (data:Record<string, any>) => {
+      mutationFn: async (data: Record<string, any>) => {
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
-      const fetchOpts = { method: 'POST', headers, body: JSON.stringify({ ...data }) };
-      const res = await fetch(`${window.location.origin}/api/volume`, fetchOpts);
-      if (res.status >= 400 && res.status < 600) {
-         const errorData = await res.json();
-         throw new Error(errorData?.error ? errorData.error : 'Bad response from server');
-      }
-      return res.json();
-   },
+         const fetchOpts = { method: 'POST', headers: getAuthHeaders(headers), body: JSON.stringify({ ...data }) };
+         const res = await fetch(`${window.location.origin}/api/volume`, fetchOpts);
+         if (res.status >= 400 && res.status < 600) {
+            const errorData = await res.json();
+            throw new Error(errorData?.error ? errorData.error : 'Bad response from server');
+         }
+         return res.json();
+      },
       onSuccess: async (data) => {
          toast('Keyword Volume Data Loaded Successfully! Reloading Page...', { icon: '✔️' });
          if (onSuccess) {
             onSuccess(false);
          }
-        setTimeout(() => {
-         window.location.reload();
-        }, 3000);
+         setTimeout(() => {
+            window.location.reload();
+         }, 3000);
       },
       onError: (error) => {
          console.log('Error Loading Keyword Volume Data!!!', error);

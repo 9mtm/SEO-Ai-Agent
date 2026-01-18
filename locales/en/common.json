@@ -625,11 +625,14 @@
       "connectBtn": "Connect Google Account",
       "connectDesc": "Link your Google account to automatically verify sites and fetch performance data directly into your dashboard."
     },
-    "delete": {
-      "cardTitle": "Delete Site",
-      "cardDesc": "Irreversible actions for your site.",
-      "msg": "Permanently remove this site and all its data. This action cannot be undone.",
-      "confirm": "Please type {{domain}} to confirm.",
+    "danger": {
+      "title": "Delete Site",
+      "desc": "Irreversible actions for your site.",
+      "warning": "Permanently remove this site and all its data. This action cannot be undone.",
+      "warning1": "All keyword tracking data will be deleted",
+      "warning2": "All posts and content will be removed",
+      "warning3": "All analytics and performance data will be lost",
+      "confirmLabel": "Please type {{domain}} to confirm",
       "btn": "Delete Site",
       "deleting": "Deleting..."
     }

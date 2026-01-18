@@ -3,18 +3,18 @@ import Cookies from 'cookies';
 import jwt from 'jsonwebtoken';
 
 interface DecodedToken {
-  userId?: number;
-  email?: string;
-  name?: string;
-  user?: string; // Legacy single-user mode
-  legacy?: boolean;
+   userId?: number;
+   email?: string;
+   name?: string;
+   user?: string; // Legacy single-user mode
+   legacy?: boolean;
 }
 
 interface VerifyUserResult {
-  authorized: boolean;
-  userId?: number;
-  user?: DecodedToken;
-  isLegacy?: boolean;
+   authorized: boolean;
+   userId?: number;
+   user?: DecodedToken;
+   isLegacy?: boolean;
 }
 
 /**
@@ -40,22 +40,34 @@ const verifyUser = (req: NextApiRequest, res: NextApiResponse): VerifyUserResult
       'GET:/api/insight',
    ];
 
-   const verifiedAPI = req.headers.authorization
-      ? req.headers.authorization.substring('Bearer '.length) === process.env.APIKEY
+   const authHeader = req.headers.authorization;
+
+   // 1. Static API Key Authentication (Cron/External)
+   const verifiedAPI = authHeader
+      ? authHeader.substring('Bearer '.length) === process.env.APIKEY
       : false;
 
    const accessingAllowedRoute = req.url && req.method
       && allowedApiRoutes.includes(`${req.method}:${req.url.replace(/\?(.*)/, '')}`);
 
-   // API Key authentication (for CRON jobs and external access)
    if (verifiedAPI && accessingAllowedRoute) {
       return { authorized: true };
    }
 
-   // JWT Token authentication
-   if (token && process.env.SECRET) {
+   // 2. JWT Token Authentication (Cookie OR Bearer)
+   let jwtToken = token;
+   // If no cookie, check Bearer header for JWT
+   if (!jwtToken && authHeader && authHeader.startsWith('Bearer ')) {
+      const possibleToken = authHeader.substring('Bearer '.length);
+      // Ensure it's not the static API key before treating as JWT
+      if (possibleToken !== process.env.APIKEY) {
+         jwtToken = possibleToken;
+      }
+   }
+
+   if (jwtToken && process.env.SECRET) {
       try {
-         const decoded = jwt.verify(token, process.env.SECRET) as DecodedToken;
+         const decoded = jwt.verify(jwtToken, process.env.SECRET) as DecodedToken;
 
          // Multi-tenant mode (new system)
          if (decoded.userId) {

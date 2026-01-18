@@ -47,11 +47,20 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
     const fileInputRef = useRef<HTMLInputElement>(null);
     const imageInputRef = useRef<HTMLInputElement>(null);
 
+    const getAuthHeaders = () => {
+        const headers: any = { 'Content-Type': 'application/json' };
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+        if (token) headers.Authorization = `Bearer ${token}`;
+        return headers;
+    };
+
     // Fetch available models based on user's API keys
     useEffect(() => {
         const fetchAvailableModels = async () => {
             try {
-                const response = await fetch('/api/user');
+                const response = await fetch('/api/user', {
+                    headers: getAuthHeaders()
+                });
                 const data = await response.json();
 
                 if (data.success && data.user?.ai_api_keys) {
@@ -101,6 +110,10 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
             sessionId: currentSessionId,
             model: selectedModel
         },
+        headers: (() => {
+            const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+            return token ? { 'Authorization': `Bearer ${token}` } : {};
+        })() as any,
         initialMessages: initialMessages || [],
         onResponse: (response) => {
             const newSessionId = response.headers.get('X-Session-Id');
@@ -118,7 +131,9 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
     }, [messages]);
 
     const fetchSessions = async () => {
-        const res = await fetch(`/api/agent/sessions?domain=${domain.domain}`);
+        const res = await fetch(`/api/agent/sessions?domain=${domain.domain}`, {
+            headers: getAuthHeaders()
+        });
         if (res.ok) {
             const data = await res.json();
             setSessions(data);
@@ -136,6 +151,7 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
         try {
             const response = await fetch(`/api/agent/sessions?id=${sessionId}`, {
                 method: 'DELETE',
+                headers: getAuthHeaders()
             });
 
             if (response.ok) {
@@ -156,7 +172,9 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
     const handleSwitchSession = async (sessionId: any) => {
         if (isLoading) return;
         setCurrentSessionId(sessionId);
-        const res = await fetch(`/api/agent/chat/history?sessionId=${sessionId}`);
+        const res = await fetch(`/api/agent/chat/history?sessionId=${sessionId}`, {
+            headers: getAuthHeaders()
+        });
         if (res.ok) {
             const data = await res.json();
             setMessages(data);
@@ -194,7 +212,9 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
     const handleAccessSEOStats = async () => {
         try {
             // Fetch SEO stats for the domain
-            const res = await fetch(`/api/domains/${domain.domain}/stats`);
+            const res = await fetch(`/api/domains/${domain.domain}/stats`, {
+                headers: getAuthHeaders()
+            });
             if (res.ok) {
                 const stats = await res.json();
                 const statsMessage = `Here are the current SEO statistics for ${domain.domain}:\n\n` +

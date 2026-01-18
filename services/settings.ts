@@ -1,8 +1,24 @@
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+// Helper for headers
+const getAuthHeaders = (otherHeaders: any = { 'Content-Type': 'application/json' }) => {
+   const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+   if (token) {
+      if (otherHeaders instanceof Headers) {
+         otherHeaders.append('Authorization', `Bearer ${token}`);
+         return otherHeaders;
+      }
+      return { ...otherHeaders, Authorization: `Bearer ${token}` };
+   }
+   return otherHeaders;
+};
+
 export async function fetchSettings() {
-   const res = await fetch(`${window.location.origin}/api/settings`, { method: 'GET' });
+   const res = await fetch(`${window.location.origin}/api/settings`, {
+      method: 'GET',
+      headers: getAuthHeaders()
+   });
    return res.json();
 }
 
@@ -13,13 +29,13 @@ export function useFetchSettings() {
    });
 }
 
-export const useUpdateSettings = (onSuccess:Function|undefined) => {
+export const useUpdateSettings = (onSuccess: Function | undefined) => {
    const queryClient = useQueryClient();
 
    return useMutation({
       mutationFn: async (settings: SettingsType) => {
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
-         const fetchOpts = { method: 'PUT', headers, body: JSON.stringify({ settings }) };
+         const fetchOpts = { method: 'PUT', headers: getAuthHeaders(headers), body: JSON.stringify({ settings }) };
          const res = await fetch(`${window.location.origin}/api/settings`, fetchOpts);
          if (res.status >= 400 && res.status < 600) {
             throw new Error('Bad response from server');
@@ -40,12 +56,12 @@ export const useUpdateSettings = (onSuccess:Function|undefined) => {
    });
 };
 
-export function useClearFailedQueue(onSuccess:Function) {
+export function useClearFailedQueue(onSuccess: Function) {
    const queryClient = useQueryClient();
    return useMutation({
       mutationFn: async () => {
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
-         const fetchOpts = { method: 'PUT', headers };
+         const fetchOpts = { method: 'PUT', headers: getAuthHeaders(headers) };
          const res = await fetch(`${window.location.origin}/api/clearfailed`, fetchOpts);
          if (res.status >= 400 && res.status < 600) {
             throw new Error('Bad response from server');
@@ -65,7 +81,10 @@ export function useClearFailedQueue(onSuccess:Function) {
 }
 
 export async function fetchMigrationStatus() {
-   const res = await fetch(`${window.location.origin}/api/dbmigrate`, { method: 'GET' });
+   const res = await fetch(`${window.location.origin}/api/dbmigrate`, {
+      method: 'GET',
+      headers: getAuthHeaders()
+   });
    return res.json();
 }
 
@@ -76,12 +95,15 @@ export function useCheckMigrationStatus() {
    });
 }
 
-export const useMigrateDatabase = (onSuccess:Function|undefined) => {
+export const useMigrateDatabase = (onSuccess: Function | undefined) => {
    const queryClient = useQueryClient();
 
    return useMutation({
       mutationFn: async () => {
-         const res = await fetch(`${window.location.origin}/api/dbmigrate`, { method: 'POST' });
+         const res = await fetch(`${window.location.origin}/api/dbmigrate`, {
+            method: 'POST',
+            headers: getAuthHeaders()
+         });
          if (res.status >= 400 && res.status < 600) {
             throw new Error('Bad response from server');
          }

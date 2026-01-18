@@ -67,6 +67,16 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
         localStorage.setItem('default_country', updated[0]);
     };
 
+    // Helper for auth headers
+    const getAuthHeaders = () => {
+        const headers: any = { 'Content-Type': 'application/json' };
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
+        }
+        return headers;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
@@ -89,7 +99,7 @@ const Step2_5 = ({ onNext, onBack, suggestedKeywords }: Step2_5Props) => {
         try {
             const res = await fetch('/api/onboarding/save', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     step: 2.5,
                     data: {

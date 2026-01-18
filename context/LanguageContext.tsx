@@ -25,14 +25,47 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         setIsLoaded(true);
+
+        // Sync language from User DB if logged in
+        const syncFromDb = async () => {
+            const token = localStorage.getItem('auth_token');
+            if (token) {
+                try {
+                    const res = await fetch('/api/user', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    if (data.success && data.user?.language && data.user.language !== locale) {
+                        // If DB has a different language, switch to it
+                        router.push(router.pathname, router.asPath, { locale: data.user.language });
+                    }
+                } catch (e) {
+                    // Ignore errors
+                }
+            }
+        };
+        syncFromDb();
     }, []);
 
     const setLocale = (newLocale: Locale) => {
         // Save preference to localStorage
         localStorage.setItem('app_locale', newLocale);
 
-        // Use Next.js router to change locale (this will update the URL)
+        // Use Next.js router to change locale
         router.push(router.pathname, router.asPath, { locale: newLocale });
+
+        // Save to Database if logged in
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+            fetch('/api/user', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ language: newLocale })
+            }).catch(console.error);
+        }
     };
 
     const t = (key: string, vars: Record<string, any> = {}) => {

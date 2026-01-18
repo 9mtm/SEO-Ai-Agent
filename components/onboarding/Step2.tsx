@@ -35,6 +35,16 @@ const Step2 = ({ onNext, onBack, initialData }: Step2Props) => {
         }
     }, [initialData]);
 
+    // Helper for auth headers
+    const getAuthHeaders = () => {
+        const headers: any = { 'Content-Type': 'application/json' };
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
+        }
+        return headers;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
@@ -53,7 +63,7 @@ const Step2 = ({ onNext, onBack, initialData }: Step2Props) => {
         try {
             const res = await fetch('/api/onboarding/save', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ step: 2, data: formData }),
             });
             const data = await res.json();

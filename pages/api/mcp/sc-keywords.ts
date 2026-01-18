@@ -153,7 +153,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             keywords: keywordsReduced,
             summary,
             domain: {
-                id: domainObj.id,
+                id: domainObj.ID,
                 domain: domainObj.domain,
             },
         });

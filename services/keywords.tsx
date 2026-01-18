@@ -3,9 +3,25 @@ import toast from 'react-hot-toast';
 import { NextRouter } from 'next/router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+// Helper to get headers
+const getAuthHeaders = (otherHeaders: any = { 'Content-Type': 'application/json' }) => {
+   const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+   if (token) {
+      if (otherHeaders instanceof Headers) {
+         otherHeaders.append('Authorization', `Bearer ${token}`);
+         return otherHeaders;
+      }
+      return { ...otherHeaders, Authorization: `Bearer ${token}` };
+   }
+   return otherHeaders;
+};
+
 export const fetchKeywords = async (router: NextRouter, domain: string) => {
    if (!domain) { return []; }
-   const res = await fetch(`${window.location.origin}/api/keywords?domain=${domain}`, { method: 'GET' });
+   const res = await fetch(`${window.location.origin}/api/keywords?domain=${domain}`, {
+      method: 'GET',
+      headers: getAuthHeaders()
+   });
    return res.json();
 };
 
@@ -44,7 +60,7 @@ export function useAddKeywords(onSuccess: Function) {
    return useMutation({
       mutationFn: async (keywords: KeywordAddPayload[]) => {
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
-         const fetchOpts = { method: 'POST', headers, body: JSON.stringify({ keywords }) };
+         const fetchOpts = { method: 'POST', headers: getAuthHeaders(headers), body: JSON.stringify({ keywords }) };
          const res = await fetch(`${window.location.origin}/api/keywords`, fetchOpts);
          if (res.status >= 400 && res.status < 600) {
             throw new Error('Bad response from server');
@@ -69,7 +85,10 @@ export function useDeleteKeywords(onSuccess: Function) {
    return useMutation({
       mutationFn: async (keywordIDs: number[]) => {
          const keywordIds = keywordIDs.join(',');
-         const res = await fetch(`${window.location.origin}/api/keywords?id=${keywordIds}`, { method: 'DELETE' });
+         const res = await fetch(`${window.location.origin}/api/keywords?id=${keywordIds}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders()
+         });
          if (res.status >= 400 && res.status < 600) {
             throw new Error('Bad response from server');
          }
@@ -93,7 +112,7 @@ export function useFavKeywords(onSuccess: Function) {
    return useMutation({
       mutationFn: async ({ keywordID, sticky }: { keywordID: number, sticky: boolean }) => {
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
-         const fetchOpts = { method: 'PUT', headers, body: JSON.stringify({ sticky }) };
+         const fetchOpts = { method: 'PUT', headers: getAuthHeaders(headers), body: JSON.stringify({ sticky }) };
          const res = await fetch(`${window.location.origin}/api/keywords?id=${keywordID}`, fetchOpts);
          if (res.status >= 400 && res.status < 600) {
             throw new Error('Bad response from server');
@@ -119,7 +138,7 @@ export function useUpdateKeywordTags(onSuccess: Function) {
       mutationFn: async ({ tags }: { tags: { [ID: number]: string[] } }) => {
          const keywordIds = Object.keys(tags).join(',');
          const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
-         const fetchOpts = { method: 'PUT', headers, body: JSON.stringify({ tags }) };
+         const fetchOpts = { method: 'PUT', headers: getAuthHeaders(headers), body: JSON.stringify({ tags }) };
          const res = await fetch(`${window.location.origin}/api/keywords?id=${keywordIds}`, fetchOpts);
          if (res.status >= 400 && res.status < 600) {
             throw new Error('Bad response from server');
@@ -145,7 +164,10 @@ export function useRefreshKeywords(onSuccess: Function) {
          const keywordIds = ids.join(',');
          console.log(keywordIds);
          const query = ids.length === 0 && domain ? `?id=all&domain=${domain}` : `?id=${keywordIds}`;
-         const res = await fetch(`${window.location.origin}/api/refresh${query}`, { method: 'POST' });
+         const res = await fetch(`${window.location.origin}/api/refresh${query}`, {
+            method: 'POST',
+            headers: getAuthHeaders()
+         });
          if (res.status >= 400 && res.status < 600) {
             throw new Error('Bad response from server');
          }
@@ -170,7 +192,10 @@ export function useFetchSingleKeyword(keywordID: number) {
       queryFn: async () => {
          try {
             const fetchURL = `${window.location.origin}/api/keyword?id=${keywordID}`;
-            const res = await fetch(fetchURL, { method: 'GET' }).then((result) => result.json());
+            const res = await fetch(fetchURL, {
+               method: 'GET',
+               headers: getAuthHeaders()
+            }).then((result) => result.json());
             if (res.status >= 400 && res.status < 600) {
                throw new Error('Bad response from server');
             }
@@ -184,7 +209,10 @@ export function useFetchSingleKeyword(keywordID: number) {
 
 export async function fetchSearchResults(router: NextRouter, keywordData: Record<string, string>) {
    const { keyword, country, device } = keywordData;
-   const res = await fetch(`${window.location.origin}/api/refresh?keyword=${keyword}&country=${country}&device=${device}`, { method: 'GET' });
+   const res = await fetch(`${window.location.origin}/api/refresh?keyword=${keyword}&country=${country}&device=${device}`, {
+      method: 'GET',
+      headers: getAuthHeaders()
+   });
    if (res.status >= 400 && res.status < 600) {
       if (res.status === 401) {
          console.log('Unauthorized!!');

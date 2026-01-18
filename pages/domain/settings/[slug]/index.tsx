@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Save, Settings, Info, Briefcase, FileText, Plus, X, Globe, Link2, CheckCircle, Target, Zap, Flag, Plug, Download, Loader2 } from 'lucide-react';
+import { Save, Settings, Info, Briefcase, FileText, Plus, X, Globe, CheckCircle, Target, Zap, Flag, Loader2 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import { useFetchDomains, useDeleteDomain } from '../../../../services/domains';
@@ -20,9 +20,9 @@ const DomainSettingsPage: NextPage = () => {
     const router = useRouter();
     const { t } = useLanguage();
     const { data: domainsData, refetch } = useFetchDomains(router);
-    const [activeDomain, setActiveDomain] = useState<DomainType | null>(null);
+    const [activeDomain, setActiveDomain] = useState<any>(null); // Type loose for now
     const [isLoading, setIsLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState<'general' | 'integrations' | 'search_console' | 'danger'>('general');
+    const [activeTab, setActiveTab] = useState<'general' | 'integrations' | 'danger'>('general');
 
     // General Form States
     const [businessName, setBusinessName] = useState('');
@@ -51,11 +51,6 @@ const DomainSettingsPage: NextPage = () => {
     // Delete Confirmation State
     const [deleteConfirmation, setDeleteConfirmation] = useState('');
 
-    // Google Search Console States
-    const [sites, setSites] = useState<any[]>([]);
-    const [loadingSites, setLoadingSites] = useState(false);
-    const [settings, setSettings] = useState<any>({ google_connected: false });
-
     // Categories State
     const [categories, setCategories] = useState<any[]>([]);
     const [loadingCategories, setLoadingCategories] = useState(false);
@@ -64,9 +59,16 @@ const DomainSettingsPage: NextPage = () => {
         // Navigation is handled inside useDeleteDomain
     });
 
+    const getAuthHeaders = () => {
+        const headers: any = { 'Content-Type': 'application/json' };
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+        if (token) headers.Authorization = `Bearer ${token}`;
+        return headers;
+    };
+
     useEffect(() => {
         if (domainsData?.domains && router.query.slug) {
-            const found = domainsData.domains.find((d: DomainType) => d.slug === router.query.slug);
+            const found = domainsData.domains.find((d: any) => d.slug === router.query.slug);
             if (found) {
                 setActiveDomain(found);
                 setBusinessName(found.business_name || '');
@@ -178,7 +180,7 @@ const DomainSettingsPage: NextPage = () => {
         try {
             const res = await fetch(`/api/domains?domain=${activeDomain.domain}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     business_name: businessName,
                     niche: niche,
@@ -223,32 +225,16 @@ const DomainSettingsPage: NextPage = () => {
         setCompetitors(competitors.filter(c => c !== compToRemove));
     };
 
-    // Fetch settings on mount
-    useEffect(() => {
-        const fetchSettings = async () => {
-            try {
-                const res = await fetch('/api/settings');
-                const data = await res.json();
-                if (data.settings) {
-                    setSettings(data.settings);
-                }
-            } catch (e) {
-                console.error('Failed to fetch settings', e);
-            }
-        };
-        fetchSettings();
-    }, []);
-
     // Sync activeTab with URL query parameter
     useEffect(() => {
         const tab = router.query.tab as string;
-        if (tab && ['general', 'integrations', 'search_console', 'danger'].includes(tab)) {
-            setActiveTab(tab as 'general' | 'integrations' | 'search_console' | 'danger');
+        if (tab && ['general', 'integrations', 'danger'].includes(tab)) {
+            setActiveTab(tab as 'general' | 'integrations' | 'danger');
         }
     }, [router.query.tab]);
 
     // Update URL when tab changes
-    const handleTabChange = (tab: 'general' | 'integrations' | 'search_console' | 'danger') => {
+    const handleTabChange = (tab: 'general' | 'integrations' | 'danger') => {
         setActiveTab(tab);
         router.push(
             {
@@ -258,63 +244,6 @@ const DomainSettingsPage: NextPage = () => {
             undefined,
             { shallow: true }
         );
-    };
-
-    // Auto-fetch sites when Google is connected
-    useEffect(() => {
-        if (settings.google_connected && sites.length === 0 && !loadingSites) {
-            fetchSites();
-        }
-    }, [settings.google_connected]);
-
-    const disconnectGoogle = async () => {
-        if (confirm('Are you sure you want to disconnect your Google Account?')) {
-            try {
-                await fetch('/api/auth/google/disconnect', { method: 'POST' });
-                window.location.reload();
-            } catch (e) {
-                toast.error('Failed to disconnect');
-            }
-        }
-    };
-
-    const fetchSites = async () => {
-        setLoadingSites(true);
-        try {
-            const res = await fetch('/api/gsc/sites');
-            const data = await res.json();
-            if (data.sites) {
-                // Filter out sc-domain sites to avoid duplicates
-                const filteredSites = data.sites.filter((site: any) =>
-                    !site.siteUrl.startsWith('sc-domain:')
-                );
-                setSites(filteredSites);
-            } else {
-                toast.error('No sites found or error fetching sites.');
-            }
-        } catch (e) {
-            toast.error('Error fetching sites');
-        } finally {
-            setLoadingSites(false);
-        }
-    };
-
-    const importSite = async (siteUrl: string) => {
-        try {
-            const res = await fetch('/api/domains', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ domains: [siteUrl] })
-            });
-            if (res.ok) {
-                toast.success(`Imported ${siteUrl}`);
-                router.push('/domains');
-            } else {
-                toast.error('Failed to import site');
-            }
-        } catch (e) {
-            toast.error('Error importing site');
-        }
     };
 
     return (
@@ -351,15 +280,6 @@ const DomainSettingsPage: NextPage = () => {
                                     }`}
                             >
                                 {t('domainSettings.tabs.integrations')}
-                            </button>
-                            <button
-                                onClick={() => handleTabChange('search_console')}
-                                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'search_console'
-                                    ? 'bg-blue-50 text-blue-700'
-                                    : 'text-neutral-600 hover:bg-neutral-100'
-                                    }`}
-                            >
-                                {t('domainSettings.tabs.searchConsole')}
                             </button>
                             <button
                                 onClick={() => handleTabChange('danger')}
@@ -764,7 +684,7 @@ const DomainSettingsPage: NextPage = () => {
                                                                 try {
                                                                     const res = await fetch('/api/cms/wordpress', {
                                                                         method: 'POST',
-                                                                        headers: { 'Content-Type': 'application/json' },
+                                                                        headers: getAuthHeaders(),
                                                                         body: JSON.stringify({
                                                                             domain: activeDomain?.domain,
                                                                             action: 'get_categories',
@@ -800,318 +720,80 @@ const DomainSettingsPage: NextPage = () => {
                                                         ) : categories.length > 0 ? (
                                                             <div className="flex flex-wrap gap-2">
                                                                 {categories.map((cat: any) => (
-                                                                    <Badge key={cat.id} variant="secondary" className="bg-white border text-neutral-600 font-normal">
-                                                                        {cat.name}
+                                                                    <Badge key={cat.id} variant="secondary" className="gap-1">
+                                                                        <span className="text-xs">{cat.name}</span>
                                                                     </Badge>
                                                                 ))}
                                                             </div>
                                                         ) : (
-                                                            <div className="text-center">
-                                                                <p className="text-xs text-neutral-400">
-                                                                    {t('domainSettings.integrations.catsHelper')}
-                                                                </p>
-                                                            </div>
+                                                            <p className="text-xs text-neutral-400 text-center py-2">{t('domainSettings.integrations.noCatsFound')}</p>
                                                         )}
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )}
-                                </CardContent>
-                                <CardFooter className="bg-neutral-50 border-t border-neutral-100 py-4 flex justify-between">
-                                    <Button
-                                        onClick={async () => {
-                                            const toastId = toast.loading(t('domainSettings.integrations.testing'));
-                                            try {
-                                                const res = await fetch('/api/cms/wordpress', {
-                                                    method: 'POST',
-                                                    headers: { 'Content-Type': 'application/json' },
-                                                    body: JSON.stringify({
-                                                        domain: activeDomain?.domain,
-                                                        action: 'verify_credentials',
-                                                        url: wpUrl,
-                                                        username: wpUsername,
-                                                        app_password: wpAppPassword
-                                                    })
-                                                });
-                                                const data = await res.json();
-                                                if (res.ok && data.success) {
-                                                    toast.success(t('domainSettings.integrations.connected', { user: data.user.name }), { id: toastId });
-                                                } else {
-                                                    toast.error(data.error || t('domainSettings.integrations.failed'), { id: toastId });
-                                                }
-                                            } catch (e) {
-                                                toast.error(t('domainSettings.integrations.failed'), { id: toastId });
-                                            }
-                                        }}
-                                        variant="outline"
-                                        disabled={isLoading || !wpUrl || !wpUsername || !wpAppPassword}
-                                        className="gap-2"
-                                    >
-                                        <Zap className="h-4 w-4" />
-                                        {t('domainSettings.integrations.test')}
-                                    </Button>
 
-                                    <Button onClick={handleSave} disabled={isLoading} className="gap-2">
-                                        <Save className="h-4 w-4" />
-                                        {t('domainSettings.integrations.saveInt')}
-                                    </Button>
-                                </CardFooter>
-                            </Card>
-                        )}
-
-                        {activeTab === 'search_console' && (
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>{t('domainSettings.gsc.cardTitle')}</CardTitle>
-                                    <CardDescription>{t('domainSettings.gsc.cardDesc')}</CardDescription>
-                                </CardHeader>
-                                <CardContent className="space-y-6">
-                                    {settings.google_connected ? (
-                                        <>
-                                            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                                                <div className="flex items-center justify-between">
-                                                    <div className="flex items-center text-green-700 font-semibold gap-2">
-                                                        <CheckCircle className="h-5 w-5" />
-                                                        {t('domainSettings.gsc.connected')}
-                                                    </div>
-                                                    <Button
-                                                        onClick={disconnectGoogle}
-                                                        variant="destructive"
-                                                        size="sm"
-                                                    >
-                                                        {t('domainSettings.gsc.disconnect')}
-                                                    </Button>
-                                                </div>
+                                            <div className="pt-4 flex justify-end">
+                                                <Button onClick={handleSave} disabled={isLoading} className="gap-2">
+                                                    <Save className="h-4 w-4" />
+                                                    {isLoading ? t('domainSettings.general.saving') : t('domainSettings.general.save')}
+                                                </Button>
                                             </div>
-
-                                            {/* Sites List */}
-                                            <div className="space-y-3">
-                                                <div className="flex items-center justify-between">
-                                                    <h3 className="text-sm font-semibold text-gray-900">{t('domainSettings.gsc.verifiedSites')}</h3>
-                                                    <Button
-                                                        onClick={fetchSites}
-                                                        disabled={loadingSites}
-                                                        variant="outline"
-                                                        size="sm"
-                                                        className="gap-2"
-                                                    >
-                                                        {loadingSites ? (
-                                                            <>
-                                                                <Loader2 className="h-3 w-3 animate-spin" />
-                                                                {t('domainSettings.gsc.loading')}
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <Download className="h-3 w-3" />
-                                                                {t('domainSettings.gsc.refreshSites')}
-                                                            </>
-                                                        )}
-                                                    </Button>
-                                                </div>
-
-                                                {loadingSites ? (
-                                                    <div className="text-center py-8">
-                                                        <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-400" />
-                                                        <p className="text-sm text-gray-500 mt-2">{t('domainSettings.gsc.loading')}</p>
-                                                    </div>
-                                                ) : sites.length === 0 ? (
-                                                    <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
-                                                        <p className="text-sm text-gray-500">{t('domainSettings.gsc.noSites')}</p>
-                                                        <p className="text-xs text-gray-400 mt-1">Click "{t('domainSettings.gsc.refreshSites')}" to load your sites</p>
-                                                    </div>
-                                                ) : (() => {
-                                                    // Filter sites to show only the current domain
-                                                    const currentDomain = activeDomain?.domain || '';
-                                                    const filteredSites = sites.filter(site => {
-                                                        const cleanSiteUrl = site.siteUrl
-                                                            .replace('sc-domain:', '')
-                                                            .replace(/^https?:\/\//, '')
-                                                            .replace(/\/$/, '')
-                                                            .toLowerCase();
-                                                        const cleanCurrentDomain = currentDomain
-                                                            .replace(/^https?:\/\//, '')
-                                                            .replace(/\/$/, '')
-                                                            .toLowerCase();
-
-                                                        return cleanSiteUrl === cleanCurrentDomain ||
-                                                            cleanSiteUrl.includes(cleanCurrentDomain) ||
-                                                            cleanCurrentDomain.includes(cleanSiteUrl);
-                                                    });
-
-                                                    if (filteredSites.length === 0) {
-                                                        return (
-                                                            <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
-                                                                <p className="text-sm text-gray-500">No matching site found for {activeDomain?.domain}</p>
-                                                                <p className="text-xs text-gray-400 mt-1">
-                                                                    Make sure this domain is verified in Google Search Console
-                                                                </p>
-                                                            </div>
-                                                        );
-                                                    }
-
-                                                    return (
-                                                        <div className="space-y-2">
-                                                            {filteredSites.map((site) => {
-                                                                const getPermissionBadge = (level: string) => {
-                                                                    switch (level) {
-                                                                        case 'siteOwner':
-                                                                            return (
-                                                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                                                    ✓ {t('domainSettings.gsc.owner')}
-                                                                                </span>
-                                                                            );
-                                                                        case 'siteFullUser':
-                                                                            return (
-                                                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                                                    {t('domainSettings.gsc.full')}
-                                                                                </span>
-                                                                            );
-                                                                        case 'siteRestrictedUser':
-                                                                            return (
-                                                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                                                    {t('domainSettings.gsc.restricted')}
-                                                                                </span>
-                                                                            );
-                                                                        case 'siteUnverifiedUser':
-                                                                            return (
-                                                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                                                    ⚠ {t('domainSettings.gsc.unverified')}
-                                                                                </span>
-                                                                            );
-                                                                        default:
-                                                                            return (
-                                                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                                                                                    {level}
-                                                                                </span>
-                                                                            );
-                                                                    }
-                                                                };
-
-                                                                const isImported = domainsData?.domains?.some(d => {
-                                                                    const cleanSiteUrl = site.siteUrl.replace('sc-domain:', '').replace(/\/$/, '');
-                                                                    const cleanDomain = d.domain.replace(/\/$/, '');
-                                                                    return cleanDomain.includes(cleanSiteUrl) || cleanSiteUrl.includes(cleanDomain);
-                                                                });
-
-                                                                const formatSiteUrl = (url: string) => {
-                                                                    return url
-                                                                        .replace(/^https?:\/\//, '') // Remove http:// or https://
-                                                                        .replace(/^sc-domain:/, '')  // Remove sc-domain:
-                                                                        .replace(/\/$/, '');         // Remove trailing slash
-                                                                };
-
-                                                                return (
-                                                                    <div
-                                                                        key={site.siteUrl}
-                                                                        className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors"
-                                                                    >
-                                                                        <div className="flex-1 mr-4">
-                                                                            <p className="font-medium text-sm truncate mb-1">{formatSiteUrl(site.siteUrl)}</p>
-                                                                            {getPermissionBadge(site.permissionLevel)}
-                                                                        </div>
-                                                                        {isImported ? (
-                                                                            <Button
-                                                                                disabled
-                                                                                variant="secondary"
-                                                                                size="sm"
-                                                                                className="gap-2 bg-green-100 text-green-700 hover:bg-green-100 opacity-100"
-                                                                            >
-                                                                                <CheckCircle className="h-3 w-3" />
-                                                                                {t('domainSettings.gsc.imported')}
-                                                                            </Button>
-                                                                        ) : (
-                                                                            <Button
-                                                                                onClick={() => importSite(site.siteUrl)}
-                                                                                size="sm"
-                                                                                className="gap-2"
-                                                                            >
-                                                                                <Plus className="h-3 w-3" />
-                                                                                {t('domainSettings.gsc.add')}
-                                                                            </Button>
-                                                                        )}
-                                                                    </div>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                    );
-                                                })()}
-                                            </div>
-
-                                            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                                <p className="text-sm text-yellow-800 mb-2">
-                                                    <strong>{t('domainSettings.gsc.notesTitle')}</strong>
-                                                </p>
-                                                <ul className="text-sm text-yellow-800 list-disc list-inside space-y-1">
-                                                    <li>{t('domainSettings.gsc.note1')}</li>
-                                                    <li>If a site has permission errors, check that you have Owner access (not just User) in Google Search Console.</li>
-                                                    <li>If you recently changed permissions, try disconnecting and reconnecting your Google account.</li>
-                                                </ul>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg border border-gray-200">
-                                            <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-                                                <svg className="w-8 h-8 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-1.07 3.97-2.9 5.4z" />
-                                                </svg>
-                                            </div>
-                                            <h3 className="text-lg font-medium text-gray-900 mb-2">{t('domainSettings.gsc.cardTitle')}</h3>
-                                            <p className="text-sm text-gray-500 mb-6 text-center max-w-md">
-                                                {t('domainSettings.gsc.connectDesc')}
-                                            </p>
-                                            <Button
-                                                onClick={() => {
-                                                    const currentUrl = window.location.pathname + window.location.search;
-                                                    window.location.href = `/api/auth/google/authorize?returnUrl=${encodeURIComponent(currentUrl)}`;
-                                                }}
-                                                size="lg"
-                                                className="gap-2 bg-black text-white hover:bg-gray-800"
-                                            >
-                                                <Plug className="h-4 w-4" />
-                                                {t('domainSettings.gsc.connectBtn')}
-                                            </Button>
                                         </div>
                                     )}
                                 </CardContent>
                             </Card>
                         )}
-
 
                         {activeTab === 'danger' && (
                             <Card className="border-red-200">
-                                <CardHeader>
-                                    <CardTitle className="text-red-600">{t('domainSettings.delete.cardTitle')}</CardTitle>
-                                    <CardDescription>
-                                        {t('domainSettings.delete.cardDesc')}
+                                <CardHeader className="bg-red-50">
+                                    <div className="flex items-center gap-2 text-red-700">
+                                        <div className="p-2 bg-red-100 rounded-full">
+                                            <X className="h-5 w-5" />
+                                        </div>
+                                        <CardTitle className="text-red-700">{t('domainSettings.danger.title')}</CardTitle>
+                                    </div>
+                                    <CardDescription className="text-red-600/80">
+                                        {t('domainSettings.danger.desc')}
                                     </CardDescription>
                                 </CardHeader>
-                                <CardContent>
-                                    <div className="space-y-4 p-4 bg-red-50 rounded-lg border border-red-100">
-                                        <div>
-                                            <h4 className="font-semibold text-red-900">{t('domainSettings.delete.cardTitle')}</h4>
-                                            <p className="text-sm text-red-700 mb-2">
-                                                {t('domainSettings.delete.msg')}
-                                            </p>
-                                            <p className="text-sm text-red-700 font-medium">
-                                                {t('domainSettings.delete.confirm', { domain: activeDomain?.domain })}
-                                            </p>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <Input
-                                                placeholder={activeDomain?.domain}
-                                                value={deleteConfirmation}
-                                                onChange={(e) => setDeleteConfirmation(e.target.value)}
-                                                className="bg-white border-red-200 focus-visible:ring-red-500"
-                                            />
-                                            <Button
-                                                variant="destructive"
-                                                onClick={handleDeleteDomain}
-                                                disabled={isDeleting || deleteConfirmation !== activeDomain?.domain}
-                                            >
-                                                {isDeleting ? t('domainSettings.delete.deleting') : t('domainSettings.delete.btn')}
-                                            </Button>
-                                        </div>
+                                <CardContent className="space-y-6 pt-6">
+                                    <div className="bg-red-50/50 p-4 rounded-lg border border-red-100">
+                                        <p className="text-sm text-red-800 font-medium mb-1">{t('domainSettings.danger.warning')}</p>
+                                        <ul className="list-disc list-inside text-sm text-red-700 space-y-1">
+                                            <li>{t('domainSettings.danger.warning1')}</li>
+                                            <li>{t('domainSettings.danger.warning2')}</li>
+                                            <li>{t('domainSettings.danger.warning3')}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="deleteSort" className="text-red-900">{t('domainSettings.danger.confirmLabel', { domain: activeDomain?.domain })}</Label>
+                                        <Input
+                                            id="deleteSort"
+                                            placeholder={activeDomain?.domain}
+                                            value={deleteConfirmation}
+                                            onChange={(e) => setDeleteConfirmation(e.target.value)}
+                                            className="border-red-300 focus-visible:ring-red-500"
+                                        />
+                                    </div>
+
+                                    <div className="flex justify-end">
+                                        <Button
+                                            variant="destructive"
+                                            onClick={handleDeleteDomain}
+                                            disabled={isDeleting || deleteConfirmation !== activeDomain?.domain}
+                                            className="w-full sm:w-auto"
+                                        >
+                                            {isDeleting ? (
+                                                <>
+                                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                    {t('domainSettings.danger.deleting')}
+                                                </>
+                                            ) : (
+                                                t('domainSettings.danger.btn')
+                                            )}
+                                        </Button>
                                     </div>
                                 </CardContent>
                             </Card>

@@ -53,6 +53,13 @@ export default function ApiKeysPage() {
         'publish:wordpress': { label: t('apiKeys.permLabels.publishWordpress'), desc: t('apiKeys.permLabels.publishWordpressDesc') },
     };
 
+    const getAuthHeaders = () => {
+        const headers: any = { 'Content-Type': 'application/json' };
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+        if (token) headers.Authorization = `Bearer ${token}`;
+        return headers;
+    };
+
     useEffect(() => {
         fetchApiKeys();
     }, []);
@@ -60,7 +67,9 @@ export default function ApiKeysPage() {
     const fetchApiKeys = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch('/api/mcp/keys');
+            const res = await fetch('/api/mcp/keys', {
+                headers: getAuthHeaders()
+            });
             const data = await res.json();
             if (res.ok) {
                 setApiKeys(data.keys || []);
@@ -86,7 +95,7 @@ export default function ApiKeysPage() {
         try {
             const res = await fetch('/api/mcp/keys', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     name: keyName,
                     permissions: selectedPermissions,
@@ -123,7 +132,7 @@ export default function ApiKeysPage() {
         try {
             const res = await fetch('/api/mcp/keys', {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ keyId, revoked: true })
             });
 
@@ -145,7 +154,8 @@ export default function ApiKeysPage() {
 
         try {
             const res = await fetch(`/api/mcp/keys?keyId=${keyId}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: getAuthHeaders()
             });
 
             if (!res.ok) {

@@ -1,22 +1,17 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { CSSTransition } from 'react-transition-group';
-import DashboardLayout from '../../components/layout/DashboardLayout';
-import AddDomain from '../../components/domains/AddDomain';
 import { useFetchDomains } from '../../services/domains';
+import DashboardLayout from '../../components/layout/DashboardLayout';
 
 const Keywords: NextPage = () => {
     const router = useRouter();
-    const [showAddDomain, setShowAddDomain] = useState(false);
     const { data: domainsData } = useFetchDomains(router);
     const domains = domainsData?.domains || [];
 
     return (
         <DashboardLayout
             domains={domains}
-            showAddModal={() => setShowAddDomain(true)}
         >
             <Head>
                 <title>Keywords - SEO AI Agent</title>
@@ -54,10 +49,6 @@ const Keywords: NextPage = () => {
                     ))}
                 </div>
             </div>
-
-            <CSSTransition in={showAddDomain} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
-                <AddDomain closeModal={() => setShowAddDomain(false)} domains={domains} />
-            </CSSTransition>
         </DashboardLayout>
     );
 };

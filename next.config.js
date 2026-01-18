@@ -29,6 +29,18 @@ const nextConfig = {
   // ✅ تحسين الأداء
   compress: true,
   poweredByHeader: false,
+
+  async headers() {
+    return [
+      {
+        source: '/platform-sso',
+        headers: [
+          { key: 'X-Frame-Options', value: 'ALLOWALL' },
+          { key: 'Content-Security-Policy', value: "frame-ancestors *" }
+        ]
+      }
+    ];
+  },
 };
 
 module.exports = nextConfig;

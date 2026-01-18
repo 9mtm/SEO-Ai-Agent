@@ -142,7 +142,9 @@ export default function ArticleWriterPage() {
     useEffect(() => {
         const fetchAvailableModels = async () => {
             try {
-                const response = await fetch('/api/user');
+                const response = await fetch('/api/user', {
+                    headers: getAuthHeaders()
+                });
                 const data = await response.json();
 
                 if (data.success && data.user?.ai_api_keys) {
@@ -478,9 +480,7 @@ export default function ArticleWriterPage() {
             // استدعاء API مع dpro model
             const response = await fetch('/api/agent/chat', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     messages: [
                         { role: 'user', content: professionalPrompt }
@@ -685,7 +685,7 @@ export default function ArticleWriterPage() {
         try {
             const res = await fetch('/api/posts', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     domain_slug: domain?.slug,
                     postData: {
@@ -741,7 +741,7 @@ export default function ArticleWriterPage() {
         try {
             const res = await fetch('/api/cms/wordpress', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     action: 'create_post',
                     domain: domain?.domain,
@@ -849,12 +849,21 @@ export default function ArticleWriterPage() {
     const [listFilter, setListFilter] = useState<'All' | 'Draft' | 'Published'>('All');
     const [isLoadingPosts, setIsLoadingPosts] = useState(false);
 
+    const getAuthHeaders = () => {
+        const headers: any = { 'Content-Type': 'application/json' };
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+        if (token) headers.Authorization = `Bearer ${token}`;
+        return headers;
+    };
+
     // Fetch Posts
     const fetchPosts = async () => {
         if (!domain?.slug) return;
         setIsLoadingPosts(true);
         try {
-            const res = await fetch(`/api/posts?domain_slug=${domain.slug}&status=${listFilter}`);
+            const res = await fetch(`/api/posts?domain_slug=${domain.slug}&status=${listFilter}`, {
+                headers: getAuthHeaders()
+            });
             const data = await res.json();
             if (res.ok) {
                 setPostsList(data.posts || []);

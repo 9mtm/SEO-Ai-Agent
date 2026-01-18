@@ -1,10 +1,20 @@
 import { NextRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 
+const getAuthHeaders = () => {
+   const headers: any = { 'Content-Type': 'application/json' };
+   const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+   if (token) headers.Authorization = `Bearer ${token}`;
+   return headers;
+};
+
 export async function fetchSCKeywords(router: NextRouter) {
    // if (!router.query.slug) { throw new Error('Invalid Domain Name'); }
    const domain = (router.query.slug as string)?.replace(/_/g, '.');
-   const res = await fetch(`${window.location.origin}/api/searchconsole?domain=${domain}`, { method: 'GET' });
+   const res = await fetch(`${window.location.origin}/api/searchconsole?domain=${domain}`, {
+      method: 'GET',
+      headers: getAuthHeaders()
+   });
    if (res.status >= 400 && res.status < 600) {
       if (res.status === 401) {
          console.log('Unauthorized!!');
@@ -24,7 +34,10 @@ export function useFetchSCKeywords(router: NextRouter, domainLoaded: boolean = f
 export async function fetchSCInsight(router: NextRouter, days: number = 30) {
    // if (!router.query.slug) { throw new Error('Invalid Domain Name'); }
    const domain = (router.query.slug as string)?.replace(/_/g, '.');
-   const res = await fetch(`${window.location.origin}/api/insight?domain=${domain}&days=${days}`, { method: 'GET' });
+   const res = await fetch(`${window.location.origin}/api/insight?domain=${domain}&days=${days}`, {
+      method: 'GET',
+      headers: getAuthHeaders()
+   });
    if (res.status >= 400 && res.status < 600) {
       if (res.status === 401) {
          console.log('Unauthorized!!');

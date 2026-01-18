@@ -40,11 +40,20 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    const getAuthHeaders = (contentType = 'application/json') => {
+        const headers: any = { 'Content-Type': contentType, Accept: 'application/json' };
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+        if (token) headers.Authorization = `Bearer ${token}`;
+        return headers;
+    };
+
     useEffect(() => {
         // Fetch user info
         const fetchUserInfo = async () => {
             try {
-                const response = await fetch('/api/user');
+                const response = await fetch('/api/user', {
+                    headers: getAuthHeaders()
+                });
                 const data = await response.json();
                 if (data.success && data.user) {
                     setUserInfo(data.user);
@@ -61,9 +70,12 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
         try {
             const fetchOpts = {
                 method: 'POST',
-                headers: new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' })
+                headers: getAuthHeaders()
             };
             const res = await fetch(`${window.location.origin}/api/logout`, fetchOpts).then((result) => result.json());
+
+            // Clear local storage on logout
+            localStorage.removeItem('auth_token');
 
             if (!res.success) {
                 toast(res.error, { icon: '⚠️' });

@@ -43,11 +43,20 @@ const ProfilePage: NextPage = () => {
       email: ''
    });
 
+   const getAuthHeaders = () => {
+      const headers: any = { 'Content-Type': 'application/json' };
+      const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+      if (token) headers.Authorization = `Bearer ${token}`;
+      return headers;
+   };
+
    // Fetch User Data
    useEffect(() => {
       const fetchUser = async () => {
          try {
-            const response = await fetch('/api/user');
+            const response = await fetch('/api/user', {
+               headers: getAuthHeaders()
+            });
             const data = await response.json();
 
             if (data.success && data.user) {
@@ -67,7 +76,7 @@ const ProfilePage: NextPage = () => {
 
       fetchUser();
    }, []);
-
+   // ...
    const handleUpdateProfile = async () => {
       setIsSaving(true);
       // Simulate API call
@@ -90,6 +99,7 @@ const ProfilePage: NextPage = () => {
       try {
          const response = await fetch('/api/user', {
             method: 'DELETE',
+            headers: getAuthHeaders()
          });
          const data = await response.json();
 

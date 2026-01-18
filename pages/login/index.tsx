@@ -28,6 +28,11 @@ const Login: NextPage = () => {
 
    const t = translations[selectedLang];
 
+   const redirectUrl = router.query.redirect ? String(router.query.redirect) : null;
+   const googleLoginUrl = redirectUrl
+      ? `/api/auth/google/login?returnUrl=${encodeURIComponent(redirectUrl)}`
+      : `/api/auth/google/login`;
+
    return (
       <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-neutral-100 flex items-center justify-center p-4">
          <Head>
@@ -62,7 +67,7 @@ const Login: NextPage = () => {
             <div className="bg-white rounded-2xl shadow-xl border border-neutral-200 p-8">
                {/* Google Login */}
                <a
-                  href="/api/auth/google/login"
+                  href={googleLoginUrl}
                   className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white border-2 border-neutral-200 rounded-xl font-medium text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 transition-all shadow-sm hover:shadow-md group"
                >
                   <Image src="/icon/google-logo.svg" alt="Google" width={20} height={20} className="h-5 w-5 group-hover:scale-110 transition-transform" />

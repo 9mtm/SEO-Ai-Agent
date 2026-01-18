@@ -9,6 +9,7 @@ import {
   HasMany,
 } from 'sequelize-typescript';
 import Domain from './domain';
+import PlatformIntegration from './platformIntegration';
 
 @Table({
   timestamps: true,
@@ -102,6 +103,26 @@ class User extends Model {
 
   @Column({ type: DataType.JSON, allowNull: true })
   declare ai_api_keys?: any;
+
+  // Platform Integration Fields
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare platform_user_id?: string;
+
+  @Column({
+    type: DataType.ENUM('direct', 'wordpress', 'shopify', 'wix'),
+    allowNull: false,
+    defaultValue: 'direct',
+  })
+  declare platform_type: string;
+
+  @Column({ type: DataType.STRING, allowNull: false, defaultValue: 'en' })
+  declare language: string;
+
+  @Column({ type: DataType.JSON, allowNull: true })
+  declare platform_metadata?: any;
+
+  @HasMany(() => PlatformIntegration)
+  declare platform_integrations: PlatformIntegration[];
 }
 
 export default User;
