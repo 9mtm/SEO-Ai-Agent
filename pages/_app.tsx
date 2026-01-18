@@ -1,9 +1,11 @@
+
 import '../styles/globals.css';
 import React from 'react';
 import type { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { LanguageProvider } from '../context/LanguageContext';
+import { Toaster } from 'react-hot-toast';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = React.useState(() => new QueryClient({
@@ -18,9 +20,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   return <QueryClientProvider client={queryClient}>
     <LanguageProvider>
       <Component {...pageProps} />
+      <Toaster position="top-right" />
       <ReactQueryDevtools initialIsOpen={false} />
     </LanguageProvider>
   </QueryClientProvider>;
 }
 
 export default MyApp;
+

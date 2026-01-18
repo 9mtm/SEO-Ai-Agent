@@ -20,7 +20,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Separator } from '@/components/ui/separator';
-import { Bot, User, Send, Plus, StopCircle, Sparkles, PenTool, Search, Zap, FileUp, ImagePlus, BarChart, Trash2 } from 'lucide-react';
+import { Bot, User, Send, Plus, StopCircle, Sparkles, PenTool, Search, Zap, FileUp, ImagePlus, BarChart, Trash2, AlertTriangle } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import {
     DropdownMenu,
@@ -32,6 +32,14 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 
 const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSessionId }: any) => {
     const router = useRouter();
@@ -46,6 +54,9 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const imageInputRef = useRef<HTMLInputElement>(null);
+
+    // Delete Confirmation State
+    const [sessionToDelete, setSessionToDelete] = useState<number | null>(null);
 
     const getAuthHeaders = () => {
         const headers: any = { 'Content-Type': 'application/json' };
@@ -145,18 +156,22 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
         router.push(`/domain/agent/${domain?.domain}`);
     };
 
-    const handleDeleteSession = async (sessionId: number) => {
-        if (!confirm('Are you sure you want to delete this chat?')) return;
+    const confirmDeleteSession = (sessionId: number) => {
+        setSessionToDelete(sessionId);
+    };
+
+    const performDeleteSession = async () => {
+        if (!sessionToDelete) return;
 
         try {
-            const response = await fetch(`/api/agent/sessions?id=${sessionId}`, {
+            const response = await fetch(`/api/agent/sessions?id=${sessionToDelete}`, {
                 method: 'DELETE',
                 headers: getAuthHeaders()
             });
 
             if (response.ok) {
-                setSessions(sessions.filter((s: any) => s.id !== sessionId));
-                if (currentSessionId === sessionId) {
+                setSessions(sessions.filter((s: any) => s.id !== sessionToDelete));
+                if (currentSessionId === sessionToDelete) {
                     handleNewChat();
                 }
                 toast.success('Chat deleted');
@@ -166,6 +181,8 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
         } catch (error) {
             console.error('Delete error:', error);
             toast.error('Failed to delete chat');
+        } finally {
+            setSessionToDelete(null);
         }
     };
 
@@ -300,7 +317,7 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                handleDeleteSession(s.id);
+                                                confirmDeleteSession(s.id);
                                             }}
                                             className="p-1 rounded hover:bg-red-100 text-neutral-400 hover:text-red-600"
                                             title="Delete"
@@ -578,6 +595,30 @@ const SeoAgentPage = ({ domain, initialMessages, initialSessions, initialSession
                         </div>
                     </div>
                 </div>
+
+                {/* Delete Session Dialog */}
+                <Dialog open={!!sessionToDelete} onOpenChange={(open) => !open && setSessionToDelete(null)}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="flex items-center gap-2">
+                                <AlertTriangle className="h-5 w-5 text-neutral-600" />
+                                Delete Chat
+                            </DialogTitle>
+                            <DialogDescription>
+                                Are you sure you want to delete this chat? This action cannot be undone.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <Button variant="outline" onClick={() => setSessionToDelete(null)}>
+                                Cancel
+                            </Button>
+                            <Button variant="destructive" onClick={performDeleteSession}>
+                                Delete Chat
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
             </div>
         </DashboardLayout>
     );

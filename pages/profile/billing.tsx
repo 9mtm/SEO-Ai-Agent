@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
@@ -11,10 +12,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
+import { toast } from 'react-hot-toast';
 
 import { useRouter } from 'next/router';
 import { useFetchDomains } from '../../services/domains';
 import { useLanguage } from '../../context/LanguageContext';
+
 
 const BillingPage: NextPage = () => {
     const router = useRouter();
@@ -431,7 +434,7 @@ const BillingPage: NextPage = () => {
                         <Button onClick={() => {
                             // Handle payment logic here
                             setIsCheckoutOpen(false);
-                            alert("Redirecting to payment provider...");
+                            toast.success("Redirecting to payment provider...");
                         }}>{t('billing.checkout.confirm')}</Button>
                     </DialogFooter>
                 </DialogContent>

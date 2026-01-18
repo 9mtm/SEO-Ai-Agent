@@ -1,8 +1,10 @@
+
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 const Register: NextPage = () => {
   const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
@@ -47,13 +49,14 @@ const Register: NextPage = () => {
   const handleGoogleSignUp = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!acceptTerms) {
       e.preventDefault();
-      alert(t.termsRequired);
+      toast.error(t.termsRequired);
     }
     // If newsletter is checked, store preference
     if (subscribeNewsletter) {
       localStorage.setItem('newsletter_subscription', 'true');
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-neutral-100 flex items-center justify-center p-4">

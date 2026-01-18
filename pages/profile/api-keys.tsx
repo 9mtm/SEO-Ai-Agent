@@ -6,6 +6,14 @@ import { useFetchDomains } from '../../services/domains';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 import { toast } from 'react-hot-toast';
 import {
     Key,
@@ -20,7 +28,8 @@ import {
     ExternalLink,
     ChevronDown,
     ChevronUp,
-    Info
+    Info,
+    AlertTriangle
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -37,6 +46,10 @@ export default function ApiKeysPage() {
     const [newKeyData, setNewKeyData] = useState<any>(null);
     const [expandedKeyId, setExpandedKeyId] = useState<number | null>(null);
     const [userApiKeys, setUserApiKeys] = useState<{ [keyId: number]: string }>({});
+
+    // Confirmation State
+    const [confirmId, setConfirmId] = useState<number | null>(null);
+    const [confirmAction, setConfirmAction] = useState<'delete' | 'revoke' | null>(null);
 
     // Form state
     const [keyName, setKeyName] = useState('');
@@ -124,11 +137,34 @@ export default function ApiKeysPage() {
         }
     };
 
-    const handleRevokeKey = async (keyId: number) => {
-        if (!confirm('Are you sure you want to disable this connection?')) {
-            return;
+    const initiateRevoke = (keyId: number) => {
+        setConfirmId(keyId);
+        setConfirmAction('revoke');
+    };
+
+    const initiateDelete = (keyId: number) => {
+        setConfirmId(keyId);
+        setConfirmAction('delete');
+    };
+
+    const closeConfirmModal = () => {
+        setConfirmId(null);
+        setConfirmAction(null);
+    };
+
+    const performConfirmAction = async () => {
+        if (!confirmId || !confirmAction) return;
+
+        if (confirmAction === 'revoke') {
+            await handleRevokeKey(confirmId);
+        } else {
+            await handleDeleteKey(confirmId);
         }
 
+        closeConfirmModal();
+    };
+
+    const handleRevokeKey = async (keyId: number) => {
         try {
             const res = await fetch('/api/mcp/keys', {
                 method: 'PUT',
@@ -148,10 +184,6 @@ export default function ApiKeysPage() {
     };
 
     const handleDeleteKey = async (keyId: number) => {
-        if (!confirm('Are you sure you want to delete this connection permanently?')) {
-            return;
-        }
-
         try {
             const res = await fetch(`/api/mcp/keys?keyId=${keyId}`, {
                 method: 'DELETE',
@@ -526,7 +558,7 @@ export default function ApiKeysPage() {
                                                     <Button
                                                         variant="outline"
                                                         size="sm"
-                                                        onClick={() => handleRevokeKey(key.id)}
+                                                        onClick={() => initiateRevoke(key.id)}
                                                         className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
                                                     >
                                                         {t('apiKeys.disable')}
@@ -535,7 +567,7 @@ export default function ApiKeysPage() {
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
-                                                    onClick={() => handleDeleteKey(key.id)}
+                                                    onClick={() => initiateDelete(key.id)}
                                                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
                                                 >
                                                     <Trash2 className="h-4 w-4 mr-1" />
@@ -622,6 +654,33 @@ export default function ApiKeysPage() {
                         </div>
                     )}
                 </div>
+
+                {/* Confirmation Dialog */}
+                <Dialog open={!!confirmId} onOpenChange={(open) => !open && closeConfirmModal()}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="flex items-center gap-2">
+                                <AlertTriangle className="h-5 w-5 text-amber-600" />
+                                {confirmAction === 'delete' ? 'Delete Connection?' : 'Disable Connection?'}
+                            </DialogTitle>
+                            <DialogDescription>
+                                {confirmAction === 'delete'
+                                    ? 'Are you sure you want to delete this connection permanently? This action cannot be undone.'
+                                    : 'Are you sure you want to disable this connection? Any applications using it will stop working immediately.'
+                                }
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <Button variant="outline" onClick={closeConfirmModal}>
+                                Cancel
+                            </Button>
+                            <Button variant="destructive" onClick={performConfirmAction}>
+                                {confirmAction === 'delete' ? 'Delete Permanently' : 'Disable Connection'}
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
             </div>
         </DashboardLayout>
     );
