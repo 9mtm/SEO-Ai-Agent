@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { toast, Toaster } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { User, Mail, Loader2, Camera, AlertTriangle, Save } from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -314,7 +314,7 @@ const ProfilePage: NextPage = () => {
                </Card>
             </div>
          </div>
-         <Toaster position="bottom-right" />
+
       </DashboardLayout>
    );
 };
