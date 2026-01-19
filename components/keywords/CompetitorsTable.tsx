@@ -45,10 +45,14 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
         }
     }, [titleColumnRef]);
 
-    // Show all keywords (no device filtering)
+    // Show only keywords that are being tracked for competitors or have competitor data
     // We create a shallow copy to ensure a new reference for react-window to detect changes
     const processedKeywords = useMemo(() => {
-        return keywords ? [...keywords] : [];
+        if (!keywords) return [];
+        return keywords.filter(k =>
+            k.updating_competitors === true ||
+            (k.competitor_positions && Object.keys(k.competitor_positions).length > 0)
+        );
     }, [keywords]);
 
     const selectKeyword = (keywordID: number) => {
