@@ -4,6 +4,8 @@ import User from './user';
 @Table({
     timestamps: true,
     tableName: 'notification_settings',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
 })
 class NotificationSetting extends Model {
     @ForeignKey(() => User)
