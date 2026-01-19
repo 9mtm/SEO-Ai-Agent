@@ -219,7 +219,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
 
     return (
         <div>
-            <div className='domKeywords flex flex-col bg-white rounded-lg text-sm border border-gray-200 mb-5 shadow-sm overflow-hidden'>
+            <div className='domKeywords flex flex-col bg-white rounded-xl text-sm border border-gray-100 mb-5 shadow-xl shadow-gray-200/40 relative'>
                 {selectedKeywords.length > 0 && (
                     <div className='font-semibold text-sm py-4 px-8 text-gray-500'>
                         <ul>

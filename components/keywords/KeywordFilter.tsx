@@ -134,19 +134,19 @@ const KeywordFilters = (props: KeywordFilterProps) => {
             <ul className='flex text-xs'>
                <li
                   data-testid="desktop_tab"
-                  className={`${deviceTabStyle} ${device === 'desktop' ? ' bg-[#F8F9FF] text-gray-700' : ''}`}
+                  className={`select-none cursor-pointer px-4 py-1.5 rounded-full mr-2 transition-all border ${device === 'desktop' ? 'bg-indigo-50 border-indigo-100 text-indigo-700 shadow-sm' : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-50'}`}
                   onClick={() => setDevice('desktop')}>
-                  <Icon type='desktop' classes='top-[3px]' size={15} />
-                  <i className='hidden not-italic lg:inline-block ml-1'>{t('keywordFilter.desktop')}</i>
-                  <span className={`${deviceTabCountStyle}`}>{keywordCounts.desktop}</span>
+                  <Icon type='desktop' classes={`top-[2px] ${device === 'desktop' ? 'text-indigo-600' : 'text-gray-400'}`} size={14} />
+                  <i className='hidden not-italic lg:inline-block ml-2 font-medium'>{t('keywordFilter.desktop')}</i>
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ml-2 ${device === 'desktop' ? 'bg-indigo-200 text-indigo-800' : 'bg-gray-100 text-gray-500'}`}>{keywordCounts.desktop}</span>
                </li>
                <li
                   data-testid="mobile_tab"
-                  className={`${deviceTabStyle} ${device === 'mobile' ? ' bg-[#F8F9FF] text-gray-700' : ''}`}
+                  className={`select-none cursor-pointer px-4 py-1.5 rounded-full mr-2 transition-all border ${device === 'mobile' ? 'bg-indigo-50 border-indigo-100 text-indigo-700 shadow-sm' : 'bg-transparent border-transparent text-gray-500 hover:bg-gray-50'}`}
                   onClick={() => setDevice('mobile')}>
-                  <Icon type='mobile' />
-                  <i className='hidden not-italic lg:inline-block ml-1'>{t('keywordFilter.mobile')}</i>
-                  <span className={`${deviceTabCountStyle}`}>{keywordCounts.mobile}</span>
+                  <Icon type='mobile' classes={`top-[2px] ${device === 'mobile' ? 'text-indigo-600' : 'text-gray-400'}`} size={14} />
+                  <i className='hidden not-italic lg:inline-block ml-2 font-medium'>{t('keywordFilter.mobile')}</i>
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ml-2 ${device === 'mobile' ? 'bg-indigo-200 text-indigo-800' : 'bg-gray-100 text-gray-500'}`}>{keywordCounts.mobile}</span>
                </li>
             </ul>
          </div>
@@ -205,7 +205,7 @@ const KeywordFilters = (props: KeywordFilterProps) => {
                <div className={'mb-2 lg:mb-0'}>
                   <input
                      data-testid="filter_input"
-                     className={'border w-44 lg:w-36 focus:w-44 transition-all rounded-3xl p-1.5 px-4 outline-none ring-0 focus:border-indigo-200'}
+                     className={'border border-gray-200 w-44 lg:w-36 focus:w-44 transition-all rounded-full p-1.5 px-4 outline-none ring-0 focus:border-indigo-300 focus:shadow-sm text-xs'}
                      type="text"
                      placeholder={t('keywordFilter.filterKeywords')}
                      onChange={searchKeywords}

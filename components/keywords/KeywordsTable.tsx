@@ -168,7 +168,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
 
    return (
       <div>
-         <div className='domKeywords flex flex-col bg-white rounded-lg text-sm border border-gray-200 mb-5 shadow-sm'>
+         <div className='domKeywords flex flex-col bg-white rounded-xl text-sm border border-gray-100 mb-5 shadow-xl shadow-gray-200/40 relative'>
             {selectedKeywords.length > 0 && (
                <div className='font-semibold text-sm py-4 px-8 text-gray-500 '>
                   <ul className=''>
@@ -217,8 +217,8 @@ const KeywordsTable = (props: KeywordsTableProps) => {
             ${showSCData && tableColumns.includes('Search Console') ? 'domkeywordsTable--hasSC' : ''} 
                w-full`}>
                <div className=' lg:min-w-[800px]'>
-                  <div className={`domKeywords_head domKeywords_head--${sortBy} hidden lg:flex p-3 px-6 bg-[#FCFCFF]
-                   text-gray-600 justify-between items-center font-semibold border-y`}>
+                  <div className={`domKeywords_head domKeywords_head--${sortBy} hidden lg:flex p-3 px-6 bg-white/95 backdrop-blur-md sticky top-0 z-30
+                   text-gray-500 justify-between items-center font-bold text-xs uppercase tracking-wider border-y border-gray-100 shadow-sm`}>
                      <span ref={titleColumnRef} className={`domKeywords_head_keyword flex-1 basis-[4rem] w-auto lg:flex-1 
                         ${showSCData && tableColumns.includes('Search Console') ? 'lg:basis-20' : 'lg:basis-10'} lg:w-auto lg:flex lg:items-center `}>
                         {processedKeywords[device].length > 0 && (
@@ -263,8 +263,8 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                            {/* Search Console */}
                            <div>
                               <div
-                                 className=' w-48 select-none cursor-pointer absolute bg-white rounded-full
-                              px-2 py-[2px] mt-[-22px] ml-3 border border-gray-200 z-20'
+                                 className='w-48 select-none cursor-pointer absolute bg-white/90 backdrop-blur rounded-full shadow-sm
+                              px-3 py-1 mt-[-22px] ml-3 border border-gray-200 hover:border-indigo-300 transition-colors z-20 flex items-center gap-2 text-[11px] font-medium text-gray-600'
                                  onClick={() => setShowScDataTypes(!showScDataTypes)}>
                                  <Icon type="google" size={13} /> {scDataObject[scDataType]}
                                  <Icon classes="ml-2" type={showScDataTypes ? 'caret-up' : 'caret-down'} size={10} />

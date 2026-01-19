@@ -117,7 +117,7 @@ const DomainHeader = (
                {!isConsole && !isInsight && !isIdeas && !isCompetitors && !isTracking && (
                   <button
                      data-testid="add_keyword"
-                     className={'flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm font-semibold'}
+                     className={'flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/30 text-sm font-semibold hover:-translate-y-0.5 active:translate-y-0'}
                      onClick={() => showAddModal && showAddModal(true)}>
                      <span>+</span>
                      <span className="hidden sm:inline">{t('domainHeader.addKeyword')}</span>
