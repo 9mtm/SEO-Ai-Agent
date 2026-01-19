@@ -355,7 +355,7 @@
             <tr>
               <td width="60%">
                 <span class="domain-title">{{domainName}}</span>
-                <span class="keyword-badge">{{keywordsCount}} Keywords</span>
+                <span class="keyword-badge">{{keywordsCount}} {{keywordsSuffix}}</span>
               </td>
               <td width="40%" class="stat-wrapper">
                 {{stat}}
@@ -376,14 +376,14 @@
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                   <tr>
                     <td>
-                      <h3 style="font-size: 16px; margin-bottom: 15px; color: #1E3A8A;">Keyword Rankings</h3>
+                      <h3 style="font-size: 16px; margin-bottom: 15px; color: #1E3A8A;">{{tableTitle}}</h3>
                       <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="keyword_table">
                         <tbody>
                           <tr align="left">
-                            <th>Keyword</th>
-                            <th>Position</th>
-                            <th>Best</th>
-                            <th>Updated</th>
+                            <th>{{colKeyword}}</th>
+                            <th>{{colPosition}}</th>
+                            <th>{{colBest}}</th>
+                            <th>{{colUpdated}}</th>
                           </tr>
                           {{keywordsTable}}
                         </tbody>
@@ -412,7 +412,7 @@
                         <td align="center" bgcolor="#2563EB" style="border-radius: 6px;">
                           <a href="{{dashboardUrl}}" target="_blank"
                             style="font-size: 16px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 6px; border: 1px solid #2563EB; display: inline-block; font-weight: 700; background-color: #2563EB;">
-                            &nbsp; Go to Dashboard &nbsp;
+                            &nbsp; {{btnConsole}} &nbsp;
                           </a>
                         </td>
                       </tr>
@@ -432,16 +432,16 @@
                   <span class="apple-link" style="color: #000000;"><strong>Dpro GmbH</strong>, Wipplingerstraße 20/18,
                     1010 Wien, Austria</span>
                   <br><br>
-                  <a href="https://seo-agent.net/privacy-policy" style="color: #000000;">Privacy Policy</a> | <a
-                    href="https://seo-agent.net/terms" style="color: #000000;">Terms of Service</a>
+                  <a href="https://seo-agent.net/privacy-policy" style="color: #000000;">{{linkPrivacy}}</a> | <a
+                    href="https://seo-agent.net/terms" style="color: #000000;">{{linkTerms}}</a>
                   <br><br>
-                  <span style="color: #000000;">Don't want to receive these emails?</span> <a href="{{unsubscribeUrl}}"
-                    style="color: #000000; text-decoration: underline;">Unsubscribe</a>.
+                  <span style="color: #000000;">{{footerUnsub}}</span> <a href="{{unsubscribeUrl}}"
+                    style="color: #000000; text-decoration: underline;">{{linkUnsub}}</a>.
                 </td>
               </tr>
               <tr>
                 <td class="content-block powered-by" style="color: #000000;">
-                  Powered by <a href="https://seo-agent.net" style="color: #000000;">SEO Ai Agent</a>
+                  {{footerPowered}} <a href="https://seo-agent.net" style="color: #000000;">SEO Ai Agent</a>
                 </td>
               </tr>
             </table>

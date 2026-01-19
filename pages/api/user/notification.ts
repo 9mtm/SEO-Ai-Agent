@@ -5,7 +5,7 @@ import NotificationSetting from '../../../database/models/notificationSetting';
 import Keyword from '../../../database/models/keyword';
 import NotificationLog from '../../../database/models/notificationLog';
 import nodeMailer from 'nodemailer';
-import generateEmail from '../../../utils/generateEmail';
+import generateEmail, { loadTranslations, getTranslation } from '../../../utils/generateEmail';
 import parseKeywords from '../../../utils/parseKeywords';
 import { getAppSettings } from '../settings';
 import verifyUser from '../../../utils/verifyUser';
@@ -26,6 +26,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'Slug is required' });
     }
 
+    // Fetch user language
+    let userLanguage = 'en';
+    if (auth.userId) {
+        try {
+            const user = await User.findByPk(auth.userId);
+            if (user?.language) userLanguage = user.language;
+        } catch (e) {
+            console.error('Failed to fetch user language', e);
+        }
+    }
+
     try {
         const domain = await Domain.findOne({ where: { slug: slug, user_id: auth.userId } });
         if (!domain) {
@@ -33,16 +44,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         const settings = await getAppSettings(auth.userId);
-        await sendNotificationEmail(domain, settings);
+        await sendNotificationEmail(domain, settings, userLanguage, auth.userId!);
 
-        return res.status(200).json({ success: true });
+        return res.status(200).json({ success: true, debugLang: userLanguage, debugUserId: auth.userId });
     } catch (error: any) {
         console.error('Test notification error:', error);
         return res.status(500).json({ error: error.message || 'Failed to send test email' });
     }
 }
 
-const sendNotificationEmail = async (domain: Domain, settings: any) => {
+const sendNotificationEmail = async (domain: Domain, settings: any, userLanguage: string, userId: number) => {
+    // ... code ...
+    // remove internal fetching of userLanguage
+
     // Prioritize environment variables for SMTP settings
     const smtp_server = process.env.SMTP_HOST || settings.smtp_server || '';
     const smtp_port = process.env.SMTP_PORT || settings.smtp_port || '';
@@ -74,9 +88,11 @@ const sendNotificationEmail = async (domain: Domain, settings: any) => {
     const keywordsArray = domainKeywords.map((el) => el.get({ plain: true }));
     const keywords = parseKeywords(keywordsArray);
 
-    const userId = domain.user_id || null;
-    // Default to 'en' for now, can be fetched from user settings later
-    const emailHTML = await generateEmail(domainName, keywords, settings, 'en', userId);
+    // Load translations for subject
+    const translations = await loadTranslations(userLanguage);
+    const t = (key: string, vars: any = {}) => getTranslation(translations, key, vars);
+
+    const emailHTML = await generateEmail(domainName, keywords, settings, userLanguage, userId);
 
     let recipientEmail = domain.notification_emails || notification_email;
 
@@ -98,13 +114,14 @@ const sendNotificationEmail = async (domain: Domain, settings: any) => {
     }
 
     console.log(`[TEST EMAIL] Domain: ${domainName}`);
+    console.log(`[TEST EMAIL] User Language: ${userLanguage}`);
     console.log(`[TEST EMAIL] Sending to Recipient: ${recipientEmail}`);
 
     // Send email
     await transporter.sendMail({
         from: fromEmail,
         to: recipientEmail,
-        subject: `${domainName} Keyword Positions Update`,
+        subject: t('email.subject', { domain: domainName }) || `${domainName} Keyword Positions Update`,
         html: emailHTML,
     });
 

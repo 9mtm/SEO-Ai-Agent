@@ -114,7 +114,7 @@ const NotificationsPage: NextPage = () => {
     const handleTestNotification = async (slug: string) => {
         const loadingToast = toast.loading('Sending test email...');
         try {
-            const response = await fetch('/api/user/test-notification', {
+            const response = await fetch('/api/user/notification', {
                 method: 'POST',
                 headers: getAuthHeaders(),
                 body: JSON.stringify({ slug })

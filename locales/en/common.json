@@ -143,7 +143,18 @@
     "hrsAgo": "{{count}} hrs ago",
     "minsAgo": "{{count}} mins ago",
     "secsAgo": "{{count}} secs ago",
-    "subject": "[{{domain}}] Monthly Keyword Positions Update"
+    "subject": "[{{domain}}] Monthly Keyword Positions Update",
+    "keywordRankings": "Keyword Rankings",
+    "keywordsSuffix": "Keywords",
+    "goToDashboard": "Go to Dashboard",
+    "unsubscribeText": "Don't want to receive these emails?",
+    "unsubscribe": "Unsubscribe",
+    "poweredBy": "Powered by",
+    "position": "Position",
+    "table": {
+      "best": "Best",
+      "updated": "Updated"
+    }
   },
   "sidebar": {
     "insight": "Insight",

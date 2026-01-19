@@ -143,7 +143,18 @@
     "hrsAgo": "il y a {{count}} h",
     "minsAgo": "il y a {{count}} min",
     "secsAgo": "il y a {{count}} s",
-    "subject": "[{{domain}}] Mise à jour mensuelle des positions"
+    "subject": "[{{domain}}] Mise à jour mensuelle des positions",
+    "keywordRankings": "Classement des mots-clés",
+    "keywordsSuffix": "mots-clés",
+    "goToDashboard": "Tableau de bord",
+    "unsubscribeText": "Vous ne souhaitez plus recevoir ces e-mails ?",
+    "unsubscribe": "Se désabonner",
+    "poweredBy": "Propulsé par",
+    "position": "Position",
+    "table": {
+      "best": "Meilleur",
+      "updated": "Mis à jour"
+    }
   },
   "sidebar": {
     "insight": "Analyses",

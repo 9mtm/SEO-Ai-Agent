@@ -233,7 +233,26 @@ const ProfilePage: NextPage = () => {
                      <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                            <Label htmlFor="language">{t('profile.language')}</Label>
-                           <Select value={currentLocale} onValueChange={(val: 'en' | 'de' | 'fr') => setLocale(val)}>
+                           <Select value={currentLocale} onValueChange={async (val: 'en' | 'de' | 'fr') => {
+                              setLocale(val);
+                              // Explicitly save to ensure DB is updated
+                              try {
+                                 const token = localStorage.getItem('auth_token');
+                                 if (token) {
+                                    await fetch('/api/user', {
+                                       method: 'PUT',
+                                       headers: {
+                                          'Content-Type': 'application/json',
+                                          'Authorization': `Bearer ${token}`
+                                       },
+                                       body: JSON.stringify({ language: val })
+                                    });
+                                    toast.success(`Language saved: ${val}`);
+                                 }
+                              } catch (e) {
+                                 console.error("Failed to save language", e);
+                              }
+                           }}>
                               <SelectTrigger id="language">
                                  <SelectValue placeholder="Select Language" />
                               </SelectTrigger>

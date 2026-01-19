@@ -21,7 +21,7 @@ type SCStatsObject = {
 }
 
 // Helper to load translations
-const loadTranslations = async (locale: string) => {
+export const loadTranslations = async (locale: string) => {
    try {
       const filePath = path.join(process.cwd(), 'locales', locale, 'common.json');
       const fileContent = await readFile(filePath, 'utf-8');
@@ -40,7 +40,7 @@ const loadTranslations = async (locale: string) => {
 };
 
 // Helper for translation lookup
-const getTranslation = (translations: any, keyPath: string, variables: Record<string, any> = {}) => {
+export const getTranslation = (translations: any, keyPath: string, variables: Record<string, any> = {}) => {
    const keysArray = keyPath.split('.');
    let value = translations;
    for (const k of keysArray) {
@@ -99,7 +99,8 @@ import jwt from 'jsonwebtoken';
  * @param {keywords[]} keywords - Keywords to scrape
  * @returns {Promise}
  */
-const generateEmail = async (domainName: string, keywords: KeywordType[], settings: SettingsType, locale: string = 'en', userId: number | null = null): Promise<string> => {
+const generateEmail = async (domainName: string, keywords: any[], settings: any, locale: string = 'en', userId: number | null = null): Promise<string> => {
+   console.log(`[GENERATE EMAIL] Generating for domain: ${domainName}, Locale: ${locale}, UserId: ${userId}`);
    const translations = await loadTranslations(locale);
    const t = (key: string, vars: any = {}) => getTranslation(translations, key, vars);
 
@@ -287,7 +288,19 @@ const generateEmail = async (domainName: string, keywords: KeywordType[], settin
       .replace('{{dashboardUrl}}', 'https://seo-agent.net?utm_source=email_report&utm_medium=email&utm_campaign=daily_rankings')
       .replace('{{unsubscribeUrl}}', unsubscribeUrl)
       .replace('{{stat}}', statHtml)
-      .replace('{{preheader}}', '');
+      .replace('{{preheader}}', '')
+      .replace('{{keywordsSuffix}}', t('email.keywordsSuffix'))
+      .replace('{{tableTitle}}', t('email.keywordRankings'))
+      .replace('{{colKeyword}}', t('email.keyword'))
+      .replace('{{colPosition}}', t('email.position'))
+      .replace('{{colBest}}', t('email.table.best'))
+      .replace('{{colUpdated}}', t('email.table.updated'))
+      .replace('{{btnConsole}}', t('email.goToDashboard'))
+      .replace('{{linkPrivacy}}', t('auth.register.privacyLink'))
+      .replace('{{linkTerms}}', t('auth.register.termsLink'))
+      .replace('{{footerUnsub}}', t('email.unsubscribeText'))
+      .replace('{{linkUnsub}}', t('email.unsubscribe'))
+      .replace('{{footerPowered}}', t('email.poweredBy'));
 
    const htmlWithSCStats = await generateGoogeleConsoleStats(domainName, t);
    const emailHTML = updatedEmail.replace('{{SCStatsTable}}', htmlWithSCStats);

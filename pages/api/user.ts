@@ -97,7 +97,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
             if (name) user.name = name;
             if (ai_api_keys) user.ai_api_keys = ai_api_keys;
-            if (language) user.language = language;
+            if (language) {
+                console.log(`[API USER] Updating language for user ${user.id} to '${language}'`);
+                user.language = language;
+            }
 
             await user.save();
 
