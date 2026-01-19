@@ -264,6 +264,9 @@
       "nameIndividual": "Nom complet",
       "vat": "TVA (Optionnel)",
       "address": "Adresse de facturation",
+      "city": "Ville",
+      "zip": "Code Postal",
+      "country": "Pays",
       "email": "E-mail de facturation",
       "save": "Enregistrer les défauts"
     },

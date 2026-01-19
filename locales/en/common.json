@@ -264,6 +264,9 @@
       "nameIndividual": "Full Name",
       "vat": "VAT ID (Optional)",
       "address": "Billing Address",
+      "city": "City",
+      "zip": "Zip Code",
+      "country": "Country",
       "email": "Billing Email",
       "save": "Save Defaults"
     },

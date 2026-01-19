@@ -69,6 +69,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                         companyName: user.invoice_profile.name,
                         vatId: user.invoice_profile.vat_id,
                         address: user.invoice_profile.address,
+                        city: user.invoice_profile.city,
+                        zip: user.invoice_profile.zip,
+                        country: user.invoice_profile.country,
                         email: user.invoice_profile.email
                     } : undefined
                 }
@@ -107,6 +110,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                         name: invoice_details.companyName,
                         vat_id: invoice_details.vatId,
                         address: invoice_details.address,
+                        city: invoice_details.city,
+                        zip: invoice_details.zip,
+                        country: invoice_details.country,
                         email: invoice_details.email
                     }
                 });
@@ -117,6 +123,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                         name: invoice_details.companyName,
                         vat_id: invoice_details.vatId,
                         address: invoice_details.address,
+                        city: invoice_details.city,
+                        zip: invoice_details.zip,
+                        country: invoice_details.country,
                         email: invoice_details.email
                     });
                 }

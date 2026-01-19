@@ -41,6 +41,9 @@ const BillingPage: NextPage = () => {
         companyName: '',
         vatId: '',
         address: '',
+        city: '',
+        zip: '',
+        country: '',
         email: ''
     });
 
@@ -551,13 +554,45 @@ const InvoiceForm = ({ invoiceInfo, onChange, t }: { invoiceInfo: any, onChange:
                 </div>
             )}
 
+            {/* Address Fields */}
             <div className="space-y-2">
                 <Label htmlFor="address">{t('billing.invoice.address')}</Label>
                 <Input
                     id="address"
-                    placeholder="Street, City, Zip Code, Country"
+                    placeholder="Street Address"
                     value={invoiceInfo.address}
                     onChange={(e) => onChange('address', e.target.value)}
+                />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <Label htmlFor="zip">{t('billing.invoice.zip') || 'Zip Code'}</Label>
+                    <Input
+                        id="zip"
+                        placeholder="1010"
+                        value={invoiceInfo.zip}
+                        onChange={(e) => onChange('zip', e.target.value)}
+                    />
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="city">{t('billing.invoice.city') || 'City'}</Label>
+                    <Input
+                        id="city"
+                        placeholder="Vienna"
+                        value={invoiceInfo.city}
+                        onChange={(e) => onChange('city', e.target.value)}
+                    />
+                </div>
+            </div>
+
+            <div className="space-y-2">
+                <Label htmlFor="country">{t('billing.invoice.country') || 'Country'}</Label>
+                <Input
+                    id="country"
+                    placeholder="Austria"
+                    value={invoiceInfo.country}
+                    onChange={(e) => onChange('country', e.target.value)}
                 />
             </div>
             <div className="space-y-2">

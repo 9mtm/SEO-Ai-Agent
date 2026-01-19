@@ -40,6 +40,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 name: invoiceDetails.companyName,
                 vat_id: invoiceDetails.vatId,
                 address: invoiceDetails.address,
+                city: invoiceDetails.city,
+                zip: invoiceDetails.zip,
+                country: invoiceDetails.country,
                 email: invoiceDetails.email
             });
 

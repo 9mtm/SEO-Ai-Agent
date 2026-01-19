@@ -264,6 +264,9 @@
       "nameIndividual": "Vollständiger Name",
       "vat": "USt-IdNr. (Optional)",
       "address": "Rechnungsadresse",
+      "city": "Stadt",
+      "zip": "Postleitzahl",
+      "country": "Land",
       "email": "Rechnungs-E-Mail",
       "save": "Standards speichern"
     },

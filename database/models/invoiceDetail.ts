@@ -40,6 +40,15 @@ class InvoiceDetail extends Model {
     declare address?: string;
 
     @Column({ type: DataType.STRING, allowNull: true })
+    declare city?: string;
+
+    @Column({ type: DataType.STRING, allowNull: true })
+    declare zip?: string;
+
+    @Column({ type: DataType.STRING, allowNull: true })
+    declare country?: string;
+
+    @Column({ type: DataType.STRING, allowNull: true })
     declare email?: string;
 
     @Column({ type: DataType.STRING, allowNull: true })
