@@ -3,7 +3,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { CSSTransition } from 'react-transition-group';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Search, Users } from 'lucide-react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import DomainHeader from '../../../components/domains/DomainHeader';
 import KeywordsTable from '../../../components/keywords/KeywordsTable';
@@ -112,21 +112,23 @@ const SingleDomain: NextPage = () => {
                 <div className="flex w-full justify-start mb-6">
                     <div className="bg-gray-100/80 p-1.5 rounded-xl inline-flex shadow-inner">
                         <button
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${activeTab === 'keywords'
+                            className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center ${activeTab === 'keywords'
                                 ? 'bg-white text-indigo-600 shadow-sm ring-1 ring-black/5'
                                 : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200/50'
                                 }`}
                             onClick={() => setActiveTab('keywords')}
                         >
+                            <Search className="w-4 h-4 mr-2" />
                             {t('tracking.tabs.keywords')}
                         </button>
                         <button
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${activeTab === 'competitors'
+                            className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center ${activeTab === 'competitors'
                                 ? 'bg-white text-indigo-600 shadow-sm ring-1 ring-black/5'
                                 : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200/50'
                                 }`}
                             onClick={() => setActiveTab('competitors')}
                         >
+                            <Users className="w-4 h-4 mr-2" />
                             {t('tracking.tabs.competitors')}
                         </button>
                     </div>
