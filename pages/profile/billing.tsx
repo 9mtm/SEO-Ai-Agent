@@ -240,6 +240,7 @@ const BillingPage: NextPage = () => {
                 body: JSON.stringify({
                     priceId,
                     planId: selectedPlan.id,
+                    invoiceDetails: invoiceInfo,
                     cancelUrl: window.location.href,
                     successUrl: `${window.location.origin}/profile/billing?success=true&session_id={CHECKOUT_SESSION_ID}`
                 })

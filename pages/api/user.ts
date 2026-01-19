@@ -112,12 +112,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 });
 
                 if (!created) {
-                    profile.type = invoice_details.type || profile.type;
-                    profile.name = invoice_details.companyName || profile.name;
-                    profile.vat_id = invoice_details.vatId || profile.vat_id;
-                    profile.address = invoice_details.address || profile.address;
-                    profile.email = invoice_details.email || profile.email;
-                    await profile.save();
+                    await profile.update({
+                        type: invoice_details.type,
+                        name: invoice_details.companyName,
+                        vat_id: invoice_details.vatId,
+                        address: invoice_details.address,
+                        email: invoice_details.email
+                    });
                 }
             }
 
