@@ -151,7 +151,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       )}
 
       <div className={hideSidebar ? "" : "lg:pl-64"}>
-        <header className="sticky top-0 z-30 bg-white border-b border-neutral-200">
+        <header className="sticky top-0 z-40 bg-white border-b border-neutral-200">
           <div className="flex items-center justify-between px-4 lg:px-8 py-4">
             {!hideSidebar && (
               <button
