@@ -556,7 +556,8 @@
     "remove": "Entfernen",
     "selected": "Ausgewählt",
     "favorite": "Favorisieren",
-    "unfavorite": "Favorit entfernen"
+    "unfavorite": "Favorit entfernen",
+    "tags": "Tags"
   },
   "domainSelector": {
     "current": "Aktuelle Domain",

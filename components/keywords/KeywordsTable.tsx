@@ -250,6 +250,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                         {t('trackingTable.volume')}{getSortIcon('volume')}
                      </span>
                      <span className='domKeywords_head_url flex-1'>{t('trackingTable.url')}</span>
+                     <span className='domKeywords_head_tags flex-1 basis-20 grow-0 text-center'>{t('trackingTable.tags')}</span>
                      <span
                         className='domKeywords_head_updated flex-1 relative left-3 max-w-[150px] cursor-pointer hover:text-blue-700 select-none'
                         onClick={() => handleColumnSort('updated')}

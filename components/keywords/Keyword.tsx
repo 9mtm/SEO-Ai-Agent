@@ -49,7 +49,7 @@ const Keyword = (props: KeywordProps) => {
    } = props;
    const { t } = useLanguage();
    const {
-      keyword, domain, ID, city, position, url = '', lastUpdated, country, sticky, history = {}, updating = false, lastUpdateError = false, volume,
+      keyword, domain, ID, city, position, url = '', lastUpdated, country, sticky, history = {}, updating = false, lastUpdateError = false, volume, tags = []
    } = keywordData;
 
    const [showOptions, setShowOptions] = useState(false);
@@ -172,6 +172,14 @@ const Keyword = (props: KeywordProps) => {
             <a href={url} target="_blank" rel="noreferrer"><span className='mr-3 lg:hidden'>
                <Icon type="link-alt" size={14} color="#999" /></span>{turncatedURL || '-'}
             </a>
+         </div>
+
+         <div className='hidden lg:block lg:flex-none lg:basis-20 lg:text-center text-xs lg:truncate text-gray-500'>
+            {tags.length > 0 ? tags.map((tag, i) => (
+               <span key={i} className="inline-block bg-gray-100 rounded px-1.5 py-0.5 text-[10px] mr-1 last:mr-0">
+                  {tag}
+               </span>
+            )) : <span className="text-gray-300">-</span>}
          </div>
 
          <div
