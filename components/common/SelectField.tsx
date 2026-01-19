@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef } from 'react';
 import Icon from './Icon';
+import useOnClickOutside from '../../hooks/useOnClickOutside';
 
 export type SelectionOption = {
    label: string,
@@ -39,6 +40,9 @@ const SelectField = (props: SelectFieldProps) => {
    const [showOptions, setShowOptions] = useState<boolean>(false);
    const [filterInput, setFilterInput] = useState<string>('');
    const [filterdOptions, setFilterdOptions] = useState<SelectionOption[]>([]);
+   const selectionRef = useRef(null);
+
+   useOnClickOutside(selectionRef, () => setShowOptions(false));
 
    const selectedLabels = useMemo(() => {
       return options.reduce((acc: string[], item: SelectionOption): string[] => {
@@ -72,7 +76,7 @@ const SelectField = (props: SelectFieldProps) => {
    };
 
    return (
-      <div className={`select font-semibold text-gray-500 relative ${inline ? 'inline-block' : 'flex'} justify-between items-center"`}>
+      <div ref={selectionRef} className={`select font-semibold text-gray-500 relative ${inline ? 'inline-block' : 'flex'} justify-between items-center"`}>
          {label && <label className='mb-2 font-semibold inline-block text-sm text-gray-700 capitalize'>{label}</label>}
          <div
             className={`selected flex border ${rounded} p-1.5 px-4 cursor-pointer select-none ${fullWidth ? 'w-full' : 'w-[210px]'} 

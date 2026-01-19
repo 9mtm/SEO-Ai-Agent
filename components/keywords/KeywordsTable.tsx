@@ -170,31 +170,29 @@ const KeywordsTable = (props: KeywordsTableProps) => {
       <div>
          <div className='domKeywords flex flex-col bg-white rounded-xl text-sm border border-gray-100 mb-5 shadow-xl shadow-gray-200/40 relative'>
             {selectedKeywords.length > 0 && (
-               <div className='font-semibold text-sm py-4 px-8 text-gray-500 '>
-                  <ul className=''>
-                     <li className='inline-block mr-4'>
-                        <a
-                           className='block px-2 py-2 cursor-pointer hover:text-indigo-600'
-                           onClick={() => { refreshMutate({ ids: selectedKeywords }); setSelectedKeywords([]); }}
-                        >
-                           <span className=' bg-indigo-100 text-blue-700 px-1 rounded'><Icon type="reload" size={11} /></span> {t('trackingTable.refreshKeywords')}
-                        </a>
-                     </li>
-                     <li className='inline-block mr-4'>
-                        <a
-                           className='block px-2 py-2 cursor-pointer hover:text-indigo-600'
-                           onClick={() => setShowRemoveModal(true)}
-                        >
-                           <span className=' bg-red-100 text-red-600 px-1 rounded'><Icon type="trash" size={14} /></span> {t('trackingTable.removeKeywords')}</a>
-                     </li>
-                     <li className='inline-block mr-4'>
-                        <a
-                           className='block px-2 py-2 cursor-pointer hover:text-indigo-600'
-                           onClick={() => setShowAddTags(true)}
-                        >
-                           <span className=' bg-green-100 text-green-500  px-1 rounded'><Icon type="tags" size={14} /></span> {t('trackingTable.tagKeywords')}</a>
-                     </li>
-                  </ul>
+               <div className='flex items-center gap-4 py-3 px-6 bg-indigo-50/50 border-b border-indigo-100 rounded-t-xl'>
+                  <span className='text-xs font-bold uppercase tracking-wider text-indigo-400'>{selectedKeywords.length} {t('trackingTable.selected')}</span>
+                  <div className="h-4 w-[1px] bg-indigo-200"></div>
+                  <div className='flex items-center gap-2'>
+                     <button
+                        className='flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-indigo-100 text-xs font-semibold text-indigo-600 shadow-sm hover:shadow hover:bg-indigo-50 transition-all'
+                        onClick={() => { refreshMutate({ ids: selectedKeywords }); setSelectedKeywords([]); }}
+                     >
+                        <Icon type="reload" size={12} classes="text-indigo-500" /> {t('trackingTable.refresh')}
+                     </button>
+                     <button
+                        className='flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-green-100 text-xs font-semibold text-green-600 shadow-sm hover:shadow hover:bg-green-50 transition-all'
+                        onClick={() => setShowAddTags(true)}
+                     >
+                        <Icon type="tags" size={12} classes="text-green-500" /> {t('trackingTable.tag')}
+                     </button>
+                     <button
+                        className='flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-red-100 text-xs font-semibold text-red-600 shadow-sm hover:shadow hover:bg-red-50 transition-all'
+                        onClick={() => setShowRemoveModal(true)}
+                     >
+                        <Icon type="trash" size={12} classes="text-red-500" /> {t('trackingTable.remove')}
+                     </button>
+                  </div>
                </div>
             )}
             {selectedKeywords.length === 0 && (

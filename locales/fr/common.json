@@ -549,7 +549,13 @@
     "refreshCompetitors": "Actualiser les concurrents",
     "yourPosition": "Votre Position",
     "noKeywordsMsg": "Aucun mot-clé ajouté. Ajoutez des mots-clés depuis l'onglet Mots-clés.",
-    "noCompetitorsMsg": "Aucun concurrent ajouté. Ajoutez des concurrents depuis les paramètres du domaine."
+    "noCompetitorsMsg": "Aucun concurrent ajouté. Ajoutez des concurrents depuis les paramètres du domaine.",
+    "refresh": "Actualiser",
+    "tag": "Tag",
+    "remove": "Supprimer",
+    "selected": "Sélectionné",
+    "favorite": "Favori",
+    "unfavorite": "Retirer des favoris"
   },
   "domainSelector": {
     "current": "Domaine actuel",

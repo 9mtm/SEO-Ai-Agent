@@ -10,6 +10,7 @@ import useIsMobile from '../../hooks/useIsMobile';
 import Modal from '../common/Modal';
 import TableSkeleton from '../common/TableSkeleton';
 import { useLanguage } from '../../context/LanguageContext';
+import useOnClickOutside from '../../hooks/useOnClickOutside';
 
 type CompetitorsTableProps = {
     domain: DomainType | null;
@@ -83,6 +84,8 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
         const competitorPositions = keyword.competitor_positions || {};
         const isSelected = selectedKeywords.includes(keyword.ID);
         const [showOptions, setShowOptions] = useState(false);
+        const dropdownRef = useRef(null);
+        useOnClickOutside(dropdownRef, () => setShowOptions(false));
         const optionsButtonStyle = 'block px-2 py-2 cursor-pointer hover:bg-indigo-50 hover:text-blue-700';
 
         return (
@@ -148,23 +151,26 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                     );
                 })}
 
-                <div className='absolute right-4 mt-[-10px] top-2 lg:flex-1 lg:basis-5 lg:grow-0 lg:shrink-0 lg:relative lg:right-[-10px]'>
+                <div ref={dropdownRef} className='absolute right-4 mt-[-10px] top-2 lg:flex-1 lg:basis-5 lg:grow-0 lg:shrink-0 lg:relative lg:right-[-10px]'>
                     <button
-                        className={`keyword_dots rounded px-1 text-indigo-300 hover:bg-indigo-50 ${showOptions ? 'bg-indigo-50 text-indigo-600 ' : ''}`}
+                        className={`w-7 h-7 flex items-center justify-center rounded-full transition-all ${showOptions ? 'bg-indigo-50 text-indigo-600 ring-2 ring-indigo-50' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'}`}
                         onClick={() => setShowOptions(!showOptions)}
                     >
-                        <Icon type="dots" size={20} />
+                        <Icon type="dots" size={16} />
                     </button>
                     {showOptions && (
-                        <ul className='keyword_options customShadow absolute w-[180px] right-0 bg-white rounded border z-20'>
+                        <ul className='keyword_options customShadow absolute w-[160px] right-0 bg-white rounded-xl border border-gray-100/50 shadow-xl z-20 py-1 overflow-hidden'>
                             <li>
-                                <a className={optionsButtonStyle} onClick={() => { handleRefreshKeyword(keyword.ID); setShowOptions(false); }}>
-                                    <span className='bg-indigo-100 text-blue-700 px-1 rounded'><Icon type="reload" size={11} /></span> Refresh Keyword
+                                <a className='flex items-center gap-2 px-4 py-2.5 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-indigo-600 cursor-pointer transition-colors'
+                                    onClick={() => { handleRefreshKeyword(keyword.ID); setShowOptions(false); }}>
+                                    <Icon type="reload" size={14} classes="text-indigo-500" /> {t('trackingTable.refresh')}
                                 </a>
                             </li>
+                            <div className="h-[1px] bg-gray-50 my-1"></div>
                             <li>
-                                <a className={optionsButtonStyle} onClick={() => { setSelectedKeywords([keyword.ID]); setShowRemoveModal(true); setShowOptions(false); }}>
-                                    <span className='bg-red-100 text-red-600 px-1 rounded'><Icon type="trash" size={14} /></span> Remove Keyword
+                                <a className='flex items-center gap-2 px-4 py-2.5 text-xs font-medium text-red-600 hover:bg-red-50 cursor-pointer transition-colors'
+                                    onClick={() => { setSelectedKeywords([keyword.ID]); setShowRemoveModal(true); setShowOptions(false); }}>
+                                    <Icon type="trash" size={14} classes="text-red-500" /> {t('trackingTable.remove')}
                                 </a>
                             </li>
                         </ul>
@@ -221,25 +227,23 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
         <div>
             <div className='domKeywords flex flex-col bg-white rounded-xl text-sm border border-gray-100 mb-5 shadow-xl shadow-gray-200/40 relative'>
                 {selectedKeywords.length > 0 && (
-                    <div className='font-semibold text-sm py-4 px-8 text-gray-500'>
-                        <ul>
-                            <li className='inline-block mr-4'>
-                                <a
-                                    className='block px-2 py-2 cursor-pointer hover:text-indigo-600'
-                                    onClick={handleRefreshSelected}
-                                >
-                                    <span className='bg-indigo-100 text-blue-700 px-1 rounded'><Icon type="reload" size={11} /></span> {t('trackingTable.refreshCompetitors')}
-                                </a>
-                            </li>
-                            <li className='inline-block mr-4'>
-                                <a
-                                    className='block px-2 py-2 cursor-pointer hover:text-indigo-600'
-                                    onClick={() => setShowRemoveModal(true)}
-                                >
-                                    <span className='bg-red-100 text-red-600 px-1 rounded'><Icon type="trash" size={14} /></span> {t('trackingTable.removeKeywords')}
-                                </a>
-                            </li>
-                        </ul>
+                    <div className='flex items-center gap-4 py-3 px-6 bg-indigo-50/50 border-b border-indigo-100 rounded-t-xl'>
+                        <span className='text-xs font-bold uppercase tracking-wider text-indigo-400'>{selectedKeywords.length} {t('trackingTable.selected')}</span>
+                        <div className="h-4 w-[1px] bg-indigo-200"></div>
+                        <div className='flex items-center gap-2'>
+                            <button
+                                className='flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-indigo-100 text-xs font-semibold text-indigo-600 shadow-sm hover:shadow hover:bg-indigo-50 transition-all'
+                                onClick={handleRefreshSelected}
+                            >
+                                <Icon type="reload" size={12} classes="text-indigo-500" /> {t('trackingTable.refresh')}
+                            </button>
+                            <button
+                                className='flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-red-100 text-xs font-semibold text-red-600 shadow-sm hover:shadow hover:bg-red-50 transition-all'
+                                onClick={() => setShowRemoveModal(true)}
+                            >
+                                <Icon type="trash" size={12} classes="text-red-500" /> {t('trackingTable.remove')}
+                            </button>
+                        </div>
                     </div>
                 )}
                 <div className='domkeywordsTable domkeywordsTable--keywords w-full'>

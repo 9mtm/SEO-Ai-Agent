@@ -549,7 +549,13 @@
     "refreshCompetitors": "Refresh Competitors",
     "yourPosition": "Your Position",
     "noKeywordsMsg": "No keywords added yet. Add keywords from the Keywords tab.",
-    "noCompetitorsMsg": "No competitors added yet. Add competitors from domain settings."
+    "noCompetitorsMsg": "No competitors added yet. Add competitors from domain settings.",
+    "refresh": "Refresh",
+    "tag": "Tag",
+    "remove": "Remove",
+    "selected": "Selected",
+    "favorite": "Favorite",
+    "unfavorite": "Unfavorite"
   },
   "domainSelector": {
     "current": "Current Domain",

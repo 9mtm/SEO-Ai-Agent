@@ -550,7 +550,13 @@
     "refreshCompetitors": "Wettbewerber aktualisieren",
     "yourPosition": "Ihre Position",
     "noKeywordsMsg": "Noch keine Keywords hinzugefügt. Fügen Sie Keywords über den Tab Keywords hinzu.",
-    "noCompetitorsMsg": "Noch keine Wettbewerber hinzugefügt. Fügen Sie Wettbewerber über die Domaineinstellungen hinzu."
+    "noCompetitorsMsg": "Noch keine Wettbewerber hinzugefügt. Fügen Sie Wettbewerber über die Domaineinstellungen hinzu.",
+    "refresh": "Aktualisieren",
+    "tag": "Markieren",
+    "remove": "Entfernen",
+    "selected": "Ausgewählt",
+    "favorite": "Favorisieren",
+    "unfavorite": "Favorit entfernen"
   },
   "domainSelector": {
     "current": "Aktuelle Domain",
