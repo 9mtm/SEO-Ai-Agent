@@ -299,8 +299,8 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                                 {t('trackingTable.yourPosition')}
                             </span>
                             {competitors.map((competitor: string, index: number) => (
-                                <span key={index} className='flex-1 basis-32 grow-0 text-center truncate px-2' title={competitor}>
-                                    {competitor.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                                <span key={index} className='flex-1 basis-32 grow-0 text-center truncate px-2 normal-case' title={competitor}>
+                                    {competitor.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '')}
                                 </span>
                             ))}
                             <span className='flex-1 basis-5 grow-0 shrink-0'></span>
