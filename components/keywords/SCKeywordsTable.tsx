@@ -154,7 +154,7 @@ const SCKeywordsTable = ({ domain, keywords = [], isPending = true, isConsoleInt
 
    // Stats Cards Componenent
    const StatsCards = () => (
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-6 py-4 bg-gray-50 border-b border-gray-200'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-6 py-4 bg-gray-50 border-b border-gray-200 rounded-t-md'>
          <div className='bg-white p-4 rounded-lg border border-gray-200 shadow-sm'>
             <div className='flex items-center justify-between mb-2'>
                <span className='text-xs font-medium text-gray-500 uppercase'>{t('insight.keywords')}</span>
@@ -190,7 +190,7 @@ const SCKeywordsTable = ({ domain, keywords = [], isPending = true, isConsoleInt
 
    return (
       <div>
-         <div className='domKeywords flex flex-col bg-[white] rounded-md text-sm border mb-4 shadow-sm overflow-hidden'>
+         <div className='domKeywords flex flex-col bg-[white] rounded-md text-sm border mb-4 shadow-sm'>
             {/* Stats Cards */}
             {!isPending && finalKeywords[device] && finalKeywords[device].length > 0 && <StatsCards />}
 

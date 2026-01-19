@@ -168,7 +168,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
 
    return (
       <div>
-         <div className='domKeywords flex flex-col bg-white rounded-lg text-sm border border-gray-200 mb-5 shadow-sm overflow-hidden'>
+         <div className='domKeywords flex flex-col bg-white rounded-lg text-sm border border-gray-200 mb-5 shadow-sm'>
             {selectedKeywords.length > 0 && (
                <div className='font-semibold text-sm py-4 px-8 text-gray-500 '>
                   <ul className=''>
@@ -264,7 +264,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                            <div>
                               <div
                                  className=' w-48 select-none cursor-pointer absolute bg-white rounded-full
-                              px-2 py-[2px] mt-[-22px] ml-3 border border-gray-200 z-40'
+                              px-2 py-[2px] mt-[-22px] ml-3 border border-gray-200 z-20'
                                  onClick={() => setShowScDataTypes(!showScDataTypes)}>
                                  <Icon type="google" size={13} /> {scDataObject[scDataType]}
                                  <Icon classes="ml-2" type={showScDataTypes ? 'caret-up' : 'caret-down'} size={10} />
