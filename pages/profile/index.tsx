@@ -233,13 +233,14 @@ const ProfilePage: NextPage = () => {
                      <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                            <Label htmlFor="language">{t('profile.language')}</Label>
-                           <Select value={currentLocale} onValueChange={(val: 'en' | 'de') => setLocale(val)}>
+                           <Select value={currentLocale} onValueChange={(val: 'en' | 'de' | 'fr') => setLocale(val)}>
                               <SelectTrigger id="language">
                                  <SelectValue placeholder="Select Language" />
                               </SelectTrigger>
                               <SelectContent>
                                  <SelectItem value="en">English</SelectItem>
                                  <SelectItem value="de">Deutsch</SelectItem>
+                                 <SelectItem value="fr">Français</SelectItem>
                               </SelectContent>
                            </Select>
                         </div>
