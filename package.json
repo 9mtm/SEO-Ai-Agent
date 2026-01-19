@@ -21,6 +21,7 @@
   "dependencies": {
     "@googleapis/searchconsole": "^1.0.5",
     "@isaacs/ttlcache": "^1.4.1",
+    "@modelcontextprotocol/sdk": "^1.25.2",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
@@ -65,7 +66,7 @@
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.4.1",
     "react-markdown": "^9.0.1",
-    "react-quill": "^2.0.0",
+    "react-quill": "^0.0.2",
     "react-timeago": "^7.2.0",
     "react-transition-group": "^4.4.5",
     "react-window": "^1.8.10",
