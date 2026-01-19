@@ -235,22 +235,22 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                         </span>
                      </span>
                      <span
-                        className='domKeywords_head_position flex-1 basis-24 grow-0 text-center cursor-pointer hover:text-blue-700 select-none'
+                        className='domKeywords_head_position flex-1 basis-32 grow-0 text-center cursor-pointer hover:text-blue-700 select-none'
                         onClick={() => handleColumnSort('position')}
                      >
                         Position{getSortIcon('position')}
                      </span>
-                     <span className={`domKeywords_head_best flex-1 basis-16 grow-0 text-center  ${shouldHideColumn('Best')}`}>{t('trackingTable.best')}</span>
-                     <span className={`domKeywords_head_history flex-1 basis-20 grow-0  ${shouldHideColumn('History')}`}>{t('trackingTable.history')}</span>
+                     <span className={`domKeywords_head_best flex-1 basis-32 grow-0 text-center  ${shouldHideColumn('Best')}`}>{t('trackingTable.best')}</span>
+                     <span className={`domKeywords_head_history flex-1 basis-32 grow-0  ${shouldHideColumn('History')}`}>{t('trackingTable.history')}</span>
                      <span
-                        className={`domKeywords_head_volume flex-1 basis-24 grow-0 text-center cursor-pointer 
+                        className={`domKeywords_head_volume flex-1 basis-32 grow-0 text-center cursor-pointer 
                            hover:text-blue-700 select-none ${shouldHideColumn('Volume')}`}
                         onClick={() => handleColumnSort('volume')}
                      >
                         {t('trackingTable.volume')}{getSortIcon('volume')}
                      </span>
                      <span className='domKeywords_head_url flex-1'>{t('trackingTable.url')}</span>
-                     <span className='domKeywords_head_tags flex-1 basis-20 grow-0 text-center'>{t('trackingTable.tags')}</span>
+                     <span className='domKeywords_head_tags flex-1 basis-32 grow-0 text-center'>{t('trackingTable.tags')}</span>
                      <span
                         className='domKeywords_head_updated flex-1 relative left-3 max-w-[150px] cursor-pointer hover:text-blue-700 select-none'
                         onClick={() => handleColumnSort('updated')}

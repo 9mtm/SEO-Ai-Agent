@@ -136,7 +136,7 @@ const Keyword = (props: KeywordProps) => {
 
          <div
             className={`keyword_position absolute bg-[#f8f9ff] w-fit min-w-[50px] h-12 p-2 text-base mt-[-20px] rounded right-5 lg:relative
-          lg:bg-transparent lg:w-auto lg:h-auto lg:mt-0 lg:p-0 lg:text-sm lg:flex-1 lg:basis-24 lg:grow-0 lg:right-0 text-center font-semibold`}>
+          lg:bg-transparent lg:w-auto lg:h-auto lg:mt-0 lg:p-0 lg:text-sm lg:flex-1 lg:basis-32 lg:grow-0 lg:right-0 text-center font-semibold`}>
             <KeywordPosition position={position} updating={updating} />
             {!updating && positionChange > 0 && <i className=' not-italic ml-1 text-xs text-[#5ed7c3]'>▲ {positionChange}</i>}
             {!updating && positionChange < 0 && <i className=' not-italic ml-1 text-xs text-red-300'>▼ {positionChange}</i>}
@@ -147,7 +147,7 @@ const Keyword = (props: KeywordProps) => {
                ? new Date(bestPosition.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }) : ''
             }
             className={`keyword_best mr-1 bg-[#f8f9ff] float-right mt-8 w-14 rounded right-5 lg:relative lg:block
-          lg:bg-transparent lg:w-auto lg:h-auto lg:mt-0 lg:mr-0 lg:p-0 lg:text-sm lg:flex-1 lg:basis-16 lg:grow-0 lg:right-0 text-center font-semibold
+          lg:bg-transparent lg:w-auto lg:h-auto lg:mt-0 lg:mr-0 lg:p-0 lg:text-sm lg:flex-1 lg:basis-32 lg:grow-0 lg:right-0 text-center font-semibold
           ${!tableColumns.includes('Best') ? 'lg:hidden' : ''}
           `}>
             {bestPosition ? bestPosition.position || '-' : (position || '-')}
@@ -155,7 +155,7 @@ const Keyword = (props: KeywordProps) => {
 
          {chartData.labels.length > 0 && (
             <div
-               className={`hidden basis-20 grow-0 cursor-pointer lg:block ${!tableColumns.includes('History') ? 'lg:hidden' : ''}`}
+               className={`hidden basis-32 grow-0 cursor-pointer lg:block ${!tableColumns.includes('History') ? 'lg:hidden' : ''}`}
                onClick={() => showKeywordDetails()}>
                <ChartSlim labels={chartData.labels} sreies={chartData.sreies} />
             </div>
@@ -163,7 +163,7 @@ const Keyword = (props: KeywordProps) => {
 
          <div
             className={`hidden bg-[#f8f9ff] w-fit min-w-[50px] h-12 p-2 text-base mt-[-20px] rounded right-5 lg:relative lg:block
-          lg:bg-transparent lg:w-auto lg:h-auto lg:mt-0 lg:p-0 lg:text-sm lg:flex-1 lg:basis-24 lg:grow-0 lg:right-0 text-center
+          lg:bg-transparent lg:w-auto lg:h-auto lg:mt-0 lg:p-0 lg:text-sm lg:flex-1 lg:basis-32 lg:grow-0 lg:right-0 text-center
           ${!tableColumns.includes('Volume') ? 'lg:hidden' : ''}
           `}>
             {formattedNum(volume)}
@@ -177,7 +177,7 @@ const Keyword = (props: KeywordProps) => {
             </a>
          </div>
 
-         <div className='hidden lg:block lg:flex-none lg:basis-20 lg:text-center text-xs lg:truncate text-gray-500'>
+         <div className='hidden lg:block lg:flex-none lg:basis-32 lg:text-center text-xs lg:truncate text-gray-500'>
             {tags.length > 0 ? tags.map((tag, i) => (
                <span key={i} className="inline-block bg-gray-100 rounded px-1.5 py-0.5 text-[10px] mr-1 last:mr-0">
                   {tag}
