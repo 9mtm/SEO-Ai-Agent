@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import Icon from '../common/Icon';
@@ -209,9 +210,9 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                     {(!competitors || competitors.length === 0) && (domain && (domain.slug || domain.domain)) && (
                         <Link
                             href={`/domain/settings/${domain.slug || domain.domain}?tab=competitors`}
-                            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm transition-colors shadow-sm inline-flex items-center gap-2"
+                            className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors shadow-sm inline-flex items-center gap-2"
                         >
-                            <Icon type="plus" size={12} color="#fff" />
+                            <Plus size={16} color="#fff" />
                             {t('tracking.manageCompetitors.add') || 'Add Competitors'}
                         </Link>
                     )}
@@ -229,9 +230,9 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                     {(domain && (domain.slug || domain.domain)) && (
                         <Link
                             href={`/domain/settings/${domain.slug || domain.domain}?tab=competitors`}
-                            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg text-sm transition-colors shadow-sm inline-flex items-center gap-2"
+                            className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors shadow-sm inline-flex items-center gap-2"
                         >
-                            <Icon type="plus" size={12} color="#fff" />
+                            <Plus size={16} color="#fff" />
                             {t('tracking.manageCompetitors.add') || 'Add Competitors'}
                         </Link>
                     )}
