@@ -11,6 +11,8 @@ import Modal from '../common/Modal';
 import TableSkeleton from '../common/TableSkeleton';
 import { useLanguage } from '../../context/LanguageContext';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
+import KeywordFilter from './KeywordFilter';
+import { filterKeywords, keywordsByDevice, sortKeywords } from '../../utils/client/sortFilter';
 
 type CompetitorsTableProps = {
     domain: DomainType | null;
@@ -25,6 +27,10 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
     const titleColumnRef = useRef(null);
     const { mutate: refreshCompetitorsMutate } = useRefreshCompetitors(() => { });
     const { mutate: deleteMutate } = useDeleteKeywords(() => { });
+    const [device, setDevice] = useState<string>('desktop');
+    const [filterParams, setFilterParams] = useState<KeywordFilters>({ countries: [], tags: [], search: '' });
+    const [sortBy, setSortBy] = useState<string>('date_asc');
+
     const [selectedKeywords, setSelectedKeywords] = useState<number[]>([]);
     const [showRemoveModal, setShowRemoveModal] = useState<boolean>(false);
     const [SCListHeight, setSCListHeight] = useState(500);
@@ -46,15 +52,26 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
         }
     }, [titleColumnRef]);
 
+    const allDomainTags: string[] = useMemo(() => {
+        return keywords.reduce((acc: string[], keyword) => [...acc, ...keyword.tags], [])
+            .filter((t) => t && t.trim() !== '')
+            .filter((value, index, self) => self.indexOf(value) === index);
+    }, [keywords]);
+
     // Show only keywords that are being tracked for competitors or have competitor data
-    // We create a shallow copy to ensure a new reference for react-window to detect changes
-    const processedKeywords = useMemo(() => {
+    const baseKeywords = useMemo(() => {
         if (!keywords) return [];
         return keywords.filter(k =>
             k.updating_competitors === true ||
             (k.competitor_positions && Object.keys(k.competitor_positions).length > 0)
         );
     }, [keywords]);
+
+    const processedKeywords = useMemo(() => {
+        const devKeywords = baseKeywords.filter(k => k.device === device);
+        const filtered = filterKeywords(devKeywords, filterParams);
+        return sortKeywords(filtered, sortBy, 'threeDays'); // Default sort context
+    }, [baseKeywords, device, filterParams, sortBy]);
 
     const selectKeyword = (keywordID: number) => {
         let updatedSelected = [...selectedKeywords, keywordID];
@@ -117,7 +134,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                 </div>
 
                 <div className='keyword_position absolute bg-[#f8f9ff] w-fit min-w-[50px] h-12 p-2 text-base mt-[-20px] rounded right-5 lg:relative
-                    lg:bg-transparent lg:w-auto lg:h-auto lg:mt-0 lg:p-0 lg:text-sm lg:flex-1 lg:basis-24 lg:grow-0 lg:right-0 text-center font-semibold'>
+                    lg:bg-transparent lg:w-auto lg:h-auto lg:mt-0 lg:p-0 lg:text-sm lg:flex-1 lg:basis-32 lg:grow-0 lg:right-0 text-center font-semibold'>
                     <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${keyword.position > 0 && keyword.position <= 10
                         ? 'bg-green-100 text-green-800'
                         : keyword.position > 10 && keyword.position <= 50
@@ -134,7 +151,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
 
                     return (
                         <div key={idx} className='hidden bg-[#f8f9ff] w-fit min-w-[50px] h-12 p-2 text-base mt-[-20px] rounded right-5 lg:relative lg:block
-                            lg:bg-transparent lg:w-auto lg:h-auto lg:mt-0 lg:p-0 lg:text-sm lg:flex-1 lg:basis-24 lg:grow-0 lg:right-0 text-center'>
+                            lg:bg-transparent lg:w-auto lg:h-auto lg:mt-0 lg:p-0 lg:text-sm lg:flex-1 lg:basis-32 lg:grow-0 lg:right-0 text-center'>
                             {keyword.updating_competitors ? (
                                 <Icon type="loading" size={14} />
                             ) : (
@@ -226,6 +243,20 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
     return (
         <div>
             <div className='domKeywords flex flex-col bg-white rounded-xl text-sm border border-gray-100 mb-5 shadow-xl shadow-gray-200/40 relative'>
+                {baseKeywords.length > 0 && (
+                    <KeywordFilter
+                        device={device}
+                        allTags={allDomainTags}
+                        setDevice={setDevice}
+                        filterParams={filterParams}
+                        filterKeywords={setFilterParams}
+                        keywords={baseKeywords}
+                        updateSort={setSortBy}
+                        sortBy={sortBy}
+                        integratedConsole={isConsoleIntegrated}
+                        tableColumns={[]}
+                    />
+                )}
                 {selectedKeywords.length > 0 && (
                     <div className='flex items-center gap-4 py-3 px-6 bg-indigo-50/50 border-b border-indigo-100 rounded-t-xl'>
                         <span className='text-xs font-bold uppercase tracking-wider text-indigo-400'>{selectedKeywords.length} {t('trackingTable.selected')}</span>
@@ -264,11 +295,11 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                                     {t('trackingTable.keyword')}
                                 </span>
                             </span>
-                            <span className='domKeywords_head_position flex-1 basis-24 grow-0 text-center'>
+                            <span className='domKeywords_head_position flex-1 basis-32 grow-0 text-center'>
                                 {t('trackingTable.yourPosition')}
                             </span>
                             {competitors.map((competitor: string, index: number) => (
-                                <span key={index} className='flex-1 basis-24 grow-0 text-center truncate px-2' title={competitor}>
+                                <span key={index} className='flex-1 basis-32 grow-0 text-center truncate px-2' title={competitor}>
                                     {competitor.replace(/^https?:\/\//, '').replace(/\/$/, '')}
                                 </span>
                             ))}
