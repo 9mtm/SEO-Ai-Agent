@@ -42,27 +42,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             } = req.body;
 
             // 1. Update Global Settings
-            // Check if settings exist for user
-            let settings = await NotificationSetting.findOne({ where: { user_id: auth.userId } });
-
-            if (settings) {
-                await settings.update({
-                    email_alerts: emailAlerts,
-                    weekly_report: weeklyReport,
-                    marketing_emails: marketingEmails,
-                    security_alerts: securityAlerts,
-                    notification_email: notificationEmail
-                });
-            } else {
-                await NotificationSetting.create({
-                    user_id: auth.userId,
-                    email_alerts: emailAlerts,
-                    weekly_report: weeklyReport,
-                    marketing_emails: marketingEmails,
-                    security_alerts: securityAlerts,
-                    notification_email: notificationEmail
-                });
-            }
+            // Use upsert to handle potential race conditions where checking for existence
+            // might return false but a parallel request creates the record.
+            await NotificationSetting.upsert({
+                user_id: auth.userId,
+                email_alerts: emailAlerts,
+                weekly_report: weeklyReport,
+                marketing_emails: marketingEmails,
+                security_alerts: securityAlerts,
+                notification_email: notificationEmail
+            });
 
             // 2. Update Domain Notifications
             if (domainNotifications) {
