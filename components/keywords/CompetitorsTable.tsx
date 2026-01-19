@@ -244,7 +244,8 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                 )}
                 <div className='domkeywordsTable domkeywordsTable--keywords w-full'>
                     <div className='w-full'>
-                        <div className='domKeywords_head hidden lg:flex p-3 px-6 bg-[#FCFCFF] text-gray-600 justify-between items-center font-semibold border-y'>
+                        <div className='domKeywords_head domKeywords_head--competitors hidden lg:flex p-3 px-6 bg-white/95 backdrop-blur-md sticky top-0 z-30
+                         text-gray-500 justify-between items-center font-bold text-xs uppercase tracking-wider border-y border-gray-100 shadow-sm'>
                             <span ref={titleColumnRef} className='domKeywords_head_keyword flex-1 basis-[4rem] w-auto lg:flex-1 lg:basis-20 lg:w-auto lg:flex lg:items-center'>
                                 {processedKeywords.length > 0 && (
                                     <button
@@ -263,7 +264,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                                 {t('trackingTable.yourPosition')}
                             </span>
                             {competitors.map((competitor: string, index: number) => (
-                                <span key={index} className='flex-1 basis-24 grow-0 text-center'>
+                                <span key={index} className='flex-1 basis-24 grow-0 text-center truncate px-2' title={competitor}>
                                     {competitor.replace(/^https?:\/\//, '').replace(/\/$/, '')}
                                 </span>
                             ))}
@@ -276,7 +277,7 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
                                     itemData={processedKeywords}
                                     itemCount={processedKeywords.length}
                                     itemSize={isMobile ? 146 : 57}
-                                    height={Math.max(processedKeywords.length * (isMobile ? 146 : 57), 50)}
+                                    height={Math.max(processedKeywords.length * (isMobile ? 146 : 57), 400)}
                                     width={'100%'}
                                     className={'styled-scrollbar'}
                                 >

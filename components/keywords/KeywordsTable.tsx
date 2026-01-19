@@ -314,7 +314,7 @@ const KeywordsTable = (props: KeywordsTableProps) => {
                            itemData={processedKeywords[device]}
                            itemCount={processedKeywords[device].length}
                            itemSize={isMobile ? 146 : 57}
-                           height={Math.max(processedKeywords[device].length * (isMobile ? 146 : 57), 50)}
+                           height={Math.max(processedKeywords[device].length * (isMobile ? 146 : 57), 400)}
                            width={'100%'}
                            className={'styled-scrollbar'}
                         >
