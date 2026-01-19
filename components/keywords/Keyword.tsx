@@ -55,8 +55,11 @@ const Keyword = (props: KeywordProps) => {
    const [showOptions, setShowOptions] = useState(false);
    const [showPositionError, setPositionError] = useState(false);
    const dropdownRef = useRef(null);
+   const errorRef = useRef(null);
 
    useOnClickOutside(dropdownRef, () => setShowOptions(false));
+   useOnClickOutside(errorRef, () => setPositionError(false));
+
 
    const turncatedURL = useMemo(() => {
       return url.replace(`https://${domain}`, '').replace(`https://www.${domain}`, '').replace(`http://${domain}`, '');
@@ -247,16 +250,26 @@ const Keyword = (props: KeywordProps) => {
          </div>
 
          {lastUpdateError && lastUpdateError.date && showPositionError && (
-            <div className={`absolute p-2 bg-white z-30 border border-red-200 rounded w-[220px] left-4 shadow-sm text-xs 
-            ${index > 2 ? 'lg:bottom-12 mt-[-70px]' : ' top-12'}`}>
-               Error Updating Keyword position (Tried <TimeAgo
-                  title={dayjs(lastUpdateError.date).format('DD-MMM-YYYY, hh:mm:ss A')}
-                  date={lastUpdateError.date} />)
-               <i className='absolute top-0 right-0 ml-2 p-2 font-semibold not-italic cursor-pointer' onClick={() => setPositionError(false)}>
-                  <Icon type="close" size={16} color="#999" />
-               </i>
-               <div className=' border-t-[1px] border-red-100 mt-2 pt-1'>
-                  {lastUpdateError.scraper && <strong className='capitalize'>{lastUpdateError.scraper}: </strong>}{lastUpdateError.error}
+            <div ref={errorRef} className={`absolute p-4 bg-white z-50 border border-red-100 ring-4 ring-red-50/50 rounded-xl w-[320px] left-8 shadow-xl text-xs 
+            ${index > 2 ? 'lg:bottom-12' : ' top-12'} animate-in fade-in zoom-in-95 duration-200 origin-top-left`}>
+               <div className="flex items-center justify-between mb-3 border-b border-red-50 pb-2">
+                  <span className="font-bold text-red-600 flex items-center gap-2 text-sm">
+                     <Icon type="error" size={16} classes="text-red-500" />
+                     {t('trackingTable.updateFailed')}
+                  </span>
+                  <button className='text-gray-400 hover:text-gray-600 p-1 rounded-md hover:bg-gray-50 transition-colors' onClick={() => setPositionError(false)}>
+                     <Icon type="close" size={14} />
+                  </button>
+               </div>
+
+               <div className="text-gray-500 mb-3 flex items-center gap-1.5 bg-gray-50 p-2 rounded-lg border border-gray-100">
+                  <Icon type="clock" size={12} classes="text-gray-400" />
+                  <span>{t('trackingTable.lastAttempt')}: <TimeAgo date={lastUpdateError.date} /></span>
+               </div>
+
+               <div className='bg-red-50 border border-red-100 rounded-lg p-3 text-red-700 break-words font-mono text-[11px] leading-relaxed shadow-sm'>
+                  {lastUpdateError.scraper && <span className='font-bold capitalize block mb-1 text-red-800 tracking-wide'>{lastUpdateError.scraper} {t('trackingTable.scraperError')}</span>}
+                  {lastUpdateError.error}
                </div>
             </div>
          )}

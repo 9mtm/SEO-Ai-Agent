@@ -17,7 +17,7 @@ import AddKeywords from '../../../components/keywords/AddKeywords';
 import CompetitorsTable from '../../../components/keywords/CompetitorsTable';
 import ManageCompetitors from '../../../components/domains/ManageCompetitors';
 import { useRefreshCompetitors } from '../../../services/competitors';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useLanguage } from '../../../context/LanguageContext';
 
 const SingleDomain: NextPage = () => {
@@ -182,7 +182,7 @@ const SingleDomain: NextPage = () => {
                 )}
             </CSSTransition>
 
-            <Toaster position='bottom-center' containerClassName="react_toaster" />
+
         </DashboardLayout>
     );
 };

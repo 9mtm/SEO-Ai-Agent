@@ -557,7 +557,10 @@
     "selected": "Ausgewählt",
     "favorite": "Favorisieren",
     "unfavorite": "Favorit entfernen",
-    "tags": "Tags"
+    "tags": "Tags",
+    "updateFailed": "Aktualisierung fehlgeschlagen",
+    "lastAttempt": "Letzter Versuch",
+    "scraperError": "Scraper-Fehler"
   },
   "domainSelector": {
     "current": "Aktuelle Domain",

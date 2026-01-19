@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return <QueryClientProvider client={queryClient}>
     <LanguageProvider>
       <Component {...pageProps} />
-      <Toaster position="top-right" />
+      <Toaster position="bottom-center" containerClassName="react_toaster" />
       <ReactQueryDevtools initialIsOpen={false} />
     </LanguageProvider>
   </QueryClientProvider>;

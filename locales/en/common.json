@@ -556,7 +556,10 @@
     "selected": "Selected",
     "favorite": "Favorite",
     "unfavorite": "Unfavorite",
-    "tags": "Tags"
+    "tags": "Tags",
+    "updateFailed": "Update Failed",
+    "lastAttempt": "Last attempt",
+    "scraperError": "Scraper Error"
   },
   "domainSelector": {
     "current": "Current Domain",
