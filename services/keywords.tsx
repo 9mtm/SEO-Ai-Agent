@@ -75,6 +75,7 @@ export function useAddKeywords(onSuccess: Function) {
          toast('Keywords Added Successfully!', { icon: '✔️' });
          onSuccess();
          queryClient.invalidateQueries({ queryKey: ['keywords'] });
+         queryClient.invalidateQueries({ queryKey: ['userUsage'] });
       },
       onError: (error: any) => {
          console.log('Error Adding New Keywords!!!', error);
@@ -119,6 +120,7 @@ export function useDeleteKeywords(onSuccess: Function) {
          onSuccess();
          toast('Keywords Removed Successfully!', { icon: '✔️' });
          queryClient.invalidateQueries({ queryKey: ['keywords'] });
+         queryClient.invalidateQueries({ queryKey: ['userUsage'] });
       },
       onError: () => {
          console.log('Error Removing Keyword!!!');

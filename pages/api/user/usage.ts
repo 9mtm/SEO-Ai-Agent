@@ -22,6 +22,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const domainCount = await Domain.count({ where: { user_id: userId } });
         const keywordCount = await Keyword.count({ where: { user_id: userId } });
 
+        console.log(`[Usage API] UserID: ${userId} | Domains: ${domainCount} | Keywords: ${keywordCount}`);
+
         return res.status(200).json({
             plan,
             limits,

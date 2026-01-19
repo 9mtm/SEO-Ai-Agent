@@ -293,7 +293,7 @@ const AddKeywords = ({ closeModal, domain, keywords, scraperName = '', allowsCit
                   className={`px-6 py-2.5 rounded-lg text-sm font-semibold text-white shadow-sm transition-all flex items-center gap-2
                      ${isOverLimit || isAdding
                         ? 'bg-gray-400 cursor-not-allowed'
-                        : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-md'}`}
+                        : 'bg-blue-600 hover:bg-blue-700 hover:shadow-md'}`}
                   disabled={isOverLimit || isAdding}
                   onClick={() => !isAdding && !isOverLimit && addKeywords()}>
                   {isAdding && <Icon type="reload" size={14} classes="animate-spin" />}
