@@ -194,7 +194,7 @@ const DomainSettingsPage: NextPage = () => {
             business_name: businessName,
             niche: niche,
             description: description,
-            competitors: competitors,
+            competitors: competitors.map(c => c.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '')),
             integration_settings: integrationPayload, // Keep for backward compatibility
             focus_keywords: cleanFocusKeywords,
             target_country: targetCountry
@@ -234,8 +234,11 @@ const DomainSettingsPage: NextPage = () => {
 
     const addCompetitor = (e?: React.FormEvent) => {
         e?.preventDefault();
-        const trimmed = newCompetitor.trim();
+        let trimmed = newCompetitor.trim();
         if (!trimmed) return;
+
+        // Normalize URL: remove protocol, www, and trailing slash
+        trimmed = trimmed.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
 
         if (competitors.includes(trimmed)) {
             toast.error(t('domainSettings.competitors.exists'));
