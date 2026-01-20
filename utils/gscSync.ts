@@ -1,5 +1,6 @@
 import moment from 'moment';
 import SearchAnalytics from '../database/models/search_analytics';
+import { Op } from 'sequelize';
 import { getSearchConsoleApiInfo, fetchSearchConsoleData } from './searchConsole';
 
 /**
@@ -25,7 +26,7 @@ export async function syncDomainGSCData(domainObj: any, daysBack: number = 3) {
             api: scDomainAPI,
             startDate,
             endDate,
-            dimensions: ['date', 'query', 'country', 'device'],
+            dimensions: ['date', 'query', 'country', 'device', 'page'],
             raw: true
         });
 
@@ -36,6 +37,19 @@ export async function syncDomainGSCData(domainObj: any, daysBack: number = 3) {
 
         console.log(`[GSC Sync] Fetched ${data.rows.length} rows from Google.`);
 
+        // 3.5 Cleanup: Remove old data for this domain to keep the table light
+        // Note: For MCP use case where we only need recent data, we can wipe data older than our sync window (daysBack).
+        // If we want historical tracking, we would remove this.
+        await SearchAnalytics.destroy({
+            where: {
+                domain_id: domainObj.ID || domainObj.id,
+                date: {
+                    [Op.lt]: startDate // Delete anything older than the start date of this sync
+                }
+            }
+        });
+        console.log(`[GSC Sync] Cleaned up data older than ${startDate}`);
+
         // 4. Prepare data for Bulk Upsert
         const records = data.rows.map((row: any) => ({
             domain_id: domainObj.ID || domainObj.id,
@@ -43,6 +57,7 @@ export async function syncDomainGSCData(domainObj: any, daysBack: number = 3) {
             keyword: row.keys[1],
             country: row.keys[2],
             device: row.keys[3],
+            page: row.keys[4] || null, // Include page data
             clicks: row.clicks,
             impressions: row.impressions,
             ctr: row.ctr,
