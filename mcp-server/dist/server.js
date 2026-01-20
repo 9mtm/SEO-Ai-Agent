@@ -1,34 +1,10 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import {
-    CallToolRequestSchema,
-    ListResourcesRequestSchema,
-    ListToolsRequestSchema,
-    ReadResourceRequestSchema,
-    ListPromptsRequestSchema,
-    GetPromptRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js';
-import axios, { AxiosRequestConfig } from 'axios';
-
-// Type definitions
-interface ApiRequestOptions {
-    method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-    data?: Record<string, any>;
-    headers?: Record<string, string>;
-}
-
-interface ApiResponse<T = any> {
-    [key: string]: T;
-}
-
+import { CallToolRequestSchema, ListResourcesRequestSchema, ListToolsRequestSchema, ReadResourceRequestSchema, ListPromptsRequestSchema, GetPromptRequestSchema, } from '@modelcontextprotocol/sdk/types.js';
+import axios from 'axios';
 // Helper function to make authenticated API requests
-async function apiRequest<T = any>(
-    endpoint: string,
-    baseUrl: string,
-    apiKey: string,
-    options: ApiRequestOptions = {}
-): Promise<ApiResponse<T>> {
+async function apiRequest(endpoint, baseUrl, apiKey, options = {}) {
     try {
-        const config: AxiosRequestConfig = {
+        const config = {
             url: `${baseUrl}${endpoint}`,
             method: options.method || 'GET',
             data: options.data,
@@ -38,30 +14,25 @@ async function apiRequest<T = any>(
                 ...options.headers,
             },
         };
-
         const response = await axios(config);
         return response.data;
-    } catch (error: any) {
+    }
+    catch (error) {
         console.error(`[MCP API] Request failed: ${error.message} (${endpoint})`);
         throw new Error(`API request failed: ${error.response?.data?.error || error.message}`);
     }
 }
-
-export function createMcpServer(baseUrl: string, apiKey: string) {
-    const server = new Server(
-        {
-            name: 'dpro-seo-agent',
-            version: '1.0.0',
+export function createMcpServer(baseUrl, apiKey) {
+    const server = new Server({
+        name: 'dpro-seo-agent',
+        version: '1.0.0',
+    }, {
+        capabilities: {
+            resources: {},
+            tools: {},
+            prompts: {},
         },
-        {
-            capabilities: {
-                resources: {},
-                tools: {},
-                prompts: {},
-            },
-        }
-    );
-
+    });
     // LIST RESOURCES
     server.setRequestHandler(ListResourcesRequestSchema, async () => {
         return {
@@ -74,8 +45,8 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     uri: 'seo://keywords',
-                    name: 'Tracked Keywords (Google Rankings)',
-                    description: 'View keywords being TRACKED for Google search rankings. These are keywords you monitor daily for position changes, competitor analysis, and ranking history. Different from target keywords (strategy). Use this to see: current positions, ranking history, position changes, search volume, countries, devices, URLs, and competitor positions.',
+                    name: 'Tracked Keyword Rankings',
+                    description: 'View all tracked keywords with their Google search rankings, positions, ranking history, position changes, search volume, countries, devices, and URLs. Shows both ranked and unranked keywords.',
                     mimeType: 'application/json',
                 },
                 {
@@ -93,11 +64,9 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
             ],
         };
     });
-
     // READ RESOURCE
     server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
         const uri = request.params.uri;
-
         if (uri === 'seo://domains') {
             const data = await apiRequest('/api/mcp/domains', baseUrl, apiKey);
             return {
@@ -110,7 +79,6 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 ],
             };
         }
-
         if (uri === 'seo://keywords') {
             const data = await apiRequest('/api/mcp/keywords', baseUrl, apiKey);
             return {
@@ -123,7 +91,6 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 ],
             };
         }
-
         if (uri === 'seo://posts') {
             const data = await apiRequest('/api/mcp/posts', baseUrl, apiKey);
             return {
@@ -136,10 +103,8 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 ],
             };
         }
-
         throw new Error(`Unknown resource: ${uri}`);
     });
-
     // LIST TOOLS
     server.setRequestHandler(ListToolsRequestSchema, async () => {
         return {
@@ -176,7 +141,7 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     name: 'add_keyword',
-                    description: 'Add a keyword to TRACK its Google search rankings. This monitors the keyword\'s position daily and tracks changes over time. Different from target keywords (which are for content strategy). Use this when you want to monitor how a keyword ranks in Google search results.',
+                    description: 'Start tracking a new keyword for Google Ranking in a specific location',
                     inputSchema: {
                         type: 'object',
                         properties: {
@@ -186,7 +151,7 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                             },
                             keyword: {
                                 type: 'string',
-                                description: 'Keyword to track for Google rankings',
+                                description: 'Keyword to track',
                             },
                             location: {
                                 type: 'string',
@@ -198,7 +163,7 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     name: 'get_domain_stats',
-                    description: 'Get overview statistics for a domain. Shows total count of TRACKED keywords, published posts, and top rankings. Useful for a quick summary of SEO monitoring efforts.',
+                    description: 'Get SEO statistics for a domain',
                     inputSchema: {
                         type: 'object',
                         properties: {
@@ -212,7 +177,7 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     name: 'get_gsc_data',
-                    description: 'Get RAW traffic data from Google Search Console (GSC). Shows actual clicks, impressions, CTR, and positions from real user searches. This is "Traffic Data", distinct from "Rank Tracking" (which monitors specific keywords).',
+                    description: 'Get Google Search Console data for a domain',
                     inputSchema: {
                         type: 'object',
                         properties: {
@@ -234,13 +199,13 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     name: 'get_keyword_rankings',
-                    description: 'Get TRACKED keywords with their current Google search rankings, positions, competitor analysis, ranking history, and position changes. Shows keywords you are actively monitoring for SEO performance. Use this to see: "What are my keyword rankings?", "How are my keywords performing?", "Show me competitor positions".',
+                    description: 'Get keyword rankings with competitor analysis.',
                     inputSchema: {
                         type: 'object',
                         properties: {
                             domain_id: {
                                 type: 'number',
-                                description: 'Domain ID (optional - returns all tracked keywords if not specified)',
+                                description: 'Domain ID (optional)',
                             },
                         },
                         required: [],
@@ -248,7 +213,7 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     name: 'get_gsc_insight',
-                    description: 'Get comprehensive GSC Insights. Analyzes your ACTUAL traffic patterns from Google Search Console. Shows which queries and pages are driving real visitors, performance trends, and country breakdowns. Use this for analyzing organic traffic performance.',
+                    description: 'Get comprehensive Google Search Console Insight data.',
                     inputSchema: {
                         type: 'object',
                         properties: {
@@ -262,7 +227,7 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     name: 'get_gsc_keywords',
-                    description: 'Get detailed keyword performance from Google Search Console. Shows queries that real users typed to find your site, with clicks and impressions. These are "Traffic Keywords", not necessarily the ones you are manually tracking.',
+                    description: 'Get detailed Google Search Console keywords data.',
                     inputSchema: {
                         type: 'object',
                         properties: {
@@ -285,11 +250,9 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
             ],
         };
     });
-
     // CALL TOOL
     server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const { name, arguments: args } = request.params;
-
         if (name === 'create_post') {
             const result = await apiRequest('/api/mcp/posts', baseUrl, apiKey, {
                 method: 'POST',
@@ -304,7 +267,6 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 ],
             };
         }
-
         if (name === 'add_keyword') {
             const result = await apiRequest('/api/mcp/keywords', baseUrl, apiKey, {
                 method: 'POST',
@@ -319,7 +281,6 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 ],
             };
         }
-
         if (name === 'get_domain_stats') {
             const domainId = args?.domain_id || '';
             const result = await apiRequest(`/api/mcp/stats?domain_id=${domainId}`, baseUrl, apiKey);
@@ -332,16 +293,15 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 ],
             };
         }
-
         if (name === 'get_gsc_data') {
             const domainId = args?.domain_id || '';
             const startDate = args?.start_date || '';
             const endDate = args?.end_date || '';
-
             let url = `/api/mcp/gsc?domain_id=${domainId}`;
-            if (startDate) url += `&start_date=${startDate}`;
-            if (endDate) url += `&end_date=${endDate}`;
-
+            if (startDate)
+                url += `&start_date=${startDate}`;
+            if (endDate)
+                url += `&end_date=${endDate}`;
             const result = await apiRequest(url, baseUrl, apiKey);
             return {
                 content: [
@@ -352,12 +312,11 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 ],
             };
         }
-
         if (name === 'get_keyword_rankings') {
             const domainId = args?.domain_id || '';
             let url = '/api/mcp/keywords';
-            if (domainId) url += `?domain_id=${domainId}`;
-
+            if (domainId)
+                url += `?domain_id=${domainId}`;
             const result = await apiRequest(url, baseUrl, apiKey);
             return {
                 content: [
@@ -368,7 +327,6 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 ],
             };
         }
-
         if (name === 'get_gsc_insight') {
             const domainId = args?.domain_id || '';
             const result = await apiRequest(`/api/mcp/insight?domain_id=${domainId}`, baseUrl, apiKey);
@@ -381,16 +339,15 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 ],
             };
         }
-
         if (name === 'get_gsc_keywords') {
             const domainId = args?.domain_id || '';
             const device = args?.device || '';
             const country = args?.country || '';
-
             let url = `/api/mcp/sc-keywords?domain_id=${domainId}`;
-            if (device) url += `&device=${device}`;
-            if (country) url += `&country=${country}`;
-
+            if (device)
+                url += `&device=${device}`;
+            if (country)
+                url += `&country=${country}`;
             const result = await apiRequest(url, baseUrl, apiKey);
             return {
                 content: [
@@ -401,10 +358,8 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 ],
             };
         }
-
         throw new Error(`Unknown tool: ${name}`);
     });
-
     // LIST PROMPTS
     server.setRequestHandler(ListPromptsRequestSchema, async () => {
         return {
@@ -428,15 +383,12 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
             ],
         };
     });
-
     // GET PROMPT
     server.setRequestHandler(GetPromptRequestSchema, async (request) => {
         const { name, arguments: args } = request.params;
-
         if (name === 'seo_article') {
             const keyword = args?.keyword || 'your topic';
             const tone = args?.tone || 'professional';
-
             return {
                 messages: [
                     {
@@ -449,9 +401,8 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 ],
             };
         }
-
         throw new Error(`Unknown prompt: ${name}`);
     });
-
     return server;
 }
+//# sourceMappingURL=server.js.map

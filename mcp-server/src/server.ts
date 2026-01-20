@@ -74,8 +74,8 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     uri: 'seo://keywords',
-                    name: 'Tracked Keywords (Google Rankings)',
-                    description: 'View keywords being TRACKED for Google search rankings. These are keywords you monitor daily for position changes, competitor analysis, and ranking history. Different from target keywords (strategy). Use this to see: current positions, ranking history, position changes, search volume, countries, devices, URLs, and competitor positions.',
+                    name: 'Tracked Keyword Rankings',
+                    description: 'View all tracked keywords with their Google search rankings, positions, ranking history, position changes, search volume, countries, devices, and URLs. Shows both ranked and unranked keywords.',
                     mimeType: 'application/json',
                 },
                 {
@@ -176,7 +176,7 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     name: 'add_keyword',
-                    description: 'Add a keyword to TRACK its Google search rankings. This monitors the keyword\'s position daily and tracks changes over time. Different from target keywords (which are for content strategy). Use this when you want to monitor how a keyword ranks in Google search results.',
+                    description: 'Start tracking a new keyword for Google Ranking in a specific location',
                     inputSchema: {
                         type: 'object',
                         properties: {
@@ -186,7 +186,7 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                             },
                             keyword: {
                                 type: 'string',
-                                description: 'Keyword to track for Google rankings',
+                                description: 'Keyword to track',
                             },
                             location: {
                                 type: 'string',
@@ -198,7 +198,7 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     name: 'get_domain_stats',
-                    description: 'Get overview statistics for a domain. Shows total count of TRACKED keywords, published posts, and top rankings. Useful for a quick summary of SEO monitoring efforts.',
+                    description: 'Get SEO statistics for a domain',
                     inputSchema: {
                         type: 'object',
                         properties: {
@@ -212,7 +212,7 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     name: 'get_gsc_data',
-                    description: 'Get RAW traffic data from Google Search Console (GSC). Shows actual clicks, impressions, CTR, and positions from real user searches. This is "Traffic Data", distinct from "Rank Tracking" (which monitors specific keywords).',
+                    description: 'Get Google Search Console data for a domain',
                     inputSchema: {
                         type: 'object',
                         properties: {
@@ -234,13 +234,13 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     name: 'get_keyword_rankings',
-                    description: 'Get TRACKED keywords with their current Google search rankings, positions, competitor analysis, ranking history, and position changes. Shows keywords you are actively monitoring for SEO performance. Use this to see: "What are my keyword rankings?", "How are my keywords performing?", "Show me competitor positions".',
+                    description: 'Get keyword rankings with competitor analysis.',
                     inputSchema: {
                         type: 'object',
                         properties: {
                             domain_id: {
                                 type: 'number',
-                                description: 'Domain ID (optional - returns all tracked keywords if not specified)',
+                                description: 'Domain ID (optional)',
                             },
                         },
                         required: [],
@@ -248,7 +248,7 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     name: 'get_gsc_insight',
-                    description: 'Get comprehensive GSC Insights. Analyzes your ACTUAL traffic patterns from Google Search Console. Shows which queries and pages are driving real visitors, performance trends, and country breakdowns. Use this for analyzing organic traffic performance.',
+                    description: 'Get comprehensive Google Search Console Insight data.',
                     inputSchema: {
                         type: 'object',
                         properties: {
@@ -262,7 +262,7 @@ export function createMcpServer(baseUrl: string, apiKey: string) {
                 },
                 {
                     name: 'get_gsc_keywords',
-                    description: 'Get detailed keyword performance from Google Search Console. Shows queries that real users typed to find your site, with clicks and impressions. These are "Traffic Keywords", not necessarily the ones you are manually tracking.',
+                    description: 'Get detailed Google Search Console keywords data.',
                     inputSchema: {
                         type: 'object',
                         properties: {

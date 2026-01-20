@@ -297,11 +297,11 @@ export default function ApiKeysPage() {
                                         <code className="text-xs text-green-900 block whitespace-pre">
                                             {`{
   "mcpServers": {
-    "seo-agent": {
-      "command": "npx",
-      "args": ["-y", "@seo-agent/mcp-server"],
-      "env": {
-        "SEO_API_KEY": "${newKeyData.apiKey}"
+    "dpro-seo-agent": {
+      "url": "http://localhost:55781/api/mcp/sse",
+      "transport": "sse",
+      "headers": {
+        "Authorization": "Bearer ${newKeyData.apiKey}"
       }
     }
   }
@@ -607,11 +607,11 @@ export default function ApiKeysPage() {
                                                                     size="sm"
                                                                     onClick={() => copyToClipboard(`{
   "mcpServers": {
-    "seo-agent": {
-      "command": "npx",
-      "args": ["-y", "@seo-agent/mcp-server"],
-      "env": {
-        "SEO_API_KEY": "${userApiKeys[key.id] || 'loading...'}"
+    "dpro-seo-agent": {
+      "url": "http://localhost:55781/api/mcp/sse",
+      "transport": "sse",
+      "headers": {
+        "Authorization": "Bearer ${userApiKeys[key.id] || 'YOUR_API_KEY'}"
       }
     }
   }
@@ -623,11 +623,11 @@ export default function ApiKeysPage() {
                                                                 <code className="text-xs text-blue-900 block whitespace-pre pr-10">
                                                                     {`{
   "mcpServers": {
-    "seo-agent": {
-      "command": "npx",
-      "args": ["-y", "@seo-agent/mcp-server"],
-      "env": {
-        "SEO_API_KEY": "${userApiKeys[key.id] || 'loading...'}"
+    "dpro-seo-agent": {
+      "url": "http://localhost:55781/api/mcp/sse",
+      "transport": "sse",
+      "headers": {
+        "Authorization": "Bearer ${userApiKeys[key.id] || 'YOUR_API_KEY'}"
       }
     }
   }

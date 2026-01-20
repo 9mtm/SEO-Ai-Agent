@@ -62,16 +62,34 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
 
         // Keyword stats
         if (canReadKeywords) {
+            // Keywords use domain as string (domain slug), not domain_id
             const allKeywords = await Keyword.findAll({
-                where: { domain: domainIds },
-                attributes: ['ID', 'position']
+                where: { user_id: auth.userId },
+                attributes: ['ID', 'position', 'domain']
             });
 
-            const topPositions = allKeywords.filter((k: any) => k.position && k.position <= 10).length;
+            // Filter by domain if specified
+            let filteredKeywords = allKeywords;
+            if (targetDomainId) {
+                // Get the domain slug for filtering
+                const targetDomain = await Domain.findOne({
+                    where: { ID: targetDomainId },
+                    attributes: ['slug']
+                });
+
+                if (targetDomain) {
+                    filteredKeywords = allKeywords.filter((k: any) => {
+                        // domain field is a string like "flowxtra.com" or "dpro.at"
+                        return k.domain === targetDomain.slug || k.domain === targetDomain.slug.replace('_', '.');
+                    });
+                }
+            }
+
+            const topPositions = filteredKeywords.filter((k: any) => k.position && k.position <= 10).length;
             const improved = 0; // lastResult_position not available
 
             stats.keywords = {
-                total: allKeywords.length,
+                total: filteredKeywords.length,
                 top_10: topPositions,
                 improved_recently: improved,
             };
