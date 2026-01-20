@@ -24,7 +24,7 @@ import {
 const MCPSEOPage: React.FC = () => {
   const router = useRouter();
   const { t, locale, setLocale } = useLanguage();
-  const [activeTab, setActiveTab] = useState<'claude' | 'chatgpt' | 'api'>('claude');
+  const [activeTab, setActiveTab] = useState<'claude' | 'cursor' | 'chatgpt' | 'windsurf' | 'zed' | 'api'>('claude');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -627,6 +627,15 @@ const MCPSEOPage: React.FC = () => {
                   Claude Desktop
                 </button>
                 <button
+                  onClick={() => setActiveTab('cursor')}
+                  className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${activeTab === 'cursor'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                    }`}
+                >
+                  Cursor
+                </button>
+                <button
                   onClick={() => setActiveTab('chatgpt')}
                   className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${activeTab === 'chatgpt'
                     ? 'bg-blue-600 text-white shadow-lg'
@@ -634,6 +643,24 @@ const MCPSEOPage: React.FC = () => {
                     }`}
                 >
                   ChatGPT
+                </button>
+                <button
+                  onClick={() => setActiveTab('windsurf')}
+                  className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${activeTab === 'windsurf'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                    }`}
+                >
+                  Windsurf
+                </button>
+                <button
+                  onClick={() => setActiveTab('zed')}
+                  className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${activeTab === 'zed'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                    }`}
+                >
+                  Zed
                 </button>
                 <button
                   onClick={() => setActiveTab('api')}
@@ -709,6 +736,155 @@ const MCPSEOPage: React.FC = () => {
                       {t('mcp.setup.claude.step2Title')}
                     </h3>
                     <p className="text-neutral-700">{t('mcp.setup.claude.step2')}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Cursor Tab */}
+              {activeTab === 'cursor' && (
+                <div className="space-y-6">
+                  <div className="bg-indigo-50 border-l-4 border-indigo-600 p-6 rounded-r-lg">
+                    <h3 className="text-xl font-bold text-neutral-900 mb-4">
+                      {t('mcp.setup.cursor.title')}
+                    </h3>
+                    <ol className="space-y-3 text-neutral-700">
+                      <li className="flex items-start">
+                        <span className="bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">1</span>
+                        <span>{t('mcp.setup.cursor.step1')}</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">2</span>
+                        <span>{t('mcp.setup.cursor.step2')}</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">3</span>
+                        <span>{t('mcp.setup.cursor.step3')}</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">4</span>
+                        <span>{t('mcp.setup.cursor.step4')}</span>
+                      </li>
+                    </ol>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-neutral-900 rounded-lg p-6">
+                      <div className="text-sm text-neutral-400 mb-2">Name</div>
+                      <code className="text-green-400 block mb-4">dpro-seo-agent</code>
+
+                      <div className="text-sm text-neutral-400 mb-2">Type</div>
+                      <code className="text-green-400 block mb-4">command</code>
+
+                      <div className="text-sm text-neutral-400 mb-2">Command</div>
+                      <div className="flex items-center gap-2">
+                        <code className="text-green-400 block">npx -y seo-agent-mcp-server</code>
+                        <button onClick={() => copyToClipboard('npx -y seo-agent-mcp-server', 'cmd')} className="text-neutral-500 hover:text-white">
+                          <Copy className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="bg-neutral-900 rounded-lg p-6">
+                      <div className="text-sm text-neutral-400 mb-2">Environment Variables</div>
+                      <div className="space-y-3">
+                        <div>
+                          <div className="text-xs text-neutral-500">SEO_API_KEY</div>
+                          <code className="text-green-400 text-xs">your_api_key_here</code>
+                        </div>
+                        <div>
+                          <div className="text-xs text-neutral-500">API_BASE_URL</div>
+                          <code className="text-green-400 text-xs">https://seo-agent.net</code>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Windsurf Tab */}
+              {activeTab === 'windsurf' && (
+                <div className="space-y-6">
+                  <div className="bg-cyan-50 border-l-4 border-cyan-600 p-6 rounded-r-lg">
+                    <h3 className="text-xl font-bold text-neutral-900 mb-4">
+                      {t('mcp.setup.windsurf.title')}
+                    </h3>
+                    <ol className="space-y-3 text-neutral-700">
+                      <li className="flex items-start">
+                        <span className="bg-cyan-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">1</span>
+                        <span>{t('mcp.setup.windsurf.step1')}</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="bg-cyan-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">2</span>
+                        <span>{t('mcp.setup.windsurf.step2')}</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="bg-cyan-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">3</span>
+                        <span>{t('mcp.setup.windsurf.step3')}</span>
+                      </li>
+                    </ol>
+                  </div>
+                  <div className="relative">
+                    <div className="bg-neutral-900 rounded-lg p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-sm text-neutral-400 font-mono">
+                          mcp_config.json
+                        </span>
+                        <button
+                          onClick={() => copyToClipboard(claudeConfig, 'windsurf')}
+                          className="flex items-center px-3 py-1 bg-neutral-800 hover:bg-neutral-700 text-white rounded text-sm transition-colors duration-200"
+                        >
+                          <Copy className="w-4 h-4 mr-1" />
+                          {t('mcp.setup.copy')}
+                        </button>
+                      </div>
+                      <pre className="text-sm text-neutral-100 overflow-x-auto">
+                        <code>{claudeConfig}</code>
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Zed Tab */}
+              {activeTab === 'zed' && (
+                <div className="space-y-6">
+                  <div className="bg-orange-50 border-l-4 border-orange-600 p-6 rounded-r-lg">
+                    <h3 className="text-xl font-bold text-neutral-900 mb-4">
+                      {t('mcp.setup.zed.title')}
+                    </h3>
+                    <ol className="space-y-3 text-neutral-700">
+                      <li className="flex items-start">
+                        <span className="bg-orange-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">1</span>
+                        <span>{t('mcp.setup.zed.step1')}</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="bg-orange-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">2</span>
+                        <span>{t('mcp.setup.zed.step2')}</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="bg-orange-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">3</span>
+                        <span>{t('mcp.setup.zed.step3')}</span>
+                      </li>
+                    </ol>
+                  </div>
+                  <div className="relative">
+                    <div className="bg-neutral-900 rounded-lg p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-sm text-neutral-400 font-mono">
+                          settings.json
+                        </span>
+                        <button
+                          onClick={() => copyToClipboard(claudeConfig, 'zed')}
+                          className="flex items-center px-3 py-1 bg-neutral-800 hover:bg-neutral-700 text-white rounded text-sm transition-colors duration-200"
+                        >
+                          <Copy className="w-4 h-4 mr-1" />
+                          {t('mcp.setup.copy')}
+                        </button>
+                      </div>
+                      <pre className="text-sm text-neutral-100 overflow-x-auto">
+                        <code>{claudeConfig}</code>
+                      </pre>
+                    </div>
                   </div>
                 </div>
               )}

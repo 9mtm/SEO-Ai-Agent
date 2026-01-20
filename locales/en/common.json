@@ -1379,5 +1379,204 @@
     "talentManagement": "Talent Management",
     "ats": "Applicant Tracking Software",
     "documentation": "Documentation"
+  },
+  "mcp": {
+    "hero": {
+      "title": "SEO Agent Model Protocol (MCP)",
+      "description": "Connect your SEO data directly to Claude Desktop & ChatGPT. Get real-time ranking data, analytics, and create content without leaving your AI assistant.",
+      "getAPIKey": "Get API Key"
+    },
+    "whatIs": {
+      "title": "What is SEO Agent MCP?",
+      "description1": "The Model Context Protocol (MCP) allows AI assistants like Claude to connect to external tools and data sources.",
+      "description2": "With the SEO Agent MCP Server, you can query your website stats, keywords, and even publish content directly from Claude.",
+      "benefit1Title": "Real-time Data",
+      "benefit1": "Access live Google rankings and GSC data",
+      "benefit2Title": "Content Creation",
+      "benefit2": "Generate and publish SEO articles",
+      "benefit3Title": "Keyword Tracking",
+      "benefit3": "Monitor keyword positions and competitors",
+      "benefit4Title": "Secure Analysis",
+      "benefit4": "Your data stays secure with granular permissions"
+    },
+    "platforms": {
+      "title": "Supported Platforms",
+      "recommended": "Recommended",
+      "advanced": "Advanced",
+      "comingSoon": "Coming Soon",
+      "claude1": "Native integration via config",
+      "claude2": "Full tool support",
+      "claude3": "Fastest performance",
+      "chatgpt1": "Via Custom Actions",
+      "chatgpt2": "OpenAPI Schema support",
+      "chatgpt3": "Requires Plus subscription",
+      "otherTools": "Other Tools",
+      "moreTools": "More coming soon"
+    },
+    "setup": {
+      "title": "Setup Guide - Step by Step",
+      "copied": "Copied!",
+      "copy": "Copy Config",
+      "claude": {
+        "step1Title": "1. Edit Config File",
+        "step1.1": "Open Claude Desktop",
+        "step1.2": "Go to Settings → Developer → Edit Config",
+        "step1.3": "Paste the following configuration:",
+        "step2Title": "2. Restart Claude",
+        "step2": "Save the file and restart Claude Desktop. You should see a '🔌' icon indicating the connection is active."
+      },
+      "cursor": {
+        "title": "Cursor IDE Setup",
+        "step1": "Open Cursor Settings (Ctrl/Cmd + Shift + J)",
+        "step2": "Go to 'Features' → Scroll down to 'MCP'",
+        "step3": "Enable 'Model Context Protocol'",
+        "step4": "Click 'Add New MCP Server'",
+        "step5": "Select 'Command' type and enter the details below:"
+      },
+      "chatgpt": {
+        "title": "ChatGPT Setup",
+        "step1": "Go to 'My GPTs' and create a new GPT",
+        "step2": "In 'Configure', scroll down to 'Actions'",
+        "step3": "Click 'Create new action' and paste the schema below",
+        "step4": "Set Authentication to 'API Key' and use your SEO Agent key"
+      },
+      "windsurf": {
+        "title": "Windsurf IDE Setup",
+        "step1": "Open Windsurf Settings",
+        "step2": "Go to 'Advanced' → 'MCP Servers'",
+        "step3": "Paste the configuration JSON below into the config file"
+      },
+      "zed": {
+        "title": "Zed Editor Setup",
+        "step1": "Open Zed",
+        "step2": "Use Command Palette (Ctrl/Cmd + Shift + P) and type 'mcp'",
+        "step3": "Select 'Configure MCP Servers' and paste the JSON"
+      },
+      "api": {
+        "title": "Direct API Usage",
+        "description": "You can also use the MCP server as a standard REST API for your own integrations."
+      }
+    },
+    "functions": {
+      "title": "Available Functions",
+      "functionName": "Function Name",
+      "description": "Description",
+      "exampleQuery": "Example Query",
+      "listDomains": {
+        "description": "List all connected domains",
+        "example": "Show me my domains"
+      },
+      "getKeywords": {
+        "description": "Get tracked keywords & rankings",
+        "example": "Check my keyword rankings"
+      },
+      "getRankings": {
+        "description": "Get detailed ranking history",
+        "example": "How has 'keyword' improved?"
+      },
+      "getGSC": {
+        "description": "Get Google Search Console data",
+        "example": "Show my GSC traffic for last week"
+      },
+      "analyzeSEO": {
+        "description": "Analyze page SEO score",
+        "example": "Analyze SEO for /blog/post-1"
+      },
+      "createPost": {
+        "description": "Generate optimized blog post",
+        "example": "Write a post about 'AI SEO'"
+      },
+      "publishPost": {
+        "description": "Publish post to CMS",
+        "example": "Publish the generated post"
+      },
+      "getCompetitors": {
+        "description": "Analyze competitor rankings",
+        "example": "Who are my competitors for 'keyword'?"
+      }
+    },
+    "benefits": {
+      "title": "Why use SEO Agent MCP?",
+      "speed": {
+        "title": "Speed",
+        "point1": "Instant data access",
+        "point2": "Zero latency queries",
+        "point3": "Automated reporting"
+      },
+      "ai": {
+        "title": "AI Power",
+        "point1": "Context-aware analysis",
+        "point2": "Smart recommendations",
+        "point3": "Automated content strategy"
+      },
+      "security": {
+        "title": "Security",
+        "point1": "Encrypted API keys",
+        "point2": "Granular permissions",
+        "point3": "GDPR compliant"
+      },
+      "updates": {
+        "title": "Always Updated",
+        "point1": "Auto-sync with GSC",
+        "point2": "Real-time rank tracking",
+        "point3": "Regular feature updates"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "Is this free?",
+        "answer": "The MCP server is free to use with your SEO Agent subscription."
+      },
+      "q2": {
+        "question": "How do I get an API Key?",
+        "answer": "Go to your Profile → API Keys to generate a new key."
+      },
+      "q3": {
+        "question": "Does it work with Windows?",
+        "answer": "Yes, it works on Windows, macOS, and Linux."
+      },
+      "q4": {
+        "question": "Can I edit the code?",
+        "answer": "Yes, it's open source! You can fork it on GitHub."
+      },
+      "q5": {
+        "question": "Is my data safe?",
+        "answer": "Yes, your API key never leaves your local machine configuration except to authenticate with our secure API."
+      },
+      "q6": {
+        "question": "What if I hit rate limits?",
+        "answer": "Rate limits depend on your subscription plan. Check your dashboard for details."
+      },
+      "q7": {
+        "question": "Can I use multiple domains?",
+        "answer": "Yes, you can manage all your domains through one MCP connection."
+      },
+      "q8": {
+        "question": "Do I need technical skills?",
+        "answer": "Basic knowledge of using a terminal/command prompt is helpful but not required for basic setup."
+      }
+    },
+    "finalCTA": {
+      "title": "Ready to Supercharge Your Workflow?",
+      "description": "Join thousands of SEOs using AI to automate their work.",
+      "getAPIKey": "Get Your API Key Now",
+      "joinUsers": "Join 10,000+ users optimizing with AI"
+    }
+  },
+  "meta": {
+    "mcpSeo": {
+      "title": "SEO Agent MCP Server - Connect Claude & ChatGPT",
+      "description": "Connect your SEO data to Claude Desktop and ChatGPT with the Model Context Protocol (MCP). Real-time rankings, analytics, and content creation.",
+      "keywords": "mcp, seo agent, claude desktop, chatgpt, seo api, rank tracking, gsc",
+      "ogTitle": "Supercharge your AI with SEO Data",
+      "ogDescription": "Connect Claude Desktop directly to your SEO metrics, rankings, and GSC data."
+    }
+  },
+  "seo": {
+    "mcpSeo": {
+      "twitterTitle": "SEO Agent MCP Integration",
+      "twitterDescription": "Connect Claude & ChatGPT to your real-time SEO data."
+    }
   }
 }
