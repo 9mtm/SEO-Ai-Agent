@@ -3,6 +3,9 @@ import { validateMcpApiKey, hasPermission, logApiAction, AuthenticatedRequest } 
 import Domain from '../../../database/models/domain';
 import { fetchDomainSCData, getSearchConsoleApiInfo } from '../../../utils/searchConsole';
 import connection from '../../../database/database';
+import SearchAnalytics from '../../../database/models/search_analytics';
+import { Op } from 'sequelize';
+import moment from 'moment';
 
 export default async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     // Initialize database connection
@@ -56,15 +59,49 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
             });
         }
 
-        // Fetch GSC data using the same method as frontend
-        const gscData = await fetchDomainSCData(domainObj, scDomainAPI);
+        // Check for specific date range or default to last 30 days
+        const startDate = start_date ? String(start_date) : moment().subtract(30, 'days').format('YYYY-MM-DD');
+        const endDate = end_date ? String(end_date) : moment().format('YYYY-MM-DD');
+
+        // Check availability in DB
+        const dbCount = await SearchAnalytics.count({
+            where: {
+                domain_id: domainObj.ID,
+                date: {
+                    [Op.between]: [startDate, endDate]
+                }
+            }
+        });
+
+        // "Stale-While-Revalidate"ish strategy: 
+        // If we have little data for the range, we assume we need to sync. 
+        // We sync in background (or await if it's critical, but here we await for simplicity to ensure user gets data).
+        // Since sync is incremental, it shouldn't take long if updated recently.
+        if (dbCount < 5) { // Arbitrary threshold, implies we don't have data
+            const { syncDomainGSCData } = await import('../../../utils/gscSync');
+            // Calculate days back based on start date
+            const daysBack = moment().diff(moment(startDate), 'days') + 2; // +buffer
+            await syncDomainGSCData(domainObj, daysBack);
+        }
+
+        // Fetch from Database
+        const analyticsData = await SearchAnalytics.findAll({
+            where: {
+                domain_id: domainObj.ID,
+                date: {
+                    [Op.between]: [startDate, endDate]
+                }
+            },
+            order: [['date', 'DESC'], ['clicks', 'DESC']],
+            limit: 5000
+        });
 
         await logApiAction(
             auth.apiKeyId,
             'get_gsc_data',
             `domain_${domain_id}`,
             true,
-            { domain_id },
+            { domain_id, count: analyticsData.length },
             undefined,
             req
         );
@@ -74,7 +111,11 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
                 ID: domainObj.ID,
                 domain: domainObj.domain,
             },
-            data: gscData,
+            data: analyticsData,
+            meta: {
+                count: analyticsData.length,
+                date_range: { start: startDate, end: endDate }
+            }
         });
 
     } catch (error: any) {

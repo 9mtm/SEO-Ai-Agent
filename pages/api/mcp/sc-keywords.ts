@@ -1,8 +1,8 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import db from '../../../database/database';
+import type { NextApiResponse } from 'next';
+import { validateMcpApiKey, hasPermission, logApiAction, AuthenticatedRequest } from '../../../utils/mcpAuth';
 import Domain from '../../../database/models/domain';
 import { fetchDomainSCData, getSearchConsoleApiInfo } from '../../../utils/searchConsole';
-import verifyUser from '../../../utils/verifyUser';
+import connection from '../../../database/database';
 
 type MCPSCKeywordsRes = {
     keywords: SearchAnalyticsItem[] | null;
@@ -26,16 +26,24 @@ type MCPSCKeywordsRes = {
     error?: string;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<MCPSCKeywordsRes>) {
+export default async function handler(req: AuthenticatedRequest, res: NextApiResponse<MCPSCKeywordsRes>) {
+    // Initialize database connection
+    await connection.sync();
+    // Validate API Key
+    const auth = await validateMcpApiKey(req, res);
+    if (!auth.valid || !auth.userId || !auth.apiKeyId) {
+        return res.status(401).json({ keywords: null, error: 'Unauthorized' });
+    }
+
     if (req.method !== 'GET') {
         return res.status(405).json({ keywords: null, error: 'Method not allowed' });
     }
 
     try {
-        await db.sync();
-        const auth = await verifyUser(req, res);
-        if (!auth.userId) {
-            return res.status(401).json({ keywords: null, error: 'Unauthorized' });
+        // Check permission
+        if (!hasPermission(auth.permissions || [], 'read:gsc')) {
+            await logApiAction(auth.apiKeyId, 'get_gsc_keywords', 'gsc', false, null, 'Insufficient permissions', req);
+            return res.status(403).json({ keywords: null, error: 'Insufficient permissions' });
         }
 
         const { domain_id, device, country } = req.query;
@@ -44,10 +52,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             return res.status(400).json({ keywords: null, error: 'Missing domain_id parameter' });
         }
 
-        // Find domain
+        // Verify domain belongs to user
         const domain = await Domain.findOne({
             where: {
-                id: domain_id,
+                ID: domain_id,
                 user_id: auth.userId,
             },
         });
@@ -149,6 +157,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             avgCTR: keywordsReduced.length > 0 ? totalCTR / keywordsReduced.length : 0,
         };
 
+        await logApiAction(
+            auth.apiKeyId,
+            'get_gsc_keywords',
+            `domain_${domain_id}`,
+            true,
+            { domain_id, count: keywordsReduced.length },
+            undefined,
+            req
+        );
+
         return res.status(200).json({
             keywords: keywordsReduced,
             summary,
@@ -160,6 +178,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     } catch (error: any) {
         console.error('MCP SC Keywords error:', error);
+        await logApiAction(auth.apiKeyId, 'get_gsc_keywords', 'gsc', false, null, error.message, req);
         return res.status(500).json({
             keywords: null,
             error: error.message || 'Internal server error'

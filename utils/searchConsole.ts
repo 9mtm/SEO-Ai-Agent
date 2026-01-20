@@ -13,15 +13,44 @@ type SCAPISettings = { client_email: string, private_key: string }
 type fetchConsoleDataResponse = SearchAnalyticsItem[] | SearchAnalyticsStat[] | SCDomainFetchError;
 
 /**
- * Retrieves data from the Google Search Console API based on the provided domain name, number of days, and optional type.
+ * Retrieves data from the Google Search Console API based on the provided domain name and options.
  * @param {DomainType} domain - The domain for which you want to fetch search console data.
- * @param {number} days - number of days of data you want to fetch from the Search Console.
- * @param {string} [type] - (optional) specifies the type of data to fetch from the Search Console.
- * @param {SCAPISettings} [api] - (optional) specifies the Seach Console API Information.
+ * @param {number|object} options - either number of days (legacy) or an options object
+ * @param {string} [legacyType] - (legacy) specifies the type of data to fetch.
+ * @param {SCAPISettings} [legacyApi] - (legacy) specifies the Seach Console API Information.
  * @returns {Promise<fetchConsoleDataResponse>}
  */
-const fetchSearchConsoleData = async (domain: DomainType, days: number, type?: string, api?: SCAPISettings): Promise<fetchConsoleDataResponse> => {
+export const fetchSearchConsoleData = async (domain: DomainType, options: number | {
+   days?: number,
+   startDate?: string,
+   endDate?: string,
+   type?: string,
+   dimensions?: string[],
+   api?: SCAPISettings,
+   raw?: boolean
+}, legacyType?: string, legacyApi?: SCAPISettings): Promise<fetchConsoleDataResponse | any> => {
    if (!domain) return { error: true, errorMsg: 'Domain Not Provided!' };
+
+   // Normalize arguments
+   let days = 30;
+   let type = legacyType;
+   let api = legacyApi;
+   let startDateStr = '';
+   let endDateStr = '';
+   let customDimensions: string[] | undefined;
+   let returnRaw = false;
+
+   if (typeof options === 'number') {
+      days = options;
+   } else {
+      days = options.days || 30;
+      type = options.type || legacyType;
+      api = options.api || legacyApi;
+      startDateStr = options.startDate || '';
+      endDateStr = options.endDate || '';
+      customDimensions = options.dimensions;
+      returnRaw = options.raw || false;
+   }
 
    let authClient: any = null;
    const domainName = domain.domain;
@@ -50,7 +79,7 @@ const fetchSearchConsoleData = async (domain: DomainType, days: number, type?: s
       if (!api?.private_key || !api?.client_email) {
          return { error: true, errorMsg: 'Search Console API Data Not Avaialable.' };
       }
-      // ... (existing service account logic)
+
       const sCPrivateKey = api?.private_key || process.env.SEARCH_CONSOLE_PRIVATE_KEY || '';
       const sCClientEmail = api?.client_email || process.env.SEARCH_CONSOLE_CLIENT_EMAIL || '';
 
@@ -66,11 +95,19 @@ const fetchSearchConsoleData = async (domain: DomainType, days: number, type?: s
    }
 
    try {
-      // ... (existing fetch logic)
-      const startDateRaw = new Date(new Date().setDate(new Date().getDate() - days));
       const padDate = (num: number) => String(num).padStart(2, '0');
-      const startDate = `${startDateRaw.getFullYear()}-${padDate(startDateRaw.getMonth() + 1)}-${padDate(startDateRaw.getDate())}`;
-      const endDate = `${new Date().getFullYear()}-${padDate(new Date().getMonth() + 1)}-${padDate(new Date().getDate())}`;
+
+      let startDate = startDateStr;
+      let endDate = endDateStr;
+
+      if (!startDate) {
+         const startDateRaw = new Date(new Date().setDate(new Date().getDate() - days));
+         startDate = `${startDateRaw.getFullYear()}-${padDate(startDateRaw.getMonth() + 1)}-${padDate(startDateRaw.getDate())}`;
+      }
+
+      if (!endDate) {
+         endDate = `${new Date().getFullYear()}-${padDate(new Date().getMonth() + 1)}-${padDate(new Date().getDate())}`;
+      }
 
       const client = new searchconsole_v1.Searchconsole({ auth: authClient });
       // Params: https://developers.google.com/webmaster-tools/v1/searchanalytics/query
@@ -78,10 +115,11 @@ const fetchSearchConsoleData = async (domain: DomainType, days: number, type?: s
          startDate,
          endDate,
          type: 'web',
-         rowLimit: 1000,
+         rowLimit: 5000,
          dataState: 'all',
-         dimensions: ['query', 'device', 'country', 'page'],
+         dimensions: customDimensions || ['query', 'device', 'country', 'page'],
       };
+
       if (type === 'stat') {
          requestBody = {
             startDate,
@@ -96,10 +134,13 @@ const fetchSearchConsoleData = async (domain: DomainType, days: number, type?: s
       const res = client.searchanalytics.query({ siteUrl, requestBody });
       const resData: any = (await res).data;
 
+      if (returnRaw) {
+         return resData;
+      }
+
       let finalRows = resData.rows ? resData.rows.map((item: SearchAnalyticsRawItem) => parseSearchConsoleItem(item, domainName)) : [];
 
       if (type === 'stat' && resData.rows && resData.rows.length > 0) {
-         // console.log(resData.rows);
          finalRows = [];
          resData.rows.forEach((row: SearchAnalyticsRawItem) => {
             finalRows.push({
@@ -117,7 +158,7 @@ const fetchSearchConsoleData = async (domain: DomainType, days: number, type?: s
       const qType = type === 'stats' ? '(stats)' : `(${days}days)`;
       const errorMsg = err?.response?.status && `${err?.response?.statusText}. ${err?.response?.data?.error_description}`;
       console.log(`[ERROR] Search Console API Error for ${domainName} ${qType} : `, errorMsg || err?.code);
-      console.log('Full Error Object:', JSON.stringify(err, null, 2)); // Detailed error log
+      console.log('Full Error Object:', JSON.stringify(err, null, 2));
       return { error: true, errorMsg: errorMsg || err?.code };
    }
 };
