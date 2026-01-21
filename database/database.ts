@@ -1,4 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
+import * as mysql2 from 'mysql2';
 import Domain from './models/domain';
 import Keyword from './models/keyword';
 import User from './models/user';
@@ -19,6 +20,7 @@ const password = process.env.DB_PASSWORD !== undefined ? process.env.DB_PASSWORD
 
 const connection = new Sequelize({
    dialect: 'mysql',
+   dialectModule: mysql2,
    host: process.env.DB_HOST || 'localhost',
    username: process.env.DB_USER || 'root',
    password: password,
