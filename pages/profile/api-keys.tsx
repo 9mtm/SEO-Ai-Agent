@@ -295,17 +295,17 @@ export default function ApiKeysPage() {
                                     <p className="text-sm text-green-700">{t('apiKeys.successModal.step2Desc')}</p>
                                     <div className="bg-white border-2 border-green-300 rounded-lg p-4">
                                         <code className="text-xs text-green-900 block whitespace-pre">
-                                            {`{
-  "mcpServers": {
-    "dpro-seo-agent": {
-      "url": "http://localhost:55781/api/mcp/sse",
-      "transport": "sse",
-      "headers": {
-        "Authorization": "Bearer ${newKeyData.apiKey}"
-      }
-    }
-  }
-}`}
+                                            {JSON.stringify({
+                                                "mcpServers": {
+                                                    "dpro-seo-agent": {
+                                                        "url": `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:55781'}/api/mcp/sse`,
+                                                        "transport": "sse",
+                                                        "headers": {
+                                                            "Authorization": `Bearer ${newKeyData.apiKey}`
+                                                        }
+                                                    }
+                                                }
+                                            }, null, 2)}
                                         </code>
                                     </div>
                                     <a
@@ -605,33 +605,33 @@ export default function ApiKeysPage() {
                                                                 <Button
                                                                     variant="ghost"
                                                                     size="sm"
-                                                                    onClick={() => copyToClipboard(`{
-  "mcpServers": {
-    "dpro-seo-agent": {
-      "url": "http://localhost:55781/api/mcp/sse",
-      "transport": "sse",
-      "headers": {
-        "Authorization": "Bearer ${userApiKeys[key.id] || 'YOUR_API_KEY'}"
-      }
-    }
-  }
-}`)}
+                                                                    onClick={() => copyToClipboard(JSON.stringify({
+                                                                        "mcpServers": {
+                                                                            "dpro-seo-agent": {
+                                                                                "url": `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:55781'}/api/mcp/sse`,
+                                                                                "transport": "sse",
+                                                                                "headers": {
+                                                                                    "Authorization": `Bearer ${userApiKeys[key.id] || 'YOUR_API_KEY'}`
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }, null, 2))}
                                                                     className="absolute top-2 right-2 h-8 px-2 text-blue-600 hover:text-blue-700 hover:bg-blue-100"
                                                                 >
                                                                     <Copy className="h-4 w-4" />
                                                                 </Button>
                                                                 <code className="text-xs text-blue-900 block whitespace-pre pr-10">
-                                                                    {`{
-  "mcpServers": {
-    "dpro-seo-agent": {
-      "url": "http://localhost:55781/api/mcp/sse",
-      "transport": "sse",
-      "headers": {
-        "Authorization": "Bearer ${userApiKeys[key.id] || 'YOUR_API_KEY'}"
-      }
-    }
-  }
-}`}
+                                                                    {JSON.stringify({
+                                                                        "mcpServers": {
+                                                                            "dpro-seo-agent": {
+                                                                                "url": `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:55781'}/api/mcp/sse`,
+                                                                                "transport": "sse",
+                                                                                "headers": {
+                                                                                    "Authorization": `Bearer ${userApiKeys[key.id] || 'YOUR_API_KEY'}`
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }, null, 2)}
                                                                 </code>
                                                             </div>
                                                         </div>
