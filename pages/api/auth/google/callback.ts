@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (error) {
     console.error('Google Auth Error:', error);
-    return res.redirect('/login?error=google_auth_failed');
+    return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/login?error=google_auth_failed`);
   }
 
   if (!code || typeof code !== 'string') {
@@ -63,12 +63,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const connectingUserId = cookies.get('oauth_connecting_user');
 
       if (!connectingUserId) {
-        return res.redirect('/login?error=session_expired');
+        return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/login?error=session_expired`);
       }
 
       const user = await User.findByPk(parseInt(connectingUserId));
       if (!user) {
-        return res.redirect('/login?error=user_not_found');
+        return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/login?error=user_not_found`);
       }
 
       // Calculate expiry
@@ -88,7 +88,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       cookies.set('oauth_return_url', '', { maxAge: 0 });
 
       // Redirect to return URL or default to Settings page
-      return res.redirect(cookieReturnUrl || '/profile/search-console?success=google_connected');
+      const defaultRedirect = `${process.env.NEXT_PUBLIC_APP_URL}/profile/search-console?success=google_connected`;
+      return res.redirect(cookieReturnUrl || defaultRedirect);
     }
 
     // ---------------------------------------------------------
@@ -154,7 +155,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // Redirect based on returnUrl first, then onboarding step
         if (returnUrl) {
-          return res.redirect(returnUrl);
+          const absoluteUrl = returnUrl.startsWith('http') ? returnUrl : `${process.env.NEXT_PUBLIC_APP_URL}${returnUrl}`;
+          return res.redirect(absoluteUrl);
         }
 
         // Check onboarding status
@@ -169,26 +171,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             await user.update({ onboarding_step: 3 });
             // Redirect to first domain
             const firstDomain = user.domains[0];
-            return res.redirect(`/domain/insight/${firstDomain.slug}`);
+            return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/domain/insight/${firstDomain.slug}`);
           }
-          return res.redirect('/onboarding');
+          return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/onboarding`);
         }
 
         // User is onboarded, redirect to their first domain or domains list
         if (user.domains && user.domains.length > 0) {
           const firstDomain = user.domains[0];
-          return res.redirect(`/domain/insight/${firstDomain.slug}`);
+          return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/domain/insight/${firstDomain.slug}`);
         }
 
         // Fallback to domains list page
-        return res.redirect('/domains');
+        return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/domains`);
       }
     }
 
-    return res.redirect('/login?error=unknown_state');
+    return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/login?error=unknown_state`);
 
   } catch (err) {
     console.error('Callback Error:', err);
-    return res.redirect('/login?error=callback_failed');
+    return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/login?error=callback_failed`);
   }
 }

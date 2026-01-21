@@ -8,7 +8,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     if (!authorized || !userId) {
         // Must be logged in to connect account
         // But if they are just logging in, they use login.ts
-        return res.status(401).redirect('/login');
+        return res.status(401).redirect(`${process.env.NEXT_PUBLIC_APP_URL}/login`);
     }
 
     if (!process.env.GOOGLE_CLIENT_ID) {
