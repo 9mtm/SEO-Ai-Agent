@@ -31,7 +31,7 @@ Add this to your Claude Desktop config file:
       "args": ["-y", "seo-agent-mcp-server"],
       "env": {
         "SEO_API_KEY": "your_api_key_here",
-        "API_BASE_URL": "https://seo-agent.com"
+        "API_BASE_URL": "https://seo-agent.net"
       }
     }
   }
@@ -46,7 +46,7 @@ Add this to your Claude Desktop config file:
 4. Set permissions and create the key
 5. Copy the API key (shown only once!)
 
-Or visit: **https://seo-agent.com/mcp/connect**
+Or visit: **https://seo-agent.net/mcp/connect**
 
 ## 💡 Usage Examples
 

@@ -83,7 +83,7 @@ export default function MCPConnectPage() {
       "args": ["-y", "seo-agent-mcp-server"],
       "env": {
         "SEO_API_KEY": "${apiKey || 'YOUR_API_KEY'}",
-        "API_BASE_URL": "${typeof window !== 'undefined' ? window.location.origin : 'https://seo-agent.com'}"
+        "API_BASE_URL": "${typeof window !== 'undefined' ? window.location.origin : 'https://seo-agent.net'}"
       }
     }
   }

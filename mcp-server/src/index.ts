@@ -9,7 +9,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { createMcpServer } from './server.js';
 
 const API_KEY = process.env.SEO_API_KEY || '';
-const BASE_URL = process.env.API_BASE_URL || 'https://seo-agent.com';
+const BASE_URL = process.env.API_BASE_URL || 'https://seo-agent.net';
 
 if (!API_KEY) {
     console.error('Error: SEO_API_KEY environment variable is required');

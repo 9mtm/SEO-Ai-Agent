@@ -1218,6 +1218,27 @@
         "step2Title": "Step 2: Add MCP Server to Claude Desktop",
         "step2": "Paste this in Claude Desktop config, restart Claude Desktop, and you're done! Start chatting."
       },
+      "cursor": {
+        "title": "Setup for Cursor IDE",
+        "step1": "Open Cursor Settings → Features → MCP",
+        "step2": "Click 'Add MCP Server'",
+        "step3": "Enter the configuration details below",
+        "step4": "Restart Cursor and start using MCP tools"
+      },
+      "windsurf": {
+        "title": "Setup for Windsurf IDE",
+        "step1": "Open Windsurf Settings → Extensions → MCP",
+        "step2": "Add new MCP server configuration",
+        "step3": "Paste the configuration below",
+        "step4": "Restart Windsurf to activate"
+      },
+      "zed": {
+        "title": "Setup for Zed Editor",
+        "step1": "Open Zed Settings (Cmd/Ctrl + ,)",
+        "step2": "Navigate to MCP Servers section",
+        "step3": "Add the configuration below",
+        "step4": "Restart Zed editor"
+      },
       "chatgpt": {
         "title": "For ChatGPT (Create Custom GPT)",
         "step1": "Go to ChatGPT → Create a GPT",
