@@ -15,12 +15,7 @@ import InvoiceDetail from './models/invoiceDetail';
 
 // MySQL connection only (SQLite removed for performance and simplicity)
 // Debugging DB Credentials
-console.log('--- DB INITIALIZATION ---');
-console.log('process.env.DB_PASSWORD Raw:', JSON.stringify(process.env.DB_PASSWORD));
-console.log('Is empty string?', process.env.DB_PASSWORD === '');
-
 const password = process.env.DB_PASSWORD !== undefined ? process.env.DB_PASSWORD : 'root';
-console.log('Resolved Password:', JSON.stringify(password));
 
 const connection = new Sequelize({
    dialect: 'mysql',
