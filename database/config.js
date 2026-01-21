@@ -1,5 +1,9 @@
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../.env.local') });
+require('dotenv').config({
+  path: process.env.NODE_ENV === 'production'
+    ? path.join(__dirname, '../.env.production')
+    : path.join(__dirname, '../.env.local')
+});
 
 const config = {
   username: process.env.DB_USER || 'root',
@@ -10,6 +14,12 @@ const config = {
   dialect: 'mysql',
   dialectOptions: {
     bigNumberStrings: true,
+    ...(process.env.NODE_ENV === 'production' && {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    })
   },
   pool: {
     max: 10,

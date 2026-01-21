@@ -53,10 +53,19 @@ This version runs entirely on your local machine using Node.js for the web app a
    SLM_API_URL=http://127.0.0.1:38474
    ```
 
-3. **Initialize Database:**
-   ```bash
-   npm run db:migrate
-   ```
+3. **Database Migrations:**
+
+   - **For Local Development (MAMP/Local MySQL):**
+     ```bash
+     npm run db:migrate
+     ```
+     *Loads settings from `.env.local`.*
+
+   - **For Production (TiDB Cloud/Remote MySQL):**
+     ```bash
+     npm run db:migrate:prod
+     ```
+     *Sets `NODE_ENV=production` and loads settings from `.env.production`. Mandatory SSL is automatically enabled for TiDB Cloud compatibility.*
 
 4. **Start Web Server:**
    ```bash

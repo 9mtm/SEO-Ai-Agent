@@ -10,15 +10,7 @@ import AccountMenu from '../components/common/AccountMenu';
 import Footer from '../components/common/Footer';
 import { useFetchDomains } from '../services/domains';
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-    if (locale !== 'en') {
-        return {
-            redirect: {
-                destination: '/terms',
-                permanent: true,
-            },
-        };
-    }
+export const getStaticProps: GetStaticProps = async () => {
     return {
         props: {},
     };

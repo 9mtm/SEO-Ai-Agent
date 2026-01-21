@@ -7,17 +7,25 @@ module.exports = {
         const keywordTableDefinition = await queryInterface.describeTable('keyword');
 
         if (keywordTableDefinition && !keywordTableDefinition.user_id) {
-          // Add user_id column
+          // Add user_id column (first without references to avoid TiDB combined SQL errors)
           await queryInterface.addColumn('keyword', 'user_id', {
             type: Sequelize.DataTypes.INTEGER,
-            allowNull: true, // Allow null initially for migration
-            references: {
-              model: 'users',
-              key: 'id',
-            },
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE',
+            allowNull: true,
           }, { transaction: t });
+
+          // Add Foreign Key constraint separately
+          await queryInterface.addConstraint('keyword', {
+            fields: ['user_id'],
+            type: 'foreign key',
+            name: 'keyword_user_id_foreign_idx',
+            references: {
+              table: 'users',
+              field: 'id',
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+            transaction: t
+          });
 
           // Set default user_id to 1 for existing keywords
           await queryInterface.sequelize.query(

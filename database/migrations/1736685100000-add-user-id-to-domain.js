@@ -7,17 +7,25 @@ module.exports = {
         const domainTableDefinition = await queryInterface.describeTable('domain');
 
         if (domainTableDefinition && !domainTableDefinition.user_id) {
-          // Add user_id column
+          // Add user_id column (first without references to avoid TiDB combined SQL errors)
           await queryInterface.addColumn('domain', 'user_id', {
             type: Sequelize.DataTypes.INTEGER,
-            allowNull: true, // Allow null initially for migration
-            references: {
-              model: 'users',
-              key: 'id',
-            },
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE',
+            allowNull: true,
           }, { transaction: t });
+
+          // Add Foreign Key constraint separately
+          await queryInterface.addConstraint('domain', {
+            fields: ['user_id'],
+            type: 'foreign key',
+            name: 'domain_user_id_foreign_idx',
+            references: {
+              table: 'users',
+              field: 'id',
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+            transaction: t
+          });
 
           // Set default user_id to 1 for existing domains (will be created in seeder)
           await queryInterface.sequelize.query(

@@ -40,16 +40,23 @@ module.exports = {
             }
         });
 
-        // 2. Add sessionId to chat_messages
+        // 2. Add sessionId to chat_messages (nullable, without references first)
         await queryInterface.addColumn('chat_messages', 'sessionId', {
-            type: Sequelize.INTEGER,
-            allowNull: true, // Allow null for existing messages, we'll migrate them or handle nulls
+            type: Sequelize.DataTypes.INTEGER,
+            allowNull: true,
+        });
+
+        // 3. Add Foreign Key constraint for sessionId separately
+        await queryInterface.addConstraint('chat_messages', {
+            fields: ['sessionId'],
+            type: 'foreign key',
+            name: 'chat_messages_sessionId_foreign_idx',
             references: {
-                model: 'chat_sessions',
-                key: 'id'
+                table: 'chat_sessions',
+                field: 'id',
             },
+            onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
         });
 
         // Add index for sessions
