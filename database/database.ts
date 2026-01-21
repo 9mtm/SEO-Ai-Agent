@@ -32,7 +32,7 @@ const connection = new Sequelize({
       idle: 10000,
       acquire: 30000,
    },
-   dialectOptions: process.env.NODE_ENV === 'production' ? {
+   dialectOptions: (process.env.DB_HOST && process.env.DB_HOST.includes('tidbcloud')) ? {
       ssl: {
          require: true,
          rejectUnauthorized: false

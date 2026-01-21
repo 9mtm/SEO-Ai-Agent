@@ -182,8 +182,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/domain/insight/${firstDomain.slug}`);
         }
 
-        // Fallback to domains list page
-        return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/domains`);
+        // Fallback to onboarding if no domains
+        return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/onboarding`);
       }
     }
 

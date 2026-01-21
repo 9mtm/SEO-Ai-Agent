@@ -14,7 +14,7 @@ const config = {
   dialect: 'mysql',
   dialectOptions: {
     bigNumberStrings: true,
-    ...(process.env.NODE_ENV === 'production' && {
+    ...((process.env.DB_HOST && process.env.DB_HOST.includes('tidbcloud')) && {
       ssl: {
         require: true,
         rejectUnauthorized: false
