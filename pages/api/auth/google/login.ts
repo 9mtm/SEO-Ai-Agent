@@ -1,9 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_REDIRECT_URI) {
-        return res.status(500).json({ error: 'Google Client ID or Redirect URI is missing in environment variables.' });
+    if (!process.env.GOOGLE_CLIENT_ID) {
+        return res.status(500).json({ error: 'Google Client ID is missing in environment variables.' });
     }
+
+    const redirectUri = process.env.GOOGLE_REDIRECT_URI || `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/google/callback`;
 
     // Login Scopes (Email, Profile)
     const scopes = [
@@ -21,7 +23,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const params = new URLSearchParams({
         client_id: process.env.GOOGLE_CLIENT_ID,
-        redirect_uri: process.env.GOOGLE_REDIRECT_URI || '', // Make sure this matches env
+        redirect_uri: redirectUri,
         response_type: 'code',
         scope: scopes.join(' '),
         access_type: 'online', // No need for refresh token for just login, unless we want to keep user info updated

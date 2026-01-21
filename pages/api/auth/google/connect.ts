@@ -11,9 +11,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         return res.status(401).redirect('/login');
     }
 
-    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_REDIRECT_URI) {
-        return res.status(500).json({ error: 'Google Client ID or Redirect URI is missing.' });
+    if (!process.env.GOOGLE_CLIENT_ID) {
+        return res.status(500).json({ error: 'Google Client ID is missing.' });
     }
+
+    const redirectUri = process.env.GOOGLE_REDIRECT_URI || `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/google/callback`;
 
     // Connect Scopes (Search Console, Ads)
     const scopes = [
@@ -32,7 +34,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const params = new URLSearchParams({
         client_id: process.env.GOOGLE_CLIENT_ID,
-        redirect_uri: process.env.GOOGLE_REDIRECT_URI || '',
+        redirect_uri: redirectUri,
         response_type: 'code',
         scope: scopes.join(' '),
         access_type: 'offline', // Crucial for Refresh Token
