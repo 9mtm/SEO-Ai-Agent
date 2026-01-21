@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { buffer } from 'stream/consumers';
 import stripe from '../../../utils/stripe';
 import User from '../../../database/models/user';
 import InvoiceDetail from '../../../database/models/invoiceDetail';
@@ -9,6 +8,16 @@ export const config = {
     api: {
         bodyParser: false,
     },
+};
+
+// Helper to read buffer
+const getRawBody = async (req: NextApiRequest): Promise<Buffer> => {
+    return new Promise((resolve, reject) => {
+        const chunks: any[] = [];
+        req.on('data', (chunk) => chunks.push(chunk));
+        req.on('end', () => resolve(Buffer.concat(chunks)));
+        req.on('error', reject);
+    });
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -28,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         // Read the raw body
-        const buf = await buffer(req);
+        const buf = await getRawBody(req);
         event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
     } catch (err: any) {
         console.error(`Webhook Error: ${err.message}`);
