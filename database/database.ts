@@ -4,8 +4,6 @@ import Domain from './models/domain';
 import Keyword from './models/keyword';
 import User from './models/user';
 import FailedJob from './models/failedJob';
-import ChatMessage from './models/chatMessage';
-import ChatSession from './models/chatSession';
 import Post from './models/post';
 import ApiKey from './models/apiKey';
 import ApiAuditLog from './models/apiAuditLog';
@@ -39,7 +37,7 @@ const connection = new Sequelize({
       }
    } : {},
    logging: false,
-   models: [User, Domain, Keyword, FailedJob, ChatMessage, ChatSession, Post, ApiKey, ApiAuditLog, NotificationSetting, PlatformIntegration, PlatformIntegrationLog, InvoiceDetail],
+   models: [User, Domain, Keyword, FailedJob, Post, ApiKey, ApiAuditLog, NotificationSetting, PlatformIntegration, PlatformIntegrationLog, InvoiceDetail],
 });
 
 export default connection;
