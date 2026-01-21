@@ -17,12 +17,7 @@
 next-env.d.ts
 
 # Environment Variables (IMPORTANT!)
-.env
-.env.local
-.env.production
-.env.*.local
-.env.development
-.env.test
+
 
 # Logs
 logs
