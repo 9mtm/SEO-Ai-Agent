@@ -30,6 +30,12 @@ const connection = new Sequelize({
       idle: 10000,
       acquire: 30000,
    },
+   dialectOptions: process.env.NODE_ENV === 'production' ? {
+      ssl: {
+         require: true,
+         rejectUnauthorized: false
+      }
+   } : {},
    logging: false,
    models: [User, Domain, Keyword, FailedJob, ChatMessage, ChatSession, Post, ApiKey, ApiAuditLog, NotificationSetting, PlatformIntegration, PlatformIntegrationLog, InvoiceDetail],
 });
