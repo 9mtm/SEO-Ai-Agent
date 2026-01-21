@@ -5,7 +5,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         return res.status(500).json({ error: 'Google Client ID is missing in environment variables.' });
     }
 
-    const redirectUri = process.env.GOOGLE_REDIRECT_URI || `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/google/callback`;
+    const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/google/callback`;
+
+    // Debug log (remove after testing)
+    console.log('🔍 Login Redirect URI:', redirectUri);
+    console.log('🔍 NEXT_PUBLIC_APP_URL:', process.env.NEXT_PUBLIC_APP_URL);
 
     // Login Scopes (Email, Profile)
     const scopes = [
