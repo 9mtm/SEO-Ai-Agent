@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../database/database';
 import Keyword from '../../database/models/keyword';
-import ChatMessage from '../../database/models/chatMessage'; // Import ChatMessage
 import { getAppSettings } from './settings';
 import verifyUser from '../../utils/verifyUser';
 import refreshAndUpdateKeywords from '../../utils/refresh';
@@ -26,22 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 const cronRefreshkeywords = async (req: NextApiRequest, res: NextApiResponse<CRONRefreshRes>) => {
    try {
-      // 1. Retention Policy: Clean up old chats (older than 60 days)
-      const sixtyDaysAgo = new Date();
-      sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
-
-      const deletedCount = await ChatMessage.destroy({
-         where: {
-            createdAt: {
-               [Op.lt]: sixtyDaysAgo
-            }
-         }
-      });
-      if (deletedCount > 0) {
-         console.log(`[CRON] Retention Policy: Deleted ${deletedCount} old chat messages.`);
-      }
-
-      // 2. Keyword Refresh Logic
+      // 1. Keyword Refresh Logic
       // Mark all keywords as updating - simplest approach to lock them roughly speaking, 
       // though typically we should only pick those due for update. 
       // Existing logic updated ALL. We retain this behavior for now.
@@ -81,4 +65,3 @@ const cronRefreshkeywords = async (req: NextApiRequest, res: NextApiResponse<CRO
       return res.status(400).json({ started: false, error: 'CRON Error refreshing keywords!' });
    }
 };
-
