@@ -147,34 +147,6 @@ const EnhancedFeatures: React.FC = () => {
     },
   ];
 
-  // Schema.org ItemList for features
-  const featuresSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: t('landing.features.title'),
-    description: t('landing.features.subtitle'),
-    itemListElement: features.map((feature, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@type': 'Product',
-        name: feature.title,
-        description: feature.description,
-        image: 'https://seo-agent.net/logo.png',
-        brand: {
-          '@type': 'Brand',
-          name: 'SEO Agent',
-        },
-        offers: {
-          '@type': 'Offer',
-          price: '0',
-          priceCurrency: 'EUR',
-          availability: 'https://schema.org/InStock',
-          url: 'https://seo-agent.net/',
-        },
-      },
-    })),
-  };
 
   return (
     <section
@@ -182,11 +154,6 @@ const EnhancedFeatures: React.FC = () => {
       aria-labelledby="features-heading"
       id="features"
     >
-      {/* Schema.org structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(featuresSchema) }}
-      />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
@@ -210,8 +177,6 @@ const EnhancedFeatures: React.FC = () => {
               <article
                 key={index}
                 className="bg-white rounded-xl border border-neutral-200 p-8 hover:border-neutral-300 hover:shadow-lg transition-all duration-300 group"
-                itemScope
-                itemType="https://schema.org/SoftwareApplication"
               >
                 {/* Icon */}
                 <div
@@ -224,18 +189,12 @@ const EnhancedFeatures: React.FC = () => {
                 </div>
 
                 {/* Title */}
-                <h3
-                  className="text-xl font-bold text-neutral-900 mb-3"
-                  itemProp="name"
-                >
+                <h3 className="text-xl font-bold text-neutral-900 mb-3">
                   {feature.title}
                 </h3>
 
                 {/* Description */}
-                <p
-                  className="text-neutral-600 mb-4 leading-relaxed text-sm"
-                  itemProp="description"
-                >
+                <p className="text-neutral-600 mb-4 leading-relaxed text-sm">
                   {feature.description}
                 </p>
 
