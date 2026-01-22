@@ -45,6 +45,7 @@ export default function ApiKeysPage() {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newKeyData, setNewKeyData] = useState<any>(null);
     const [expandedKeyId, setExpandedKeyId] = useState<number | null>(null);
+    const [setupPlatform, setSetupPlatform] = useState<'claude' | 'chatgpt'>('claude');
     const [userApiKeys, setUserApiKeys] = useState<{ [keyId: number]: string }>({});
 
     // Confirmation State
@@ -592,59 +593,146 @@ export default function ApiKeysPage() {
                                                     </div>
                                                 </div>
 
-                                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                                    <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
-                                                        <Info className="h-4 w-4" />
-                                                        {t('apiKeys.setupTitle')}
-                                                    </h4>
-                                                    <div className="space-y-3 text-sm">
-                                                        <div>
-                                                            <p className="font-medium text-blue-900 mb-1">{t('apiKeys.setupClaude')}</p>
-                                                            <p className="text-blue-700 mb-2">{t('apiKeys.setupConfig')}</p>
-                                                            <div className="relative bg-white border border-blue-300 rounded p-3">
-                                                                <Button
-                                                                    variant="ghost"
-                                                                    size="sm"
-                                                                    onClick={() => copyToClipboard(JSON.stringify({
-                                                                        "mcpServers": {
-                                                                            "dpro-seo-agent": {
-                                                                                "url": `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:55781'}/api/mcp/sse`,
-                                                                                "transport": "sse",
-                                                                                "headers": {
-                                                                                    "Authorization": `Bearer ${userApiKeys[key.id] || 'YOUR_API_KEY'}`
+                                                {/* Platform Tabs */}
+                                                <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4 mb-4">
+                                                    <div className="flex gap-2 mb-4">
+                                                        <button
+                                                            onClick={() => setSetupPlatform('claude')}
+                                                            className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-all ${setupPlatform === 'claude'
+                                                                    ? 'bg-blue-600 text-white shadow-md'
+                                                                    : 'bg-white text-neutral-600 hover:bg-neutral-100'
+                                                                }`}
+                                                        >
+                                                            Claude Desktop
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setSetupPlatform('chatgpt')}
+                                                            className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-all ${setupPlatform === 'chatgpt'
+                                                                    ? 'bg-violet-600 text-white shadow-md'
+                                                                    : 'bg-white text-neutral-600 hover:bg-neutral-100'
+                                                                }`}
+                                                        >
+                                                            ChatGPT
+                                                        </button>
+                                                    </div>
+
+                                                    {/* Claude Desktop Setup */}
+                                                    {setupPlatform === 'claude' && (
+                                                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                                            <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                                                                <Info className="h-4 w-4" />
+                                                                {t('apiKeys.setupTitle')}
+                                                            </h4>
+                                                            <div className="space-y-3 text-sm">
+                                                                <div>
+                                                                    <p className="font-medium text-blue-900 mb-1">{t('apiKeys.setupClaude')}</p>
+                                                                    <p className="text-blue-700 mb-2">{t('apiKeys.setupConfig')}</p>
+                                                                    <div className="relative bg-white border border-blue-300 rounded p-3">
+                                                                        <Button
+                                                                            variant="ghost"
+                                                                            size="sm"
+                                                                            onClick={() => copyToClipboard(JSON.stringify({
+                                                                                "mcpServers": {
+                                                                                    "dpro-seo-agent": {
+                                                                                        "url": `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:55781'}/api/mcp/sse`,
+                                                                                        "transport": "sse",
+                                                                                        "headers": {
+                                                                                            "Authorization": `Bearer ${userApiKeys[key.id] || 'YOUR_API_KEY'}`
+                                                                                        }
+                                                                                    }
                                                                                 }
-                                                                            }
-                                                                        }
-                                                                    }, null, 2))}
-                                                                    className="absolute top-2 right-2 h-8 px-2 text-blue-600 hover:text-blue-700 hover:bg-blue-100"
+                                                                            }, null, 2))}
+                                                                            className="absolute top-2 right-2 h-8 px-2 text-blue-600 hover:text-blue-700 hover:bg-blue-100"
+                                                                        >
+                                                                            <Copy className="h-4 w-4" />
+                                                                        </Button>
+                                                                        <code className="text-xs text-blue-900 block whitespace-pre pr-10">
+                                                                            {JSON.stringify({
+                                                                                "mcpServers": {
+                                                                                    "dpro-seo-agent": {
+                                                                                        "url": `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:55781'}/api/mcp/sse`,
+                                                                                        "transport": "sse",
+                                                                                        "headers": {
+                                                                                            "Authorization": `Bearer ${userApiKeys[key.id] || 'YOUR_API_KEY'}`
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }, null, 2)}
+                                                                        </code>
+                                                                    </div>
+                                                                </div>
+                                                                <a
+                                                                    href="https://docs.anthropic.com/claude/docs/mcp"
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-sm text-blue-700 hover:text-blue-900 flex items-center gap-1"
                                                                 >
-                                                                    <Copy className="h-4 w-4" />
-                                                                </Button>
-                                                                <code className="text-xs text-blue-900 block whitespace-pre pr-10">
-                                                                    {JSON.stringify({
-                                                                        "mcpServers": {
-                                                                            "dpro-seo-agent": {
-                                                                                "url": `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:55781'}/api/mcp/sse`,
-                                                                                "transport": "sse",
-                                                                                "headers": {
-                                                                                    "Authorization": `Bearer ${userApiKeys[key.id] || 'YOUR_API_KEY'}`
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }, null, 2)}
-                                                                </code>
+                                                                    <ExternalLink className="h-3 w-3" />
+                                                                    {t('apiKeys.viewGuide')}
+                                                                </a>
                                                             </div>
                                                         </div>
-                                                        <a
-                                                            href="https://docs.anthropic.com/claude/docs/mcp"
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-sm text-blue-700 hover:text-blue-900 flex items-center gap-1"
-                                                        >
-                                                            <ExternalLink className="h-3 w-3" />
-                                                            {t('apiKeys.viewGuide')}
-                                                        </a>
-                                                    </div>
+                                                    )}
+
+                                                    {/* ChatGPT Setup */}
+                                                    {setupPlatform === 'chatgpt' && (
+                                                        <div className="bg-violet-50 border border-violet-200 rounded-lg p-4">
+                                                            <h4 className="font-semibold text-violet-900 mb-3 flex items-center gap-2">
+                                                                <Info className="h-4 w-4" />
+                                                                ChatGPT Setup (via Proxy)
+                                                            </h4>
+
+                                                            {/* Login Notice */}
+                                                            <div className="bg-amber-50 border border-amber-300 rounded-lg p-3 mb-3">
+                                                                <div className="flex items-start gap-2">
+                                                                    <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                                                                    <div className="text-sm">
+                                                                        <p className="font-semibold text-amber-900">Login Required</p>
+                                                                        <p className="text-amber-800 mt-1">
+                                                                            You must be logged in to SEO Agent for ChatGPT to work. No API key needed!
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="space-y-3 text-sm">
+                                                                <div>
+                                                                    <p className="font-medium text-violet-900 mb-1">Configuration for ChatGPT</p>
+                                                                    <p className="text-violet-700 mb-2">Add this to ChatGPT MCP settings:</p>
+                                                                    <div className="relative bg-white border border-violet-300 rounded p-3">
+                                                                        <Button
+                                                                            variant="ghost"
+                                                                            size="sm"
+                                                                            onClick={() => copyToClipboard(JSON.stringify({
+                                                                                "mcpServers": {
+                                                                                    "dpro-seo-agent": {
+                                                                                        "url": `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:55781'}/mcp-proxy/sse`,
+                                                                                        "transport": "sse"
+                                                                                    }
+                                                                                }
+                                                                            }, null, 2))}
+                                                                            className="absolute top-2 right-2 h-8 px-2 text-violet-600 hover:text-violet-700 hover:bg-violet-100"
+                                                                        >
+                                                                            <Copy className="h-4 w-4" />
+                                                                        </Button>
+                                                                        <code className="text-xs text-violet-900 block whitespace-pre pr-10">
+                                                                            {JSON.stringify({
+                                                                                "mcpServers": {
+                                                                                    "dpro-seo-agent": {
+                                                                                        "url": `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:55781'}/mcp-proxy/sse`,
+                                                                                        "transport": "sse"
+                                                                                    }
+                                                                                }
+                                                                            }, null, 2)}
+                                                                        </code>
+                                                                    </div>
+                                                                </div>
+                                                                <p className="text-violet-700 text-xs">
+                                                                    💡 The proxy server handles authentication automatically using your login session.
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         )}

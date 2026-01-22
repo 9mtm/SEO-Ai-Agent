@@ -31,6 +31,7 @@ export default function MCPConnectPage() {
     const { data: domainsData } = useFetchDomains(router);
 
     const [step, setStep] = useState(1);
+    const [platform, setPlatform] = useState<'claude' | 'chatgpt'>('claude');
     const [apiKey, setApiKey] = useState('');
     const [selectedPermissions, setSelectedPermissions] = useState<string[]>([
         'read:domains',
@@ -76,18 +77,29 @@ export default function MCPConnectPage() {
         }
     };
 
-    const configCode = `{
+
+    // Dynamic configuration based on platform
+    const configCode = platform === 'claude'
+        ? `{
   "mcpServers": {
     "dpro-seo-agent": {
-      "command": "npx",
-      "args": ["-y", "seo-agent-mcp-server"],
-      "env": {
-        "SEO_API_KEY": "${apiKey || 'YOUR_API_KEY'}",
-        "API_BASE_URL": "${typeof window !== 'undefined' ? window.location.origin : 'https://seo-agent.net'}"
+      "url": "${typeof window !== 'undefined' ? window.location.origin : 'https://seo-agent.net'}/api/mcp/sse",
+      "transport": "sse",
+      "headers": {
+        "Authorization": "Bearer ${apiKey || 'YOUR_API_KEY'}"
       }
     }
   }
+}`
+        : `{
+  "mcpServers": {
+    "dpro-seo-agent": {
+      "url": "${typeof window !== 'undefined' ? window.location.origin : 'https://seo-agent.net'}/mcp-proxy/sse",
+      "transport": "sse"
+    }
+  }
 }`;
+
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
@@ -107,10 +119,10 @@ export default function MCPConnectPage() {
                         <Zap className="h-8 w-8 text-white" />
                     </div>
                     <h1 className="text-3xl font-bold tracking-tight mb-2">
-                        Connect to Claude Desktop
+                        Connect to {platform === 'claude' ? 'Claude Desktop' : 'ChatGPT'}
                     </h1>
                     <p className="text-neutral-500 text-lg">
-                        Get instant access to your SEO data in Claude
+                        Get instant access to your SEO data in {platform === 'claude' ? 'Claude' : 'ChatGPT'}
                     </p>
                 </div>
 
@@ -151,6 +163,39 @@ export default function MCPConnectPage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="pt-6 space-y-6">
+                            {/* Platform Selection */}
+                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-lg border-2 border-blue-200">
+                                <label className="text-base font-semibold mb-3 block">Choose Your Platform</label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => setPlatform('claude')}
+                                        className={`p-4 rounded-lg border-2 transition-all ${platform === 'claude'
+                                            ? 'border-blue-600 bg-blue-100 shadow-md'
+                                            : 'border-neutral-300 bg-white hover:border-blue-400'
+                                            }`}
+                                    >
+                                        <div className="text-center">
+                                            <div className="font-bold text-lg mb-1">Claude Desktop</div>
+                                            <div className="text-sm text-neutral-600">Direct SSE connection</div>
+                                        </div>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setPlatform('chatgpt')}
+                                        className={`p-4 rounded-lg border-2 transition-all ${platform === 'chatgpt'
+                                            ? 'border-violet-600 bg-violet-100 shadow-md'
+                                            : 'border-neutral-300 bg-white hover:border-violet-400'
+                                            }`}
+                                    >
+                                        <div className="text-center">
+                                            <div className="font-bold text-lg mb-1">ChatGPT</div>
+                                            <div className="text-sm text-neutral-600">Via secure proxy</div>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+
                             {/* Permissions Selection */}
                             <div className="bg-neutral-50 p-5 rounded-lg border-2 border-neutral-200">
                                 <div className="flex items-center justify-between mb-3">
@@ -231,10 +276,13 @@ export default function MCPConnectPage() {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-green-900">
                                 <CheckCircle2 className="h-6 w-6" />
-                                Step 2: Configure Claude Desktop
+                                Step 2: Configure {platform === 'claude' ? 'Claude Desktop' : 'ChatGPT'}
                             </CardTitle>
                             <CardDescription className="text-green-700">
-                                Copy this configuration to your Claude Desktop settings
+                                {platform === 'claude'
+                                    ? 'Copy this configuration to your Claude Desktop settings'
+                                    : 'Copy this configuration to ChatGPT MCP settings (must be logged in to SEO Agent)'
+                                }
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
