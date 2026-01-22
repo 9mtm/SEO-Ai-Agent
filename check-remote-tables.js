@@ -14,7 +14,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
         }
     }
 });
-
+ 
 async function check() {
     try {
         await sequelize.authenticate();
