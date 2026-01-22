@@ -75,6 +75,10 @@ const Pricing: React.FC = () => {
     name: 'SEO Agent',
     description: 'Complete SEO tracking and AI content platform',
     image: 'https://seo-agent.net/logo.png',
+    brand: {
+      '@type': 'Brand',
+      name: 'SEO Agent',
+    },
     offers: plans.map((plan) => ({
       '@type': 'Offer',
       name: plan.name,
@@ -121,8 +125,8 @@ const Pricing: React.FC = () => {
             <button
               onClick={() => setBillingCycle('monthly')}
               className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${billingCycle === 'monthly'
-                  ? 'bg-neutral-900 text-white'
-                  : 'text-neutral-600 hover:text-neutral-900'
+                ? 'bg-neutral-900 text-white'
+                : 'text-neutral-600 hover:text-neutral-900'
                 }`}
             >
               {t('landing.pricing.monthly')}
@@ -130,8 +134,8 @@ const Pricing: React.FC = () => {
             <button
               onClick={() => setBillingCycle('yearly')}
               className={`px-6 py-2 rounded-full font-medium transition-all duration-300 relative ${billingCycle === 'yearly'
-                  ? 'bg-neutral-900 text-white'
-                  : 'text-neutral-600 hover:text-neutral-900'
+                ? 'bg-neutral-900 text-white'
+                : 'text-neutral-600 hover:text-neutral-900'
                 }`}
             >
               {t('landing.pricing.yearly')}

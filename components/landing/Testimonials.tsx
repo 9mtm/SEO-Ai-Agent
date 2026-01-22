@@ -40,6 +40,10 @@ const Testimonials: React.FC = () => {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: 'SEO Agent',
+    brand: {
+      '@type': 'Brand',
+      name: 'SEO Agent',
+    },
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: '5',

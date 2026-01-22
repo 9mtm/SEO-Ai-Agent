@@ -161,6 +161,10 @@ const EnhancedFeatures: React.FC = () => {
         name: feature.title,
         description: feature.description,
         image: 'https://seo-agent.net/logo.png',
+        brand: {
+          '@type': 'Brand',
+          name: 'SEO Agent',
+        },
         offers: {
           '@type': 'Offer',
           price: '0',
