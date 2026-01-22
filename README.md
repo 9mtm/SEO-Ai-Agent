@@ -3,8 +3,6 @@
 
 website: https://seo-agent.net
 
-
-
 ![License](https://img.shields.io/badge/license-MIT-blue) ![Next.js](https://img.shields.io/badge/Next.js-14-black) ![AI](https://img.shields.io/badge/AI-Powered-purple)
 
 **SEO Agent** has been upgraded to a **Multi-Tenant SaaS** with a built-in **Local AI SEO Agent**.
