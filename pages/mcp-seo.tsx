@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useLanguage } from '@/context/LanguageContext';
-import { Menu, X, Globe } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import AccountMenu from '../components/common/AccountMenu';
 import Footer from '../components/common/Footer';
 import { useFetchDomains } from '../services/domains';
@@ -19,12 +19,14 @@ import {
   ChevronDown,
   ChevronUp,
   ExternalLink,
+  AlertCircle,
+  Globe,
 } from 'lucide-react';
 
 const MCPSEOPage: React.FC = () => {
   const router = useRouter();
   const { t, locale, setLocale } = useLanguage();
-  const [activeTab, setActiveTab] = useState<'claude' | 'cursor' | 'chatgpt' | 'windsurf' | 'zed' | 'api'>('claude');
+  const [activeTab, setActiveTab] = useState<'claude' | 'cursor' | 'chatgpt' | 'web' | 'windsurf' | 'zed' | 'api'>('claude');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -152,12 +154,11 @@ const MCPSEOPage: React.FC = () => {
 
   const claudeConfig = `{
   "mcpServers": {
-    "seo-agent": {
-      "command": "npx",
-      "args": ["-y", "seo-agent-mcp-server"],
-      "env": {
-        "SEO_API_KEY": "your_api_key_here",
-        "API_BASE_URL": "https://seo-agent.net"
+    "dpro-seo-agent": {
+      "url": "https://seo-agent.net/api/mcp/sse",
+      "transport": "sse",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_KEY"
       }
     }
   }
@@ -167,6 +168,15 @@ const MCPSEOPage: React.FC = () => {
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"domain": "example.com", "limit": 10}'`;
+
+  const chatGPTProxyConfig = `{
+  "mcpServers": {
+    "dpro-seo-agent": {
+      "url": "https://seo-agent.net/mcp-proxy/sse",
+      "transport": "sse"
+    }
+  }
+}`;
 
   const chatGPTSchema = `paths:
   /api/mcp/keywords:
@@ -645,6 +655,16 @@ const MCPSEOPage: React.FC = () => {
                   ChatGPT
                 </button>
                 <button
+                  onClick={() => setActiveTab('web')}
+                  className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${activeTab === 'web'
+                    ? 'bg-green-600 text-white shadow-lg'
+                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                    }`}
+                >
+                  <Globe className="w-4 h-4" />
+                  Web-Based
+                </button>
+                <button
                   onClick={() => setActiveTab('windsurf')}
                   className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${activeTab === 'windsurf'
                     ? 'bg-blue-600 text-white shadow-lg'
@@ -685,19 +705,25 @@ const MCPSEOPage: React.FC = () => {
                         <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
                           1
                         </span>
-                        <span>{t('mcp.setup.claude.step1.1')}</span>
+                        <span>Get your API key from <Link href="/profile/api-keys" className="text-blue-600 underline hover:text-blue-800">API Keys page</Link></span>
                       </li>
                       <li className="flex items-start">
                         <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
                           2
                         </span>
-                        <span>{t('mcp.setup.claude.step1.2')}</span>
+                        <span>Open Claude Desktop Settings → Developer → Edit Config</span>
                       </li>
                       <li className="flex items-start">
                         <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
                           3
                         </span>
-                        <span>{t('mcp.setup.claude.step1.3')}</span>
+                        <span>Paste the configuration below and replace YOUR_API_KEY with your actual key</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">
+                          4
+                        </span>
+                        <span>Restart Claude Desktop to apply changes</span>
                       </li>
                     </ol>
                   </div>
@@ -801,6 +827,104 @@ const MCPSEOPage: React.FC = () => {
                 </div>
               )}
 
+              {/* Web-Based Tab */}
+              {activeTab === 'web' && (
+                <div className="space-y-6">
+                  <div className="bg-green-50 border-l-4 border-green-600 p-6 rounded-r-lg">
+                    <h3 className="text-xl font-bold text-neutral-900 mb-4 flex items-center gap-2">
+                      <Globe className="w-6 h-6" />
+                      Access SEO Agent from Any Browser
+                    </h3>
+                    <p className="text-neutral-700 mb-4">
+                      No installation required! Use our web-based interface to access all SEO features directly from your browser.
+                    </p>
+                    <ul className="space-y-2 text-neutral-700">
+                      <li className="flex items-start">
+                        <Check className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                        <span>Works on any device (Desktop, Mobile, Tablet)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                        <span>No software installation needed</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                        <span>Automatic updates</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                        <span>Same powerful features as desktop apps</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Quick Start */}
+                  <div className="bg-white border-2 border-green-200 rounded-lg p-6">
+                    <h4 className="font-bold text-neutral-900 mb-4">Quick Start:</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3">
+                        <span className="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold">1</span>
+                        <div>
+                          <p className="font-semibold text-neutral-900">Login to SEO Agent</p>
+                          <p className="text-sm text-neutral-600">Access your account at seo-agent.net</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <span className="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold">2</span>
+                        <div>
+                          <p className="font-semibold text-neutral-900">Navigate to Dashboard</p>
+                          <p className="text-sm text-neutral-600">All your SEO data is available in the dashboard</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <span className="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold">3</span>
+                        <div>
+                          <p className="font-semibold text-neutral-900">Use AI Features</p>
+                          <p className="text-sm text-neutral-600">Ask questions and get instant SEO insights</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CTA Button */}
+                  <div className="text-center">
+                    <Link
+                      href="/dashboard"
+                      className="inline-flex items-center px-8 py-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    >
+                      <Rocket className="w-5 h-5 mr-2" />
+                      Go to Dashboard
+                      <ExternalLink className="w-5 h-5 ml-2" />
+                    </Link>
+                  </div>
+
+                  {/* Feature Comparison */}
+                  <div className="bg-neutral-50 rounded-lg p-6">
+                    <h4 className="font-bold text-neutral-900 mb-4">Web vs Desktop:</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="font-semibold text-green-700 mb-2">✅ Web-Based Advantages:</p>
+                        <ul className="space-y-1 text-neutral-600">
+                          <li>• No installation</li>
+                          <li>• Works everywhere</li>
+                          <li>• Always up-to-date</li>
+                          <li>• Easy to share</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-blue-700 mb-2">⚡ Desktop Advantages:</p>
+                        <ul className="space-y-1 text-neutral-600">
+                          <li>• Offline access</li>
+                          <li>• Faster response</li>
+                          <li>• More integrations</li>
+                          <li>• Advanced features</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Windsurf Tab */}
               {activeTab === 'windsurf' && (
                 <div className="space-y-6">
@@ -892,44 +1016,93 @@ const MCPSEOPage: React.FC = () => {
               {/* ChatGPT Tab */}
               {activeTab === 'chatgpt' && (
                 <div className="space-y-6">
+                  {/* Login Required Notice */}
+                  <div className="bg-amber-50 border-l-4 border-amber-600 p-6 rounded-r-lg">
+                    <div className="flex items-start gap-3">
+                      <AlertCircle className="w-6 h-6 text-amber-600 mt-1 flex-shrink-0" />
+                      <div>
+                        <h4 className="font-bold text-amber-900 mb-2">Important: Login Required</h4>
+                        <p className="text-amber-800 text-sm">
+                          ChatGPT connection requires you to be logged in to SEO Agent.
+                          The proxy server will use your session to authenticate requests automatically.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Setup Steps */}
                   <div className="bg-violet-50 border-l-4 border-violet-600 p-6 rounded-r-lg">
                     <h3 className="text-xl font-bold text-neutral-900 mb-4">
-                      {t('mcp.setup.chatgpt.title')}
+                      Setup Instructions
                     </h3>
-                    <ol className="space-y-3 text-neutral-700 list-decimal list-inside">
-                      <li>{t('mcp.setup.chatgpt.step1')}</li>
-                      <li>{t('mcp.setup.chatgpt.step2')}</li>
-                      <li>{t('mcp.setup.chatgpt.step3')}</li>
-                      <li>{t('mcp.setup.chatgpt.step4')}</li>
+                    <ol className="space-y-3 text-neutral-700">
+                      <li className="flex items-start">
+                        <span className="bg-violet-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">1</span>
+                        <span>Make sure you're logged in to <Link href="/login" className="text-violet-600 underline hover:text-violet-800">SEO Agent</Link></span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="bg-violet-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">2</span>
+                        <span>Open ChatGPT Settings → Beta Features → MCP Servers</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="bg-violet-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">3</span>
+                        <span>Add the configuration below</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="bg-violet-600 text-white w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0 text-sm font-bold">4</span>
+                        <span>Start using SEO Agent tools in ChatGPT!</span>
+                      </li>
                     </ol>
                   </div>
 
+                  {/* Configuration Code */}
                   <div className="relative">
                     <div className="bg-neutral-900 rounded-lg p-6">
                       <div className="flex items-center justify-between mb-4">
                         <span className="text-sm text-neutral-400 font-mono">
-                          openapi_schema.yaml
+                          chatgpt_mcp_config.json
                         </span>
                         <button
-                          onClick={() => copyToClipboard(chatGPTSchema, 'chatgpt')}
+                          onClick={() => copyToClipboard(chatGPTProxyConfig, 'chatgpt')}
                           className="flex items-center px-3 py-1 bg-neutral-800 hover:bg-neutral-700 text-white rounded text-sm transition-colors duration-200"
                         >
                           {copiedCode === 'chatgpt' ? (
                             <>
                               <Check className="w-4 h-4 mr-1" />
-                              {t('mcp.setup.copied')}
+                              Copied!
                             </>
                           ) : (
                             <>
                               <Copy className="w-4 h-4 mr-1" />
-                              {t('mcp.setup.copy')}
+                              Copy
                             </>
                           )}
                         </button>
                       </div>
                       <pre className="text-sm text-neutral-100 overflow-x-auto">
-                        <code>{chatGPTSchema}</code>
+                        <code>{chatGPTProxyConfig}</code>
                       </pre>
+                    </div>
+                  </div>
+
+                  {/* Info Box */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start gap-2">
+                      <Shield className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <div className="text-sm text-blue-800">
+                        <p className="font-semibold mb-1">How it works:</p>
+                        <p>ChatGPT connects to our secure proxy server, which automatically adds your authentication. You must stay logged in to SEO Agent for this to work. No API key needed!</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Coming Soon Notice */}
+                  <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
+                    <div className="flex items-center gap-2 text-neutral-600">
+                      <Rocket className="w-5 h-5" />
+                      <p className="text-sm">
+                        <span className="font-semibold">Note:</span> ChatGPT MCP support is currently in beta. The proxy server will be deployed soon.
+                      </p>
                     </div>
                   </div>
                 </div>
