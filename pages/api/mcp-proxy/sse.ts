@@ -3,8 +3,8 @@ import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
 import { createMcpServer } from '../../../lib/mcp';
 import { getTransports } from '../../../lib/mcp-store';
 import connection from '../../../database/database';
-import ApiKey from '../../../models/ApiKey';
-import { verifyUser } from '../../../utils/auth';
+import ApiKey from '../../../database/models/apiKey';
+import verifyUser from '../../../utils/verifyUser';
 
 /**
  * ChatGPT MCP Proxy Endpoint
@@ -28,23 +28,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Initialize database
         await connection.sync();
 
-        // Validate user session (instead of API key)
-        const user = await verifyUser(req);
-        if (!user) {
+        // Validate user session
+        const { authorized, userId } = verifyUser(req, res);
+        if (!authorized || !userId) {
             console.log('[MCP Proxy] No valid session found');
             res.status(401).json({
-                error: 'Unauthorized: Please login to SEO Agent',
-                message: 'ChatGPT proxy requires an active login session'
+                error: 'Unauthorized',
+                message: 'Please login to SEO Agent'
             });
             return;
         }
 
-        console.log(`[MCP Proxy] Valid session for user: ${user.id}`);
+        console.log(`[MCP Proxy] Valid session for user: ${userId}`);
 
         // Get user's API key from database
         const apiKey = await ApiKey.findOne({
             where: {
-                user_id: user.id,
+                user_id: userId,
                 revoked: false
             },
             order: [['created_at', 'DESC']]
@@ -67,7 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         let decryptedKey = decipher.update(apiKey.key_encrypted, 'hex', 'utf8');
         decryptedKey += decipher.final('utf8');
 
-        console.log(`[MCP Proxy] Using API key ID: ${apiKey.id} for user: ${user.id}`);
+        console.log(`[MCP Proxy] Using API key ID: ${apiKey.id} for user: ${userId}`);
 
         // Initialize SSE Transport
         const transport = new SSEServerTransport('/api/mcp/message', res);
@@ -84,7 +84,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const transports = getTransports();
         transports.set(transport.sessionId, transport);
 
-        console.log(`[MCP Proxy] Connection established. SessionId: ${transport.sessionId}, UserId: ${user.id}`);
+        console.log(`[MCP Proxy] Connection established. SessionId: ${transport.sessionId}, UserId: ${userId}`);
 
         // Set connection timeout (1 hour)
         const timeout = setTimeout(() => {
