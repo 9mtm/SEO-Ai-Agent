@@ -49,6 +49,10 @@ const Testimonials: React.FC = () => {
     },
     review: testimonials.map((testimonial) => ({
       '@type': 'Review',
+      itemReviewed: {
+        '@type': 'Product',
+        name: 'SEO Agent',
+      },
       author: {
         '@type': 'Person',
         name: testimonial.name,

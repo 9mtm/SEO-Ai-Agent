@@ -160,6 +160,13 @@ const EnhancedFeatures: React.FC = () => {
         '@type': 'Product',
         name: feature.title,
         description: feature.description,
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'EUR',
+          availability: 'https://schema.org/InStock',
+          url: 'https://seo-agent.net/',
+        },
       },
     })),
   };
