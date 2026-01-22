@@ -59,10 +59,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return;
         }
 
-        // Decrypt the API key
+        // Decrypt the API key (using SECRET like rest of codebase)
         const crypto = require('crypto');
         const algorithm = 'aes-256-cbc';
-        const key = Buffer.from(process.env.ENCRYPTION_KEY || 'default-key-change-in-production-32b', 'utf-8');
+        const key = Buffer.from((process.env.SECRET || 'default-key-change-in-production-32b').padEnd(32, '0').slice(0, 32));
         const decipher = crypto.createDecipheriv(algorithm, key, Buffer.from(apiKey.iv, 'hex'));
         let decryptedKey = decipher.update(apiKey.key_encrypted, 'hex', 'utf8');
         decryptedKey += decipher.final('utf8');
