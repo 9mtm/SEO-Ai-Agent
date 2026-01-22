@@ -63,8 +63,6 @@ const Testimonials: React.FC = () => {
             <article
               key={index}
               className="bg-white rounded-2xl border border-neutral-200 p-8 hover:shadow-xl hover:border-neutral-300 transition-all duration-300 relative"
-              itemScope
-              itemType="https://schema.org/Review"
             >
               {/* Quote Icon */}
               <div className="absolute -top-4 -right-4 w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
@@ -72,14 +70,7 @@ const Testimonials: React.FC = () => {
               </div>
 
               {/* Rating Stars */}
-              <div
-                className="flex items-center mb-4"
-                itemProp="reviewRating"
-                itemScope
-                itemType="https://schema.org/Rating"
-              >
-                <meta itemProp="ratingValue" content={testimonial.rating.toString()} />
-                <meta itemProp="bestRating" content="5" />
+              <div className="flex items-center mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <Star
                     key={i}
@@ -94,21 +85,13 @@ const Testimonials: React.FC = () => {
 
               {/* Review Text */}
               <blockquote className="mb-6">
-                <p
-                  className="text-neutral-700 leading-relaxed text-base italic"
-                  itemProp="reviewBody"
-                >
+                <p className="text-neutral-700 leading-relaxed text-base italic">
                   "{testimonial.review}"
                 </p>
               </blockquote>
 
               {/* Reviewer Info */}
-              <div
-                className="flex items-center"
-                itemProp="author"
-                itemScope
-                itemType="https://schema.org/Person"
-              >
+              <div className="flex items-center">
                 {/* Avatar */}
                 <div
                   className={`w-12 h-12 ${testimonial.color} rounded-full flex items-center justify-center mr-4 flex-shrink-0`}
@@ -120,22 +103,11 @@ const Testimonials: React.FC = () => {
 
                 {/* Name & Position */}
                 <div className="flex-1 min-w-0">
-                  <p
-                    className="font-semibold text-neutral-900 truncate"
-                    itemProp="name"
-                  >
+                  <p className="font-semibold text-neutral-900 truncate">
                     {testimonial.name}
                   </p>
                   <p className="text-sm text-neutral-600 truncate">
-                    <span itemProp="jobTitle">{testimonial.position}</span>
-                    {' @ '}
-                    <span
-                      itemProp="worksFor"
-                      itemScope
-                      itemType="https://schema.org/Organization"
-                    >
-                      <span itemProp="name">{testimonial.company}</span>
-                    </span>
+                    {testimonial.position} @ {testimonial.company}
                   </p>
                 </div>
               </div>
