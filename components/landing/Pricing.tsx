@@ -74,6 +74,7 @@ const Pricing: React.FC = () => {
     '@type': 'Product',
     name: 'SEO Agent',
     description: 'Complete SEO tracking and AI content platform',
+    image: 'https://seo-agent.net/logo.png',
     offers: plans.map((plan) => ({
       '@type': 'Offer',
       name: plan.name,
@@ -119,21 +120,19 @@ const Pricing: React.FC = () => {
           <div className="inline-flex items-center bg-white border border-neutral-200 rounded-full p-1 shadow-sm">
             <button
               onClick={() => setBillingCycle('monthly')}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-                billingCycle === 'monthly'
+              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${billingCycle === 'monthly'
                   ? 'bg-neutral-900 text-white'
                   : 'text-neutral-600 hover:text-neutral-900'
-              }`}
+                }`}
             >
               {t('landing.pricing.monthly')}
             </button>
             <button
               onClick={() => setBillingCycle('yearly')}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 relative ${
-                billingCycle === 'yearly'
+              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 relative ${billingCycle === 'yearly'
                   ? 'bg-neutral-900 text-white'
                   : 'text-neutral-600 hover:text-neutral-900'
-              }`}
+                }`}
             >
               {t('landing.pricing.yearly')}
               <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full font-semibold">
@@ -148,9 +147,8 @@ const Pricing: React.FC = () => {
           {plans.map((plan, index) => (
             <article
               key={index}
-              className={`relative bg-white rounded-2xl border-2 ${plan.color} p-8 hover:shadow-2xl transition-all duration-300 ${
-                plan.popular ? 'shadow-xl scale-105 md:scale-110' : 'shadow-sm'
-              }`}
+              className={`relative bg-white rounded-2xl border-2 ${plan.color} p-8 hover:shadow-2xl transition-all duration-300 ${plan.popular ? 'shadow-xl scale-105 md:scale-110' : 'shadow-sm'
+                }`}
               itemScope
               itemType="https://schema.org/Offer"
             >

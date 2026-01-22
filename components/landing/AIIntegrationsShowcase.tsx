@@ -92,6 +92,7 @@ const AIIntegrationsShowcase: React.FC = () => {
       '@type': 'Offer',
       price: '0',
       priceCurrency: 'EUR',
+      availability: 'https://schema.org/InStock',
     },
     featureList: [
       'ChatGPT Integration',

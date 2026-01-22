@@ -56,6 +56,7 @@ const Home: NextPage = () => {
     name: 'SEO Agent',
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
+    image: 'https://seo-agent.net/logo.png',
     offers: {
       '@type': 'AggregateOffer',
       priceCurrency: 'EUR',
