@@ -57,6 +57,10 @@ const Home: NextPage = () => {
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     image: 'https://seo-agent.net/logo.png',
+    brand: {
+      '@type': 'Brand',
+      name: 'SEO Agent',
+    },
     offers: {
       '@type': 'AggregateOffer',
       priceCurrency: 'EUR',
@@ -67,8 +71,61 @@ const Home: NextPage = () => {
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: '5.0',
-      reviewCount: '100',
+      reviewCount: '3',
     },
+    review: [
+      {
+        '@type': 'Review',
+        itemReviewed: {
+          '@type': 'SoftwareApplication',
+          name: 'SEO Agent',
+        },
+        author: {
+          '@type': 'Person',
+          name: 'Sarah Ahmed',
+        },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5',
+        },
+        reviewBody: 'An amazing tool that helped us improve our website ranking by 150% in just 3 months. The multi-country tracking feature is a game-changer!',
+      },
+      {
+        '@type': 'Review',
+        itemReviewed: {
+          '@type': 'SoftwareApplication',
+          name: 'SEO Agent',
+        },
+        author: {
+          '@type': 'Person',
+          name: 'Michael Schmidt',
+        },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5',
+        },
+        reviewBody: 'The detailed reports and daily tracking made my job so much easier. The AI content generation is incredibly accurate and saves hours of work.',
+      },
+      {
+        '@type': 'Review',
+        itemReviewed: {
+          '@type': 'SoftwareApplication',
+          name: 'SEO Agent',
+        },
+        author: {
+          '@type': 'Person',
+          name: 'Lisa Chen',
+        },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5',
+        },
+        reviewBody: 'Best SEO tool I\'ve ever used. The interface is simple and the results are accurate. The WordPress integration is seamless!',
+      },
+    ],
     author: {
       '@type': 'Organization',
       name: 'Dpro GmbH',

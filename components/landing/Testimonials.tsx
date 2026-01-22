@@ -35,45 +35,6 @@ const Testimonials: React.FC = () => {
     },
   ];
 
-  // Schema.org Review structured data
-  const reviewSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: 'SEO Agent',
-    brand: {
-      '@type': 'Brand',
-      name: 'SEO Agent',
-    },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '5',
-      reviewCount: testimonials.length,
-      bestRating: '5',
-      worstRating: '1',
-    },
-    review: testimonials.map((testimonial) => ({
-      '@type': 'Review',
-      itemReviewed: {
-        '@type': 'Product',
-        name: 'SEO Agent',
-      },
-      author: {
-        '@type': 'Person',
-        name: testimonial.name,
-        jobTitle: testimonial.position,
-        worksFor: {
-          '@type': 'Organization',
-          name: testimonial.company,
-        },
-      },
-      reviewRating: {
-        '@type': 'Rating',
-        ratingValue: testimonial.rating,
-        bestRating: '5',
-      },
-      reviewBody: testimonial.review,
-    })),
-  };
 
   return (
     <section
@@ -81,11 +42,6 @@ const Testimonials: React.FC = () => {
       aria-labelledby="testimonials-heading"
       id="testimonials"
     >
-      {/* Schema.org structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
-      />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}

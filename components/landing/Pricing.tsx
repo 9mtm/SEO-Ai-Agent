@@ -68,32 +68,6 @@ const Pricing: React.FC = () => {
     },
   ];
 
-  // Schema.org Offer structured data
-  const pricingSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: 'SEO Agent',
-    description: 'Complete SEO tracking and AI content platform',
-    image: 'https://seo-agent.net/logo.png',
-    brand: {
-      '@type': 'Brand',
-      name: 'SEO Agent',
-    },
-    offers: plans.map((plan) => ({
-      '@type': 'Offer',
-      name: plan.name,
-      description: plan.description,
-      price: billingCycle === 'monthly' ? plan.price : plan.yearlyPrice * 12,
-      priceCurrency: 'EUR',
-      priceSpecification: {
-        '@type': 'UnitPriceSpecification',
-        price: billingCycle === 'monthly' ? plan.price : plan.yearlyPrice,
-        priceCurrency: 'EUR',
-        unitCode: billingCycle === 'monthly' ? 'MON' : 'ANN',
-      },
-      availability: 'https://schema.org/InStock',
-    })),
-  };
 
   return (
     <section
@@ -101,11 +75,6 @@ const Pricing: React.FC = () => {
       aria-labelledby="pricing-heading"
       id="pricing"
     >
-      {/* Schema.org structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingSchema) }}
-      />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}

@@ -82,27 +82,6 @@ const AIIntegrationsShowcase: React.FC = () => {
     },
   ];
 
-  // Schema.org for integrations
-  const integrationsSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'SEO Agent',
-    applicationCategory: 'BusinessApplication',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'EUR',
-      availability: 'https://schema.org/InStock',
-    },
-    featureList: [
-      'ChatGPT Integration',
-      'Claude AI Integration',
-      'Google Gemini Integration',
-      'WordPress Direct Publishing',
-      'Multi-Search Engine Tracking',
-      'Google Search Console Integration',
-    ],
-  };
 
   return (
     <section
@@ -110,11 +89,6 @@ const AIIntegrationsShowcase: React.FC = () => {
       aria-labelledby="integrations-heading"
       id="integrations"
     >
-      {/* Schema.org structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(integrationsSchema) }}
-      />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
