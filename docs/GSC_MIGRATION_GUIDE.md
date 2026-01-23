@@ -102,5 +102,59 @@ To add or submit a sitemap URL to GSC:
     - `SECRET` (for encryption)
     - `NEXT_PUBLIC_APP_URL`
 3.  **Database Migration**: Update your database schema to include `search_console` (config JSON) and `search_console_data` (cache JSON) in your `Domain` table.
-4.  **OAuth Scopes**: Ensure your authorization logic includes `https://www.googleapis.com/auth/webmasters`.
+4.  **OAuth Scopes**: Ensure your authorization logic includes `https://www.googleapis.com/auth/webmasters` and `https://www.googleapis.com/auth/indexing` (if using the Indexing API).
+
+---
+
+## 8. Google Indexing API (Fast Indexing for Job Posts)
+The Indexing API allows you to notify Google immediately when pages with `JobPosting` or `BroadcastEvent` structured data are added, updated, or removed. This ensures your job posts appear in search results much faster.
+
+### Prerequisites (Google Cloud Console):
+1.  **Enable API**: Enable the **Indexing API** in your Google Cloud Project.
+2.  **Service Account**:
+    - Create a Service Account in IAM & Admin.
+    - Download the **JSON Key file**.
+    - Copy the Service Account's email address (e.g., `my-service-account@project.iam.gserviceaccount.com`).
+3.  **Search Console Permission**:
+    - Open Search Console for your site.
+    - Go to **Settings > Users and permissions**.
+    - Add the Service Account email as an **Owner**.
+
+### Usage logic (Node.js):
+To notify Google of a new or updated job post:
+
+```javascript
+const { google } = require('googleapis');
+const key = require('./path-to-your-service-account-key.json');
+
+const jwtClient = new google.auth.JWT(
+  key.client_email,
+  null,
+  key.private_key,
+  ['https://www.googleapis.com/auth/indexing'],
+  null
+);
+
+async function notifyGoogle(url, type = 'URL_UPDATED') {
+  await jwtClient.authorize();
+  const options = {
+    url: 'https://indexing.googleapis.com/v3/urlNotifications:publish',
+    method: 'POST',
+    auth: jwtClient,
+    body: JSON.stringify({
+      url: url,
+      type: type // 'URL_UPDATED' or 'URL_DELETED'
+    })
+  };
+  
+  // Send the request using your preferred HTTP client (axios, fetch, etc.)
+  // Or use the Google SDK directly if available.
+}
+```
+
+### Benefits for Recruitment Platforms:
+- **Instant Crawling**: Job posts are crawled almost immediately after publishing.
+- **Accurate Search Results**: Deleted jobs are removed from Google results quickly, preventing user frustration from clicking on expired links.
+- **SEO Edge**: Faster indexing gives your platform a speed advantage over competitors relying on standard sitemap crawling.
+
 
