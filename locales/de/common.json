@@ -49,6 +49,8 @@
       "noSitesTitle": "Keine verifizierten Seiten in Ihrer Google Search Console gefunden.",
       "noSitesDesc": "Bitte verifizieren Sie Ihre Domain zuerst in der Google Search Console und aktualisieren Sie dann diese Seite.",
       "chooseSite": "-- Wählen Sie eine verifizierte Seite --",
+      "searchSitePlaceholder": "Suchen Sie Ihre Website...",
+      "noResults": "Keine Ergebnisse für Ihre Suche gefunden",
       "owner": "(Inhaber)",
       "websiteUrlLabel": "Website-URL",
       "websiteUrlPlaceholder": "Wählen Sie oben eine Seite aus",

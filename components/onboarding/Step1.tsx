@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
-import { Loader2, CheckCircle, Globe } from 'lucide-react';
+import { Loader2, CheckCircle, Globe, Search, ChevronDown, X } from 'lucide-react';
 import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import UpgradeModal from '../common/UpgradeModal';
@@ -22,6 +22,22 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
     const [showSkipOption, setShowSkipOption] = useState(false);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
+
+    // Search and Dropdown States
+    const [searchTerm, setSearchTerm] = useState('');
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Handle outside clicks to close dropdown
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     // Upgrade Modal State
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -85,6 +101,8 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
     // Handle site selection
     const handleSiteSelect = (siteUrl: string) => {
         setSelectedSite(siteUrl);
+        setSearchTerm(formatSiteUrl(siteUrl));
+        setIsDropdownOpen(false);
         // Auto-fill Website URL
         const cleanUrl = siteUrl
             .replace('sc-domain:', '')
@@ -107,6 +125,14 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
             .replace(/^sc-domain:/, '')
             .replace(/\/$/, '');
     };
+
+    // Filtered sites based on search
+    const filteredSites = React.useMemo(() => {
+        return gscSites.filter(site =>
+            site.siteUrl.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            formatSiteUrl(site.siteUrl).toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [gscSites, searchTerm]);
 
     // Cleanup timer on unmount
     useEffect(() => {
@@ -217,7 +243,7 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-sm">
+        <div className="mx-auto mt-10 p-6 bg-white rounded-lg shadow-sm">
             <div className="mb-6">
                 {/* Progress Bar / Dots could go here */}
             </div>
@@ -277,20 +303,74 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
                                 </p>
                             </div>
                         ) : (
-                            <select
-                                value={selectedSite}
-                                onChange={(e) => handleSiteSelect(e.target.value)}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                                required
-                            >
-                                <option value="">{t('onboarding.step1.chooseSite')}</option>
-                                {gscSites.map((site) => (
-                                    <option key={site.siteUrl} value={site.siteUrl}>
-                                        {formatSiteUrl(site.siteUrl)}
-                                        {site.permissionLevel === 'siteOwner' ? ` ${t('onboarding.step1.owner')}` : ''}
-                                    </option>
-                                ))}
-                            </select>
+                            <div className="relative" ref={dropdownRef}>
+                                <div className="relative">
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                    <input
+                                        type="text"
+                                        placeholder={t('onboarding.step1.searchSitePlaceholder')}
+                                        value={searchTerm}
+                                        onChange={(e) => {
+                                            setSearchTerm(e.target.value);
+                                            setIsDropdownOpen(true);
+                                            if (selectedSite && e.target.value !== formatSiteUrl(selectedSite)) {
+                                                setSelectedSite('');
+                                            }
+                                        }}
+                                        onFocus={() => setIsDropdownOpen(true)}
+                                        className="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                                    />
+                                    {searchTerm ? (
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setSearchTerm('');
+                                                setSelectedSite('');
+                                                setUrl('');
+                                            }}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                        >
+                                            <X className="h-5 w-5" />
+                                        </button>
+                                    ) : (
+                                        <ChevronDown className={`absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                                    )}
+                                </div>
+
+                                {isDropdownOpen && (
+                                    <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-auto animate-in fade-in slide-in-from-top-1 duration-200">
+                                        {filteredSites.length > 0 ? (
+                                            filteredSites.map((site) => (
+                                                <button
+                                                    key={site.siteUrl}
+                                                    type="button"
+                                                    onClick={() => handleSiteSelect(site.siteUrl)}
+                                                    className={`w-full text-left px-4 py-3 hover:bg-blue-50 flex items-center justify-between border-b last:border-0 border-gray-50 transition-colors ${selectedSite === site.siteUrl ? 'bg-blue-50' : ''}`}
+                                                >
+                                                    <div className="flex flex-col">
+                                                        <span className="text-gray-900 font-medium">{formatSiteUrl(site.siteUrl)}</span>
+                                                        <span className="text-xs text-gray-500 truncate max-w-[300px]">{site.siteUrl}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        {site.permissionLevel === 'siteOwner' && (
+                                                            <span className="text-[10px] uppercase tracking-wider bg-green-100 text-green-700 px-2 py-0.5 rounded font-bold">
+                                                                {t('onboarding.step1.owner')}
+                                                            </span>
+                                                        )}
+                                                        {selectedSite === site.siteUrl && (
+                                                            <CheckCircle className="h-4 w-4 text-blue-600" />
+                                                        )}
+                                                    </div>
+                                                </button>
+                                            ))
+                                        ) : (
+                                            <div className="p-4 text-center text-gray-500 text-sm">
+                                                {t('onboarding.step1.noResults')}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         )}
                     </div>
 

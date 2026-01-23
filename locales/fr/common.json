@@ -49,6 +49,8 @@
       "noSitesTitle": "Aucun site vérifié trouvé dans votre GSC.",
       "noSitesDesc": "Veuillez d'abord vérifier votre domaine dans Google Search Console, puis actualisez cette page.",
       "chooseSite": "-- Choisissez un site vérifié --",
+      "searchSitePlaceholder": "Rechercher votre site web...",
+      "noResults": "Aucun résultat trouvé pour votre recherche",
       "owner": "(Propriétaire)",
       "websiteUrlLabel": "URL du site",
       "websiteUrlPlaceholder": "Sélectionnez un site ci-dessus",

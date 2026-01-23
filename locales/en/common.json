@@ -49,6 +49,8 @@
       "noSitesTitle": "No verified sites found in your Google Search Console.",
       "noSitesDesc": "Please verify your domain in Google Search Console first, then refresh this page.",
       "chooseSite": "-- Choose a verified site --",
+      "searchSitePlaceholder": "Search your website...",
+      "noResults": "No results found for your search",
       "owner": "(Owner)",
       "websiteUrlLabel": "Website URL",
       "websiteUrlPlaceholder": "Select a site above",
