@@ -107,6 +107,12 @@ class Domain extends Model {
   @Column({ type: DataType.DATE, allowNull: true })
   declare gsc_last_sync?: Date;
 
+  @Column({ type: DataType.DATEONLY, allowNull: true })
+  declare gsc_last_synced_date?: string;
+
+  @Column({ type: DataType.BOOLEAN, allowNull: true, defaultValue: false })
+  declare gsc_sync_in_progress?: boolean;
+
   @BelongsTo(() => User)
   declare user: User;
 

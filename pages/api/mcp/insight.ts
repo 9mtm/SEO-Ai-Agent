@@ -1,8 +1,8 @@
 import type { NextApiResponse } from 'next';
 import { validateMcpApiKey, hasPermission, logApiAction, AuthenticatedRequest } from '../../../utils/mcpAuth';
 import Domain from '../../../database/models/domain';
-import { getCountryInsight, getKeywordsInsight, getPagesInsight } from '../../../utils/insight';
-import { fetchDomainSCData, getSearchConsoleApiInfo } from '../../../utils/searchConsole';
+import { getSearchConsoleApiInfo } from '../../../utils/searchConsole';
+import { ensureDomainSynced, readInsightData } from '../../../services/gscStorage';
 import connection from '../../../database/database';
 
 type MCPInsightRes = {
@@ -66,21 +66,11 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
             });
         }
 
-        // Fetch GSC data
-        const scData = await fetchDomainSCData(domainObj, scDomainAPI);
+        // Smart incremental sync (same logic as web access)
+        await ensureDomainSynced(domainObj, { source: 'mcp', userId: auth.userId });
 
-        // Process insight data (same as /api/insight)
-        const { stats = [] } = scData;
-        const countries = getCountryInsight(scData);
-        const keywords = getKeywordsInsight(scData);
-        const pages = getPagesInsight(scData);
-
-        const insightData: InsightDataType = {
-            stats,
-            countries,
-            keywords,
-            pages,
-        };
+        // Read aggregated data from DB
+        const insightData: any = await readInsightData(domainObj.ID, 30);
 
         await logApiAction(
             auth.apiKeyId,

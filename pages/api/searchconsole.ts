@@ -1,73 +1,103 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../database/database';
 import Domain from '../../database/models/domain';
-import { fetchDomainSCData, getSearchConsoleApiInfo, readLocalSCData } from '../../utils/searchConsole';
 import verifyUser from '../../utils/verifyUser';
+import { ensureDomainSynced, readSCKeywordsData } from '../../services/gscStorage';
 
 type searchConsoleRes = {
-   data: SCDomainDataType | null
-   error?: string | null,
-}
-
-type searchConsoleCRONRes = {
-   status: string,
-   error?: string | null,
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-   await db.sync();
-   const verifyResult = verifyUser(req, res);
-   if (!verifyResult.authorized) {
-      return res.status(401).json({ error: 'Unauthorized' });
-   }
-   if (req.method === 'GET') {
-      return getDomainSearchConsoleData(req, res);
-   }
-   if (req.method === 'POST') {
-      return cronRefreshSearchConsoleData(req, res);
-   }
-   return res.status(502).json({ error: 'Unrecognized Route.' });
-}
-
-const getDomainSearchConsoleData = async (req: NextApiRequest, res: NextApiResponse<searchConsoleRes>) => {
-   if (!req.query.domain && typeof req.query.domain !== 'string') return res.status(400).json({ data: null, error: 'Domain is Missing.' });
-   const domainname = (req.query.domain as string).replaceAll('-', '.').replaceAll('_', '-');
-   const localSCData = await readLocalSCData(domainname);
-   if (localSCData && localSCData.thirtyDays && localSCData.thirtyDays.length) {
-      return res.status(200).json({ data: localSCData });
-   }
-   try {
-      const query = { domain: domainname };
-      const foundDomain: Domain | null = await Domain.findOne({ where: query });
-      const domainObj: DomainType = foundDomain && foundDomain.get({ plain: true });
-
-      const scDomainAPI = await getSearchConsoleApiInfo(domainObj);
-
-      // Check for OAuth connection
-      const { hasGoogleConnection } = await import('../../utils/googleOAuth');
-      const isConnected = domainObj.user_id ? await hasGoogleConnection(domainObj.user_id) : false;
-
-      if (!isConnected && !(scDomainAPI.client_email && scDomainAPI.private_key)) {
-         return res.status(200).json({ data: null, error: 'Google Search Console is not Integrated.' });
-      }
-      const scData = await fetchDomainSCData(domainObj, scDomainAPI);
-      return res.status(200).json({ data: scData });
-   } catch (error) {
-      console.log('[ERROR] Getting Search Console Data for: ', domainname, error);
-      return res.status(400).json({ data: null, error: 'Error Fetching Data from Google Search Console.' });
-   }
+    data: any;
+    error?: string | null;
+    sync?: any;
 };
 
-const cronRefreshSearchConsoleData = async (req: NextApiRequest, res: NextApiResponse<searchConsoleCRONRes>) => {
-   try {
-      const allDomainsRaw = await Domain.findAll();
-      const Domains: DomainType[] = allDomainsRaw.map((el) => el.get({ plain: true }));
-      for (const domain of Domains) {
-         await fetchDomainSCData(domain);
-      }
-      return res.status(200).json({ status: 'completed' });
-   } catch (error) {
-      console.log('[ERROR] CRON Updating Search Console Data. ', error);
-      return res.status(400).json({ status: 'failed', error: 'Error Fetching Data from Google Search Console.' });
-   }
+type searchConsoleCRONRes = {
+    status: string;
+    error?: string | null;
+};
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    await db.sync();
+    const verifyResult = verifyUser(req, res);
+    if (!verifyResult.authorized) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    if (req.method === 'GET') {
+        return getDomainSearchConsoleData(req, res, verifyResult);
+    }
+    if (req.method === 'POST') {
+        return manualRefresh(req, res, verifyResult);
+    }
+    return res.status(502).json({ error: 'Unrecognized Route.' });
+}
+
+const getDomainSearchConsoleData = async (
+    req: NextApiRequest,
+    res: NextApiResponse<searchConsoleRes>,
+    verifyResult: any
+) => {
+    if (!req.query.domain || typeof req.query.domain !== 'string') {
+        return res.status(400).json({ data: null, error: 'Domain is Missing.' });
+    }
+    const domainname = (req.query.domain as string).replaceAll('-', '.').replaceAll('_', '-');
+
+    try {
+        const foundDomain: Domain | null = await Domain.findOne({ where: { domain: domainname } });
+        if (!foundDomain) {
+            return res.status(404).json({ data: null, error: 'Domain not found' });
+        }
+        const domainObj: any = foundDomain.get({ plain: true });
+
+        const { hasGoogleConnection } = await import('../../utils/googleOAuth');
+        const scApi = domainObj.search_console ? JSON.parse(domainObj.search_console) : {};
+        const isConnected =
+            (domainObj.user_id ? await hasGoogleConnection(domainObj.user_id) : false) ||
+            !!(scApi.client_email && scApi.private_key);
+
+        let sync: any = null;
+        if (isConnected) {
+            sync = await ensureDomainSynced(domainObj, {
+                source: 'web',
+                userId: verifyResult.user?.id || verifyResult.userId
+            });
+        }
+
+        const data = await readSCKeywordsData(domainObj.ID, 30);
+        if (!isConnected && (!data.thirtyDays || data.thirtyDays.length === 0)) {
+            return res.status(200).json({ data: null, error: 'Google Search Console is not Integrated.' });
+        }
+        return res.status(200).json({ data, sync });
+    } catch (error) {
+        console.log('[ERROR] Getting Search Console Data for: ', domainname, error);
+        return res.status(400).json({ data: null, error: 'Error Fetching Data from Google Search Console.' });
+    }
+};
+
+/**
+ * POST: manual force-refresh for the currently selected domain.
+ * Replaces the old CRON-based refresh of ALL domains (which wasted API quota
+ * on inactive users). Now sync is driven by user activity only.
+ */
+const manualRefresh = async (
+    req: NextApiRequest,
+    res: NextApiResponse<searchConsoleCRONRes>,
+    verifyResult: any
+) => {
+    try {
+        const domainname = (req.body?.domain || req.query?.domain || '').toString();
+        if (!domainname) return res.status(400).json({ status: 'failed', error: 'Domain required' });
+
+        const foundDomain = await Domain.findOne({ where: { domain: domainname } });
+        if (!foundDomain) return res.status(404).json({ status: 'failed', error: 'Domain not found' });
+
+        const domainObj: any = foundDomain.get({ plain: true });
+        const result = await ensureDomainSynced(domainObj, {
+            source: 'manual',
+            userId: verifyResult.user?.id || verifyResult.userId,
+            force: true
+        });
+        return res.status(200).json({ status: result.ok ? 'completed' : 'failed', error: result.error || null });
+    } catch (error: any) {
+        console.log('[ERROR] Manual Search Console refresh. ', error);
+        return res.status(400).json({ status: 'failed', error: error?.message || 'Unknown error' });
+    }
 };

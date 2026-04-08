@@ -1,7 +1,8 @@
 import type { NextApiResponse } from 'next';
 import { validateMcpApiKey, hasPermission, logApiAction, AuthenticatedRequest } from '../../../utils/mcpAuth';
 import Domain from '../../../database/models/domain';
-import { fetchDomainSCData, getSearchConsoleApiInfo } from '../../../utils/searchConsole';
+import { getSearchConsoleApiInfo } from '../../../utils/searchConsole';
+import { ensureDomainSynced } from '../../../services/gscStorage';
 import connection from '../../../database/database';
 import SearchAnalytics from '../../../database/models/search_analytics';
 import { Op } from 'sequelize';
@@ -63,26 +64,9 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
         const startDate = start_date ? String(start_date) : moment().subtract(30, 'days').format('YYYY-MM-DD');
         const endDate = end_date ? String(end_date) : moment().format('YYYY-MM-DD');
 
-        // Check availability in DB
-        const dbCount = await SearchAnalytics.count({
-            where: {
-                domain_id: domainObj.ID,
-                date: {
-                    [Op.between]: [startDate, endDate]
-                }
-            }
-        });
-
-        // "Stale-While-Revalidate"ish strategy: 
-        // If we have little data for the range, we assume we need to sync. 
-        // We sync in background (or await if it's critical, but here we await for simplicity to ensure user gets data).
-        // Since sync is incremental, it shouldn't take long if updated recently.
-        if (dbCount < 5) { // Arbitrary threshold, implies we don't have data
-            const { syncDomainGSCData } = await import('../../../utils/gscSync');
-            // Calculate days back based on start date
-            const daysBack = moment().diff(moment(startDate), 'days') + 2; // +buffer
-            await syncDomainGSCData(domainObj, daysBack);
-        }
+        // Smart incremental sync — same logic across web/api/mcp.
+        // Cooldown + lock + per-user lazy sync built in. No-op if already up to date.
+        await ensureDomainSynced(domainObj, { source: 'mcp', userId: auth.userId });
 
         // Fetch from Database
         const analyticsData = await SearchAnalytics.findAll({

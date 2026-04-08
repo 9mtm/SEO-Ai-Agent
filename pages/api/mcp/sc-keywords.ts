@@ -1,7 +1,8 @@
 import type { NextApiResponse } from 'next';
 import { validateMcpApiKey, hasPermission, logApiAction, AuthenticatedRequest } from '../../../utils/mcpAuth';
 import Domain from '../../../database/models/domain';
-import { fetchDomainSCData, getSearchConsoleApiInfo } from '../../../utils/searchConsole';
+import { getSearchConsoleApiInfo } from '../../../utils/searchConsole';
+import { ensureDomainSynced, readSCKeywordsData } from '../../../services/gscStorage';
 import connection from '../../../database/database';
 
 type MCPSCKeywordsRes = {
@@ -78,57 +79,22 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
             });
         }
 
-        // Fetch GSC data
-        const scData = await fetchDomainSCData(domainObj, scDomainAPI);
+        // Smart incremental sync (same logic as web access)
+        await ensureDomainSynced(domainObj, { source: 'mcp', userId: auth.userId });
 
-        // Get keywords from thirtyDays data (same as Console page)
-        let keywords = scData.thirtyDays || [];
+        // Read pre-aggregated keywords from DB
+        const data: any = await readSCKeywordsData(domainObj.ID, 30);
+        let keywordsReduced: any[] = data.thirtyDays || [];
 
         // Apply device filter if provided
         if (device && typeof device === 'string') {
-            keywords = keywords.filter((k: SearchAnalyticsItem) => k.device === device.toLowerCase());
+            keywordsReduced = keywordsReduced.filter((k: any) => k.device === device.toLowerCase());
         }
 
         // Apply country filter if provided
         if (country && typeof country === 'string') {
-            keywords = keywords.filter((k: SearchAnalyticsItem) => k.country === country);
+            keywordsReduced = keywordsReduced.filter((k: any) => k.country === country);
         }
-
-        // Group keywords by device-country-keyword (same logic as Console page)
-        const keywordsCount = new Map<string, number>();
-        keywords.forEach((k: SearchAnalyticsItem) => {
-            const key = `${k.device}-${k.country}-${k.keyword}`;
-            keywordsCount.set(key, (keywordsCount.get(key) || 0) + 1);
-        });
-
-        // Reduce keywords (aggregate by device-country-keyword)
-        const keywordsMap = new Map<string, SearchAnalyticsItem>();
-        keywords.forEach((k: SearchAnalyticsItem) => {
-            const key = `${k.device}-${k.country}-${k.keyword}`;
-            const existing = keywordsMap.get(key);
-            if (existing) {
-                existing.clicks += k.clicks;
-                existing.impressions += k.impressions;
-                existing.ctr += k.ctr;
-                existing.position += k.position;
-            } else {
-                keywordsMap.set(key, {
-                    ...k,
-                    uid: key,
-                });
-            }
-        });
-
-        // Calculate averages
-        const keywordsReduced = Array.from(keywordsMap.values()).map((k: SearchAnalyticsItem) => {
-            const key = `${k.device}-${k.country}-${k.keyword}`;
-            const count = keywordsCount.get(key) || 1;
-            return {
-                ...k,
-                ctr: Math.round((k.ctr / count) * 100) / 100,
-                position: Math.round(k.position / count),
-            };
-        });
 
         // Calculate summary statistics
         const byDevice = {
