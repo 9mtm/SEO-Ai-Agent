@@ -33,6 +33,8 @@ const BillingPage: NextPage = () => {
     const user = userData?.user;
 
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
+    // Display mode: "monthly" = show price/12 per mo (billed yearly), "yearly" = show full yearly total
+    const [displayMode, setDisplayMode] = useState<'monthly' | 'yearly'>('monthly');
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState<any>(null);
 
@@ -321,17 +323,58 @@ const BillingPage: NextPage = () => {
                             </CardHeader>
                         </Card>
 
+                        {/* Display Mode Toggle — Yearly is the primary/default */}
+                        <div className="flex justify-center">
+                            <div className="inline-flex items-center bg-neutral-100 rounded-full p-1 border border-neutral-200 gap-1">
+                                <button
+                                    type="button"
+                                    onClick={() => setDisplayMode('monthly')}
+                                    className={`px-6 py-2 rounded-full text-sm font-semibold transition-all ${displayMode === 'monthly'
+                                        ? 'bg-primary text-white shadow-md'
+                                        : 'text-neutral-500 hover:text-neutral-800'
+                                        }`}
+                                >
+                                    {t('billing.checkout.monthly') || 'Monthly'}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setDisplayMode('yearly')}
+                                    className={`px-6 py-2 rounded-full text-sm font-semibold transition-all flex items-center gap-2 ${displayMode === 'yearly'
+                                        ? 'bg-primary text-white shadow-md'
+                                        : 'text-neutral-500 hover:text-neutral-800'
+                                        }`}
+                                >
+                                    {t('billing.checkout.yearly') || 'Yearly'}
+                                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${displayMode === 'yearly' ? 'bg-green-400 text-white' : 'bg-green-100 text-green-700'}`}>
+                                        Save 50%
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+
                         {/* Pricing Cards */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {plans.map((plan) => {
-                                // All paid plans are yearly only — the price entered IS the yearly price
-                                const price = plan.price.yearly || 0;
-                                const originalPrice = (plan.price as any).original || 0;
-                                const hasDiscount = originalPrice > price && price > 0;
+                                // Yearly total IS what's entered in the plans array — billing is always yearly.
+                                // Display mode just changes how we present the price (per mo vs per year).
+                                const yearlyTotal = plan.price.yearly || 0;
+                                const originalYearly = (plan.price as any).original || 0;
+                                const isMonthlyDisplay = displayMode === 'monthly';
+
+                                const price = isMonthlyDisplay
+                                    ? (yearlyTotal > 0 ? Math.round((yearlyTotal / 12) * 100) / 100 : 0)
+                                    : yearlyTotal;
+                                const originalPrice = isMonthlyDisplay
+                                    ? (originalYearly > 0 ? Math.round((originalYearly / 12) * 100) / 100 : 0)
+                                    : originalYearly;
+
+                                const hasDiscount = originalYearly > yearlyTotal && yearlyTotal > 0;
                                 const discountPct = hasDiscount
-                                    ? Math.round(((originalPrice - price) / originalPrice) * 100)
+                                    ? Math.round(((originalYearly - yearlyTotal) / originalYearly) * 100)
                                     : 0;
-                                const period = currentLocale === 'de' ? 'Jahr' : currentLocale === 'fr' ? 'an' : 'year';
+                                const period = isMonthlyDisplay
+                                    ? (currentLocale === 'de' ? 'Monat' : currentLocale === 'fr' ? 'mois' : 'mo')
+                                    : (currentLocale === 'de' ? 'Jahr' : currentLocale === 'fr' ? 'an' : 'year');
                                 let subtext = t('billing.checkout.billedYearly');
 
                                 if (plan.id === 'free') {
@@ -361,7 +404,7 @@ const BillingPage: NextPage = () => {
                                                 </div>
                                                 {hasDiscount && (
                                                     <p className="text-xs text-green-600 font-semibold mt-1">
-                                                        Save ${originalPrice - price}
+                                                        Save ${isMonthlyDisplay ? (originalYearly - yearlyTotal) : (originalYearly - yearlyTotal)}/year
                                                     </p>
                                                 )}
                                                 {plan.id !== 'free' && !hasDiscount && <p className="text-xs text-gray-500 mt-1">{subtext}</p>}

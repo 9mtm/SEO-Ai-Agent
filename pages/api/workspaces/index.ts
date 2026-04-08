@@ -35,6 +35,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
     }
 
+    if (req.method === 'PATCH') {
+        const id = parseInt(String(req.query.id || req.body?.id || ''));
+        const { name } = req.body || {};
+        if (!id || !name || typeof name !== 'string' || !name.trim()) {
+            return res.status(400).json({ error: 'id and name are required' });
+        }
+        // Only owner/admin can rename
+        const member = await WorkspaceMember.findOne({
+            where: { workspace_id: id, user_id: auth.userId, status: 'active' }
+        });
+        if (!member || (member.role !== 'owner' && member.role !== 'admin')) {
+            return res.status(403).json({ error: 'Only owners or admins can rename the workspace' });
+        }
+        const ws: any = await Workspace.findByPk(id);
+        if (!ws) return res.status(404).json({ error: 'Not found' });
+        await ws.update({ name: name.trim() });
+        return res.status(200).json({ ok: true, workspace: ws.toJSON() });
+    }
+
     if (req.method === 'POST') {
         const { name } = req.body || {};
         if (!name || typeof name !== 'string') {

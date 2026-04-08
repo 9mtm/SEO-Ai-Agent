@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import User from '../../../../database/models/user';
 import Domain from '../../../../database/models/domain';
 import connection from '../../../../database/database';
+import { ensurePersonalWorkspace } from '../../../../utils/createPersonalWorkspace';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { code, state, error } = req.query;
@@ -123,7 +124,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           scraper_type: 'scrapingrobot', // Default
           picture: googleUser.picture || null, // Create with picture
         });
+        // Auto-create personal workspace for the new user
+        await ensurePersonalWorkspace(user.id, googleUser.name);
       } else {
+        // Safety net: older accounts may not have a workspace yet
+        await ensurePersonalWorkspace(user.id);
         // Update existing user with new picture if available
         if (googleUser.picture) {
           await user.update({ picture: googleUser.picture });

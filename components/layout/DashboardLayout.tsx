@@ -18,6 +18,8 @@ import {
   PenTool,
   Key,
   Bell,
+  Building2,
+  Shield,
 } from 'lucide-react';
 import AccountMenu from '../common/AccountMenu';
 import DomainSelector from '../domains/DomainSelector';
@@ -63,10 +65,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   } else if (router.pathname.startsWith('/profile')) {
     navigation.push(
       { name: t('sidebar.profile'), href: '/profile', icon: User },
+      { name: 'Workspaces', href: '/profile/workspaces', icon: Building2 },
+      { name: 'Team Members', href: '/profile/team', icon: Users },
       { name: 'Search Console', href: '/profile/search-console', icon: Search },
       { name: t('sidebar.notifications'), href: '/profile/notifications', icon: Bell },
       { name: t('sidebar.billing'), href: '/profile/billing', icon: CreditCard },
       { name: t('sidebar.apiKeys'), href: '/profile/api-keys', icon: Key },
+      { name: 'OAuth Apps', href: '/profile/oauth-apps', icon: Shield },
       { name: t('sidebar.scraper'), href: '/profile/scraper', icon: Settings },
       { name: t('sidebar.connections'), href: '/profile/connections', icon: LinkIcon }
     );

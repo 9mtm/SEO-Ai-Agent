@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcryptjs';
 import User from '../../../database/models/user';
 import connection from '../../../database/database';
+import { ensurePersonalWorkspace } from '../../../utils/createPersonalWorkspace';
 
 type RegisterResponse = {
   success?: boolean;
@@ -57,6 +58,9 @@ export default async function handler(
       subscription_plan: 'free',
       is_active: true,
     });
+
+    // Auto-create personal workspace for the new user
+    await ensurePersonalWorkspace(user.id, name);
 
     return res.status(201).json({
       success: true,

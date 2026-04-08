@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Settings, LogOut, Plus, Globe, User } from 'lucide-react';
+import { Settings, LogOut, Plus, Globe, User, Users, Building2, Check, Key } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -16,12 +16,23 @@ type UserInfo = {
     picture?: string;
 };
 
+type WorkspaceItem = {
+    id: number;
+    name: string;
+    slug: string;
+    role: string;
+    is_personal: boolean;
+    is_current: boolean;
+};
+
 const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
     const { locale: selectedLang, setLocale, t } = useLanguage();
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isLangOpen, setIsLangOpen] = useState(false);
     const [userInfo, setUserInfo] = useState<UserInfo>({ name: 'User', email: 'user@example.com' });
+    const [workspaces, setWorkspaces] = useState<WorkspaceItem[]>([]);
+    const [switchingWs, setSwitchingWs] = useState<number | null>(null);
     const menuRef = useRef<HTMLDivElement>(null);
     const langRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
@@ -65,6 +76,36 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
 
         fetchUserInfo();
     }, []);
+
+    // Fetch workspaces when menu opens
+    useEffect(() => {
+        if (!isMenuOpen) return;
+        fetch('/api/workspaces', { headers: getAuthHeaders() })
+            .then((r) => r.json())
+            .then((d) => { if (d?.workspaces) setWorkspaces(d.workspaces); })
+            .catch(() => { });
+    }, [isMenuOpen]);
+
+    const switchWorkspace = async (id: number) => {
+        setSwitchingWs(id);
+        try {
+            const res = await fetch('/api/workspaces/switch', {
+                method: 'POST',
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ workspace_id: id })
+            });
+            if (res.ok) {
+                toast.success('Workspace switched');
+                window.location.reload();
+            } else {
+                toast.error('Failed to switch workspace');
+            }
+        } catch {
+            toast.error('Error switching workspace');
+        } finally {
+            setSwitchingWs(null);
+        }
+    };
 
     const logoutUser = async () => {
         try {
@@ -171,12 +212,57 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
 
                 {/* Dropdown Menu */}
                 {isMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-neutral-200 py-2 z-50">
+                    <div className="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-neutral-200 py-2 z-50">
                         {/* Account Header */}
                         <div className="px-4 py-3 border-b border-neutral-200 bg-neutral-50/50">
                             <p className="text-sm font-semibold text-neutral-900">{userInfo.name}</p>
                             <p className="text-xs text-neutral-500 truncate">{userInfo.email}</p>
                         </div>
+
+                        {/* Workspace Switcher — list style */}
+                        {workspaces.length > 0 && (
+                            <div className="border-b border-neutral-200">
+                                <div className="px-4 pt-3 pb-2 text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
+                                    Workspaces
+                                </div>
+                                <div className="max-h-56 overflow-y-auto px-2 pb-2 space-y-0.5">
+                                    {workspaces.map((ws) => (
+                                        <button
+                                            key={ws.id}
+                                            onClick={() => !ws.is_current && switchWorkspace(ws.id)}
+                                            disabled={ws.is_current || switchingWs === ws.id}
+                                            className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-md text-sm transition-colors ${ws.is_current
+                                                ? 'bg-blue-50 text-blue-700 cursor-default'
+                                                : 'text-neutral-700 hover:bg-neutral-100 cursor-pointer'
+                                                }`}
+                                        >
+                                            <div className="flex items-center gap-2.5 min-w-0">
+                                                <div className={`w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 ${ws.is_current ? 'bg-blue-100' : 'bg-neutral-100'}`}>
+                                                    <Building2 className={`h-3.5 w-3.5 ${ws.is_current ? 'text-blue-600' : 'text-neutral-500'}`} />
+                                                </div>
+                                                <div className="flex flex-col items-start min-w-0">
+                                                    <span className="truncate font-medium leading-tight">{ws.name}</span>
+                                                    <span className="text-[10px] text-neutral-400 uppercase tracking-wide leading-tight mt-0.5">{ws.role}</span>
+                                                </div>
+                                            </div>
+                                            {ws.is_current && <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />}
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="px-2 pb-2 pt-1 border-t border-neutral-100">
+                                    <Link
+                                        href="/profile/workspaces"
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors"
+                                    >
+                                        <div className="w-7 h-7 rounded-md bg-blue-50 border border-dashed border-blue-300 flex items-center justify-center flex-shrink-0">
+                                            <Plus className="h-3.5 w-3.5 text-blue-600" />
+                                        </div>
+                                        <span>Create new workspace</span>
+                                    </Link>
+                                </div>
+                            </div>
+                        )}
 
                         <div className="py-1">
                             <Link
@@ -186,6 +272,22 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                             >
                                 <User className="h-4 w-4 text-neutral-500" />
                                 <span>{t('sidebar.profile')}</span>
+                            </Link>
+                            <Link
+                                href="/profile/team"
+                                onClick={() => setIsMenuOpen(false)}
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                            >
+                                <Users className="h-4 w-4 text-neutral-500" />
+                                <span>Team Members</span>
+                            </Link>
+                            <Link
+                                href="/profile/oauth-apps"
+                                onClick={() => setIsMenuOpen(false)}
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                            >
+                                <Key className="h-4 w-4 text-neutral-500" />
+                                <span>OAuth Apps</span>
                             </Link>
                             <Link
                                 href="/profile/notifications"
