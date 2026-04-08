@@ -5,11 +5,13 @@ import { useRouter } from 'next/router';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { CheckCircle2, Circle, ArrowRight, Settings, Globe, Database, Key, ShieldCheck } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { useFetchDomains } from '../../services/domains';
 
 export default function SetupPage() {
     const router = useRouter();
     const [status, setStatus] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const { data: domainsData } = useFetchDomains(router);
 
     useEffect(() => {
         fetch('/api/user/setup-status')
@@ -78,7 +80,7 @@ export default function SetupPage() {
     ];
 
     return (
-        <DashboardLayout>
+        <DashboardLayout domains={domainsData?.domains || []}>
             <Head><title>System Setup | SEO AI Agent</title></Head>
             <div className="max-w-4xl mx-auto py-10 px-4">
                 <div className="mb-8 text-center animate-in fade-in slide-in-from-top-4 duration-500">

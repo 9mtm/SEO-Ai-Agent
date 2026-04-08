@@ -45,10 +45,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const { t } = useLanguage();
 
   const currentSlug = router.query.slug as string;
-  // Try to find domain by slug, and if not found, try by domain name (for backward compatibility)
+  // Try to find domain by slug, and if not found, try by domain name (for backward compatibility).
+  // On non-domain pages (e.g. /setup, /), fall back to the first available domain so the user
+  // always sees the main sidebar (Insight/Discover/Tracking/Posts/Settings).
   const currentDomain = domains.find(d => d.slug === currentSlug) ||
     domains.find(d => d.domain === currentSlug) ||
-    null;
+    (!router.pathname.startsWith('/profile') && domains.length > 0 ? domains[0] : null);
 
   const navigation: { name: string; href: string; icon: any }[] = [];
 
@@ -74,8 +76,14 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       { name: t('sidebar.scraper'), href: '/profile/scraper', icon: Settings }
     );
   } else {
+    // Default sidebar for home, /setup and other top-level pages
     navigation.push(
-      { name: t('sidebar.myDomains'), href: '/', icon: Globe }
+      { name: t('sidebar.myDomains'), href: '/', icon: Globe },
+      { name: 'Setup', href: '/setup', icon: Settings },
+      { name: t('sidebar.profile'), href: '/profile', icon: User },
+      { name: 'Workspaces', href: '/profile/workspaces', icon: Building2 },
+      { name: 'Team Members', href: '/profile/team', icon: Users },
+      { name: t('sidebar.billing'), href: '/profile/billing', icon: CreditCard }
     );
   }
 
