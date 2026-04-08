@@ -523,7 +523,7 @@ export default function ApiKeysPage() {
                                                 <div>
                                                     <p className="text-xs font-semibold text-neutral-500 mb-2">{t('apiKeys.permissions')}</p>
                                                     <div className="flex flex-wrap gap-2">
-                                                        {key.permissions.map((perm: string) => {
+                                                        {(Array.isArray(key.permissions) ? key.permissions : (typeof key.permissions === 'string' ? (()=>{try{return JSON.parse(key.permissions);}catch{return [];}})() : [])).map((perm: string) => {
                                                             const permInfo = AVAILABLE_PERMISSIONS[perm as keyof typeof AVAILABLE_PERMISSIONS];
                                                             return (
                                                                 <Badge key={perm} variant="secondary" className="text-xs">

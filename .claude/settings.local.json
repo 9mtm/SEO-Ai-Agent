@@ -41,7 +41,11 @@
       "Bash(where:*)",
       "Bash(find:*)",
       "Bash(php -l:*)",
-      "Bash(mysql:*)"
+      "Bash(mysql:*)",
+      "Bash(taskkill /F /PID 29224)",
+      "Bash(cmd //c \"taskkill /F /PID 29224\")",
+      "Bash(cmd //c \"npm run dev\")",
+      "Bash(cmd //c \"npx sequelize-cli db:migrate 2>&1\")"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"

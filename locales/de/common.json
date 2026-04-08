@@ -1005,7 +1005,7 @@
       "free": {
         "name": "Kostenlos",
         "description": "Perfekt zum Ausprobieren",
-        "feature1": "1 Website",
+        "feature1": "2 Websites",
         "feature2": "10 Keywords",
         "feature3": "Tägliche Updates",
         "feature4": "Basis-Berichte",
@@ -1124,7 +1124,7 @@
       },
       "q3": {
         "question": "Kann ich mehrere Websites verfolgen?",
-        "answer": "Ja, abhängig von Ihrem Plan: 1 Website für Kostenlos, 5 Websites für Pro und unbegrenzt für Enterprise."
+        "answer": "Ja, abhängig von Ihrem Plan: 2 Websites für Kostenlos, 3 für Basic, 5 für Pro und unbegrenzt für Premium/Enterprise."
       },
       "q4": {
         "question": "Wie funktioniert das Multi-Country-Tracking?",

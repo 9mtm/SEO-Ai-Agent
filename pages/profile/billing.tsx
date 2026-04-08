@@ -32,7 +32,7 @@ const BillingPage: NextPage = () => {
     const { data: userData } = useFetchUser();
     const user = userData?.user;
 
-    const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+    const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState<any>(null);
 
@@ -114,10 +114,8 @@ const BillingPage: NextPage = () => {
     };
 
     const handlePlanSelect = (plan: any) => {
-        // Basic is yearly only
-        if (plan.id === 'basic') {
-            setBillingCycle('yearly');
-        }
+        // All plans are yearly only
+        setBillingCycle('yearly');
         setSelectedPlan(plan);
         setIsCheckoutOpen(true);
     };
@@ -131,7 +129,7 @@ const BillingPage: NextPage = () => {
             description: t('billing.planDesc.free'),
             price: { monthly: 0, yearly: 0 },
             features: [
-                t('billing.features.domain', { count: 1 }),
+                t('billing.features.domains', { count: 2 }),
                 t('billing.features.keywords', { count: 9 }),
                 t('billing.features.updates'),
             ],
@@ -145,7 +143,7 @@ const BillingPage: NextPage = () => {
             description: t('billing.planDesc.basic'),
             price: { monthly: null, yearly: 9 }, // Monthly price shown, but billed yearly
             features: [
-                t('billing.features.domains', { count: 2 }),
+                t('billing.features.domains', { count: 3 }),
                 t('billing.features.keywords', { count: 25 }),
                 t('billing.features.weekly'),
                 t('billing.features.mcp')
@@ -219,13 +217,12 @@ const BillingPage: NextPage = () => {
         // Map plans to Stripe Price IDs (from Environment Variables)
         const PRICE_IDS: Record<string, string | undefined> = {
             'basic_yearly': process.env.NEXT_PUBLIC_STRIPE_PRICE_BASIC_YEARLY,
-            'pro_monthly': process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY,
             'pro_yearly': process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_YEARLY,
-            'premium_monthly': process.env.NEXT_PUBLIC_STRIPE_PRICE_PREMIUM_MONTHLY,
             'premium_yearly': process.env.NEXT_PUBLIC_STRIPE_PRICE_PREMIUM_YEARLY,
         };
 
-        const key = `${selectedPlan.id}_${selectedPlan.id === 'basic' ? 'yearly' : billingCycle}`;
+        // All plans are yearly only
+        const key = `${selectedPlan.id}_yearly`;
         const priceId = PRICE_IDS[key];
 
         if (!priceId) {
@@ -327,26 +324,19 @@ const BillingPage: NextPage = () => {
                         {/* Pricing Cards */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {plans.map((plan) => {
-                                // Show monthly price by default, or yearly if only available yearly
-                                let price = plan.price.monthly || plan.price.yearly;
+                                // All paid plans are yearly only — show monthly-equivalent price
+                                let price = plan.price.yearly;
                                 let period = 'mo';
-                                let subtext = t('billing.checkout.monthly');
+                                let subtext = t('billing.checkout.billedYearly');
 
                                 if (currentLocale === 'de') {
-                                    // simple manual override for period
                                     period = 'Monat';
                                 } else if (currentLocale === 'fr') {
                                     period = 'mois';
                                 }
 
-                                if (plan.id === 'basic') {
-                                    price = plan.price.yearly;
-                                    subtext = t('billing.checkout.billedYearly');
-                                } else if (plan.id === 'free') {
+                                if (plan.id === 'free') {
                                     subtext = t('billing.planDesc.free');
-                                } else {
-                                    // For normal plans, show "billed monthly" if not yearly forced
-                                    subtext = t('billing.checkout.monthly');
                                 }
 
                                 return (
@@ -421,7 +411,7 @@ const BillingPage: NextPage = () => {
                 <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>
-                            {t('billing.checkout.title', { cycle: selectedPlan?.id === 'basic' ? 'Yearly' : (billingCycle === 'yearly' ? 'Yearly' : 'Monthly') })}
+                            {t('billing.checkout.title', { cycle: 'Yearly' })}
                         </DialogTitle>
                         <DialogDescription>
                             {t('billing.checkout.desc')}
@@ -430,42 +420,25 @@ const BillingPage: NextPage = () => {
 
                     {selectedPlan && (
                         <div className="grid gap-6 py-4">
-                            {/* Billing Cycle Selection (Inside Dialog) */}
-                            {selectedPlan.id !== 'basic' && selectedPlan.id !== 'free' && (
-                                <div className="flex items-center justify-center gap-4 p-4 bg-muted/50 rounded-lg">
-                                    <span className={`text-sm font-medium ${billingCycle === 'monthly' ? 'text-primary' : 'text-gray-500'}`}>{t('billing.checkout.monthly')}</span>
-                                    <Switch
-                                        checked={billingCycle === 'yearly'}
-                                        onCheckedChange={(checked) => setBillingCycle(checked ? 'yearly' : 'monthly')}
-                                    />
-                                    <span className={`text-sm font-medium ${billingCycle === 'yearly' ? 'text-primary' : 'text-gray-500'}`}>
-                                        {t('billing.checkout.yearly')} <span className="text-xs text-green-600 font-normal">({t('billing.checkout.save')})</span>
-                                    </span>
-                                </div>
-                            )}
-
-                            {/* Plan Summary */}
+                            {/* Plan Summary — Yearly Only */}
                             <div className="bg-neutral-50 p-4 rounded-lg border border-neutral-200">
                                 <div className="flex justify-between items-center mb-2">
                                     <h3 className="font-bold text-lg">{t('billing.checkout.planSummary', { plan: selectedPlan.name })}</h3>
                                     <span className="text-xl font-bold font-mono">
-                                        ${selectedPlan.id === 'basic' ? selectedPlan.price.yearly : (billingCycle === 'yearly' ? selectedPlan.price.yearly : selectedPlan.price.monthly)}
+                                        ${selectedPlan.price.yearly}
                                         <span className="text-sm text-gray-500 font-normal">/mo</span>
                                     </span>
                                 </div>
                                 <div className="text-sm text-gray-600 flex justify-between">
                                     <span>{t('billing.checkout.cycle')}:</span>
                                     <span className="font-medium capitalize">
-                                        {selectedPlan.id === 'basic' ? t('billing.checkout.yearly') : (billingCycle === 'yearly' ? t('billing.checkout.yearly') : t('billing.checkout.monthly'))}
+                                        {t('billing.checkout.yearly')}
                                     </span>
                                 </div>
                                 <div className="text-sm text-gray-600 flex justify-between mt-1">
                                     <span>{t('billing.checkout.total')}:</span>
                                     <span className="font-bold text-neutral-900">
-                                        {/* Calculate Total: Price * 12 if yearly, else Price * 1 */}
-                                        ${selectedPlan.id === 'basic'
-                                            ? selectedPlan.price.yearly * 12
-                                            : (billingCycle === 'yearly' ? selectedPlan.price.yearly * 12 : selectedPlan.price.monthly)}
+                                        ${selectedPlan.price.yearly * 12}
                                     </span>
                                 </div>
                             </div>

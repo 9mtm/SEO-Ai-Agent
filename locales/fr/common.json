@@ -1004,7 +1004,7 @@
       "free": {
         "name": "Gratuit",
         "description": "Parfait pour essayer",
-        "feature1": "1 site web",
+        "feature1": "2 sites web",
         "feature2": "10 mots-clés",
         "feature3": "Mises à jour quotidiennes",
         "feature4": "Rapports de base",
@@ -1123,7 +1123,7 @@
       },
       "q3": {
         "question": "Puis-je suivre plusieurs sites web ?",
-        "answer": "Oui, selon votre plan : 1 site pour Gratuit, 5 sites pour Pro, et illimité pour Entreprise."
+        "answer": "Oui, selon votre plan : 2 sites pour Gratuit, 3 pour Basic, 5 pour Pro, et illimité pour Premium/Entreprise."
       },
       "q4": {
         "question": "Comment fonctionne le suivi multi-pays ?",

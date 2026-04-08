@@ -3,6 +3,7 @@
   "version": "2.1.0",
   "private": true,
   "scripts": {
+    "predev": "node -e \"const{execSync}=require('child_process');try{const o=execSync('netstat -ano | findstr :55781').toString();const pids=[...new Set(o.split('\\n').map(l=>l.trim().split(/\\s+/).pop()).filter(p=>p&&/^\\d+$/.test(p)))];pids.forEach(p=>{try{execSync('taskkill /F /PID '+p);console.log('Killed PID '+p)}catch(e){}})}catch(e){}\"",
     "dev": "next dev -p 55781",
     "build": "next build",
     "start": "next start -p 55781",

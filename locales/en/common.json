@@ -1003,7 +1003,7 @@
       "free": {
         "name": "Free",
         "description": "Perfect for trying out",
-        "feature1": "1 website",
+        "feature1": "2 websites",
         "feature2": "10 keywords",
         "feature3": "Daily updates",
         "feature4": "Basic reports",
@@ -1122,7 +1122,7 @@
       },
       "q3": {
         "question": "Can I track multiple websites?",
-        "answer": "Yes, depending on your plan: 1 website for Free, 5 websites for Pro, and unlimited for Enterprise."
+        "answer": "Yes, depending on your plan: 2 websites for Free, 3 for Basic, 5 for Pro, and unlimited for Premium/Enterprise."
       },
       "q4": {
         "question": "How does multi-country tracking work?",
