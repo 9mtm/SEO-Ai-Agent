@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
-import { Building2, Plus, Check, Pencil, X, Trash2 } from 'lucide-react';
+import { Building2, Plus, Check, Pencil, X, Trash2, Globe } from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -11,7 +11,7 @@ import { useFetchDomains } from '../../services/domains';
 import { useAppDialogs } from '../../components/common/AppDialog';
 export { getServerSideProps } from '../../utils/ownerOnlyPage';
 
-type WS = { id: number; name: string; slug: string; role: string; is_personal: boolean; is_current: boolean };
+type WS = { id: number; name: string; slug: string; role: string; is_personal: boolean; is_current: boolean; domain_count?: number };
 
 export default function WorkspacesPage() {
     const router = useRouter();
@@ -180,7 +180,14 @@ export default function WorkspacesPage() {
                                                                 </button>
                                                             )}
                                                         </div>
-                                                        <div className="text-xs text-neutral-500 uppercase tracking-wide">{ws.role}</div>
+                                                        <div className="text-xs text-neutral-500 flex items-center gap-2 mt-0.5">
+                                                            <span className="uppercase tracking-wide">{ws.role}</span>
+                                                            <span className="text-neutral-300">•</span>
+                                                            <span className="inline-flex items-center gap-1">
+                                                                <Globe className="h-3 w-3" />
+                                                                {ws.domain_count || 0} {(ws.domain_count || 0) === 1 ? 'site' : 'sites'}
+                                                            </span>
+                                                        </div>
                                                     </>
                                                 )}
                                             </div>

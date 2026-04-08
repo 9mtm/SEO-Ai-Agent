@@ -66,6 +66,18 @@ export const getDomains = async (
       if (!isLegacy) {
          const ctx = await getWorkspaceContext(req, res);
          if (ctx) {
+            // Self-heal: adopt any domains this user owns but that have no
+            // workspace_id yet. This covers domains created before workspaces
+            // existed or created when the user's previous workspace got
+            // deleted. Attach them to the currently active workspace.
+            if (userId) {
+               try {
+                  await Domain.update(
+                     { workspace_id: ctx.workspaceId } as any,
+                     { where: { user_id: userId, workspace_id: null as any } }
+                  );
+               } catch (e) { /* non-fatal */ }
+            }
             whereClause = { workspace_id: ctx.workspaceId };
          } else if (userId) {
             // Fallback to user-owned (rare: should always have a workspace after migration)

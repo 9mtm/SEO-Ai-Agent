@@ -211,6 +211,13 @@ curl -X POST http://localhost:55781/api/cron -H "Authorization: Bearer YOUR_API_
 - **Team-aware Google OAuth callback** — new signups who arrive via an invitation link do NOT get a personal workspace auto-created. Returning users only get a personal workspace if they have zero memberships.
 - **Team-aware post-login redirect** — the Google callback now reads the active workspace's domains (not `user.domains`) so team members land directly on the shared workspace's first domain instead of being bounced to `/onboarding`.
 - **Team-member setup bypass** — `/api/user/setup-status` reports `percentage: 100` + `is_team_member: true` for non-owners, so the Setup Guide never nags them to connect GSC / configure scraper / add domains.
+- **Self-healing orphan domains** — `GET /api/domains` automatically adopts any domain that belongs to the user but has `workspace_id = NULL` (created before the workspaces migration or left behind when a workspace was deleted) into the currently active workspace.
+- **Workspace domain count** — the `/api/workspaces` response now includes `domain_count` per workspace (computed in a single grouped query), shown on `/profile/workspaces` under each workspace name.
+- **Loading skeletons on Insight** — when a domain has no GSC data yet (empty / new / post-wipe), the Insight page shows a skeleton with pulsing KPI cards, a fake bar chart, and a "Loading stats…" spinner instead of rendering zeroes.
+- **OAuth Apps page tabs** — `/profile/oauth-apps` is now split into 4 tabs: **Quick Connect** (paste-URL for Claude/Cursor), **Personal Token** (generate / regenerate / revoke with masked display + show-hide eye toggle), **Active Connections** (OAuth sessions with revoke), **Developer Apps** (register your own OAuth clients). Badges show counts on each tab.
+- **`AppDialog` — unified Promise-based confirm / prompt** — `components/common/AppDialog.tsx` exposes `useAppDialogs()` returning `{ confirmDialog, promptDialog, Dialogs }`. Every page-level `window.confirm` and `window.prompt` has been replaced with styled Radix dialogs supporting `variant: 'danger'`, inline validation, keyboard shortcuts, and proper focus management.
+- **Free plan adjustment** — the Free plan is now **1 domain / 9 keywords** (was 2/9) to push serious users onto Basic.
+- **Public OAuth client lookup** — `GET /api/oauth/clients/public?client_id=…` returns display-only client info (name / description / logo / website / scopes) for the consent screen, so the unauthenticated `/oauth/consent` page can show the correct app name + logo before the user has a session with that client.
 
 ---
 

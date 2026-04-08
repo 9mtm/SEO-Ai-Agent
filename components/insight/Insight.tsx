@@ -300,12 +300,43 @@ const SCInsight = ({ insight, isPending = true, isConsoleIntegrated = true, doma
             )}
 
             {isConsoleIntegrated && activeTab === 'stats' && (
-               <InsightStats
-                  stats={insight?.stats ? insight.stats : []}
-                  totalKeywords={insight?.keywords?.length || 0}
-                  totalCountries={insight?.countries?.length || 0}
-                  totalPages={insight?.pages?.length || 0}
-               />
+               isPending && (!insight?.stats || insight.stats.length === 0) ? (
+                  <div className="px-6 py-8">
+                     {/* KPI cards skeleton */}
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        {Array(3).fill(0).map((_, i) => (
+                           <div key={i} className="bg-gray-50 border border-gray-100 rounded-lg p-5 animate-pulse">
+                              <div className="h-3 w-20 bg-gray-200 rounded mb-3"></div>
+                              <div className="h-8 w-24 bg-gray-300 rounded mb-2"></div>
+                              <div className="h-2 w-16 bg-gray-200 rounded"></div>
+                           </div>
+                        ))}
+                     </div>
+                     {/* Chart skeleton */}
+                     <div className="bg-gray-50 border border-gray-100 rounded-lg p-6 animate-pulse">
+                        <div className="h-4 w-32 bg-gray-200 rounded mb-4"></div>
+                        <div className="h-48 bg-gray-100 rounded flex items-end gap-1 p-3">
+                           {Array(20).fill(0).map((_, i) => (
+                              <div key={i} className="flex-1 bg-gray-200 rounded-t" style={{ height: `${30 + Math.random() * 70}%` }}></div>
+                           ))}
+                        </div>
+                     </div>
+                     <div className="mt-4 flex items-center justify-center gap-2 text-sm text-gray-500">
+                        <svg className="animate-spin h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24">
+                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        Loading stats…
+                     </div>
+                  </div>
+               ) : (
+                  <InsightStats
+                     stats={insight?.stats ? insight.stats : []}
+                     totalKeywords={insight?.keywords?.length || 0}
+                     totalCountries={insight?.countries?.length || 0}
+                     totalPages={insight?.pages?.length || 0}
+                  />
+               )
             )}
 
             {/* Top Performers */}

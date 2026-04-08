@@ -62,6 +62,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             include: [{ model: Workspace }]
         });
         const me: any = await User.findByPk(auth.userId);
+
+        // Count domains per workspace in a single grouped query
+        const Domain = (await import('../../../database/models/domain')).default;
+        const { fn, col } = await import('sequelize');
+        const wsIds = memberships.map((m: any) => m.workspace.id);
+        const domainCounts: Record<number, number> = {};
+        if (wsIds.length > 0) {
+            const rows: any = await Domain.findAll({
+                where: { workspace_id: wsIds },
+                attributes: ['workspace_id', [fn('COUNT', col('ID')), 'count']],
+                group: ['workspace_id']
+            });
+            for (const r of rows) {
+                const plain: any = r.get({ plain: true });
+                domainCounts[plain.workspace_id] = Number(plain.count) || 0;
+            }
+        }
+
         return res.status(200).json({
             workspaces: memberships.map((m: any) => ({
                 id: m.workspace.id,
@@ -71,7 +89,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 logo_url: m.workspace.logo_url,
                 is_personal: m.workspace.is_personal,
                 role: m.role,
-                is_current: m.workspace.id === me?.current_workspace_id
+                is_current: m.workspace.id === me?.current_workspace_id,
+                domain_count: domainCounts[m.workspace.id] || 0
             })),
             current_workspace_id: me?.current_workspace_id || null
         });
