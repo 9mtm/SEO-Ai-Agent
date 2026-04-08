@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../..
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { useFetchDomains } from '../../services/domains';
+import { useAppDialogs } from '../../components/common/AppDialog';
 export { getServerSideProps } from '../../utils/ownerOnlyPage';
 
 type WS = { id: number; name: string; slug: string; role: string; is_personal: boolean; is_current: boolean };
@@ -15,6 +16,7 @@ type WS = { id: number; name: string; slug: string; role: string; is_personal: b
 export default function WorkspacesPage() {
     const router = useRouter();
     const { data: domainsData } = useFetchDomains(router);
+    const { promptDialog, Dialogs } = useAppDialogs();
     const [workspaces, setWorkspaces] = useState<WS[]>([]);
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
@@ -65,11 +67,15 @@ export default function WorkspacesPage() {
     const cancelEdit = () => { setEditingId(null); setEditName(''); };
 
     const deleteWorkspace = async (ws: WS) => {
-        const confirmName = prompt(`This will permanently delete "${ws.name}" and all its domains, keywords and posts.\n\nType the workspace name to confirm:`);
-        if (confirmName !== ws.name) {
-            if (confirmName !== null) toast.error('Name did not match — cancelled');
-            return;
-        }
+        const typed = await promptDialog({
+            title: `Delete "${ws.name}"?`,
+            description: 'This will permanently remove the workspace and all its domains, keywords and posts.\n\nType the workspace name below to confirm.',
+            label: 'Workspace name',
+            placeholder: ws.name,
+            confirmText: 'Delete workspace',
+            validate: (v) => (v.trim() === ws.name ? null : 'Name does not match')
+        });
+        if (typed !== ws.name) return;
         const res = await fetch(`/api/workspaces?id=${ws.id}`, { method: 'DELETE' });
         const data = await res.json();
         if (res.ok) {
@@ -93,6 +99,7 @@ export default function WorkspacesPage() {
     return (
         <DashboardLayout domains={domainsData?.domains || []}>
             <Head><title>Workspaces - SEO AI Agent</title></Head>
+            <Dialogs />
 
             <div className="max-w-4xl space-y-6">
                 <div>

@@ -1,7 +1,7 @@
 
 export const PLAN_LIMITS = {
-    free: { domains: 2, keywords: 9 },
-    basic: { domains: 3, keywords: 25 },
+    free: { domains: 1, keywords: 9 },
+    basic: { domains: 2, keywords: 25 },
     pro: { domains: 5, keywords: 500 },
     premium: { domains: 99999, keywords: 1000 },
     enterprise: { domains: 99999, keywords: 10000 }

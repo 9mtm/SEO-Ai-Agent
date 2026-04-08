@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../..
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { useFetchDomains } from '../../services/domains';
+import { useAppDialogs } from '../../components/common/AppDialog';
 export { getServerSideProps } from '../../utils/ownerOnlyPage';
 
 type Member = {
@@ -22,6 +23,7 @@ type Member = {
 export default function TeamPage() {
     const router = useRouter();
     const { data: domainsData } = useFetchDomains(router);
+    const { confirmDialog, Dialogs } = useAppDialogs();
     const [members, setMembers] = useState<Member[]>([]);
     const [pending, setPending] = useState<any[]>([]);
     const [email, setEmail] = useState('');
@@ -38,7 +40,13 @@ export default function TeamPage() {
     };
 
     const revokeInvite = async (id: number) => {
-        if (!confirm('Revoke this invitation?')) return;
+        const ok = await confirmDialog({
+            title: 'Revoke this invitation?',
+            description: 'The invitation link will stop working immediately. You can always send a new invite later.',
+            confirmText: 'Revoke invitation',
+            variant: 'danger'
+        });
+        if (!ok) return;
         const res = await fetch(`/api/workspaces/invitations/${id}`, { method: 'DELETE' });
         if (res.ok) { toast.success('Revoked'); loadMembers(); }
         else toast.error('Failed');
@@ -79,7 +87,13 @@ export default function TeamPage() {
     };
 
     const removeMember = async (id: number) => {
-        if (!confirm('Remove this member?')) return;
+        const ok = await confirmDialog({
+            title: 'Remove this member?',
+            description: 'They will immediately lose access to this workspace. You can invite them again later.',
+            confirmText: 'Remove member',
+            variant: 'danger'
+        });
+        if (!ok) return;
         try {
             const res = await fetch(`/api/workspaces/members?member_id=${id}`, { method: 'DELETE' });
             if (res.ok) { toast.success('Removed'); loadMembers(); }
@@ -101,6 +115,7 @@ export default function TeamPage() {
     return (
         <DashboardLayout domains={domainsData?.domains || []}>
             <Head><title>Team Members - SEO AI Agent</title></Head>
+            <Dialogs />
 
             <div className="max-w-4xl space-y-6">
                 <div>

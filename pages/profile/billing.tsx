@@ -132,7 +132,7 @@ const BillingPage: NextPage = () => {
             description: t('billing.planDesc.free'),
             price: { monthly: 0, yearly: 0, original: 0 },
             features: [
-                t('billing.features.domains', { count: 2 }),
+                t('billing.features.domain', { count: 1 }),
                 t('billing.features.keywords', { count: 9 }),
                 t('billing.features.updates'),
             ],
@@ -146,7 +146,7 @@ const BillingPage: NextPage = () => {
             description: t('billing.planDesc.basic'),
             price: { monthly: null, yearly: 29, original: 59 }, // Yearly only
             features: [
-                t('billing.features.domains', { count: 3 }),
+                t('billing.features.domains', { count: 2 }),
                 t('billing.features.keywords', { count: 25 }),
                 t('billing.features.weekly'),
                 t('billing.features.mcp')
