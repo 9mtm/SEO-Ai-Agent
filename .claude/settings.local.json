@@ -45,7 +45,10 @@
       "Bash(taskkill /F /PID 29224)",
       "Bash(cmd //c \"taskkill /F /PID 29224\")",
       "Bash(cmd //c \"npm run dev\")",
-      "Bash(cmd //c \"npx sequelize-cli db:migrate 2>&1\")"
+      "Bash(cmd //c \"npx sequelize-cli db:migrate 2>&1\")",
+      "Bash(npm run:*)",
+      "Bash(node_modules/.bin/sequelize-cli.cmd db:migrate:undo:all)",
+      "Bash(node_modules/.bin/sequelize-cli.cmd db:migrate)"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"
