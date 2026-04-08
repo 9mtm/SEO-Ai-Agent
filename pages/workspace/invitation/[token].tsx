@@ -34,6 +34,31 @@ export default function InvitationPage() {
                 if (invRes?.error) setError(invRes.error);
                 else setInvite(invRes.invitation);
                 if (userRes?.success && userRes?.user) setUser(userRes.user);
+
+                // Auto-accept: if the user is already logged in with the matching
+                // email, accept the invitation immediately — no extra click needed.
+                const u = userRes?.user;
+                const inv = invRes?.invitation;
+                if (
+                    u &&
+                    inv &&
+                    !invRes?.error &&
+                    u.email?.toLowerCase() === inv.email?.toLowerCase()
+                ) {
+                    setAccepting(true);
+                    fetch(`/api/workspaces/invitation/${token}`, { method: 'POST' })
+                        .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
+                        .then(({ ok, data }) => {
+                            if (ok) {
+                                setDone(true);
+                                setTimeout(() => { window.location.href = '/'; }, 1200);
+                            } else {
+                                setError(data?.error || 'Failed to accept invitation.');
+                            }
+                        })
+                        .catch(() => setError('Network error while accepting.'))
+                        .finally(() => setAccepting(false));
+                }
             })
             .catch(() => setError('Failed to load invitation.'))
             .finally(() => setLoading(false));

@@ -4,7 +4,9 @@ import verifyUser from '../../utils/verifyUser';
 import allScrapers from '../../scrapers/index';
 import User from '../../database/models/user';
 import FailedJob from '../../database/models/failedJob';
+import Workspace from '../../database/models/workspace';
 import db from '../../database/database';
+import { getWorkspaceContext } from '../../utils/workspaceContext';
 
 type SettingsGetResponse = {
    settings?: object | null,
@@ -29,6 +31,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 const getSettings = async (req: NextApiRequest, res: NextApiResponse<SettingsGetResponse>, userId?: number) => {
    const settings = await getAppSettings(userId);
    if (settings) {
+      // Team-member GSC inheritance: if the current user is NOT the owner of
+      // their active workspace, expose the owner's Google Search Console
+      // connection status instead of the member's (members don't connect
+      // their own Google account — they inherit the workspace's).
+      try {
+         const ctx = await getWorkspaceContext(req, res);
+         if (ctx && ctx.role !== 'owner') {
+            const ws: any = await Workspace.findByPk(ctx.workspaceId);
+            if (ws?.owner_user_id && ws.owner_user_id !== userId) {
+               const owner: any = await User.findByPk(ws.owner_user_id);
+               const ownerHasGsc = !!(owner?.google_refresh_token || owner?.google_access_token);
+               (settings as any).google_connected = ownerHasGsc;
+               (settings as any).search_console_integrated = ownerHasGsc;
+               (settings as any).is_team_member = true;
+               (settings as any).workspace_owner_id = ws.owner_user_id;
+            }
+         }
+      } catch (e) {
+         console.error('[settings] team-member GSC inheritance failed:', e);
+      }
       const version = process.env.APP_VERSION;
       return res.status(200).json({ settings: { ...settings, version } });
    }

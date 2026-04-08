@@ -173,14 +173,14 @@ const SingleDomain: NextPage = () => {
                 />
             </CSSTransition>
 
-            <CSSTransition in={showManageCompetitors} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
-                {activDomain && (
+            {activDomain && (
+                <CSSTransition in={showManageCompetitors} timeout={300} classNames="modal_anim" unmountOnExit mountOnEnter>
                     <ManageCompetitors
                         domain={activDomain}
                         closeModal={() => setShowManageCompetitors(false)}
                     />
-                )}
-            </CSSTransition>
+                </CSSTransition>
+            )}
 
 
         </DashboardLayout>

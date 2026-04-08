@@ -388,6 +388,104 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         return res.status(500).json({ success: false, error: 'AI API not configured' });
                     }
 
+                    // ---------------------------------------------------------
+                    // Auto-Save focus_keywords + Auto-Add to Tracking immediately
+                    // after domain creation (Step 1). The AI already returned
+                    // strong keywords + target country, so we don't need to wait
+                    // for the user to reach Step 2.5.
+                    // ---------------------------------------------------------
+                    try {
+                        const targetCountry = (
+                            (aiData as any)?.target_country ||
+                            data.target_country ||
+                            'US'
+                        ) as string;
+
+                        // Refetch the just-created/updated domain
+                        const domainJustCreated = await Domain.findOne({
+                            where: { domain: domainUrl, user_id: userId },
+                            order: [['ID', 'DESC']]
+                        });
+
+                        if (domainJustCreated) {
+                            const hasAnyKw =
+                                (suggestedKeywords.high?.length || 0) +
+                                (suggestedKeywords.medium?.length || 0) +
+                                (suggestedKeywords.low?.length || 0) > 0;
+
+                            if (hasAnyKw) {
+                                await domainJustCreated.update({
+                                    focus_keywords: suggestedKeywords,
+                                    target_country: targetCountry,
+                                    business_name: aiData.businessName || undefined,
+                                    niche: aiData.niche || undefined,
+                                    description: aiData.description || undefined,
+                                });
+
+                                const allFocusKeywords = [
+                                    ...(suggestedKeywords.high || []),
+                                    ...(suggestedKeywords.medium || []),
+                                    ...(suggestedKeywords.low || []),
+                                ]
+                                    .map((k: any) => (typeof k === 'string' ? k.trim() : ''))
+                                    .filter((k: string) => k !== '');
+
+                                if (allFocusKeywords.length > 0) {
+                                    // Skip duplicates already tracked
+                                    const existing = await Keyword.findAll({
+                                        where: {
+                                            user_id: userId,
+                                            domain: domainJustCreated.domain,
+                                            country: targetCountry,
+                                            device: 'desktop',
+                                        },
+                                        attributes: ['keyword'],
+                                    });
+                                    const existingSet = new Set(
+                                        existing.map((k: any) => String(k.keyword).toLowerCase())
+                                    );
+                                    const toAdd = allFocusKeywords.filter(
+                                        k => !existingSet.has(k.toLowerCase())
+                                    );
+
+                                    // Enforce plan limit
+                                    const planUser = await User.findByPk(userId);
+                                    const kwLimit = getPlanLimits(planUser?.subscription_plan || 'free').keywords;
+                                    const currentKwCount = await Keyword.count({ where: { user_id: userId } });
+                                    const capacity = Math.max(0, kwLimit - currentKwCount);
+                                    const toAddCapped = toAdd.slice(0, capacity);
+
+                                    if (toAddCapped.length > 0) {
+                                        const keywordsToAdd = toAddCapped.map((k: string) => ({
+                                            keyword: k,
+                                            device: 'desktop',
+                                            country: targetCountry,
+                                            domain: domainJustCreated.domain,
+                                            user_id: userId,
+                                            workspace_id: (domainJustCreated as any).workspace_id || null,
+                                            tags: JSON.stringify(['Target']),
+                                            position: 0,
+                                            updating: true,
+                                            history: JSON.stringify({}),
+                                            url: '',
+                                            sticky: false,
+                                            added: new Date().toJSON(),
+                                            lastUpdated: new Date().toJSON(),
+                                        }));
+
+                                        const newKeywords = await Keyword.bulkCreate(keywordsToAdd);
+                                        const appSettings = await getAppSettings(userId);
+                                        refreshAndUpdateKeywords(newKeywords, appSettings);
+                                        console.log(`[ONBOARDING] ✅ Auto-added ${newKeywords.length} AI keywords to tracking for ${domainJustCreated.domain}`);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (autoAddErr: any) {
+                        console.error('[ONBOARDING] ⚠️ Auto-add keywords after Step 1 failed:', autoAddErr?.message);
+                        // Do not fail onboarding — keywords can still be saved in Step 2.5
+                    }
+
                     return res.status(200).json({
                         success: true,
                         aiData,
@@ -466,6 +564,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                                 country: targetCountry,
                                 domain: domain.domain, // Ensure domain is available
                                 user_id: userId,
+                                workspace_id: (domain as any).workspace_id || null,
                                 tags: JSON.stringify(['Target']), // Add "Target" tag
                                 position: 0,
                                 updating: true,

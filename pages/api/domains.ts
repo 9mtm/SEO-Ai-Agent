@@ -9,6 +9,8 @@ import getdomainStats from '../../utils/domains';
 import verifyUser from '../../utils/verifyUser';
 import { getWorkspaceContext } from '../../utils/workspaceContext';
 import { checkSerchConsoleIntegration, removeLocalSCData } from '../../utils/searchConsole';
+import refreshAndUpdateKeywords from '../../utils/refresh';
+import { getAppSettings } from './settings';
 
 type DomainsGetRes = {
    domains: DomainType[]
@@ -427,6 +429,76 @@ export const updateDomain = async (
          console.log('[DEBUG] Domain updates payload:', updates);
          domainToUpdate.set(updates);
          await domainToUpdate.save();
+
+         // ---------------------------------------------------------
+         // Auto-Add new focus_keywords to Tracking (Desktop, Tag: Target)
+         // Mirrors onboarding Step 2.5 behavior so keywords edited via
+         // the Domain Settings page also flow into the tracking table.
+         // ---------------------------------------------------------
+         if (focus_keywords !== undefined && domainToUpdate.domain) {
+            try {
+               const targetCountry = (req.body.target_country || domainToUpdate.target_country || 'US') as string;
+               const fk: any = focus_keywords || {};
+               const allFocusKeywords: string[] = [
+                  ...(fk.high || []),
+                  ...(fk.medium || []),
+                  ...(fk.low || []),
+               ]
+                  .map((k: any) => (typeof k === 'string' ? k.trim() : ''))
+                  .filter((k: string) => k !== '');
+
+               if (allFocusKeywords.length > 0) {
+                  // Skip keywords that already exist for this domain+country+device
+                  const existing = await Keyword.findAll({
+                     where: {
+                        user_id: verifyResult.userId,
+                        domain: domainToUpdate.domain,
+                        country: targetCountry,
+                        device: 'desktop',
+                     },
+                     attributes: ['keyword'],
+                  });
+                  const existingSet = new Set(existing.map((k: any) => String(k.keyword).toLowerCase()));
+                  const toAdd = allFocusKeywords.filter(k => !existingSet.has(k.toLowerCase()));
+
+                  if (toAdd.length > 0) {
+                     // Enforce plan limits
+                     const user = await User.findByPk(verifyResult.userId);
+                     const limit = getPlanLimits(user?.subscription_plan || 'free').keywords;
+                     const currentCount = await Keyword.count({ where: { user_id: verifyResult.userId } });
+
+                     if (currentCount + toAdd.length > limit) {
+                        console.warn(`[WARN] Focus keywords auto-add skipped: plan limit ${limit}, current ${currentCount}, adding ${toAdd.length}`);
+                     } else {
+                        const keywordsToAdd = toAdd.map((k: string) => ({
+                           keyword: k,
+                           device: 'desktop',
+                           country: targetCountry,
+                           domain: domainToUpdate.domain,
+                           user_id: verifyResult.userId,
+                           workspace_id: (domainToUpdate as any).workspace_id || null,
+                           tags: JSON.stringify(['Target']),
+                           position: 0,
+                           updating: true,
+                           history: JSON.stringify({}),
+                           url: '',
+                           sticky: false,
+                           added: new Date().toJSON(),
+                           lastUpdated: new Date().toJSON(),
+                        }));
+
+                        const newKeywords = await Keyword.bulkCreate(keywordsToAdd);
+                        const settings = await getAppSettings(verifyResult.userId);
+                        refreshAndUpdateKeywords(newKeywords, settings);
+                        console.log(`[INFO] Auto-added ${newKeywords.length} focus keywords to tracking from settings page.`);
+                     }
+                  }
+               }
+            } catch (err) {
+               console.error('[ERROR] Failed to auto-add focus keywords from settings:', err);
+               // Do not fail the request
+            }
+         }
       }
       return res.status(200).json({ domain: domainToUpdate });
    } catch (error) {

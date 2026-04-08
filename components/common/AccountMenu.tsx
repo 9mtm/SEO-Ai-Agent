@@ -200,6 +200,9 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                         <img
                             src={userInfo.picture}
                             alt={userInfo.name}
+                            referrerPolicy="no-referrer"
+                            crossOrigin="anonymous"
+                            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
                             className="w-8 h-8 rounded-full border border-neutral-200"
                         />
                     ) : (
