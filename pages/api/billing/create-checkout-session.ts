@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import stripe from '../../../utils/stripe';
 import verifyUser from '../../../utils/verifyUser';
+import { getWorkspaceContext } from '../../../utils/workspaceContext';
 import User from '../../../database/models/user';
 import InvoiceDetail from '../../../database/models/invoiceDetail';
 import sequelize from '../../../database/database';
@@ -27,6 +28,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
+
+        // Determine which workspace this subscription applies to
+        const ctx = await getWorkspaceContext(req, res);
+        const workspaceId = ctx?.workspaceId || null;
 
         // 0. Update Invoice Details if provided
         if (invoiceDetails) {
@@ -87,11 +92,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             metadata: {
                 userId: user.id.toString(),
                 planId: planId,
+                workspaceId: workspaceId ? String(workspaceId) : '',
             },
             subscription_data: {
                 metadata: {
                     userId: user.id.toString(),
                     planId: planId,
+                    workspaceId: workspaceId ? String(workspaceId) : '',
                 }
             },
             allow_promotion_codes: true,

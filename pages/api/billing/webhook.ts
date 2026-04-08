@@ -74,13 +74,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         }
 
                         const planId = session.metadata?.planId;
+                        const workspaceIdRaw = session.metadata?.workspaceId;
                         if (planId) {
                             user.subscription_plan = planId;
+                            // Apply the plan to the specific workspace if we captured it at checkout.
+                            // This lets each workspace carry its own plan instead of inheriting from the owner.
+                            if (workspaceIdRaw) {
+                                try {
+                                    const Workspace = (await import('../../../database/models/workspace')).default;
+                                    const ws: any = await Workspace.findByPk(parseInt(workspaceIdRaw));
+                                    if (ws) { await ws.update({ plan: planId }); }
+                                } catch (e) { console.error('Failed to update workspace plan', e); }
+                            }
                         }
 
                         await invoiceDetail.save();
                         await user.save();
-                        console.log(`User ${userId} subscription updated to ${subscriptionId}`);
+                        console.log(`User ${userId} subscription updated to ${subscriptionId} (workspace=${workspaceIdRaw || 'n/a'})`);
                     }
                 }
                 break;

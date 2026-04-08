@@ -45,8 +45,7 @@ export default function SetupProgress() {
             <div className="p-3 space-y-3">
                 <StepItem label="Connect Account & Site" done={status.steps.gsc_domain} active={!status.steps.gsc_domain} />
                 <StepItem label="Scraper Configuration" done={status.steps.scraper} active={status.steps.gsc_domain && !status.steps.scraper} />
-                <StepItem label="Platform Connections" done={status.steps.platform} active={status.steps.scraper && !status.steps.platform} />
-                <StepItem label="API & MCP Setup" done={status.steps.mcp} active={status.steps.platform && !status.steps.mcp} />
+                <StepItem label="Connect AI Assistant" done={status.steps.ai_connected} active={status.steps.scraper && !status.steps.ai_connected} />
             </div>
 
             <div className="p-3 pt-0">

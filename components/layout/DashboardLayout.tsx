@@ -21,6 +21,7 @@ import {
   Shield,
 } from 'lucide-react';
 import AccountMenu from '../common/AccountMenu';
+import WorkspaceIndicator from '../common/WorkspaceIndicator';
 import DomainSelector from '../domains/DomainSelector';
 import SetupProgress from '../setup/SetupProgress';
 import { useLanguage } from '../../context/LanguageContext';
@@ -71,8 +72,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       { name: 'Search Console', href: '/profile/search-console', icon: Search },
       { name: t('sidebar.notifications'), href: '/profile/notifications', icon: Bell },
       { name: t('sidebar.billing'), href: '/profile/billing', icon: CreditCard },
-      { name: t('sidebar.apiKeys'), href: '/profile/api-keys', icon: Key },
-      { name: 'OAuth Apps', href: '/profile/oauth-apps', icon: Shield },
+      { name: 'Connected Apps', href: '/profile/oauth-apps', icon: Shield },
       { name: t('sidebar.scraper'), href: '/profile/scraper', icon: Settings }
     );
   } else {
@@ -183,7 +183,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               </Link>
             )}
 
-            <div className="flex-1 lg:flex-none"></div>
+            <div className="flex items-center gap-3 ml-4">
+              {!hideSidebar && <WorkspaceIndicator />}
+            </div>
+
+            <div className="flex-1"></div>
 
             <div className="flex items-center gap-3">
               {/* Account Menu in Header - Using the same component */}

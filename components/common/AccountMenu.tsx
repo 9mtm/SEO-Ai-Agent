@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Settings, LogOut, Plus, Globe, User, Users, Building2, Check, Key } from 'lucide-react';
+import { Settings, LogOut, Plus, Globe, User, Users, Building2, Check, Key, Search, Bell, CreditCard, Shield, Database } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -219,51 +219,6 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                             <p className="text-xs text-neutral-500 truncate">{userInfo.email}</p>
                         </div>
 
-                        {/* Workspace Switcher — list style */}
-                        {workspaces.length > 0 && (
-                            <div className="border-b border-neutral-200">
-                                <div className="px-4 pt-3 pb-2 text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
-                                    Workspaces
-                                </div>
-                                <div className="max-h-56 overflow-y-auto px-2 pb-2 space-y-0.5">
-                                    {workspaces.map((ws) => (
-                                        <button
-                                            key={ws.id}
-                                            onClick={() => !ws.is_current && switchWorkspace(ws.id)}
-                                            disabled={ws.is_current || switchingWs === ws.id}
-                                            className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-md text-sm transition-colors ${ws.is_current
-                                                ? 'bg-blue-50 text-blue-700 cursor-default'
-                                                : 'text-neutral-700 hover:bg-neutral-100 cursor-pointer'
-                                                }`}
-                                        >
-                                            <div className="flex items-center gap-2.5 min-w-0">
-                                                <div className={`w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 ${ws.is_current ? 'bg-blue-100' : 'bg-neutral-100'}`}>
-                                                    <Building2 className={`h-3.5 w-3.5 ${ws.is_current ? 'text-blue-600' : 'text-neutral-500'}`} />
-                                                </div>
-                                                <div className="flex flex-col items-start min-w-0">
-                                                    <span className="truncate font-medium leading-tight">{ws.name}</span>
-                                                    <span className="text-[10px] text-neutral-400 uppercase tracking-wide leading-tight mt-0.5">{ws.role}</span>
-                                                </div>
-                                            </div>
-                                            {ws.is_current && <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />}
-                                        </button>
-                                    ))}
-                                </div>
-                                <div className="px-2 pb-2 pt-1 border-t border-neutral-100">
-                                    <Link
-                                        href="/profile/workspaces"
-                                        onClick={() => setIsMenuOpen(false)}
-                                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors"
-                                    >
-                                        <div className="w-7 h-7 rounded-md bg-blue-50 border border-dashed border-blue-300 flex items-center justify-center flex-shrink-0">
-                                            <Plus className="h-3.5 w-3.5 text-blue-600" />
-                                        </div>
-                                        <span>Create new workspace</span>
-                                    </Link>
-                                </div>
-                            </div>
-                        )}
-
                         <div className="py-1">
                             <Link
                                 href="/profile"
@@ -274,6 +229,14 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                                 <span>{t('sidebar.profile')}</span>
                             </Link>
                             <Link
+                                href="/profile/workspaces"
+                                onClick={() => setIsMenuOpen(false)}
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                            >
+                                <Building2 className="h-4 w-4 text-neutral-500" />
+                                <span>Workspaces</span>
+                            </Link>
+                            <Link
                                 href="/profile/team"
                                 onClick={() => setIsMenuOpen(false)}
                                 className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
@@ -282,20 +245,44 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                                 <span>Team Members</span>
                             </Link>
                             <Link
-                                href="/profile/oauth-apps"
+                                href="/profile/search-console"
                                 onClick={() => setIsMenuOpen(false)}
                                 className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
                             >
-                                <Key className="h-4 w-4 text-neutral-500" />
-                                <span>OAuth Apps</span>
+                                <Search className="h-4 w-4 text-neutral-500" />
+                                <span>Search Console</span>
                             </Link>
                             <Link
                                 href="/profile/notifications"
                                 onClick={() => setIsMenuOpen(false)}
                                 className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
                             >
-                                <Settings className="h-4 w-4 text-neutral-500" />
+                                <Bell className="h-4 w-4 text-neutral-500" />
                                 <span>{t('sidebar.notifications')}</span>
+                            </Link>
+                            <Link
+                                href="/profile/billing"
+                                onClick={() => setIsMenuOpen(false)}
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                            >
+                                <CreditCard className="h-4 w-4 text-neutral-500" />
+                                <span>{t('sidebar.billing')}</span>
+                            </Link>
+                            <Link
+                                href="/profile/oauth-apps"
+                                onClick={() => setIsMenuOpen(false)}
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                            >
+                                <Shield className="h-4 w-4 text-neutral-500" />
+                                <span>Connected Apps</span>
+                            </Link>
+                            <Link
+                                href="/profile/scraper"
+                                onClick={() => setIsMenuOpen(false)}
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                            >
+                                <Database className="h-4 w-4 text-neutral-500" />
+                                <span>{t('sidebar.scraper')}</span>
                             </Link>
                         </div>
 

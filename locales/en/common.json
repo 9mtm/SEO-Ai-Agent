@@ -1168,6 +1168,20 @@
     }
   },
   "mcp": {
+    "autoConnect": {
+      "heroCta": "Connect Your AI",
+      "heroSubtext": "No tokens, no copying — paste one URL in Claude Desktop and approve in your browser.",
+      "claudeTitle": "Connect Claude Desktop (OAuth — no API key)",
+      "cursorTitle": "Connect Cursor (OAuth — no API key)",
+      "chatgptTitle": "Connect ChatGPT (OAuth — no API key)",
+      "windsurfTitle": "Connect Windsurf (OAuth — no API key)",
+      "zedTitle": "Connect Zed (OAuth — no API key)",
+      "apiTitle": "Direct HTTP / JSON-RPC access",
+      "doneTitle": "You're done — authorize once in your browser",
+      "doneText": "On first use, your AI assistant will open a tab on our site, ask you to approve the connection, and redirect back automatically. After that every call is handled by the access token it received.",
+      "noKeyNeeded": "No API key needed",
+      "oauthAutomatic": "OAuth 2.0 (automatic)"
+    },
     "meta": {
       "title": "MCP SEO - Connect ChatGPT & Claude Desktop",
       "description": "Integrate SEO Agent with ChatGPT and Claude Desktop using MCP API. Track rankings, analyze keywords, and generate content directly from your AI chat."

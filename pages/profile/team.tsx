@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
-import { Users, Mail, Trash2, Copy } from 'lucide-react';
+import { Users, Mail, Trash2, Copy, Clock, RefreshCw } from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -22,6 +22,7 @@ export default function TeamPage() {
     const router = useRouter();
     const { data: domainsData } = useFetchDomains(router);
     const [members, setMembers] = useState<Member[]>([]);
+    const [pending, setPending] = useState<any[]>([]);
     const [email, setEmail] = useState('');
     const [role, setRole] = useState<'admin' | 'editor' | 'viewer'>('editor');
     const [loading, setLoading] = useState(false);
@@ -31,7 +32,21 @@ export default function TeamPage() {
             const res = await fetch('/api/workspaces/members');
             const data = await res.json();
             if (data.members) setMembers(data.members);
+            if (data.pending) setPending(data.pending);
         } catch (e) { }
+    };
+
+    const revokeInvite = async (id: number) => {
+        if (!confirm('Revoke this invitation?')) return;
+        const res = await fetch(`/api/workspaces/invitations/${id}`, { method: 'DELETE' });
+        if (res.ok) { toast.success('Revoked'); loadMembers(); }
+        else toast.error('Failed');
+    };
+
+    const resendInvite = async (id: number) => {
+        const res = await fetch(`/api/workspaces/invitations/${id}`, { method: 'POST' });
+        if (res.ok) toast.success('Email resent');
+        else { const d = await res.json().catch(() => ({})); toast.error(d.error || 'Failed'); }
     };
 
     useEffect(() => { loadMembers(); }, []);
@@ -123,6 +138,64 @@ export default function TeamPage() {
                         </div>
                     </CardContent>
                 </Card>
+
+                {/* Pending invitations */}
+                {pending.length > 0 && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Clock className="h-5 w-5 text-amber-600" /> Pending invitations ({pending.length})
+                            </CardTitle>
+                            <CardDescription>These people were invited but haven't accepted yet.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="divide-y">
+                                {pending.map((p) => {
+                                    const expired = new Date(p.expires_at) < new Date();
+                                    return (
+                                        <div key={p.id} className="flex items-center justify-between py-3 gap-3">
+                                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                                                <div className="w-10 h-10 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0">
+                                                    <Mail className="h-4 w-4" />
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <div className="font-semibold text-sm truncate">{p.email}</div>
+                                                    <div className="text-xs text-neutral-500 flex items-center gap-2">
+                                                        <span className="capitalize">{p.role}</span>
+                                                        <span>•</span>
+                                                        {expired ? (
+                                                            <span className="text-red-600 font-semibold">Expired</span>
+                                                        ) : (
+                                                            <span>Expires {new Date(p.expires_at).toLocaleDateString()}</span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-1 flex-shrink-0">
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    title="Copy link"
+                                                    onClick={() => { navigator.clipboard.writeText(p.accept_url); toast.success('Link copied'); }}
+                                                >
+                                                    <Copy className="h-4 w-4" />
+                                                </Button>
+                                                {!expired && (
+                                                    <Button variant="outline" size="sm" title="Resend email" onClick={() => resendInvite(p.id)}>
+                                                        <RefreshCw className="h-4 w-4" />
+                                                    </Button>
+                                                )}
+                                                <Button variant="ghost" size="sm" title="Revoke" onClick={() => revokeInvite(p.id)}>
+                                                    <Trash2 className="h-4 w-4 text-red-600" />
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
 
                 <Card>
                     <CardHeader>

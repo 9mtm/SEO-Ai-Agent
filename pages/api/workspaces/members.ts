@@ -12,7 +12,10 @@ import db from '../../../database/database';
 import { requireWorkspace } from '../../../utils/workspaceContext';
 import WorkspaceMember from '../../../database/models/workspace_member';
 import WorkspaceInvitation from '../../../database/models/workspace_invitation';
+import Workspace from '../../../database/models/workspace';
 import User from '../../../database/models/user';
+import { sendMail } from '../../../utils/mailer';
+import { buildInvitationEmail } from '../../../utils/emails/invitationEmail';
 
 const ALLOWED_ROLES = ['admin', 'editor', 'viewer'] as const;
 
@@ -26,6 +29,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             where: { workspace_id: ctx.workspaceId },
             include: [{ model: User }]
         });
+        // Also return pending invitations so the team page can show them
+        const pending: any = await WorkspaceInvitation.findAll({
+            where: { workspace_id: ctx.workspaceId, status: 'pending' },
+            order: [['createdAt', 'DESC']]
+        });
         return res.status(200).json({
             members: members.map((m: any) => ({
                 id: m.id,
@@ -34,7 +42,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 status: m.status,
                 joined_at: m.joined_at,
                 user: m.user ? { id: m.user.id, name: m.user.name, email: m.user.email, picture: m.user.picture } : null
-            }))
+            })),
+            pending: pending.map((p: any) => {
+                const o = p.get({ plain: true });
+                return {
+                    id: o.id,
+                    email: o.email,
+                    role: o.role,
+                    expires_at: o.expires_at,
+                    created_at: o.createdAt,
+                    accept_url: `${process.env.NEXT_PUBLIC_APP_URL || ''}/workspace/invitation/${o.token}`
+                };
+            })
         });
     }
 
@@ -70,10 +89,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const acceptUrl = `${process.env.NEXT_PUBLIC_APP_URL || ''}/workspace/invitation/${token}`;
 
-        // TODO: send email via existing SMTP helper. For now just return the token+URL.
+        // Fire-and-forget email send (don't block the API response on SMTP)
+        let emailSent = false;
+        let emailError: string | null = null;
+        try {
+            const inviter: any = await User.findByPk(ctx.userId);
+            const ws: any = await Workspace.findByPk(ctx.workspaceId);
+            const { subject, html, text } = await buildInvitationEmail({
+                inviteeEmail: email,
+                inviterName: inviter?.name || 'A teammate',
+                workspaceName: ws?.name || 'SEO AI Agent Workspace',
+                role,
+                acceptUrl
+            });
+            await sendMail({ to: email, subject, html, text });
+            emailSent = true;
+        } catch (err: any) {
+            console.error('[Invitation Email] failed:', err?.message || err);
+            emailError = err?.message || 'Failed to send email';
+        }
+
         return res.status(201).json({
             invitation: { id: invite.id, email, role, expires_at: expires, token },
-            accept_url: acceptUrl
+            accept_url: acceptUrl,
+            email_sent: emailSent,
+            email_error: emailError
         });
     }
 

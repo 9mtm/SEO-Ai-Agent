@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import { CheckCircle2, Circle, ArrowRight, Settings, Globe, Database, Key, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, Circle, ArrowRight, Settings, Globe, Database, Key, ShieldCheck, Bot } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { useFetchDomains } from '../../services/domains';
 
@@ -58,24 +58,14 @@ export default function SetupPage() {
             required: true
         },
         {
-            id: 'platform',
-            title: 'Platform Connections',
-            desc: 'Connect WordPress, LinkedIn, or other platforms for auto-publishing.',
-            done: status?.steps?.platform,
-            icon: <Settings className="w-6 h-6 text-orange-600" />,
-            action: () => router.push('/profile/connections'),
-            btnText: 'Connect Platforms',
-            required: false
-        },
-        {
-            id: 'mcp',
-            title: 'API & MCP Setup',
-            desc: 'Generate API Keys for AI Agents and programmatic access.',
-            done: status?.steps?.mcp,
-            icon: <Key className="w-6 h-6 text-indigo-600" />,
-            action: () => router.push('/profile/api-keys'),
-            btnText: 'Manage API Keys',
-            required: false
+            id: 'ai_connected',
+            title: 'Connect Your AI Assistant',
+            desc: 'Add your MCP connection in Claude Desktop, ChatGPT, Cursor or any MCP-compatible AI. Setup completes automatically once your first successful AI call arrives.',
+            done: status?.steps?.ai_connected,
+            icon: <Bot className="w-6 h-6 text-indigo-600" />,
+            action: () => router.push('/mcp-seo'),
+            btnText: 'View MCP Instructions',
+            required: true
         }
     ];
 

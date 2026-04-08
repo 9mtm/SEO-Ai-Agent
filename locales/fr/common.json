@@ -1169,6 +1169,20 @@
     }
   },
   "mcp": {
+    "autoConnect": {
+      "heroCta": "Connecter votre IA",
+      "heroSubtext": "Aucun jeton, aucun copier-coller — collez une seule URL dans Claude Desktop et validez dans votre navigateur.",
+      "claudeTitle": "Connecter Claude Desktop (OAuth — sans clé API)",
+      "cursorTitle": "Connecter Cursor (OAuth — sans clé API)",
+      "chatgptTitle": "Connecter ChatGPT (OAuth — sans clé API)",
+      "windsurfTitle": "Connecter Windsurf (OAuth — sans clé API)",
+      "zedTitle": "Connecter Zed (OAuth — sans clé API)",
+      "apiTitle": "Accès direct HTTP / JSON-RPC",
+      "doneTitle": "C'est terminé — autorisez une fois dans votre navigateur",
+      "doneText": "À la première utilisation, votre assistant IA ouvrira un onglet sur notre site, vous demandera d'approuver la connexion, puis vous renverra automatiquement. Ensuite, chaque appel est géré par le jeton d'accès reçu.",
+      "noKeyNeeded": "Aucune clé API nécessaire",
+      "oauthAutomatic": "OAuth 2.0 (automatique)"
+    },
     "meta": {
       "title": "MCP SEO - Connectez ChatGPT & Claude Desktop",
       "description": "Intégrez SEO Agent avec ChatGPT et Claude Desktop via l'API MCP. Suivez les classements, analysez les mots-clés et générez du contenu directement depuis votre chat IA."

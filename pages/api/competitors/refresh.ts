@@ -5,6 +5,7 @@ import Keyword from '../../../database/models/keyword';
 import Domain from '../../../database/models/domain';
 import { getAppSettings } from '../settings';
 import verifyUser from '../../../utils/verifyUser';
+import { getWorkspaceContext } from '../../../utils/workspaceContext';
 import { scrapeKeywordFromGoogle } from '../../../utils/scraper';
 
 type CompetitorsRefreshRes = {
@@ -32,10 +33,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     try {
-        // Get domain and competitors
-        const domain = await Domain.findOne({
-            where: { domain: domainName, user_id: userId }
-        });
+        // Resolve workspace context (falls back to user_id for legacy calls)
+        const ctx = await getWorkspaceContext(req, res);
+        const domainWhere: any = { domain: domainName };
+        const kwWhere: any = { domain: domainName };
+        if (ctx) {
+            if (!ctx.can.write) return res.status(403).json({ error: 'No write access in this workspace' });
+            domainWhere.workspace_id = ctx.workspaceId;
+            kwWhere.workspace_id = ctx.workspaceId;
+        } else if (userId) {
+            domainWhere.user_id = userId;
+            kwWhere.user_id = userId;
+        }
+
+        const domain = await Domain.findOne({ where: domainWhere });
 
         if (!domain) {
             return res.status(404).json({ error: 'Domain not found' });
@@ -48,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         }
 
         // Get keywords - either single keyword or all keywords
-        const whereClause: any = { domain: domainName, user_id: userId };
+        const whereClause: any = { ...kwWhere };
         if (keywordId) {
             whereClause.ID = keywordId;
         }

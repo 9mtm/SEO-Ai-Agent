@@ -4,8 +4,6 @@ import db from '../../../database/database';
 import verifyUser from '../../../utils/verifyUser';
 import User from '../../../database/models/user';
 import Domain from '../../../database/models/domain';
-import PlatformIntegration from '../../../database/models/platformIntegration';
-import ApiKey from '../../../database/models/apiKey';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     await db.sync();
@@ -22,28 +20,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         const domainCount = await Domain.count({ where: { user_id: userId } });
-        const platformCount = await PlatformIntegration.count({ where: { user_id: userId } });
-        const apiKeyCount = await ApiKey.count({ where: { user_id: userId, revoked: false } });
 
         const hasGsc = !!(user.google_refresh_token || user.google_access_token);
         const hasScraper = user.scraper_type && user.scraper_type !== 'none';
         const hasDomain = domainCount > 0;
-        const hasPlatform = platformCount > 0;
-        const hasMcp = apiKeyCount > 0;
 
-        // Calculate progress
-        // Total steps: 4 (GSC+Domain is Step 1, Scraper Step 2, Platform Step 3, MCP Step 4)
-        // Step 1: 25% (Requires GSC AND Domain?) Or GSC is one, Domain is part of it.
-        // User said: "Step 1: Connect account... Step 2: Connect GSC and Add Site".
-        // Let's split into atomic checks.
+        // Detect whether the user has successfully connected an external AI
+        // (Claude Desktop / Cursor / ChatGPT) via MCP. A successful connection
+        // means at least ONE MCP-triggered sync or tool call has landed for any
+        // of their domains. We look in gsc_sync_log for trigger_source='mcp'.
+        const [[mcpRow]]: any = await db.query(
+            `SELECT COUNT(*) n FROM gsc_sync_log gsl
+             INNER JOIN domain d ON d.ID = gsl.domain_id
+             WHERE d.user_id = ? AND gsl.trigger_source IN ('mcp','oauth')
+               AND gsl.status = 'success'`,
+            { replacements: [userId] }
+        );
+        const hasMcpConnected = Number(mcpRow?.n) > 0;
 
+        // 3-step setup: GSC+Domain, Scraper, Connect AI (MCP)
         let completedSteps = 0;
-        const totalSteps = 4;
-
+        const totalSteps = 3;
         if (hasGsc && hasDomain) completedSteps++;
         if (hasScraper) completedSteps++;
-        if (hasPlatform) completedSteps++;
-        if (hasMcp) completedSteps++;
+        if (hasMcpConnected) completedSteps++;
 
         const percentage = Math.round((completedSteps / totalSteps) * 100);
 
@@ -52,8 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             steps: {
                 gsc_domain: hasGsc && hasDomain,
                 scraper: hasScraper,
-                platform: hasPlatform,
-                mcp: hasMcp,
+                ai_connected: hasMcpConnected,
                 details: {
                     has_gsc: hasGsc,
                     domain_count: domainCount

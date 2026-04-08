@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
-import { Building2, Plus, Check, Pencil, X } from 'lucide-react';
+import { Building2, Plus, Check, Pencil, X, Trash2 } from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -62,6 +62,23 @@ export default function WorkspacesPage() {
     };
 
     const cancelEdit = () => { setEditingId(null); setEditName(''); };
+
+    const deleteWorkspace = async (ws: WS) => {
+        const confirmName = prompt(`This will permanently delete "${ws.name}" and all its domains, keywords and posts.\n\nType the workspace name to confirm:`);
+        if (confirmName !== ws.name) {
+            if (confirmName !== null) toast.error('Name did not match — cancelled');
+            return;
+        }
+        const res = await fetch(`/api/workspaces?id=${ws.id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (res.ok) {
+            toast.success('Workspace deleted');
+            if (ws.is_current) window.location.reload();
+            else load();
+        } else {
+            toast.error(data.error || 'Failed');
+        }
+    };
 
     const switchTo = async (id: number) => {
         const res = await fetch('/api/workspaces/switch', {
@@ -161,7 +178,7 @@ export default function WorkspacesPage() {
                                             </div>
                                         </div>
                                         {!isEditing && (
-                                            <div className="flex-shrink-0">
+                                            <div className="flex items-center gap-2 flex-shrink-0">
                                                 {ws.is_current ? (
                                                     <span className="flex items-center gap-1 text-sm text-green-600 font-semibold">
                                                         <Check className="h-4 w-4" /> Current
@@ -169,6 +186,16 @@ export default function WorkspacesPage() {
                                                 ) : (
                                                     <Button variant="outline" size="sm" onClick={() => switchTo(ws.id)}>
                                                         Switch
+                                                    </Button>
+                                                )}
+                                                {ws.role === 'owner' && !ws.is_personal && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        title="Delete workspace"
+                                                        onClick={() => deleteWorkspace(ws)}
+                                                    >
+                                                        <Trash2 className="h-4 w-4 text-red-600" />
                                                     </Button>
                                                 )}
                                             </div>

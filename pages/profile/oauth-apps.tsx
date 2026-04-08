@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
-import { Key, Plus, Trash2, Copy, AlertCircle } from 'lucide-react';
+import { Key, Plus, Trash2, Copy, AlertCircle, Shield, Link2, Clock } from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -23,6 +23,9 @@ export default function OAuthAppsPage() {
     const router = useRouter();
     const { data: domainsData } = useFetchDomains(router);
     const [clients, setClients] = useState<any[]>([]);
+    const [connections, setConnections] = useState<any[]>([]);
+    const [personalTokens, setPersonalTokens] = useState<any[]>([]);
+    const [newPersonalToken, setNewPersonalToken] = useState<string | null>(null);
     const [newClient, setNewClient] = useState<any>(null);
     const [form, setForm] = useState({
         name: '',
@@ -33,12 +36,61 @@ export default function OAuthAppsPage() {
     });
 
     const load = async () => {
-        const res = await fetch('/api/oauth/clients');
+        const [clientsRes, connsRes, tokensRes] = await Promise.all([
+            fetch('/api/oauth/clients').then((r) => r.json()).catch(() => ({})),
+            fetch('/api/oauth/connections').then((r) => r.json()).catch(() => ({})),
+            fetch('/api/oauth/personal-token').then((r) => r.json()).catch(() => ({}))
+        ]);
+        if (clientsRes?.clients) setClients(clientsRes.clients);
+        if (connsRes?.connections) setConnections(connsRes.connections);
+        if (tokensRes?.tokens) setPersonalTokens(tokensRes.tokens);
+    };
+
+    const generatePersonalToken = async () => {
+        const name = prompt('Name this token (e.g. "Claude Desktop - MacBook"):', 'Personal Access Token');
+        if (!name) return;
+        const res = await fetch('/api/oauth/personal-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name })
+        });
         const data = await res.json();
-        if (data.clients) setClients(data.clients);
+        if (res.ok && data.token) {
+            setNewPersonalToken(data.token);
+            load();
+            toast.success('Token generated — copy it now!');
+        } else {
+            toast.error(data.error || 'Failed');
+        }
+    };
+
+    const revokePersonalToken = async (id: number) => {
+        if (!confirm('Revoke this token? Any client using it will stop working.')) return;
+        const res = await fetch(`/api/oauth/personal-token?id=${id}`, { method: 'DELETE' });
+        if (res.ok) { toast.success('Revoked'); load(); }
+        else toast.error('Failed');
     };
 
     useEffect(() => { load(); }, []);
+
+    const revokeConnection = async (id: number) => {
+        if (!confirm('Disconnect this app? It will no longer be able to access your data.')) return;
+        const res = await fetch(`/api/oauth/connections?client_id=${id}`, { method: 'DELETE' });
+        if (res.ok) { toast.success('Disconnected'); load(); }
+        else toast.error('Failed');
+    };
+
+    const fmtDate = (d: string | null) => {
+        if (!d) return 'Never';
+        const date = new Date(d);
+        const now = Date.now();
+        const diff = now - date.getTime();
+        if (diff < 60 * 1000) return 'Just now';
+        if (diff < 60 * 60 * 1000) return `${Math.floor(diff / 60000)}m ago`;
+        if (diff < 24 * 60 * 60 * 1000) return `${Math.floor(diff / 3600000)}h ago`;
+        if (diff < 7 * 24 * 60 * 60 * 1000) return `${Math.floor(diff / 86400000)}d ago`;
+        return date.toLocaleDateString();
+    };
 
     const create = async () => {
         if (!form.name || !form.redirect_uris) { toast.error('Name and redirect URIs are required'); return; }
@@ -81,9 +133,126 @@ export default function OAuthAppsPage() {
             <div className="max-w-4xl space-y-6">
                 <div>
                     <h1 className="text-3xl font-bold text-neutral-900 mb-2 flex items-center gap-2">
-                        <Key className="h-7 w-7" /> OAuth Apps
+                        <Shield className="h-7 w-7" /> Connected Apps
                     </h1>
-                    <p className="text-neutral-600">Register third-party apps that can "Sign in with SEO AI Agent" and access our API on behalf of users.</p>
+                    <p className="text-neutral-600">AI assistants and third-party apps that are currently authorized to access your workspace.</p>
+                </div>
+
+                {/* Quick-Connect Instructions */}
+                <Card className="border-blue-200 bg-blue-50">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-blue-900">
+                            <Link2 className="h-5 w-5" /> Connect your AI assistant in 10 seconds
+                        </CardTitle>
+                        <CardDescription className="text-blue-800">
+                            No tokens, no copying. Just add this URL to Claude Desktop, Cursor or ChatGPT — you'll be sent here to approve, then sent back automatically.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        <div>
+                            <div className="text-xs font-semibold text-blue-900 mb-1">1. MCP Server Name</div>
+                            <div className="flex items-center gap-2">
+                                <code className="bg-white px-3 py-2 rounded border border-blue-200 flex-1 text-sm font-mono">SEO AI Agent</code>
+                                <Button size="sm" variant="outline" onClick={() => { navigator.clipboard.writeText('SEO AI Agent'); toast.success('Copied'); }}>
+                                    <Copy className="h-3 w-3" />
+                                </Button>
+                            </div>
+                        </div>
+                        <div>
+                            <div className="text-xs font-semibold text-blue-900 mb-1">2. MCP Server URL</div>
+                            <div className="flex items-center gap-2">
+                                <code className="bg-white px-3 py-2 rounded border border-blue-200 flex-1 text-sm font-mono truncate">
+                                    {typeof window !== 'undefined' ? `${window.location.origin}/api/mcp` : '/api/mcp'}
+                                </code>
+                                <Button
+                                    size="sm"
+                                    onClick={() => {
+                                        const url = typeof window !== 'undefined' ? `${window.location.origin}/api/mcp` : '/api/mcp';
+                                        navigator.clipboard.writeText(url);
+                                        toast.success('Copied');
+                                    }}
+                                >
+                                    <Copy className="h-3 w-3 mr-1" /> Copy URL
+                                </Button>
+                            </div>
+                        </div>
+                        <div className="text-xs text-blue-800 pt-2 border-t border-blue-200">
+                            <strong>That's it.</strong> Your AI client will automatically open this site in your browser, ask you to approve the connection, and then you'll be redirected back to your AI — already connected.
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Active Connections */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Link2 className="h-5 w-5" />
+                            Active Connections ({connections.length})
+                        </CardTitle>
+                        <CardDescription>
+                            These apps have an active access token for your account. Revoke any you no longer use.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        {connections.length === 0 ? (
+                            <div className="text-center py-8 text-sm text-neutral-500">
+                                <Link2 className="h-10 w-10 mx-auto mb-2 text-neutral-300" />
+                                <p>No external app is currently connected.</p>
+                                <p className="mt-1 text-xs">
+                                    When you connect Claude Desktop, Cursor, ChatGPT or any MCP-compatible AI assistant, it will appear here.
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="divide-y">
+                                {connections.map((c) => (
+                                    <div key={c.id} className="flex items-center justify-between gap-3 py-3">
+                                        <div className="flex items-center gap-3 min-w-0">
+                                            <div className="w-10 h-10 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0">
+                                                {c.logo_url ? (
+                                                    <img src={c.logo_url} alt="" className="w-10 h-10 rounded-lg object-cover" />
+                                                ) : (
+                                                    <Shield className="h-5 w-5" />
+                                                )}
+                                            </div>
+                                            <div className="min-w-0 flex-1">
+                                                <div className="font-semibold flex items-center gap-2">
+                                                    <span className="truncate">{c.name}</span>
+                                                    {c.is_own_app && (
+                                                        <span className="text-[10px] bg-neutral-100 text-neutral-600 px-1.5 py-0.5 rounded">Your app</span>
+                                                    )}
+                                                </div>
+                                                <div className="text-xs text-neutral-500 flex items-center gap-3 mt-0.5">
+                                                    <span className="flex items-center gap-1">
+                                                        <Clock className="h-3 w-3" /> Last used {fmtDate(c.last_used_at || c.first_authorized_at)}
+                                                    </span>
+                                                    <span>• {c.active_tokens} active token{c.active_tokens !== 1 && 's'}</span>
+                                                </div>
+                                                {c.scopes?.length > 0 && (
+                                                    <div className="mt-1 flex flex-wrap gap-1">
+                                                        {c.scopes.map((s: string) => (
+                                                            <span key={s} className="text-[10px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border border-blue-100">
+                                                                {s}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <Button variant="outline" size="sm" onClick={() => revokeConnection(c.id)}>
+                                            <Trash2 className="h-4 w-4 mr-1 text-red-600" /> Revoke
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+
+                <div className="pt-4 border-t border-neutral-200">
+                    <h2 className="text-xl font-bold text-neutral-900 mb-1 flex items-center gap-2">
+                        <Key className="h-5 w-5" /> Developer — Register an App
+                    </h2>
+                    <p className="text-sm text-neutral-600">If you're building an app, register it here to get OAuth credentials.</p>
                 </div>
 
                 {newClient && (

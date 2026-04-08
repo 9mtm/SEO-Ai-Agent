@@ -35,6 +35,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
     }
 
+    if (req.method === 'DELETE') {
+        const id = parseInt(String(req.query.id || ''));
+        if (!id) return res.status(400).json({ error: 'id required' });
+        const ws: any = await Workspace.findByPk(id);
+        if (!ws) return res.status(404).json({ error: 'not_found' });
+        if (ws.owner_user_id !== auth.userId) {
+            return res.status(403).json({ error: 'Only the owner can delete a workspace' });
+        }
+        if (ws.is_personal) {
+            return res.status(400).json({ error: 'Personal workspaces cannot be deleted' });
+        }
+        // Count owners to avoid orphaning: this user must own another workspace to switch to
+        const other: any = await WorkspaceMember.findOne({
+            where: { user_id: auth.userId, status: 'active' },
+            include: [{ model: Workspace }],
+            order: [['id', 'ASC']]
+        });
+        await ws.destroy(); // CASCADE deletes members, invitations, domains, keywords, etc.
+        // Switch user to another workspace if current was the deleted one
+        const me: any = await User.findByPk(auth.userId);
+        if (me?.current_workspace_id === id) {
+            const fallback: any = await WorkspaceMember.findOne({
+                where: { user_id: auth.userId, status: 'active' }
+            });
+            await User.update(
+                { current_workspace_id: fallback?.workspace_id || null } as any,
+                { where: { id: auth.userId } }
+            );
+        }
+        return res.status(200).json({ ok: true });
+    }
+
     if (req.method === 'PATCH') {
         const id = parseInt(String(req.query.id || req.body?.id || ''));
         const { name } = req.body || {};

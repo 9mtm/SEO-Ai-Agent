@@ -35,8 +35,15 @@ interface JsonRpcResponse {
     error?: { code: number; message: string; data?: any };
 }
 
-const PROTOCOL_VERSION = '2024-11-05';
-const SERVER_INFO = { name: 'seo-ai-agent', version: '1.0.0' };
+const PROTOCOL_VERSION = '2025-06-18';
+const SERVER_INFO = {
+    name: 'SEO AI Agent',
+    title: 'SEO AI Agent',
+    version: '1.0.0',
+    icons: [
+        { src: '/dpro_logo.png', sizes: 'any', mimeType: 'image/png' }
+    ]
+};
 
 const ERR = {
     parse: -32700,

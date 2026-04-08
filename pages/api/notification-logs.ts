@@ -2,7 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { Op } from 'sequelize';
 import db from '../../database/database';
 import NotificationLog from '../../database/models/notificationLog';
+import Domain from '../../database/models/domain';
 import verifyUser from '../../utils/verifyUser';
+import { getWorkspaceContext } from '../../utils/workspaceContext';
 
 type NotificationLogsResponse = {
     logs?: any[];
@@ -39,10 +41,18 @@ const getNotificationLogs = async (
     try {
         const { domain, limit = '50', status, type } = req.query;
 
-        // Build query filters
+        // Scope logs by the workspace's domains (workspace-first, user fallback)
+        const ctx = await getWorkspaceContext(req, res);
         const where: any = {};
 
-        if (userId) {
+        if (ctx) {
+            const domains = await Domain.findAll({ where: { workspace_id: ctx.workspaceId } });
+            const names = domains.map((d: any) => d.domain);
+            if (names.length === 0) {
+                return res.status(200).json({ logs: [], stats: { total: 0, success: 0, failed: 0, pending: 0 } });
+            }
+            where.domain = { [Op.in]: names };
+        } else if (userId) {
             where.user_id = userId;
         }
 
@@ -65,8 +75,10 @@ const getNotificationLogs = async (
             order: [['sent_at', 'DESC']],
         });
 
-        // Get statistics
-        const statsWhere = userId ? { user_id: userId } : {};
+        // Get statistics — reuse the same workspace/user scoping
+        const statsWhere: any = {};
+        if (where.domain) statsWhere.domain = where.domain;
+        else if (userId) statsWhere.user_id = userId;
 
         const [total, success, failed, pending] = await Promise.all([
             NotificationLog.count({ where: statsWhere }),
