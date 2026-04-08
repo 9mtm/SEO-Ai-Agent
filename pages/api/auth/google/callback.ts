@@ -124,11 +124,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           scraper_type: 'scrapingrobot', // Default
           picture: googleUser.picture || null, // Create with picture
         });
-        // Auto-create personal workspace for the new user
-        await ensurePersonalWorkspace(user.id, googleUser.name);
+
+        // Check for any pending workspace invitation addressed to this email.
+        // If there is one, the user came here specifically to join that
+        // workspace — we must NOT auto-create a personal workspace, otherwise
+        // they will end up with two. The invitation acceptance page will take
+        // care of attaching them to the invited workspace.
+        const WorkspaceInvitation = (await import('../../../../database/models/workspace_invitation')).default;
+        const pendingInvite = await WorkspaceInvitation.findOne({
+          where: { email: googleUser.email, status: 'pending' }
+        });
+        if (!pendingInvite) {
+          await ensurePersonalWorkspace(user.id, googleUser.name);
+        }
       } else {
-        // Safety net: older accounts may not have a workspace yet
-        await ensurePersonalWorkspace(user.id);
+        // Existing user: only create a personal workspace if they have no memberships at all.
+        const WorkspaceMember = (await import('../../../../database/models/workspace_member')).default;
+        const anyMembership = await WorkspaceMember.findOne({
+          where: { user_id: user.id, status: 'active' }
+        });
+        if (!anyMembership) {
+          await ensurePersonalWorkspace(user.id);
+        }
         // Update existing user with new picture if available
         if (googleUser.picture) {
           await user.update({ picture: googleUser.picture });
@@ -164,30 +181,75 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.redirect(absoluteUrl);
         }
 
-        // Check onboarding status
-        // Cast to any because onboarding_step might not be in the strict TS type definition yet
+        // ---------------------------------------------------------------
+        // Post-login redirect logic
+        // ---------------------------------------------------------------
+        // Before anything, resolve the user's active workspace and its domains.
+        // A team member may not own any domains themselves but inherits the
+        // workspace's domains — so we must look at the workspace, NOT user.domains.
         const u = user as any;
         const onboardingStep = u.onboarding_step || 0;
 
-        // If user is stuck in onboarding but has domains, fix it
+        // Import workspace helpers lazily
+        const WorkspaceMember = (await import('../../../../database/models/workspace_member')).default;
+        const Workspace = (await import('../../../../database/models/workspace')).default;
+
+        // Load the user's active workspace (current_workspace_id first, else first membership)
+        let activeWorkspaceId: number | null = u.current_workspace_id || null;
+        if (!activeWorkspaceId) {
+          const firstMember: any = await WorkspaceMember.findOne({
+            where: { user_id: user.id, status: 'active' }
+          });
+          activeWorkspaceId = firstMember?.workspace_id || null;
+          if (activeWorkspaceId) {
+            await user.update({ current_workspace_id: activeWorkspaceId } as any);
+          }
+        }
+
+        // Load domains of the active workspace + figure out the caller's role
+        let workspaceDomains: any[] = [];
+        let roleInActive: string | null = null;
+        if (activeWorkspaceId) {
+          workspaceDomains = await Domain.findAll({
+            where: { workspace_id: activeWorkspaceId },
+            order: [['added', 'ASC']]
+          });
+          const member: any = await WorkspaceMember.findOne({
+            where: { workspace_id: activeWorkspaceId, user_id: user.id, status: 'active' }
+          });
+          roleInActive = member?.role || null;
+        }
+
+        const isTeamMember = roleInActive && roleInActive !== 'owner';
+
+        // Team members always skip onboarding — they inherit a configured workspace
+        if (isTeamMember) {
+          if (onboardingStep < 3) {
+            await user.update({ onboarding_step: 3 } as any);
+          }
+          if (workspaceDomains.length > 0) {
+            const firstDomain: any = workspaceDomains[0].get({ plain: true });
+            return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/domain/insight/${firstDomain.slug}`);
+          }
+          // Team member of an empty workspace — land on profile page
+          return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/profile`);
+        }
+
+        // Owners: run normal onboarding flow
         if (onboardingStep < 3) {
-          if (user.domains && user.domains.length > 0) {
-            // User has content, so they are onboarded.
-            await user.update({ onboarding_step: 3 });
-            // Redirect to first domain
-            const firstDomain = user.domains[0];
+          if (workspaceDomains.length > 0) {
+            await user.update({ onboarding_step: 3 } as any);
+            const firstDomain: any = workspaceDomains[0].get({ plain: true });
             return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/domain/insight/${firstDomain.slug}`);
           }
           return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/onboarding`);
         }
 
-        // User is onboarded, redirect to their first domain or domains list
-        if (user.domains && user.domains.length > 0) {
-          const firstDomain = user.domains[0];
+        if (workspaceDomains.length > 0) {
+          const firstDomain: any = workspaceDomains[0].get({ plain: true });
           return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/domain/insight/${firstDomain.slug}`);
         }
 
-        // Fallback to onboarding if no domains
         return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/onboarding`);
       }
     }

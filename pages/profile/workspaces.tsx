@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../..
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { useFetchDomains } from '../../services/domains';
+export { getServerSideProps } from '../../utils/ownerOnlyPage';
 
 type WS = { id: number; name: string; slug: string; role: string; is_personal: boolean; is_current: boolean };
 

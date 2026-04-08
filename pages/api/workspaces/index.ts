@@ -15,6 +15,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!auth.authorized || !auth.userId) return res.status(401).json({ error: 'Unauthorized' });
 
     if (req.method === 'GET') {
+        // Self-healing cleanup: if this user is a member of at least one
+        // non-personal workspace (i.e. they were invited somewhere) AND they
+        // still own an empty auto-created personal workspace from before the
+        // invitation fix, delete the personal one so the switcher only shows
+        // the workspaces they actually use.
+        try {
+            const allMemberships: any = await WorkspaceMember.findAll({
+                where: { user_id: auth.userId, status: 'active' },
+                include: [{ model: Workspace }]
+            });
+            const hasTeamWorkspace = allMemberships.some(
+                (m: any) => m.workspace && !m.workspace.is_personal
+            );
+            if (hasTeamWorkspace) {
+                const Domain = (await import('../../../database/models/domain')).default;
+                for (const m of allMemberships) {
+                    const ws: any = m.workspace;
+                    if (!ws || !ws.is_personal || ws.owner_user_id !== auth.userId) continue;
+                    const domainCount = await Domain.count({ where: { workspace_id: ws.id } });
+                    if (domainCount === 0) {
+                        await ws.destroy(); // CASCADE removes member row + invitations
+                    }
+                }
+                // If we just nuked the user's active workspace, repoint them
+                const refreshedUser: any = await User.findByPk(auth.userId);
+                if (refreshedUser && refreshedUser.current_workspace_id) {
+                    const stillExists: any = await Workspace.findByPk(refreshedUser.current_workspace_id);
+                    if (!stillExists) {
+                        const fallback: any = await WorkspaceMember.findOne({
+                            where: { user_id: auth.userId, status: 'active' }
+                        });
+                        await User.update(
+                            { current_workspace_id: fallback?.workspace_id || null } as any,
+                            { where: { id: auth.userId } }
+                        );
+                    }
+                }
+            }
+        } catch (e) {
+            console.error('[Workspaces] self-heal cleanup failed:', e);
+        }
+
         const memberships = await WorkspaceMember.findAll({
             where: { user_id: auth.userId, status: 'active' },
             include: [{ model: Workspace }]

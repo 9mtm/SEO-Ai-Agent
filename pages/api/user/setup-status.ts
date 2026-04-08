@@ -4,6 +4,9 @@ import db from '../../../database/database';
 import verifyUser from '../../../utils/verifyUser';
 import User from '../../../database/models/user';
 import Domain from '../../../database/models/domain';
+import Workspace from '../../../database/models/workspace';
+import WorkspaceMember from '../../../database/models/workspace_member';
+import { getWorkspaceContext } from '../../../utils/workspaceContext';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     await db.sync();
@@ -17,6 +20,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const user = await User.findByPk(userId);
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
+        }
+
+        // If the user is NOT the owner of their current workspace, they are a
+        // team member. Team members inherit an already-configured workspace and
+        // don't need to set anything up — report 100% progress so the setup
+        // guide UI doesn't nag them.
+        const ctx = await getWorkspaceContext(req, res);
+        if (ctx && ctx.role !== 'owner') {
+            const ws: any = await Workspace.findByPk(ctx.workspaceId);
+            const owner: any = ws ? await User.findByPk(ws.owner_user_id) : null;
+            const ownerHasGsc = !!(owner?.google_refresh_token || owner?.google_access_token);
+            return res.status(200).json({
+                percentage: 100,
+                is_team_member: true,
+                role: ctx.role,
+                steps: {
+                    gsc_domain: ownerHasGsc,
+                    scraper: true,
+                    ai_connected: true,
+                    details: { has_gsc: ownerHasGsc, domain_count: 0 }
+                }
+            });
         }
 
         const domainCount = await Domain.count({ where: { user_id: userId } });

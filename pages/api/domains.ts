@@ -219,11 +219,14 @@ const addDomain = async (
                search_console: JSON.stringify(searchConsoleSettings),
             };
 
-            // Workspace + user assignment
+            // Workspace + user assignment.
+            // Owners and admins can add domains. The plan-limit check below
+            // uses the workspace owner's plan, so an admin can never push the
+            // workspace over its paid caps.
             const ctx = !isLegacy ? await getWorkspaceContext(req, res) : null;
             if (ctx) {
-               if (!ctx.can.write) {
-                  return res.status(403).json({ domains: null, error: 'You do not have write access to this workspace' });
+               if (ctx.role !== 'owner' && ctx.role !== 'admin') {
+                  return res.status(403).json({ domains: null, error: 'Only owners and admins can add new domains' });
                }
                domainData.workspace_id = ctx.workspaceId;
                domainData.user_id = ctx.userId;

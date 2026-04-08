@@ -67,8 +67,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         await invite.update({ status: 'accepted', accepted_at: new Date() });
-        // Switch user's current workspace to the joined one
-        await User.update({ current_workspace_id: invite.workspace_id } as any, { where: { id: auth.userId } });
+
+        // Switch user's current workspace to the joined one AND mark onboarding done.
+        await User.update(
+            { current_workspace_id: invite.workspace_id, onboarding_step: 3 } as any,
+            { where: { id: auth.userId } }
+        );
+
+        // Clean up: if this user had an auto-created empty personal workspace
+        // from before the invitation existed, delete it. Team members should
+        // live exclusively inside the workspace that invited them — no leftover
+        // personal workspace polluting the switcher.
+        try {
+            const Workspace = (await import('../../../../database/models/workspace')).default;
+            const Domain = (await import('../../../../database/models/domain')).default;
+            const personalWorkspaces: any = await Workspace.findAll({
+                where: { owner_user_id: auth.userId, is_personal: true }
+            });
+            for (const ws of personalWorkspaces) {
+                const domainCount = await Domain.count({ where: { workspace_id: ws.id } });
+                if (domainCount === 0) {
+                    await ws.destroy(); // CASCADE removes the member row
+                }
+            }
+        } catch (e) {
+            console.error('[Invitation] personal workspace cleanup failed:', e);
+        }
 
         return res.status(200).json({ ok: true, workspace_id: invite.workspace_id });
     }

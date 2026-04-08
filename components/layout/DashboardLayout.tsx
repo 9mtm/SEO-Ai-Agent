@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import AccountMenu from '../common/AccountMenu';
 import WorkspaceIndicator from '../common/WorkspaceIndicator';
+import { useWorkspaceRole } from '../../hooks/useWorkspaceRole';
 import DomainSelector from '../domains/DomainSelector';
 import SetupProgress from '../setup/SetupProgress';
 import { useLanguage } from '../../context/LanguageContext';
@@ -44,6 +45,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { t } = useLanguage();
+  const { canManage } = useWorkspaceRole();
 
   const currentSlug = router.query.slug as string;
   // Try to find domain by slug, and if not found, try by domain name (for backward compatibility).
@@ -65,26 +67,39 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       { name: t('sidebar.settings'), href: `/domain/settings/${currentDomain.slug}`, icon: Settings }
     );
   } else if (router.pathname.startsWith('/profile')) {
-    navigation.push(
-      { name: t('sidebar.profile'), href: '/profile', icon: User },
-      { name: 'Workspaces', href: '/profile/workspaces', icon: Building2 },
-      { name: 'Team Members', href: '/profile/team', icon: Users },
-      { name: 'Search Console', href: '/profile/search-console', icon: Search },
-      { name: t('sidebar.notifications'), href: '/profile/notifications', icon: Bell },
-      { name: t('sidebar.billing'), href: '/profile/billing', icon: CreditCard },
-      { name: 'Connected Apps', href: '/profile/oauth-apps', icon: Shield },
-      { name: t('sidebar.scraper'), href: '/profile/scraper', icon: Settings }
-    );
+    // Profile sidebar — trimmed for team members (non-owners).
+    // Everyone sees: Profile, Notifications, Connected Apps.
+    // Owners also see: Workspaces, Team, Search Console, Billing, Scraper.
+    navigation.push({ name: t('sidebar.profile'), href: '/profile', icon: User });
+    if (canManage) {
+      navigation.push(
+        { name: 'Workspaces', href: '/profile/workspaces', icon: Building2 },
+        { name: 'Team Members', href: '/profile/team', icon: Users },
+        { name: 'Search Console', href: '/profile/search-console', icon: Search }
+      );
+    }
+    navigation.push({ name: t('sidebar.notifications'), href: '/profile/notifications', icon: Bell });
+    if (canManage) {
+      navigation.push({ name: t('sidebar.billing'), href: '/profile/billing', icon: CreditCard });
+    }
+    navigation.push({ name: 'Connected Apps', href: '/profile/oauth-apps', icon: Shield });
+    if (canManage) {
+      navigation.push({ name: t('sidebar.scraper'), href: '/profile/scraper', icon: Settings });
+    }
   } else {
     // Default sidebar for home, /setup and other top-level pages
-    navigation.push(
-      { name: t('sidebar.myDomains'), href: '/', icon: Globe },
-      { name: 'Setup', href: '/setup', icon: Settings },
-      { name: t('sidebar.profile'), href: '/profile', icon: User },
-      { name: 'Workspaces', href: '/profile/workspaces', icon: Building2 },
-      { name: 'Team Members', href: '/profile/team', icon: Users },
-      { name: t('sidebar.billing'), href: '/profile/billing', icon: CreditCard }
-    );
+    navigation.push({ name: t('sidebar.myDomains'), href: '/', icon: Globe });
+    if (canManage) {
+      navigation.push({ name: 'Setup', href: '/setup', icon: Settings });
+    }
+    navigation.push({ name: t('sidebar.profile'), href: '/profile', icon: User });
+    if (canManage) {
+      navigation.push(
+        { name: 'Workspaces', href: '/profile/workspaces', icon: Building2 },
+        { name: 'Team Members', href: '/profile/team', icon: Users },
+        { name: t('sidebar.billing'), href: '/profile/billing', icon: CreditCard }
+      );
+    }
   }
 
   return (

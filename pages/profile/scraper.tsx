@@ -3,6 +3,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+export { getServerSideProps } from '../../utils/ownerOnlyPage';
 import { toast, Toaster } from 'react-hot-toast';
 import { Settings as SettingsIcon, Plug, Save, Loader2, CheckCircle, Download, X, Search, Plus } from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';

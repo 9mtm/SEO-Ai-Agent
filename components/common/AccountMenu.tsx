@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Settings, LogOut, Plus, Globe, User, Users, Building2, Check, Key, Search, Bell, CreditCard, Shield, Database } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useLanguage } from '../../context/LanguageContext';
+import { useWorkspaceRole } from '../../hooks/useWorkspaceRole';
 
 type AccountMenuProps = {
     domains?: DomainType[];
@@ -27,6 +28,7 @@ type WorkspaceItem = {
 
 const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
     const { locale: selectedLang, setLocale, t } = useLanguage();
+    const { canManage } = useWorkspaceRole();
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isLangOpen, setIsLangOpen] = useState(false);
@@ -228,30 +230,34 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                                 <User className="h-4 w-4 text-neutral-500" />
                                 <span>{t('sidebar.profile')}</span>
                             </Link>
-                            <Link
-                                href="/profile/workspaces"
-                                onClick={() => setIsMenuOpen(false)}
-                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
-                            >
-                                <Building2 className="h-4 w-4 text-neutral-500" />
-                                <span>Workspaces</span>
-                            </Link>
-                            <Link
-                                href="/profile/team"
-                                onClick={() => setIsMenuOpen(false)}
-                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
-                            >
-                                <Users className="h-4 w-4 text-neutral-500" />
-                                <span>Team Members</span>
-                            </Link>
-                            <Link
-                                href="/profile/search-console"
-                                onClick={() => setIsMenuOpen(false)}
-                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
-                            >
-                                <Search className="h-4 w-4 text-neutral-500" />
-                                <span>Search Console</span>
-                            </Link>
+                            {canManage && (
+                                <>
+                                    <Link
+                                        href="/profile/workspaces"
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                                    >
+                                        <Building2 className="h-4 w-4 text-neutral-500" />
+                                        <span>Workspaces</span>
+                                    </Link>
+                                    <Link
+                                        href="/profile/team"
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                                    >
+                                        <Users className="h-4 w-4 text-neutral-500" />
+                                        <span>Team Members</span>
+                                    </Link>
+                                    <Link
+                                        href="/profile/search-console"
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                                    >
+                                        <Search className="h-4 w-4 text-neutral-500" />
+                                        <span>Search Console</span>
+                                    </Link>
+                                </>
+                            )}
                             <Link
                                 href="/profile/notifications"
                                 onClick={() => setIsMenuOpen(false)}
@@ -260,14 +266,16 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                                 <Bell className="h-4 w-4 text-neutral-500" />
                                 <span>{t('sidebar.notifications')}</span>
                             </Link>
-                            <Link
-                                href="/profile/billing"
-                                onClick={() => setIsMenuOpen(false)}
-                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
-                            >
-                                <CreditCard className="h-4 w-4 text-neutral-500" />
-                                <span>{t('sidebar.billing')}</span>
-                            </Link>
+                            {canManage && (
+                                <Link
+                                    href="/profile/billing"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                                >
+                                    <CreditCard className="h-4 w-4 text-neutral-500" />
+                                    <span>{t('sidebar.billing')}</span>
+                                </Link>
+                            )}
                             <Link
                                 href="/profile/oauth-apps"
                                 onClick={() => setIsMenuOpen(false)}
@@ -276,14 +284,16 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                                 <Shield className="h-4 w-4 text-neutral-500" />
                                 <span>Connected Apps</span>
                             </Link>
-                            <Link
-                                href="/profile/scraper"
-                                onClick={() => setIsMenuOpen(false)}
-                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
-                            >
-                                <Database className="h-4 w-4 text-neutral-500" />
-                                <span>{t('sidebar.scraper')}</span>
-                            </Link>
+                            {canManage && (
+                                <Link
+                                    href="/profile/scraper"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                                >
+                                    <Database className="h-4 w-4 text-neutral-500" />
+                                    <span>{t('sidebar.scraper')}</span>
+                                </Link>
+                            )}
                         </div>
 
                         <div className="border-t border-neutral-200 py-1">

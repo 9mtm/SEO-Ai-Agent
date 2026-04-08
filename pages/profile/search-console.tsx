@@ -3,6 +3,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { toast, Toaster } from 'react-hot-toast';
+export { getServerSideProps } from '../../utils/ownerOnlyPage';
 
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

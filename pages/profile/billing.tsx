@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import type { NextPage } from 'next';
+export { getServerSideProps } from '../../utils/ownerOnlyPage';
 import Head from 'next/head';
 import { CreditCard, FileText, Check, Zap, Download, User as UserIcon, Building2, AlertCircle } from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';

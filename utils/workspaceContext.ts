@@ -54,10 +54,13 @@ export async function getWorkspaceContext(
     if (!auth.authorized || !auth.userId) return null;
 
     // 1. Explicit override
+    // In API routes `req` is NextApiRequest (has .query). In getServerSideProps
+    // `req` is a raw IncomingMessage without .query — guard against it.
     let requestedWsId: number | null = null;
     const headerWs = req.headers['x-workspace-id'];
     if (headerWs && typeof headerWs === 'string') requestedWsId = parseInt(headerWs);
-    if (req.query.workspace_id) requestedWsId = parseInt(String(req.query.workspace_id));
+    const queryWs = (req as any).query?.workspace_id;
+    if (queryWs) requestedWsId = parseInt(String(queryWs));
 
     // 2. Fallback to user's current_workspace_id
     if (!requestedWsId) {

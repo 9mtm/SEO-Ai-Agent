@@ -177,4 +177,104 @@ curl -X POST http://localhost:55781/api/cron -H "Authorization: Bearer YOUR_API_
 
 ---
 
+## 📋 Project Status & Roadmap
+
+### ✅ Completed
+
+- **Multi-tenant Workspaces** — full team support (owner / admin / editor / viewer), invitations with email, workspace switching, rename, delete
+- **OAuth 2.0 Provider** — Authorization Code + PKCE, Dynamic Client Registration (RFC 7591), Protected Resource Metadata (RFC 9728), consent screen, token rotation
+- **Integrated MCP Server** — single endpoint `/api/mcp` with 19 tools, OAuth Bearer + API-key dual auth, JSON-RPC 2.0, auto-discovery via `.well-known`
+- **SEO Analyzer** — professional 20+ on-page factor scoring engine (0-100), used in `save_post` tool + `/api/posts/analyze`
+- **Smart Incremental GSC Sync** — on-demand, cooldown-based, with concurrency lock, audit log in `gsc_sync_log`
+- **Content Research Tools** — domain SEO overview, keyword opportunities (striking distance / low CTR / rising), content brief generator
+- **Setup Guide** — 3-step flow with automatic AI connection detection
+- **Connected Apps page** — shows active OAuth sessions + developer app registration
+- **Workspace Indicator** — Slack-style switcher in header
+- **Workspace-scoped APIs** — domains, keywords, posts, competitors, usage, notifications
+- **Workspace-based Billing** — Stripe checkout binds subscription to the active workspace via metadata
+- **Translations** — `en` / `de` / `fr` for the new `mcp.autoConnect` block
+- **Legacy cleanup** — removed standalone `mcp-server/`, `mcp-proxy/`, old API-key UI, duplicate MCP routes
+- **Role-based UI + server guards** — `owner` & `admin` share the full management UI (Workspaces, Team, Search Console, Billing, Scraper, Connected Apps). `editor` and `viewer` only see Profile + Notifications + Connected Apps. Every owner-only page enforces the rule again in `getServerSideProps` via `utils/ownerOnlyPage.ts`.
+- **Permission matrix**
+
+  | Action | Owner | Admin | Editor | Viewer |
+  |---|---|---|---|---|
+  | View dashboard, insights, tracking | ✅ | ✅ | ✅ | ✅ |
+  | Manage keywords / competitors / posts | ✅ | ✅ | ✅ | ❌ |
+  | Add new domains (capped by owner plan) | ✅ | ✅ | ❌ | ❌ |
+  | Manage Workspaces / Team / Search Console / Scraper | ✅ | ✅ | ❌ | ❌ |
+  | Billing & Subscription | ✅ | view-only | ❌ | ❌ |
+  | Delete workspace | owner only | ❌ | ❌ | ❌ |
+
+- **Team member join flow** — accepting an invitation sets `onboarding_step = 3`, switches `current_workspace_id` to the invited workspace, and **deletes the user's empty personal workspace** so they only see the team workspace in the switcher.
+- **Self-healing workspace cleanup** — `GET /api/workspaces` automatically deletes any empty, auto-created personal workspace for users who are already members of a team workspace. Legacy accounts are repaired on next page load without any manual SQL.
+- **Team-aware Google OAuth callback** — new signups who arrive via an invitation link do NOT get a personal workspace auto-created. Returning users only get a personal workspace if they have zero memberships.
+- **Team-aware post-login redirect** — the Google callback now reads the active workspace's domains (not `user.domains`) so team members land directly on the shared workspace's first domain instead of being bounced to `/onboarding`.
+- **Team-member setup bypass** — `/api/user/setup-status` reports `percentage: 100` + `is_team_member: true` for non-owners, so the Setup Guide never nags them to connect GSC / configure scraper / add domains.
+
+---
+
+### 🔴 Remaining Production Blockers
+
+1. **End-to-end OAuth flow test** from Cursor / Zed / Claude Desktop against a live HTTPS deployment. `localhost` is rejected by most MCP clients.
+2. **Deploy to a real server with HTTPS** — VPS (Hetzner / DigitalOcean / Contabo) or a container host that supports full Node.js (Puppeteer + cron rule out pure serverless).
+3. **Stripe production keys** — currently `sk_test_...`. Switch to live keys and register the webhook endpoint in the Stripe dashboard.
+4. **Production environment variables**
+   - `NEXT_PUBLIC_APP_URL=https://your-domain.com`
+   - `GOOGLE_REDIRECT_URI=https://your-domain.com/api/auth/google/callback`
+   - `STRIPE_WEBHOOK_SECRET` from the live dashboard
+   - All SMTP credentials verified
+
+---
+
+### 🟡 Important (not blockers)
+
+5. **Email verification on signup** — add `email_verified` column + verification link flow. Current email/password signup accepts any address.
+6. **Password reset flow** — no "Forgot password" on the login page yet. Needs `/api/auth/forgot-password` + `/reset-password?token=...` page.
+7. **Finish mcp-seo translations** — only the `mcp.autoConnect` block is localized. FAQ (8 questions) and per-tab step text are still hard-coded English.
+8. **Plan-limit integration tests** — verify free plan caps at 2 domains / 9 keywords end-to-end.
+9. **Profile landing page (`/profile`)** — review and clean up after the sidebar changes.
+10. **Platform integrations (WordPress / Shopify / Wix)** — the `platform_integrations` tables still live in the DB. Either finish the workspace-scope migration for `/domain/settings/[slug]?tab=integrations` or drop the feature entirely.
+
+---
+
+### 🟢 Nice to have
+
+11. **Bounced invitation email handling** — retry or flag when SMTP returns a hard bounce.
+12. **Workspace audit log** — timestamped record of every member change, domain add/remove, plan change.
+13. **Multi-workspace dashboard** — one-page overview across every workspace the user belongs to.
+14. **2FA / TOTP** for owners and admins.
+15. **Rate limiting** on `/api/oauth/authorize`, `/api/oauth/token`, `/api/oauth/register` (currently unbounded).
+16. **Pending invitations badge** in the header bell icon.
+17. **Outbound webhooks** — `workspace.member_added`, `domain.added`, `subscription.updated`, etc., so users can wire our events into Zapier / n8n.
+18. **API documentation** — Swagger / OpenAPI for the REST endpoints and an MCP tool reference.
+19. **i18n for the new pages** — `/profile/team`, `/profile/workspaces`, `/profile/oauth-apps`, `/oauth/consent`, `/workspace/invitation/[token]` are English-only.
+20. **Onboarding refresh** — explain the MCP / OAuth flow and the workspace concept during signup.
+21. **Error tracking** — Sentry (or similar) in production.
+22. **Performance monitoring** — Vercel Analytics / Web Vitals.
+23. **SEO meta tags** for all new public-facing pages.
+24. **Cookie consent banner (GDPR)** — mandatory for EU traffic.
+
+---
+
+### 🔵 Future / long-term
+
+- SSO (SAML / OIDC) for enterprise customers
+- White-labelling per workspace (custom logo, colors, favicon)
+- Custom domains per workspace
+- Workspace data export / import
+- API versioning (`/api/v1/mcp`)
+- Optional GraphQL endpoint
+
+---
+
+### 💡 Suggested next step
+
+1. **Test the OAuth flow from Cursor or Zed** against a live HTTPS host — everything downstream depends on this working.
+2. Then: **email verification + password reset** (security baseline, no infrastructure changes required).
+3. Then: **Stripe production switch** + end-to-end checkout run.
+4. Then: the remaining 🟡 items as time allows.
+
+---
+
 **© 2026 Dpro GmbH - Flowxtra**
