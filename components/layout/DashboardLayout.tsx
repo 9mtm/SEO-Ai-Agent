@@ -14,7 +14,6 @@ import {
   Settings,
   CreditCard,
   User,
-  Link as LinkIcon,
   PenTool,
   Key,
   Bell,
@@ -72,8 +71,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       { name: t('sidebar.billing'), href: '/profile/billing', icon: CreditCard },
       { name: t('sidebar.apiKeys'), href: '/profile/api-keys', icon: Key },
       { name: 'OAuth Apps', href: '/profile/oauth-apps', icon: Shield },
-      { name: t('sidebar.scraper'), href: '/profile/scraper', icon: Settings },
-      { name: t('sidebar.connections'), href: '/profile/connections', icon: LinkIcon }
+      { name: t('sidebar.scraper'), href: '/profile/scraper', icon: Settings }
     );
   } else {
     navigation.push(
