@@ -123,6 +123,9 @@ class User extends Model {
   @Column({ type: DataType.JSON, allowNull: true })
   declare platform_metadata?: any;
 
+  @Column({ type: DataType.INTEGER, allowNull: true })
+  declare current_workspace_id?: number;
+
   @HasOne(() => InvoiceDetail)
   declare invoice_profile: InvoiceDetail;
 

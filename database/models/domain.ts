@@ -113,6 +113,9 @@ class Domain extends Model {
   @Column({ type: DataType.BOOLEAN, allowNull: true, defaultValue: false })
   declare gsc_sync_in_progress?: boolean;
 
+  @Column({ type: DataType.INTEGER, allowNull: true })
+  declare workspace_id?: number;
+
   @BelongsTo(() => User)
   declare user: User;
 

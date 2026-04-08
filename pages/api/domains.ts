@@ -7,6 +7,7 @@ import User from '../../database/models/user';
 import { getPlanLimits } from '../../utils/planLimits';
 import getdomainStats from '../../utils/domains';
 import verifyUser from '../../utils/verifyUser';
+import { getWorkspaceContext } from '../../utils/workspaceContext';
 import { checkSerchConsoleIntegration, removeLocalSCData } from '../../utils/searchConsole';
 
 type DomainsGetRes = {
@@ -60,8 +61,17 @@ export const getDomains = async (
 ) => {
    const withStats = !!req?.query?.withstats;
    try {
-      // Multi-tenant: Filter by user_id
-      const whereClause = (userId && !isLegacy) ? { user_id: userId } : {};
+      // Workspace-scoped (multi-tenant w/ team support)
+      let whereClause: any = {};
+      if (!isLegacy) {
+         const ctx = await getWorkspaceContext(req, res);
+         if (ctx) {
+            whereClause = { workspace_id: ctx.workspaceId };
+         } else if (userId) {
+            // Fallback to user-owned (rare: should always have a workspace after migration)
+            whereClause = { user_id: userId };
+         }
+      }
       const allDomains: Domain[] = await Domain.findAll({
          where: whereClause,
          order: [['added', 'ASC']]
@@ -209,11 +219,17 @@ const addDomain = async (
                search_console: JSON.stringify(searchConsoleSettings),
             };
 
-            // Add user_id for multi-tenant mode
-            if (userId && !isLegacy) {
+            // Workspace + user assignment
+            const ctx = !isLegacy ? await getWorkspaceContext(req, res) : null;
+            if (ctx) {
+               if (!ctx.can.write) {
+                  return res.status(403).json({ domains: null, error: 'You do not have write access to this workspace' });
+               }
+               domainData.workspace_id = ctx.workspaceId;
+               domainData.user_id = ctx.userId;
+            } else if (userId && !isLegacy) {
                domainData.user_id = userId;
             } else {
-               // For legacy mode, default to user_id = 1
                domainData.user_id = 1;
             }
 
@@ -222,11 +238,21 @@ const addDomain = async (
 
          let newDomains: Domain[] = [];
          if (domainsToAdd.length > 0) {
-            // Check Plan Limits
+            // Check Plan Limits — based on workspace owner's plan
             if (userId && !isLegacy) {
-               const user = await User.findByPk(userId);
+               const wsId = domainsToAdd[0].workspace_id;
+               // Plan is on owner; load owner via workspace if available
+               let planUserId = userId;
+               if (wsId) {
+                  const Workspace = (await import('../../database/models/workspace')).default;
+                  const ws: any = await Workspace.findByPk(wsId);
+                  if (ws) planUserId = ws.owner_user_id;
+               }
+               const user = await User.findByPk(planUserId);
                const limit = getPlanLimits(user?.subscription_plan || 'free').domains;
-               const currentCount = await Domain.count({ where: { user_id: userId } });
+               const currentCount = wsId
+                  ? await Domain.count({ where: { workspace_id: wsId } })
+                  : await Domain.count({ where: { user_id: userId } });
 
                if (currentCount + domainsToAdd.length > limit) {
                   return res.status(403).json({
@@ -265,13 +291,21 @@ export const deleteDomain = async (
    try {
       const { domain } = req.query || {};
 
-      // Multi-tenant: Verify domain ownership
+      // Workspace-scoped delete (admin/editor required)
       const whereClause: any = { domain };
-      if (userId && !isLegacy) {
-         whereClause.user_id = userId;
+      if (!isLegacy) {
+         const ctx = await getWorkspaceContext(req, res);
+         if (ctx) {
+            if (!ctx.can.write) {
+               return res.status(403).json({ domainRemoved: 0, keywordsRemoved: 0, SCDataRemoved: false, error: 'No write access' });
+            }
+            whereClause.workspace_id = ctx.workspaceId;
+         } else if (userId) {
+            whereClause.user_id = userId;
+         }
       }
 
-      // Check if domain exists and belongs to user
+      // Check if domain exists and belongs to workspace
       const domainToDelete = await Domain.findOne({ where: whereClause });
       if (!domainToDelete) {
          return res.status(403).json({

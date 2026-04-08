@@ -127,7 +127,7 @@ const BillingPage: NextPage = () => {
             id: 'free',
             name: t('billing.planNames.free'),
             description: t('billing.planDesc.free'),
-            price: { monthly: 0, yearly: 0 },
+            price: { monthly: 0, yearly: 0, original: 0 },
             features: [
                 t('billing.features.domains', { count: 2 }),
                 t('billing.features.keywords', { count: 9 }),
@@ -141,7 +141,7 @@ const BillingPage: NextPage = () => {
             id: 'basic',
             name: t('billing.planNames.basic'),
             description: t('billing.planDesc.basic'),
-            price: { monthly: null, yearly: 9 }, // Monthly price shown, but billed yearly
+            price: { monthly: null, yearly: 29, original: 59 }, // Yearly only
             features: [
                 t('billing.features.domains', { count: 3 }),
                 t('billing.features.keywords', { count: 25 }),
@@ -157,7 +157,7 @@ const BillingPage: NextPage = () => {
             id: 'pro',
             name: t('billing.planNames.pro'),
             description: t('billing.planDesc.pro'),
-            price: { monthly: 35, yearly: 29 },
+            price: { monthly: null, yearly: 79, original: 149 },
             features: [
                 t('billing.features.domains', { count: 5 }),
                 t('billing.features.keywords', { count: 500 }),
@@ -174,10 +174,10 @@ const BillingPage: NextPage = () => {
             id: 'premium',
             name: t('billing.planNames.premium'),
             description: t('billing.planDesc.premium'),
-            price: { monthly: 99, yearly: 79 },
+            price: { monthly: null, yearly: 199, original: 399 },
             features: [
                 t('billing.features.unlimitedDomains'),
-                t('billing.features.keywords', { count: 5000 }),
+                t('billing.features.keywords', { count: 1000 }),
                 t('billing.features.priority'),
                 t('billing.features.api'),
                 t('billing.features.mcp')
@@ -324,16 +324,15 @@ const BillingPage: NextPage = () => {
                         {/* Pricing Cards */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {plans.map((plan) => {
-                                // All paid plans are yearly only — show monthly-equivalent price
-                                let price = plan.price.yearly;
-                                let period = 'mo';
+                                // All paid plans are yearly only — the price entered IS the yearly price
+                                const price = plan.price.yearly || 0;
+                                const originalPrice = (plan.price as any).original || 0;
+                                const hasDiscount = originalPrice > price && price > 0;
+                                const discountPct = hasDiscount
+                                    ? Math.round(((originalPrice - price) / originalPrice) * 100)
+                                    : 0;
+                                const period = currentLocale === 'de' ? 'Jahr' : currentLocale === 'fr' ? 'an' : 'year';
                                 let subtext = t('billing.checkout.billedYearly');
-
-                                if (currentLocale === 'de') {
-                                    period = 'Monat';
-                                } else if (currentLocale === 'fr') {
-                                    period = 'mois';
-                                }
 
                                 if (plan.id === 'free') {
                                     subtext = t('billing.planDesc.free');
@@ -341,16 +340,32 @@ const BillingPage: NextPage = () => {
 
                                 return (
                                     <Card key={plan.id} className={`flex flex-col ${plan.popular ? 'border-2 border-primary relative' : ''} ${plan.disabled ? 'opacity-75' : ''}`}>
-                                        {plan.popular && <div className="absolute top-0 right-0 p-1 bg-primary text-primary-foreground text-xs font-bold rounded-bl">POPULAR</div>}
+                                        {plan.popular && <div className="absolute top-0 right-0 p-1 bg-primary text-primary-foreground text-xs font-bold rounded-bl z-10">POPULAR</div>}
+                                        {hasDiscount && (
+                                            <div className="absolute top-0 left-0 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-br z-10">
+                                                -{discountPct}%
+                                            </div>
+                                        )}
                                         <CardHeader>
                                             <CardTitle>{plan.name}</CardTitle>
                                             <CardDescription>{plan.description}</CardDescription>
                                             <div className="mt-4">
+                                                {hasDiscount && (
+                                                    <div className="text-sm text-gray-400 line-through">
+                                                        ${originalPrice}/{period}
+                                                    </div>
+                                                )}
                                                 <div className="flex items-baseline">
                                                     <span className="text-3xl font-bold">${price}</span>
                                                     <span className="text-gray-500 ml-1">/{period}</span>
                                                 </div>
-                                                {plan.id !== 'free' && <p className="text-xs text-gray-500 mt-1">{subtext}</p>}
+                                                {hasDiscount && (
+                                                    <p className="text-xs text-green-600 font-semibold mt-1">
+                                                        Save ${originalPrice - price}
+                                                    </p>
+                                                )}
+                                                {plan.id !== 'free' && !hasDiscount && <p className="text-xs text-gray-500 mt-1">{subtext}</p>}
+                                                {plan.id !== 'free' && hasDiscount && <p className="text-xs text-gray-500 mt-0.5">{subtext}</p>}
                                             </div>
                                         </CardHeader>
                                         <CardContent className="space-y-2 text-sm text-gray-600 flex-1">
@@ -424,21 +439,33 @@ const BillingPage: NextPage = () => {
                             <div className="bg-neutral-50 p-4 rounded-lg border border-neutral-200">
                                 <div className="flex justify-between items-center mb-2">
                                     <h3 className="font-bold text-lg">{t('billing.checkout.planSummary', { plan: selectedPlan.name })}</h3>
-                                    <span className="text-xl font-bold font-mono">
-                                        ${selectedPlan.price.yearly}
-                                        <span className="text-sm text-gray-500 font-normal">/mo</span>
-                                    </span>
+                                    <div className="text-right">
+                                        {(selectedPlan.price as any).original > selectedPlan.price.yearly && (
+                                            <div className="text-sm text-gray-400 line-through font-mono">
+                                                ${(selectedPlan.price as any).original}
+                                            </div>
+                                        )}
+                                        <span className="text-xl font-bold font-mono">
+                                            ${selectedPlan.price.yearly}
+                                            <span className="text-sm text-gray-500 font-normal">/year</span>
+                                        </span>
+                                    </div>
                                 </div>
+                                {(selectedPlan.price as any).original > selectedPlan.price.yearly && (
+                                    <div className="text-sm text-green-600 font-semibold mb-2">
+                                        🎉 You save ${(selectedPlan.price as any).original - selectedPlan.price.yearly} ({Math.round((((selectedPlan.price as any).original - selectedPlan.price.yearly) / (selectedPlan.price as any).original) * 100)}% off)
+                                    </div>
+                                )}
                                 <div className="text-sm text-gray-600 flex justify-between">
                                     <span>{t('billing.checkout.cycle')}:</span>
                                     <span className="font-medium capitalize">
                                         {t('billing.checkout.yearly')}
                                     </span>
                                 </div>
-                                <div className="text-sm text-gray-600 flex justify-between mt-1">
-                                    <span>{t('billing.checkout.total')}:</span>
+                                <div className="text-sm text-gray-600 flex justify-between mt-1 pt-2 border-t border-gray-200">
+                                    <span className="font-semibold">{t('billing.checkout.total')}:</span>
                                     <span className="font-bold text-neutral-900">
-                                        ${selectedPlan.price.yearly * 12}
+                                        ${selectedPlan.price.yearly}
                                     </span>
                                 </div>
                             </div>

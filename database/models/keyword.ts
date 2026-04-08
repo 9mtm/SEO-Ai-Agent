@@ -85,6 +85,12 @@ class Keyword extends Model {
   @Column({ type: DataType.BOOLEAN, allowNull: true, defaultValue: false })
   declare updating_competitors?: boolean;
 
+  @Column({ type: DataType.INTEGER, allowNull: true })
+  declare workspace_id?: number;
+
+  @Column({ type: DataType.INTEGER, allowNull: true })
+  declare domain_id?: number;
+
   @BelongsTo(() => User)
   declare user: User;
 }

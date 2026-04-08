@@ -66,10 +66,16 @@ const getKeywords = async (
    const domainSCData = integratedSC || (search_console_client_email && search_console_private_key) ? await readLocalSCData(domain) : false;
 
    try {
-      // Multi-tenant: Filter by user_id
+      // Workspace-scoped (falls back to user_id if no workspace ctx)
       const whereClause: any = { domain };
-      if (userId && !isLegacy) {
-         whereClause.user_id = userId;
+      if (!isLegacy) {
+         const { getWorkspaceContext } = await import('../../utils/workspaceContext');
+         const ctx = await getWorkspaceContext(req, res);
+         if (ctx) {
+            whereClause.workspace_id = ctx.workspaceId;
+         } else if (userId) {
+            whereClause.user_id = userId;
+         }
       }
 
       const allKeywords: Keyword[] = await Keyword.findAll({ where: whereClause });
@@ -106,11 +112,29 @@ const addKeywords = async (
          return res.status(401).json({ error: 'User authentication required' });
       }
 
-      // Check Plan Limits
+      // Resolve workspace context for plan limits + assignment
+      let wsCtx: any = null;
+      if (!isLegacy && userId) {
+         const { getWorkspaceContext } = await import('../../utils/workspaceContext');
+         wsCtx = await getWorkspaceContext(req, res);
+         if (wsCtx && !wsCtx.can.write) {
+            return res.status(403).json({ error: 'No write access in this workspace' });
+         }
+      }
+
+      // Check Plan Limits — based on workspace owner's plan
       if (userId && !isLegacy) {
-         const user = await User.findByPk(userId);
+         let planUserId = userId;
+         let countWhere: any = { user_id: userId };
+         if (wsCtx) {
+            const Workspace = (await import('../../database/models/workspace')).default;
+            const ws: any = await Workspace.findByPk(wsCtx.workspaceId);
+            if (ws) planUserId = ws.owner_user_id;
+            countWhere = { workspace_id: wsCtx.workspaceId };
+         }
+         const user = await User.findByPk(planUserId);
          const limit = getPlanLimits(user?.subscription_plan || 'free').keywords;
-         const currentCount = await Keyword.count({ where: { user_id: userId } });
+         const currentCount = await Keyword.count({ where: countWhere });
 
          if (currentCount + keywords.length > limit) {
             return res.status(403).json({
@@ -141,11 +165,13 @@ const addKeywords = async (
             updating_competitors: track_competitors || false,
          };
 
-         // Add user_id for multi-tenant mode
-         if (userId && !isLegacy) {
+         // Workspace + user assignment
+         if (wsCtx) {
+            newKeyword.workspace_id = wsCtx.workspaceId;
+            newKeyword.user_id = wsCtx.userId;
+         } else if (userId && !isLegacy) {
             newKeyword.user_id = userId;
          } else {
-            // Legacy mode: default to user_id = 1
             newKeyword.user_id = 1;
          }
 

@@ -11,6 +11,9 @@ import NotificationSetting from './models/notificationSetting';
 import PlatformIntegration from './models/platformIntegration';
 import PlatformIntegrationLog from './models/platformIntegrationLog';
 import InvoiceDetail from './models/invoiceDetail';
+import Workspace from './models/workspace';
+import WorkspaceMember from './models/workspace_member';
+import WorkspaceInvitation from './models/workspace_invitation';
 
 // MySQL connection only (SQLite removed for performance and simplicity)
 // Debugging DB Credentials
@@ -37,7 +40,7 @@ const connection = new Sequelize({
       }
    } : {},
    logging: false,
-   models: [User, Domain, Keyword, FailedJob, Post, ApiKey, ApiAuditLog, NotificationSetting, PlatformIntegration, PlatformIntegrationLog, InvoiceDetail],
+   models: [User, Domain, Keyword, FailedJob, Post, ApiKey, ApiAuditLog, NotificationSetting, PlatformIntegration, PlatformIntegrationLog, InvoiceDetail, Workspace, WorkspaceMember, WorkspaceInvitation],
 });
 
 export default connection;
