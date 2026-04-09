@@ -11,11 +11,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     console.log('🔍 Login Redirect URI:', redirectUri);
     console.log('🔍 NEXT_PUBLIC_APP_URL:', process.env.NEXT_PUBLIC_APP_URL);
 
-    // Login Scopes (Email, Profile)
+    // Login Scopes (Email, Profile + Search Console read access)
     const scopes = [
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',
-        'openid'
+        'openid',
+        'https://www.googleapis.com/auth/webmasters.readonly'
     ];
 
     const { returnUrl } = req.query;
@@ -30,8 +31,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         redirect_uri: redirectUri,
         response_type: 'code',
         scope: scopes.join(' '),
-        access_type: 'online', // No need for refresh token for just login, unless we want to keep user info updated
-        prompt: 'select_account',
+        access_type: 'offline', // Need refresh token to keep GSC access
+        prompt: 'consent',
         state: JSON.stringify(stateObj) // To distinguish from 'connect_flow' in callback and carry returnUrl
     });
 

@@ -35,7 +35,9 @@ interface JsonRpcResponse {
     error?: { code: number; message: string; data?: any };
 }
 
-const PROTOCOL_VERSION = '2025-06-18';
+// Support both versions — respond with what the client requested
+const SUPPORTED_VERSIONS = ['2025-06-18', '2024-11-05'];
+const DEFAULT_PROTOCOL_VERSION = '2024-11-05'; // Claude uses this
 const SERVER_INFO = {
     name: 'SEO AI Agent',
     title: 'SEO AI Agent',
@@ -105,16 +107,22 @@ export class MCPServer {
 
         try {
             switch (reqBody.method) {
-                case 'initialize':
+                case 'initialize': {
+                    // Negotiate protocol version — use what the client requests if we support it
+                    const clientVersion = reqBody.params?.protocolVersion;
+                    const negotiatedVersion = (clientVersion && SUPPORTED_VERSIONS.includes(clientVersion))
+                        ? clientVersion
+                        : DEFAULT_PROTOCOL_VERSION;
                     return {
                         jsonrpc: '2.0',
                         id,
                         result: {
-                            protocolVersion: PROTOCOL_VERSION,
+                            protocolVersion: negotiatedVersion,
                             capabilities: { tools: {}, resources: {}, prompts: {} },
                             serverInfo: SERVER_INFO
                         }
                     };
+                }
 
                 case 'ping':
                     return { jsonrpc: '2.0', id, result: {} };

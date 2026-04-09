@@ -452,7 +452,80 @@ NODE_ENV=production npx sequelize-cli db:migrate --env production
 
 ---
 
-## 12. File Checklist on Server
+## 12. MCP Server — Architecture & Troubleshooting
+
+### What we use
+
+The MCP endpoint (`/api/mcp`) is built with the **official
+`@modelcontextprotocol/sdk`** package (v1.29+). It uses:
+
+- **`McpServer`** from `@modelcontextprotocol/sdk/server/mcp.js` — tool
+  registration, protocol negotiation, capabilities
+- **`StreamableHTTPServerTransport`** from
+  `@modelcontextprotocol/sdk/server/streamableHttp.js` — SSE + JSON
+  responses, session management, `Mcp-Session-Id` header
+
+This is the same approach as `laravel-mcp` in the Flowxtra backend — the
+official SDK handles SSE transport, session IDs, and protocol versions
+automatically, which is required by Claude, Cursor, and ChatGPT.
+
+### Why the custom implementation failed
+
+Our initial hand-written JSON-RPC handler returned plain `application/json`
+responses. Claude.ai's MCP client requires **Streamable HTTP transport**
+(SSE envelope, session headers, protocol negotiation). Without the SDK
+handling these details, every OAuth-authenticated request completed on the
+server (tokens were issued and validated) but Claude rejected the response
+format and reported "Authorization with the MCP server failed."
+
+### How it works now
+
+| Component | File |
+|---|---|
+| MCP endpoint | `pages/api/mcp/index.ts` |
+| Tool definitions | inline in `createMcpServer()` (same file) |
+| OAuth token verification | `utils/oauthAuth.ts` |
+| Legacy API-key auth | `utils/mcpAuth.ts` |
+| OAuth provider (authorize/token/register) | `pages/api/oauth/*` |
+| Discovery | `pages/api/.well-known/oauth-authorization-server.ts` |
+
+**19 tools** registered:
+`get_profile`, `get_current_workspace`, `list_domains`,
+`get_domain_insight`, `get_domain_keywords`, `list_tracked_keywords`,
+`add_tracked_keyword`, `list_domain_competitors`,
+`update_domain_competitors`, `get_keyword_competitors`,
+`get_competitor_history`, `get_domain_seo_overview`,
+`find_keyword_opportunities`, `generate_content_brief`, `list_posts`,
+`get_post`, `analyze_seo`, `save_post`, `delete_post`
+
+### Connecting from Claude.ai
+
+1. Go to **Settings → Connectors → Add custom connector**
+2. Name: `SEO AI Agent`
+3. URL: `https://seo-agent.net/api/mcp`
+4. Leave OAuth fields empty — auto-discovery handles everything
+5. Claude opens the consent page → approve → connected
+
+### Connecting from Claude Desktop (config file)
+
+Claude Desktop does not yet support remote HTTP MCP via `url` in config.
+Use the local proxy or wait for Claude Desktop to add remote support.
+
+### MariaDB compatibility
+
+cPanel uses MariaDB, not MySQL. MariaDB does not support the
+`ANY_VALUE()` function. Use `MAX()` instead in GROUP BY queries
+(already fixed in `services/gscStorage.ts`).
+
+### `output: 'standalone'` must NOT be set
+
+`next.config.js` must NOT contain `output: 'standalone'`. This mode
+generates a self-contained server that conflicts with cPanel's Passenger
+`server.js`. The setting was removed — do not re-add it.
+
+---
+
+## 13. File Checklist on Server
 
 After a successful deploy, `/home/seoagent/public_html/agent/` should contain:
 
