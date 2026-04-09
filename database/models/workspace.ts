@@ -1,5 +1,4 @@
-import { Table, Model, Column, DataType, PrimaryKey, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript';
-import User from './user';
+import { Table, Model, Column, DataType, PrimaryKey } from 'sequelize-typescript';
 
 @Table({ tableName: 'workspaces', timestamps: true })
 class Workspace extends Model {
@@ -13,7 +12,6 @@ class Workspace extends Model {
     @Column({ type: DataType.STRING(191), allowNull: false, unique: true })
     declare slug: string;
 
-    @ForeignKey(() => User)
     @Column({ type: DataType.INTEGER, allowNull: false })
     declare owner_user_id: number;
 
@@ -25,9 +23,6 @@ class Workspace extends Model {
 
     @Column({ type: DataType.BOOLEAN, defaultValue: false })
     declare is_personal: boolean;
-
-    @BelongsTo(() => User, 'owner_user_id')
-    declare owner: User;
 }
 
 export default Workspace;

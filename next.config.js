@@ -3,7 +3,6 @@ const { version } = require('./package.json');
 
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
 
   // ⚡ Vercel Optimization: Ignore TS/ESLint errors during build
   // ⚡ Vercel Optimization: Ignore TS errors during build

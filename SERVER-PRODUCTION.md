@@ -99,34 +99,45 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 
 ### 5.1 Build locally (Windows / macOS / Linux)
 
+> **CRITICAL — three things that MUST be right or the deploy will fail:**
+>
+> 1. **Use `--webpack`** — Next.js 16 defaults to Turbopack which crashes on
+>    cPanel's symlinked `node_modules`. Always build with `--webpack`.
+> 2. **Set `NEXT_PUBLIC_APP_URL`** at build time — `NEXT_PUBLIC_*` vars are
+>    baked into the JS bundle. If you build with `localhost`, every client-side
+>    redirect will point to localhost on production.
+> 3. **Match Next.js version** — the server's `next` version (installed via
+>    `npm install` in the cPanel venv) must match the local build version.
+>    Check with `node -e "console.log(require('next/package.json').version)"`.
+
 ```bash
-cd agent
+cd C:\xampp\htdocs\dpro\seo-ai-agent
 npm install
-npm run build
+NEXT_PUBLIC_APP_URL=https://seo-agent.net npx next build --webpack
 ```
 
-The build produces `agent/.next/`. Verify the output lists all routes
-successfully. If the build fails, fix locally before uploading.
+The build produces `.next/`. Verify the output lists all routes successfully.
 
 ### 5.2 Package source + pre-built output
 
-Two zips are produced at the project root (one level above `agent/`):
+Two archives are produced:
 
-- `seo-agent-deploy.zip` — application source (no `node_modules`, no `.next`,
-  no secrets). Generated via PowerShell:
+- **`seo-agent-deploy.zip`** — application source (no `node_modules`, no
+  `.next`, no secrets):
   ```powershell
-  $src  = 'C:\MAMP\htdocs\dpro\seo-agent\agent'
-  $dst  = 'C:\MAMP\htdocs\dpro\seo-agent\seo-agent-deploy.zip'
-  $exclude = @('node_modules','.next','.git','logs','.venv','models','coverage','.env.local','.env.production')
-  $items = Get-ChildItem -Path $src -Force | Where-Object { $exclude -notcontains $_.Name }
-  Compress-Archive -Path $items.FullName -DestinationPath $dst -CompressionLevel Optimal -Force
+  cd C:\xampp\htdocs\dpro\seo-ai-agent
+  $exclude = @('node_modules','.next','.git','logs','.venv','models','coverage','.env.local','.env.production','next-build.tar.gz','seo-agent-deploy.zip')
+  $items = Get-ChildItem -Path '.' -Force | Where-Object { $exclude -notcontains $_.Name }
+  Compress-Archive -Path $items.FullName -DestinationPath 'seo-agent-deploy.zip' -CompressionLevel Optimal -Force
   ```
-- `next-build.zip` — the pre-built `.next/` output (excluding `dev/` and
-  `cache/`):
-  ```powershell
-  $items = Get-ChildItem -Path 'C:\MAMP\htdocs\dpro\seo-agent\agent\.next' -Force |
-           Where-Object { $_.Name -ne 'dev' -and $_.Name -ne 'cache' }
-  Compress-Archive -Path $items.FullName -DestinationPath 'C:\MAMP\htdocs\dpro\seo-agent\next-build.zip' -CompressionLevel Optimal -Force
+
+- **`next-build.tar.gz`** — the pre-built `.next/` output (excluding `dev/`
+  and `cache/`). **Use `.tar.gz` NOT `.zip`** because cPanel's ClamAV
+  antivirus blocks zip files containing JavaScript (false positive
+  `Sanesecurity.Foxhole.JS_Zip_12`):
+  ```bash
+  tar -cf next-build.tar --exclude='dev' --exclude='cache' -C .next .
+  gzip next-build.tar
   ```
 
 ### 5.3 Upload to server
@@ -180,16 +191,38 @@ nano .env.production
 ```bash
 rm -rf .next
 mkdir -p .next
-unzip -o next-build.zip -d .next/
-ls -la .next/ | head -10    # expect server/, static/, build-manifest.json, ...
-rm next-build.zip
+tar -xzf next-build.tar.gz -C .next/
+ls .next/ | head -10    # expect server/, static/, build-manifest.json, ...
+rm next-build.tar.gz
 ```
 
-### 5.7 Run database migrations
+### 5.7 Install devDependencies needed at runtime
+
+`@tanstack/react-query-devtools` is in `devDependencies` but the dynamic
+import in `_app.tsx` still causes Next.js to look for it at startup even in
+production. cPanel installs with `NODE_ENV=production` which skips
+devDependencies, so we must install it explicitly:
 
 ```bash
-npm run db:migrate:prod
+cd /home/seoagent/nodevenv/public_html/agent/22/lib/node_modules/@tanstack
+npm pack @tanstack/react-query-devtools@5 2>/dev/null && tar -xzf tanstack-react-query-devtools-*.tgz && mv package react-query-devtools && rm -f tanstack-react-query-devtools-*.tgz
+npm pack @tanstack/query-devtools@5 2>/dev/null && tar -xzf tanstack-query-devtools-*.tgz && mv package query-devtools && rm -f tanstack-query-devtools-*.tgz
+cd /home/seoagent/public_html/agent
+ls node_modules/@tanstack/react-query-devtools/package.json && echo "OK"
 ```
+
+> This only needs to be done once. The packages survive across deploys
+> because they live in the venv `node_modules`, not in the project directory.
+
+### 5.8 Run database migrations
+
+```bash
+NODE_ENV=production npx sequelize-cli db:migrate --env production
+```
+
+> **Note:** Do NOT use `npm run db:migrate:prod` — the npm script uses
+> `set NODE_ENV=production&&` which is Windows-only syntax. On Linux use
+> `NODE_ENV=production npx sequelize-cli db:migrate --env production`.
 
 This creates all tables: users, domains, keywords, workspaces, workspace_members,
 workspace_invitations, posts, search_analytics, failed_jobs, notification_logs, etc.
@@ -254,28 +287,74 @@ Replace `REPLACE_WITH_APIKEY` with the value from `.env.production → APIKEY`.
 
 ## 9. Updating the Application (subsequent deploys)
 
-For any code change:
+### Quick-deploy checklist
 
-1. Edit locally → test with `npm run dev`.
-2. Run `npm run build` locally.
-3. Rebuild the two zips (`seo-agent-deploy.zip`, `next-build.zip`).
-4. Upload both to `/home/seoagent/public_html/agent/`.
-5. On the server:
-   ```bash
-   source /home/seoagent/nodevenv/public_html/agent/22/bin/activate && cd /home/seoagent/public_html/agent
-   unzip -o seo-agent-deploy.zip
-   rm -rf .next && mkdir -p .next && unzip -o next-build.zip -d .next/
-   PUPPETEER_SKIP_DOWNLOAD=true npm install    # only if package.json changed
-   npm run db:migrate:prod                      # only if new migrations exist
-   ```
-6. cPanel → Node.js App → **RESTART**.
+```bash
+# === LOCAL (Windows / macOS) ===
+
+# 1. Build with production URL + webpack
+cd C:\xampp\htdocs\dpro\seo-ai-agent
+NEXT_PUBLIC_APP_URL=https://seo-agent.net npx next build --webpack
+
+# 2. Package build (tar.gz, NOT zip — ClamAV blocks JS in zips)
+tar -cf next-build.tar --exclude='dev' --exclude='cache' -C .next .
+gzip next-build.tar
+
+# 3. Package source
+# PowerShell:
+$exclude = @('node_modules','.next','.git','logs','.venv','models','coverage','.env.local','.env.production','next-build.tar.gz','seo-agent-deploy.zip')
+$items = Get-ChildItem -Path '.' -Force | Where-Object { $exclude -notcontains $_.Name }
+Compress-Archive -Path $items.FullName -DestinationPath 'seo-agent-deploy.zip' -CompressionLevel Optimal -Force
+
+# 4. Upload both files to /home/seoagent/public_html/agent/ via cPanel File Manager
+```
+
+```bash
+# === SERVER (cPanel Terminal) ===
+
+source /home/seoagent/nodevenv/public_html/agent/22/bin/activate && cd /home/seoagent/public_html/agent
+
+# 5. Extract source
+unzip -o seo-agent-deploy.zip
+
+# 6. Extract build
+rm -rf .next && mkdir -p .next
+tar -xzf next-build.tar.gz -C .next/
+
+# 7. Cleanup archives
+rm -f next-build.tar.gz seo-agent-deploy.zip
+
+# 8. Install deps (only if package.json changed)
+PUPPETEER_SKIP_DOWNLOAD=true npm install
+
+# 9. Run migrations (only if new migration files exist)
+NODE_ENV=production npx sequelize-cli db:migrate --env production
+
+# 10. cPanel → Node.js App → RESTART
+```
+
+### Version mismatch gotcha
+
+The `next` package version installed on the server MUST match the version used
+for the local build. If they differ, `app.prepare()` will crash with a cryptic
+`.map` error. Check both sides:
+
+```bash
+# Local
+node -e "console.log(require('next/package.json').version)"
+
+# Server
+node -e "console.log(require('next/package.json').version)"
+```
+
+If they differ, update locally: `npm install next@<server-version>` then rebuild.
 
 ### Faster path for tiny fixes
 
 If you changed only a handful of files (e.g. a single API route), you can
-skip the full zip and upload only those files via File Manager. Then still
-rebuild `.next` locally and upload `next-build.zip` — this is the non-optional
-part, because the Next.js runtime reads from `.next/server/pages/**`.
+skip `seo-agent-deploy.zip` and upload only those files via File Manager.
+You still MUST rebuild `.next` locally and upload `next-build.tar.gz` — the
+Next.js runtime reads compiled output from `.next/server/pages/**`.
 
 ---
 
@@ -322,6 +401,54 @@ elsewhere, wrap the unaggregated column in `ANY_VALUE()` or add it to
 ### Google profile picture not showing
 Ensure `<img>` tags include `referrerPolicy="no-referrer"` (already applied in
 `components/common/AccountMenu.tsx`).
+
+### `Cannot find package '@tanstack/react-query-devtools'`
+This devDependency is dynamically imported in `_app.tsx`. cPanel installs
+with `NODE_ENV=production` and skips devDeps. Fix: install it manually in
+the venv (see §5.7). This only needs to be done once.
+
+### `Cannot read properties of undefined (reading 'map')` on startup
+Almost always a **Next.js version mismatch** between the local build and
+the server. The `.next/` output is version-specific. Fix: match versions
+(see §9 "Version mismatch gotcha"), rebuild, re-upload.
+
+### `NEXT_PUBLIC_APP_URL` pointing to localhost in production
+`NEXT_PUBLIC_*` variables are **baked into the JS bundle at build time**.
+Setting them in `.env.production` on the server has no effect for
+client-side code. Fix: set them BEFORE running `next build`:
+```bash
+NEXT_PUBLIC_APP_URL=https://seo-agent.net npx next build --webpack
+```
+
+### ClamAV blocks `.zip` upload (Sanesecurity.Foxhole.JS_Zip)
+cPanel's antivirus flags zip files containing JavaScript as malware (false
+positive). Fix: use `.tar.gz` instead of `.zip` for the `.next/` build
+archive (see §5.2).
+
+### `node_modules` broken after `npm audit fix --force`
+`npm audit fix --force` replaces the cPanel symlink with a real directory.
+Fix:
+```bash
+rm -rf node_modules
+ln -s /home/seoagent/nodevenv/public_html/agent/22/lib/node_modules node_modules
+```
+Then click **Run NPM Install** in cPanel Node.js App page.
+
+### `Cloudlinux NodeJS Selector demands symlink` error
+Same as above — `node_modules` must be a symlink, not a real directory.
+
+### Database reset (nuclear option)
+If columns are missing or tables are corrupt, drop everything and re-run
+migrations from scratch:
+```bash
+mysql -u seoagent_agent -p'Necl4.p1)bWc}PJT' seoagent_agent -e "
+SET FOREIGN_KEY_CHECKS=0;
+$(mysql -u seoagent_agent -p'Necl4.p1)bWc}PJT' seoagent_agent -e \
+  "SELECT CONCAT('DROP TABLE IF EXISTS \\\`',table_name,'\\\`;') FROM information_schema.tables WHERE table_schema='seoagent_agent';" 2>/dev/null | grep DROP)
+SET FOREIGN_KEY_CHECKS=1;
+"
+NODE_ENV=production npx sequelize-cli db:migrate --env production
+```
 
 ---
 

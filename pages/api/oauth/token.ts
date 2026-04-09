@@ -12,13 +12,20 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../../database/database';
 import { randomToken, sha256, safeEqual, verifyPkce } from '../../../lib/oauth/crypto';
 
-const ACCESS_TTL_MS = 60 * 60 * 1000;          // 1 hour
-const REFRESH_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+const ACCESS_TTL_MS = 365 * 24 * 60 * 60 * 1000;  // 1 year
+const REFRESH_TTL_MS = 365 * 24 * 60 * 60 * 1000; // 1 year
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    // CORS — Claude sends the token request from its own origin
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
     await db.sync();
 
+    // Accept both JSON and form-urlencoded (OAuth spec requires form-urlencoded,
+    // but some clients send JSON). Next.js parses both into req.body.
     const body = (req.body || {}) as Record<string, string>;
     const grant_type = body.grant_type;
 

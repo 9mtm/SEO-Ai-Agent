@@ -66,9 +66,9 @@ const getDomainSearchConsoleData = async (
             return res.status(200).json({ data: null, error: 'Google Search Console is not Integrated.' });
         }
         return res.status(200).json({ data, sync });
-    } catch (error) {
-        console.log('[ERROR] Getting Search Console Data for: ', domainname, error);
-        return res.status(400).json({ data: null, error: 'Error Fetching Data from Google Search Console.' });
+    } catch (error: any) {
+        console.error('[ERROR] Getting Search Console Data for: ', domainname, error?.message || error);
+        return res.status(400).json({ data: null, error: error?.message || 'Error Fetching Data from Google Search Console.' });
     }
 };
 

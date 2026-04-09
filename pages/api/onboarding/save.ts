@@ -286,11 +286,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         private_key: ''
                     };
 
+                    // Resolve the user's active workspace so the domain is scoped correctly
+                    let wsId: number | null = null;
+                    try {
+                        const u: any = await User.findByPk(userId);
+                        wsId = u?.current_workspace_id || null;
+                        if (!wsId) {
+                            const { ensurePersonalWorkspace } = await import('../../../utils/createPersonalWorkspace');
+                            wsId = await ensurePersonalWorkspace(userId);
+                        }
+                    } catch (e) { /* non-fatal */ }
+
                     // Create domain with GSC settings
                     const domainData: any = {
                         domain: domainUrl,
                         slug: slug,
                         user_id: userId,
+                        workspace_id: wsId,
                         lastUpdated: new Date().toISOString(),
                         added: new Date().toISOString(),
                         search_console: JSON.stringify(searchConsoleSettings),
@@ -545,48 +557,61 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         ...(data.focus_keywords.low || [])
                     ].filter((k: any) => k && k.trim() !== '');
 
-                    // Check Keyword Limits
-                    const user = await User.findByPk(userId);
-                    const limit = getPlanLimits(user?.subscription_plan || 'free').keywords;
-                    const currentCount = await Keyword.count({ where: { user_id: userId } });
-
-                    if (currentCount + allFocusKeywords.length > limit) {
-                        return res.status(403).json({
-                            error: `Plan Limit Reached: Your plan allows ${limit} keywords. You have ${currentCount} and are trying to add ${allFocusKeywords.length}. (Total: ${currentCount + allFocusKeywords.length}). Please remove some keywords or upgrade.`
-                        });
-                    }
-
                     if (allFocusKeywords.length > 0 && domain.domain) {
                         try {
-                            const keywordsToAdd = allFocusKeywords.map((k: string) => ({
-                                keyword: k.trim(),
-                                device: 'desktop',
-                                country: targetCountry,
-                                domain: domain.domain, // Ensure domain is available
-                                user_id: userId,
-                                workspace_id: (domain as any).workspace_id || null,
-                                tags: JSON.stringify(['Target']), // Add "Target" tag
-                                position: 0,
-                                updating: true,
-                                history: JSON.stringify({}),
-                                url: '',
-                                sticky: false,
-                                added: new Date().toJSON(),
-                                lastUpdated: new Date().toJSON(),
-                            }));
+                            // Skip keywords already tracked (Step 1 may have added them)
+                            const existing = await Keyword.findAll({
+                                where: {
+                                    user_id: userId,
+                                    domain: domain.domain,
+                                    country: targetCountry,
+                                    device: 'desktop',
+                                },
+                                attributes: ['keyword'],
+                            });
+                            const existingSet = new Set(
+                                existing.map((k: any) => String(k.keyword).toLowerCase())
+                            );
+                            const toAdd = allFocusKeywords.filter(
+                                (k: string) => !existingSet.has(k.toLowerCase().trim())
+                            );
 
-                            // Bulk Create
-                            const newKeywords = await Keyword.bulkCreate(keywordsToAdd);
+                            // Enforce plan limit on NEW keywords only
+                            const user = await User.findByPk(userId);
+                            const limit = getPlanLimits(user?.subscription_plan || 'free').keywords;
+                            const currentCount = await Keyword.count({ where: { user_id: userId } });
+                            const capacity = Math.max(0, limit - currentCount);
+                            const toAddCapped = toAdd.slice(0, capacity);
 
-                            // Trigger Rank Refresh
-                            const settings = await getAppSettings(userId);
-                            refreshAndUpdateKeywords(newKeywords, settings);
+                            if (toAddCapped.length === 0) {
+                                console.log(`[ONBOARDING] Step 2.5: All ${allFocusKeywords.length} keywords already tracked, skipping.`);
+                            }
 
-                            console.log(`[INFO] Auto-added ${newKeywords.length} focus keywords to tracking.`);
+                            if (toAddCapped.length > 0) {
+                                const keywordsToAdd = toAddCapped.map((k: string) => ({
+                                    keyword: k.trim(),
+                                    device: 'desktop',
+                                    country: targetCountry,
+                                    domain: domain.domain,
+                                    user_id: userId,
+                                    workspace_id: (domain as any).workspace_id || null,
+                                    tags: JSON.stringify(['Target']),
+                                    position: 0,
+                                    updating: true,
+                                    history: JSON.stringify({}),
+                                    url: '',
+                                    sticky: false,
+                                    added: new Date().toJSON(),
+                                    lastUpdated: new Date().toJSON(),
+                                }));
+
+                                const newKeywords = await Keyword.bulkCreate(keywordsToAdd);
+
+                                console.log(`[INFO] Step 2.5: Added ${newKeywords.length} new focus keywords to tracking.`);
+                            }
 
                         } catch (err) {
                             console.error('[ERROR] Failed to auto-add focus keywords:', err);
-                            // Don't fail the request, just log error
                         }
                     }
                 }

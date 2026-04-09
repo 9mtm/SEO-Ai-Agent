@@ -51,14 +51,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const hasDomain = domainCount > 0;
 
         // Detect whether the user has successfully connected an external AI
-        // (Claude Desktop / Cursor / ChatGPT) via MCP. A successful connection
-        // means at least ONE MCP-triggered sync or tool call has landed for any
-        // of their domains. We look in gsc_sync_log for trigger_source='mcp'.
+        // (Claude Desktop / Cursor / ChatGPT) via MCP/OAuth. A successful
+        // connection means at least ONE active (non-revoked, non-expired)
+        // OAuth access token exists for this user.
         const [[mcpRow]]: any = await db.query(
-            `SELECT COUNT(*) n FROM gsc_sync_log gsl
-             INNER JOIN domain d ON d.ID = gsl.domain_id
-             WHERE d.user_id = ? AND gsl.trigger_source IN ('mcp','oauth')
-               AND gsl.status = 'success'`,
+            `SELECT COUNT(*) n FROM oauth_access_tokens
+             WHERE user_id = ? AND revoked = 0 AND expires_at > NOW()`,
             { replacements: [userId] }
         );
         const hasMcpConnected = Number(mcpRow?.n) > 0;

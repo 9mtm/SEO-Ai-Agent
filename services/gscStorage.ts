@@ -383,7 +383,7 @@ export async function readSCKeywordsData(domainId: number, days: number = 30): P
     const since = ymd(addDays(today(), -days));
 
     const [rows]: any = await db.query(
-        `SELECT keyword, device, country, ANY_VALUE(page) AS page,
+        `SELECT keyword, device, country, MAX(page) AS page,
                 SUM(clicks) AS clicks,
                 SUM(impressions) AS impressions,
                 AVG(ctr) AS ctr,

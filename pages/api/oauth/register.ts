@@ -54,12 +54,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     else if (typeof scope === 'string') requested = scope.split(/\s+/).filter(Boolean);
     const finalScopes = (requested.length ? requested.filter(isValidScope) : ALL_SCOPES) as string[];
 
-    // Desktop apps without client_secret → public clients (PKCE required).
-    // Confidential clients get a secret.
-    const isPublic =
-        token_endpoint_auth_method === 'none' ||
-        application_type === 'native' ||
-        redirect_uris.some((u: string) => u.startsWith('http://localhost') || u.startsWith('http://127.0.0.1'));
+    // All dynamically registered MCP clients are public (PKCE-only).
+    // They never securely store a client_secret — whether the redirect
+    // goes to localhost (Cursor, Claude Desktop) or to a cloud callback
+    // (claude.ai, chatgpt.com). Confidential clients are only created
+    // manually via /api/oauth/clients by developers who control a backend.
+    const isPublic = true;
 
     const clientId = `mcp_${randomToken(12).replace(/[-_]/g, '').slice(0, 24)}`;
     const clientSecret = isPublic ? '' : randomToken(32);
