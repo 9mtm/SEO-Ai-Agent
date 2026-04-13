@@ -8,12 +8,20 @@
  */
 import nodeMailer from 'nodemailer';
 
+export interface MailAttachment {
+    filename: string;
+    path?: string;
+    content?: Buffer | string;
+    contentType?: string;
+}
+
 export interface SendMailOptions {
     to: string | string[];
     subject: string;
     html: string;
     text?: string;
     replyTo?: string;
+    attachments?: MailAttachment[];
 }
 
 export async function sendMail(opts: SendMailOptions) {
@@ -42,7 +50,8 @@ export async function sendMail(opts: SendMailOptions) {
         subject: opts.subject,
         html: opts.html,
         text: opts.text,
-        replyTo: opts.replyTo
+        replyTo: opts.replyTo,
+        attachments: opts.attachments,
     });
 
     return info;

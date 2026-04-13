@@ -3,6 +3,7 @@ import stripe from '../../../utils/stripe';
 import User from '../../../database/models/user';
 import InvoiceDetail from '../../../database/models/invoiceDetail';
 import sequelize from '../../../database/database';
+import { createInvoice } from '../../../services/invoiceService';
 
 export const config = {
     api: {
@@ -91,6 +92,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         await invoiceDetail.save();
                         await user.save();
                         console.log(`User ${userId} subscription updated to ${subscriptionId} (workspace=${workspaceIdRaw || 'n/a'})`);
+
+                        // --- Generate invoice PDF ---
+                        try {
+                            const price = subscription.items.data[0]?.price;
+                            const amountNet = price ? (price.unit_amount / 100) : 0;
+                            const billingInterval = price?.recurring?.interval || 'year';
+
+                            await createInvoice({
+                                userId: user.id,
+                                workspaceId: workspaceIdRaw ? parseInt(workspaceIdRaw) : null,
+                                amountNet,
+                                currency: (price?.currency || 'eur').toUpperCase(),
+                                planId: planId || 'subscription',
+                                billingInterval,
+                                stripeInvoiceId: session.invoice || null,
+                                stripePaymentIntentId: session.payment_intent || null,
+                                stripeSubscriptionId: subscriptionId,
+                            });
+                            console.log(`Invoice generated for user ${userId}`);
+                        } catch (invoiceErr) {
+                            console.error('Failed to generate invoice:', invoiceErr);
+                        }
                     }
                 }
                 break;

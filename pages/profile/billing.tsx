@@ -198,13 +198,31 @@ const BillingPage: NextPage = () => {
 
     useEffect(() => {
         const loadInvoices = async () => {
-            if (!user?.stripe_customer_id) return;
+            if (!user) return;
             setIsLoadingInvoices(true);
             try {
-                const res = await fetch('/api/billing/invoices');
-                const data = await res.json();
-                if (data.invoices) {
-                    setInvoices(data.invoices);
+                // Load our generated invoices first, fallback to Stripe
+                const ownRes = await fetch('/api/user/invoices');
+                const ownData = await ownRes.json();
+                if (ownData.invoices?.length > 0) {
+                    setInvoices(ownData.invoices.map((inv: any) => ({
+                        id: inv.id,
+                        number: inv.invoice_number,
+                        date: new Date(inv.date).toLocaleDateString(),
+                        amount: `${Number(inv.amount_gross).toFixed(2).replace('.', ',')} ${inv.currency}`,
+                        amount_net: `${Number(inv.amount_net).toFixed(2).replace('.', ',')} ${inv.currency}`,
+                        tax: inv.tax_rate > 0 ? `${inv.tax_rate}%` : '-',
+                        status: inv.status,
+                        download_url: inv.pdf_url,
+                        plan_name: inv.plan_name,
+                    })));
+                } else if (user.stripe_customer_id) {
+                    // Fallback: Stripe invoices for older payments
+                    const stripeRes = await fetch('/api/billing/invoices');
+                    const stripeData = await stripeRes.json();
+                    if (stripeData.invoices) {
+                        setInvoices(stripeData.invoices);
+                    }
                 }
             } catch (err) {
                 console.error('Failed to load invoices', err);
@@ -213,7 +231,7 @@ const BillingPage: NextPage = () => {
             }
         };
         loadInvoices();
-    }, [user?.stripe_customer_id]);
+    }, [user]);
     const handleCheckout = async () => {
         if (!selectedPlan) return;
 
@@ -664,6 +682,7 @@ const InvoiceHistoryTab = ({ t, isLoading, invoices }: { t: any, isLoading: bool
                 <table className="w-full caption-bottom text-sm text-left">
                     <thead className="[&_tr]:border-b">
                         <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                            <th className="h-12 px-4 align-middle font-medium text-muted-foreground">Nr.</th>
                             <th className="h-12 px-4 align-middle font-medium text-muted-foreground">{t('billing.history.date')}</th>
                             <th className="h-12 px-4 align-middle font-medium text-muted-foreground">{t('billing.history.amount')}</th>
                             <th className="h-12 px-4 align-middle font-medium text-muted-foreground">{t('billing.history.status')}</th>
@@ -673,18 +692,19 @@ const InvoiceHistoryTab = ({ t, isLoading, invoices }: { t: any, isLoading: bool
                     <tbody className="[&_tr:last-child]:border-0">
                         {isLoading ? (
                             <tr>
-                                <td colSpan={4} className="p-8 text-center text-muted-foreground">Loading invoices...</td>
+                                <td colSpan={5} className="p-8 text-center text-muted-foreground">Loading invoices...</td>
                             </tr>
                         ) : invoices.length === 0 ? (
                             <tr>
-                                <td colSpan={4} className="p-8 text-center text-muted-foreground">No invoices found.</td>
+                                <td colSpan={5} className="p-8 text-center text-muted-foreground">No invoices found.</td>
                             </tr>
                         ) : invoices.map((invoice) => (
                             <tr key={invoice.id} className="border-b transition-colors hover:bg-muted/50">
+                                <td className="p-4 align-middle font-mono text-xs">{invoice.number || '-'}</td>
                                 <td className="p-4 align-middle">{invoice.date}</td>
                                 <td className="p-4 align-middle font-medium">{invoice.amount}</td>
                                 <td className="p-4 align-middle">
-                                    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent ${invoice.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
+                                    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent ${invoice.status === 'paid' ? 'bg-green-100 text-green-800' : invoice.status === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800'}`}>
                                         {invoice.status}
                                     </span>
                                 </td>

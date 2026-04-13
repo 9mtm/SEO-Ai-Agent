@@ -12,7 +12,7 @@ cron jobs, and maintenance.
 > the pre-built `.next/` directory** — do NOT run `npm run build` on the server.
 
 ---
-
+shh : C:\MAMP\htdocs\dpro\seo-agent\agent\server_info_deply
 ## 1. Server Environment
 
 | Item | Value |
