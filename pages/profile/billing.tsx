@@ -414,16 +414,16 @@ const BillingPage: NextPage = () => {
                                             <div className="mt-4">
                                                 {hasDiscount && (
                                                     <div className="text-sm text-gray-400 line-through">
-                                                        ${originalPrice}/{period}
+                                                        €{originalPrice}/{period}
                                                     </div>
                                                 )}
                                                 <div className="flex items-baseline">
-                                                    <span className="text-3xl font-bold">${price}</span>
+                                                    <span className="text-3xl font-bold">€{price}</span>
                                                     <span className="text-gray-500 ml-1">/{period}</span>
                                                 </div>
                                                 {hasDiscount && (
                                                     <p className="text-xs text-green-600 font-semibold mt-1">
-                                                        Save ${isMonthlyDisplay ? (originalYearly - yearlyTotal) : (originalYearly - yearlyTotal)}/year
+                                                        Save €{isMonthlyDisplay ? (originalYearly - yearlyTotal) : (originalYearly - yearlyTotal)}/year
                                                     </p>
                                                 )}
                                                 {plan.id !== 'free' && !hasDiscount && <p className="text-xs text-gray-500 mt-1">{subtext}</p>}
@@ -504,18 +504,18 @@ const BillingPage: NextPage = () => {
                                     <div className="text-right">
                                         {(selectedPlan.price as any).original > selectedPlan.price.yearly && (
                                             <div className="text-sm text-gray-400 line-through font-mono">
-                                                ${(selectedPlan.price as any).original}
+                                                €{(selectedPlan.price as any).original}
                                             </div>
                                         )}
                                         <span className="text-xl font-bold font-mono">
-                                            ${selectedPlan.price.yearly}
+                                            €{selectedPlan.price.yearly}
                                             <span className="text-sm text-gray-500 font-normal">/year</span>
                                         </span>
                                     </div>
                                 </div>
                                 {(selectedPlan.price as any).original > selectedPlan.price.yearly && (
                                     <div className="text-sm text-green-600 font-semibold mb-2">
-                                        🎉 You save ${(selectedPlan.price as any).original - selectedPlan.price.yearly} ({Math.round((((selectedPlan.price as any).original - selectedPlan.price.yearly) / (selectedPlan.price as any).original) * 100)}% off)
+                                        You save €{(selectedPlan.price as any).original - selectedPlan.price.yearly} ({Math.round((((selectedPlan.price as any).original - selectedPlan.price.yearly) / (selectedPlan.price as any).original) * 100)}% off)
                                     </div>
                                 )}
                                 <div className="text-sm text-gray-600 flex justify-between">
@@ -527,7 +527,7 @@ const BillingPage: NextPage = () => {
                                 <div className="text-sm text-gray-600 flex justify-between mt-1 pt-2 border-t border-gray-200">
                                     <span className="font-semibold">{t('billing.checkout.total')}:</span>
                                     <span className="font-bold text-neutral-900">
-                                        ${selectedPlan.price.yearly}
+                                        €{selectedPlan.price.yearly}
                                     </span>
                                 </div>
                             </div>
