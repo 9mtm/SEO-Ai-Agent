@@ -60,7 +60,8 @@
       "WebSearch",
       "Bash(cmd //c \"taskkill /F /PID 26920\")",
       "mcp__Claude_Preview__preview_start",
-      "Bash(ssh -o:*)"
+      "Bash(ssh -o:*)",
+      "WebFetch(domain:flowxtra.com)"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"
