@@ -17,14 +17,25 @@ cron jobs, and maintenance.
 
 | Item | Value |
 |---|---|
-| Host | `s2903.fra1.stableserver.net` |
-| SSH user | `seoagent` |
+| IP | `192.250.229.32` |
+| Hostname | `s2903.fra1.stableserver.net` |
+| cPanel user | `seoagent` |
+| cPanel password | stored in `server_info_deply` (local file, NOT committed) |
 | Home directory | `/home/seoagent` |
 | Application root | `/home/seoagent/public_html/agent` |
 | Node.js version | `22.22.0` (via cPanel Node.js Selector) |
 | Passenger venv activator | `source /home/seoagent/nodevenv/public_html/agent/22/bin/activate && cd /home/seoagent/public_html/agent` |
 | Public URL | `https://seo-agent.net` |
 | Startup file | `server.js` |
+| cPanel URL | `https://s2903.fra1.stableserver.net:2083` |
+| SSH | **Disabled** (port 22 closed by hosting provider). Use cPanel Terminal only. |
+| FTP | Port 21 open. User: `seoagent` |
+
+> **Access methods:**
+> - **cPanel Terminal** (browser): `https://s2903.fra1.stableserver.net:2083` → Terminal
+> - **cPanel File Manager**: same URL → File Manager → `public_html/agent/`
+> - **FTP**: `ftp://192.250.229.32` port 21 (for file uploads)
+> - **SSH**: not available (port 22 blocked by StableServer firewall)
 
 ## 2. Database (cPanel MySQL)
 

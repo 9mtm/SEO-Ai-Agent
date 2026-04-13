@@ -126,6 +126,9 @@ class User extends Model {
   @Column({ type: DataType.INTEGER, allowNull: true })
   declare current_workspace_id?: number;
 
+  @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: false })
+  declare is_super_admin: boolean;
+
   @HasOne(() => InvoiceDetail)
   declare invoice_profile: InvoiceDetail;
 
