@@ -9,13 +9,21 @@ import { sendInvoiceEmail } from '../utils/emails/invoiceEmail';
 // --- Company Info ---
 const COMPANY = {
     name: 'Dpro GmbH',
+    subtitle: 'Software Entwicklung',
     addressLine: 'Wipplingerstraße 20/18',
     zip: '1010',
     city: 'Wien',
     country: 'Österreich',
-    vatId: 'ATU79aborad', // Update with real USt-IdNr if different
-    email: 'rechnung@dpro.at',
-    website: 'www.dpro.at',
+    phone: '+43 6769054441',
+    email: 'E-Mail: office@seo-agent.net',
+    website: 'Web: dpro.at',
+    fnNr: 'FN-Nr.: 631492S',
+    vatId: 'USt.-ID: ATU81099445',
+    steuerNr: 'Steuer-Nr.: 129072682',
+    ceo: 'Geschäftsführung: Mohamed Alarade',
+    bankName: 'Erste Bank',
+    iban: 'IBAN: AT972011185158190500',
+    bic: 'BIC: GIBAATWWXXX',
     contactPerson: 'Mohamed Alarade',
 };
 
@@ -42,7 +50,7 @@ export function determineTax(country?: string | null, vatId?: string | null): { 
     const c = (country || '').trim().toLowerCase();
 
     if (!c || AUSTRIA_KEYS.includes(c)) {
-        return { rate: 20, text: 'zzgl. Umsatzsteuer 20%' };
+        return { rate: 20, text: 'VAT 20%' };
     }
 
     if (EU_COUNTRIES.includes(c)) {
@@ -50,11 +58,11 @@ export function determineTax(country?: string | null, vatId?: string | null): { 
             return { rate: 0, text: 'Reverse Charge §13b UStG' };
         }
         // EU individual without VAT => still 20% (simplified, B2C)
-        return { rate: 20, text: 'zzgl. Umsatzsteuer 20%' };
+        return { rate: 20, text: 'VAT 20%' };
     }
 
     // Non-EU
-    return { rate: 0, text: 'Steuerfreie Ausfuhrlieferung' };
+    return { rate: 0, text: 'Tax-free export' };
 }
 
 /**
@@ -169,7 +177,7 @@ export async function generateInvoicePdf(invoice: Invoice): Promise<string> {
 
     const logoPath = path.join(process.cwd(), 'public', 'dpro_logo.png');
 
-    const doc = new PDFDocument({ size: 'A4', margin: 50 });
+    const doc = new PDFDocument({ size: 'A4', margins: { top: 50, bottom: 0, left: 50, right: 50 } });
     const stream = fs.createWriteStream(filePath);
     doc.pipe(stream);
 
@@ -178,15 +186,10 @@ export async function generateInvoicePdf(invoice: Invoice): Promise<string> {
     const marginRight = 50;
     const contentWidth = pageWidth - marginLeft - marginRight;
 
-    // --- Header: Logo top-right ---
+    // --- Header: Logo top-left ---
     if (fs.existsSync(logoPath)) {
-        doc.image(logoPath, pageWidth - marginRight - 80, 30, { width: 80 });
+        doc.image(logoPath, marginLeft, 30, { width: 70 });
     }
-
-    // Company name next to logo
-    doc.fontSize(16).font('Helvetica-Bold')
-        .fillColor('#333333')
-        .text('Dpro', pageWidth - marginRight - 80 - 60, 55, { width: 60, align: 'right' });
 
     // --- Sender line (small, above recipient) ---
     doc.fontSize(7).font('Helvetica')
@@ -229,32 +232,25 @@ export async function generateInvoicePdf(invoice: Invoice): Promise<string> {
     };
 
     doc.fontSize(12).font('Helvetica-Bold').fillColor('#000000')
-        .text('Rechnungs-Nr.', labelX, infoY, { width: 100 });
+        .text('Invoice No.', labelX, infoY, { width: 100 });
     doc.fontSize(12).font('Helvetica-Bold')
         .text(invoice.invoice_number, labelX + 100, infoY, { width: valueX - labelX - 100, align: 'right' });
     infoY += 20;
 
-    drawInfoRow('Rechnungsdatum', formatDate(invoice.invoice_date));
-    drawInfoRow('Lieferdatum', formatDate(invoice.invoice_date));
+    drawInfoRow('Invoice Date', formatDate(invoice.invoice_date));
+    drawInfoRow('Delivery Date', formatDate(invoice.invoice_date));
 
     if (invoice.customer_vat_id) {
-        drawInfoRow('Ihre USt-Id.', invoice.customer_vat_id);
+        drawInfoRow('VAT ID', invoice.customer_vat_id);
     }
-    drawInfoRow('Ihr Ansprechpartner', COMPANY.contactPerson);
 
     // --- Invoice title ---
     const titleY = Math.max(recipientY + 30, infoY + 20);
     doc.fontSize(14).font('Helvetica-Bold').fillColor('#000000')
-        .text(`Invoice no. ${invoice.invoice_number}`, marginLeft, titleY);
-
-    // --- Greeting ---
-    doc.fontSize(10).font('Helvetica').fillColor('#333333')
-        .text('Sehr geehrte Damen und Herren,', marginLeft, titleY + 25);
-    doc.text('vielen Dank für Ihren Auftrag und das damit verbundene Vertrauen!', marginLeft, titleY + 40);
-    doc.text('Hiermit stelle ich Ihnen die folgenden Leistungen in Rechnung:', marginLeft, titleY + 54);
+        .text(`Invoice ${invoice.invoice_number}`, marginLeft, titleY);
 
     // --- Items table ---
-    const tableY = titleY + 80;
+    const tableY = titleY + 30;
     const colPos = marginLeft;
     const colDesc = marginLeft + 35;
     const colQty = marginLeft + contentWidth * 0.55;
@@ -264,11 +260,11 @@ export async function generateInvoicePdf(invoice: Invoice): Promise<string> {
     // Table header
     doc.rect(marginLeft, tableY, contentWidth, 22).fill('#f5f5f5');
     doc.fontSize(8).font('Helvetica-Bold').fillColor('#333333');
-    doc.text('Pos.', colPos + 5, tableY + 6);
-    doc.text('Beschreibung', colDesc, tableY + 6);
-    doc.text('Menge', colQty, tableY + 6, { width: 50, align: 'right' });
-    doc.text('Einzelpreis', colUnit, tableY + 6, { width: 60, align: 'right' });
-    doc.text('Gesamtpreis', colTotal, tableY + 6, { width: 65, align: 'right' });
+    doc.text('No.', colPos + 5, tableY + 6);
+    doc.text('Description', colDesc, tableY + 6);
+    doc.text('Qty', colQty, tableY + 6, { width: 50, align: 'right' });
+    doc.text('Unit Price', colUnit, tableY + 6, { width: 60, align: 'right' });
+    doc.text('Total', colTotal, tableY + 6, { width: 65, align: 'right' });
 
     // Table row
     const rowY = tableY + 26;
@@ -283,7 +279,7 @@ export async function generateInvoicePdf(invoice: Invoice): Promise<string> {
     doc.font('Helvetica').fontSize(8).fillColor('#555555');
 
     doc.fontSize(9).font('Helvetica').fillColor('#000000');
-    doc.text('1,00 Stk', colQty, rowY, { width: 50, align: 'right' });
+    doc.text('1', colQty, rowY, { width: 50, align: 'right' });
     doc.text(`${formatMoney(invoice.amount_net)} ${currency}`, colUnit, rowY, { width: 60, align: 'right' });
     doc.text(`${formatMoney(invoice.amount_net)} ${currency}`, colTotal, rowY, { width: 65, align: 'right' });
 
@@ -295,44 +291,37 @@ export async function generateInvoicePdf(invoice: Invoice): Promise<string> {
     // Net
     doc.rect(marginLeft, totalsY, contentWidth, 20).fill('#f0f7ff');
     doc.fontSize(9).font('Helvetica').fillColor('#333333')
-        .text('Gesamtbetrag netto', totalsLabelX + 5, totalsY + 5, { width: contentWidth * 0.7 });
+        .text('Subtotal', totalsLabelX + 5, totalsY + 5, { width: contentWidth * 0.7 });
     doc.font('Helvetica-Bold')
         .text(`${formatMoney(invoice.amount_net)} ${currency}`, totalsValueX, totalsY + 5, { width: 65, align: 'right' });
 
     // Tax
     const taxRowY = totalsY + 22;
     doc.fontSize(9).font('Helvetica').fillColor('#333333')
-        .text(invoice.tax_text || `zzgl. Umsatzsteuer ${invoice.tax_rate}%`, totalsLabelX + 5, taxRowY + 3, { width: contentWidth * 0.7 });
+        .text(invoice.tax_rate > 0 ? `VAT ${invoice.tax_rate}%` : (invoice.tax_text || 'Tax'), totalsLabelX + 5, taxRowY + 3, { width: contentWidth * 0.7 });
     doc.text(`${formatMoney(invoice.tax_amount)} ${currency}`, totalsValueX, taxRowY + 3, { width: 65, align: 'right' });
 
     // Gross (bold)
     const grossRowY = taxRowY + 22;
     doc.rect(marginLeft, grossRowY, contentWidth, 22).fill('#e8f0fe');
     doc.fontSize(10).font('Helvetica-Bold').fillColor('#000000')
-        .text('Gesamtbetrag brutto', totalsLabelX + 5, grossRowY + 5, { width: contentWidth * 0.7 });
+        .text('Total', totalsLabelX + 5, grossRowY + 5, { width: contentWidth * 0.7 });
     doc.text(`${formatMoney(invoice.amount_gross)} ${currency}`, totalsValueX, grossRowY + 5, { width: 65, align: 'right' });
 
-    // --- Payment note ---
-    const noteY = grossRowY + 45;
-    doc.fontSize(9).font('Helvetica').fillColor('#cc6600')
-        .text(
-            `Bitte überweisen Sie den Rechnungsbetrag unter Angabe der Rechnungsnummer ${invoice.invoice_number} auf das unten angegebene Konto. Der Rechnungsbetrag ist innerhalb von 14 Tagen fällig.`,
-            marginLeft, noteY, { width: contentWidth }
-        );
+    // --- Footer (3 compact centered lines) ---
+    const footerY = doc.page.height - 95;
+    doc.moveTo(marginLeft, footerY - 8).lineTo(marginLeft + contentWidth, footerY - 8).strokeColor('#cccccc').lineWidth(0.5).stroke();
+    doc.fontSize(8).font('Helvetica').fillColor('#777777');
+    const footerLineH = 9;
 
-    // --- Closing ---
-    const closeY = noteY + 40;
-    doc.fontSize(10).font('Helvetica').fillColor('#333333')
-        .text('Mit freundlichen Grüßen,', marginLeft, closeY);
-    doc.text(COMPANY.contactPerson, marginLeft, closeY + 14);
+    const fLine1 = 'Dpro GmbH  ·  Software Entwicklung  ·  Wipplingerstraße 20/18  ·  1010 Wien  ·  Österreich';
+    const fLine2 = 'Tel.: +43 6769054441  ·  E-Mail: office@seo-agent.net';
+    const fLine3 = 'FN-Nr.: 631492S  ·  USt.-ID: ATU81090445  ·  Steuer-Nr.: 129072682';
 
-    // --- Footer ---
-    const footerY = doc.page.height - 70;
-    doc.fontSize(7).font('Helvetica').fillColor('#999999');
-    doc.text(
-        `${COMPANY.name} | ${COMPANY.addressLine}, ${COMPANY.zip} ${COMPANY.city} | ${COMPANY.email} | ${COMPANY.website}`,
-        marginLeft, footerY, { width: contentWidth, align: 'center' }
-    );
+    let tw: number;
+    tw = doc.widthOfString(fLine1); doc.text(fLine1, marginLeft + (contentWidth - tw) / 2, footerY, { lineBreak: false });
+    tw = doc.widthOfString(fLine2); doc.text(fLine2, marginLeft + (contentWidth - tw) / 2, footerY + footerLineH + 4, { lineBreak: false });
+    tw = doc.widthOfString(fLine3); doc.text(fLine3, marginLeft + (contentWidth - tw) / 2, footerY + footerLineH * 2 + 8, { lineBreak: false });
 
     doc.end();
 

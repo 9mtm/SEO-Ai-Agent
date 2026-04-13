@@ -4,6 +4,8 @@ import verifyUser from '../../../utils/verifyUser';
 import User from '../../../database/models/user';
 import InvoiceDetail from '../../../database/models/invoiceDetail';
 import sequelize from '../../../database/database';
+import { createInvoice } from '../../../services/invoiceService';
+import Invoice from '../../../database/models/invoice';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'POST') {
@@ -65,6 +67,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             await invoiceDetail.save();
             await user.save();
+
+            // Generate invoice (also handles cases where webhook didn't fire, e.g. localhost)
+            try {
+                const existing = await Invoice.findOne({
+                    where: { stripe_subscription_id: subscriptionId, user_id: user.id }
+                });
+                if (!existing) {
+                    const price = subscription.items.data[0]?.price;
+                    const amountNet = price ? (price.unit_amount / 100) : 0;
+                    const billingInterval = price?.recurring?.interval || 'year';
+
+                    await createInvoice({
+                        userId: user.id,
+                        amountNet,
+                        currency: (price?.currency || 'eur').toUpperCase(),
+                        planId: planId || 'subscription',
+                        billingInterval,
+                        stripeInvoiceId: session.invoice as string || null,
+                        stripePaymentIntentId: session.payment_intent as string || null,
+                        stripeSubscriptionId: subscriptionId,
+                    });
+                    console.log(`Invoice generated via verify-session for user ${user.id}`);
+                }
+            } catch (invoiceErr) {
+                console.error('Failed to generate invoice in verify-session:', invoiceErr);
+            }
+
             return res.status(200).json({ success: true, plan: planId });
         }
 

@@ -709,16 +709,20 @@ const InvoiceHistoryTab = ({ t, isLoading, invoices }: { t: any, isLoading: bool
                                     </span>
                                 </td>
                                 <td className="p-4 align-middle text-right">
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-8 gap-2"
-                                        disabled={!invoice.download_url}
-                                        onClick={() => invoice.download_url && window.open(invoice.download_url, '_blank')}
-                                    >
-                                        <Download className="h-4 w-4" />
-                                        PDF
-                                    </Button>
+                                    {invoice.download_url ? (
+                                        <a
+                                            href={invoice.download_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            download
+                                            className="inline-flex items-center gap-2 h-8 px-3 text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
+                                        >
+                                            <Download className="h-4 w-4" />
+                                            PDF
+                                        </a>
+                                    ) : (
+                                        <span className="text-muted-foreground text-sm">-</span>
+                                    )}
                                 </td>
                             </tr>
                         ))}
