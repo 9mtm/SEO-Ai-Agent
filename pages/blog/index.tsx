@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Clock, ArrowRight, Calendar } from 'lucide-react';
+import LandingHeader from '../../components/common/LandingHeader';
+import Footer from '../../components/common/Footer';
 
 export default function BlogPage() {
     const [posts, setPosts] = useState<any[]>([]);
@@ -27,23 +28,10 @@ export default function BlogPage() {
             </Head>
 
             <div className="min-h-screen bg-white">
-                {/* Nav */}
-                <nav className="border-b border-neutral-200 bg-white sticky top-0 z-50">
-                    <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-                        <Link href="/" className="flex items-center gap-2">
-                            <Image src="/dpro_logo.png" alt="SEO AI Agent" width={32} height={32} />
-                            <span className="font-bold text-lg">SEO AI Agent</span>
-                        </Link>
-                        <div className="flex items-center gap-6">
-                            <Link href="/blog" className="text-sm font-semibold text-blue-600">Blog</Link>
-                            <Link href="/contact" className="text-sm text-neutral-600 hover:text-neutral-900">Contact</Link>
-                            <Link href="/login" className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Get Started</Link>
-                        </div>
-                    </div>
-                </nav>
+                <LandingHeader activePage="blog" />
 
                 {/* Hero */}
-                <header className="bg-gradient-to-b from-blue-50 to-white py-16">
+                <header className="bg-gradient-to-b from-blue-50 to-white pt-24 pb-16">
                     <div className="max-w-4xl mx-auto px-4 text-center">
                         <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4">
                             SEO Insights & AI Strategies
@@ -112,12 +100,7 @@ export default function BlogPage() {
                     )}
                 </main>
 
-                {/* Footer */}
-                <footer className="border-t bg-neutral-50 py-8">
-                    <div className="max-w-6xl mx-auto px-4 text-center text-sm text-neutral-500">
-                        © {new Date().getFullYear()} Dpro GmbH — <Link href="/privacy" className="hover:underline">Privacy</Link> · <Link href="/terms" className="hover:underline">Terms</Link> · <Link href="/imprint" className="hover:underline">Imprint</Link>
-                    </div>
-                </footer>
+                <Footer />
             </div>
         </>
     );

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image';
-import { Send, CheckCircle2, Mail, MessageSquare } from 'lucide-react';
+import { Send, CheckCircle2, Mail } from 'lucide-react';
 import toast from 'react-hot-toast';
+import LandingHeader from '../components/common/LandingHeader';
+import Footer from '../components/common/Footer';
 
 export default function ContactPage() {
     const [form, setForm] = useState({ name: '', email: '', message: '' });
@@ -44,21 +45,9 @@ export default function ContactPage() {
             </Head>
 
             <div className="min-h-screen bg-white">
-                <nav className="border-b border-neutral-200 bg-white sticky top-0 z-50">
-                    <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-                        <Link href="/" className="flex items-center gap-2">
-                            <Image src="/dpro_logo.png" alt="SEO AI Agent" width={32} height={32} />
-                            <span className="font-bold text-lg">SEO AI Agent</span>
-                        </Link>
-                        <div className="flex items-center gap-6">
-                            <Link href="/blog" className="text-sm text-neutral-600 hover:text-neutral-900">Blog</Link>
-                            <Link href="/contact" className="text-sm font-semibold text-blue-600">Contact</Link>
-                            <Link href="/login" className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Get Started</Link>
-                        </div>
-                    </div>
-                </nav>
+                <LandingHeader activePage="contact" />
 
-                <main className="max-w-2xl mx-auto px-4 py-16">
+                <main className="max-w-2xl mx-auto px-4 pt-24 pb-16">
                     <div className="text-center mb-10">
                         <span className="inline-block px-4 py-1.5 bg-blue-50 text-blue-700 text-sm font-semibold rounded-full mb-4">
                             Get In Touch
@@ -151,11 +140,7 @@ export default function ContactPage() {
                     )}
                 </main>
 
-                <footer className="border-t bg-neutral-50 py-8">
-                    <div className="max-w-6xl mx-auto px-4 text-center text-sm text-neutral-500">
-                        © {new Date().getFullYear()} Dpro GmbH — <Link href="/privacy" className="hover:underline">Privacy</Link> · <Link href="/terms" className="hover:underline">Terms</Link>
-                    </div>
-                </footer>
+                <Footer />
             </div>
         </>
     );

@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Clock, Calendar, ArrowLeft, User } from 'lucide-react';
+import LandingHeader from '../../components/common/LandingHeader';
+import Footer from '../../components/common/Footer';
 
 export default function BlogPostPage() {
     const router = useRouter();
@@ -55,32 +56,21 @@ export default function BlogPostPage() {
             </Head>
 
             <div className="min-h-screen bg-white">
-                <nav className="border-b border-neutral-200 bg-white sticky top-0 z-50">
-                    <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-                        <Link href="/" className="flex items-center gap-2">
-                            <Image src="/dpro_logo.png" alt="SEO AI Agent" width={32} height={32} />
-                            <span className="font-bold text-lg">SEO AI Agent</span>
-                        </Link>
-                        <div className="flex items-center gap-6">
-                            <Link href="/blog" className="text-sm font-semibold text-blue-600">Blog</Link>
-                            <Link href="/login" className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Get Started</Link>
-                        </div>
-                    </div>
-                </nav>
+                <LandingHeader activePage="blog" />
 
                 {loading ? (
-                    <div className="max-w-3xl mx-auto px-4 py-16 animate-pulse space-y-4">
+                    <div className="max-w-3xl mx-auto px-4 pt-24 py-16 animate-pulse space-y-4">
                         <div className="h-8 w-3/4 bg-neutral-200 rounded" />
                         <div className="h-4 w-1/2 bg-neutral-200 rounded" />
                         <div className="h-64 bg-neutral-100 rounded-xl mt-8" />
                     </div>
                 ) : !post ? (
-                    <div className="max-w-3xl mx-auto px-4 py-20 text-center">
+                    <div className="max-w-3xl mx-auto px-4 pt-24 py-20 text-center">
                         <h1 className="text-2xl font-bold mb-2">Post not found</h1>
                         <Link href="/blog" className="text-blue-600 hover:underline">← Back to blog</Link>
                     </div>
                 ) : (
-                    <article className="max-w-3xl mx-auto px-4 py-12">
+                    <article className="max-w-3xl mx-auto px-4 pt-24 py-12">
                         <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline mb-6">
                             <ArrowLeft className="h-4 w-4" /> Back to blog
                         </Link>
@@ -128,11 +118,7 @@ export default function BlogPostPage() {
                     </article>
                 )}
 
-                <footer className="border-t bg-neutral-50 py-8 mt-16">
-                    <div className="max-w-6xl mx-auto px-4 text-center text-sm text-neutral-500">
-                        © {new Date().getFullYear()} Dpro GmbH — <Link href="/privacy" className="hover:underline">Privacy</Link> · <Link href="/terms" className="hover:underline">Terms</Link>
-                    </div>
-                </footer>
+                <Footer />
             </div>
         </>
     );

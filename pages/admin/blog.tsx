@@ -5,7 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAppDialogs } from '../../components/common/AppDialog';
 import toast from 'react-hot-toast';
+import Dynamic from 'next/dynamic';
 export { getServerSideProps } from '../../utils/requireSuperAdmin';
+
+const RichTextEditor = Dynamic(() => import('../../components/admin/RichTextEditor'), { ssr: false, loading: () => <div className="border rounded-lg p-8 text-center text-neutral-400">Loading editor...</div> });
 
 export default function AdminBlog() {
     const { confirmDialog, Dialogs } = useAppDialogs();
@@ -79,7 +82,7 @@ export default function AdminBlog() {
                     <Input placeholder="Title" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} />
                     <Input placeholder="Slug (auto-generated)" value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })} />
                 </div>
-                <textarea placeholder="Content (HTML)" className="w-full border rounded-lg p-3 text-sm min-h-[200px]" value={form.content} onChange={e => setForm({ ...form, content: e.target.value })} />
+                <RichTextEditor content={form.content} onChange={(html) => setForm(f => ({ ...f, content: html }))} placeholder="Start writing your blog post..." />
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} className="border rounded-lg px-3 py-2 text-sm">
                         <option value="">Select Category</option>
