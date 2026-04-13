@@ -85,11 +85,7 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
             });
             const data = await res.json();
             if (data.sites && Array.isArray(data.sites)) {
-                // Filter out sc-domain sites to avoid duplicates
-                const filteredSites = data.sites.filter((site: any) =>
-                    !site.siteUrl.startsWith('sc-domain:')
-                );
-                setGscSites(filteredSites);
+                setGscSites(data.sites);
             }
         } catch (err) {
             console.error('Error fetching GSC sites:', err);

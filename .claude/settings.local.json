@@ -57,7 +57,9 @@
       "Bash(NEXT_PUBLIC_APP_URL=https://seo-agent.net npx next build --webpack)",
       "Bash(powershell -Command 'Compress-Archive -Path \\(Get-ChildItem '\\\\''.'\\\\'' -Force | Where-Object { @\\('\\\\''node_modules'\\\\'','\\\\''.next'\\\\'','\\\\''.git'\\\\'','\\\\''logs'\\\\'','\\\\''.venv'\\\\'','\\\\''models'\\\\'','\\\\''coverage'\\\\'','\\\\''.env.local'\\\\'','\\\\''.env.production'\\\\'','\\\\''next-build.tar.gz'\\\\'','\\\\''seo-agent-deploy.zip'\\\\''\\) -notcontains $_.Name }\\).FullName -DestinationPath '\\\\''seo-agent-deploy.zip'\\\\'' -CompressionLevel Optimal -Force')",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f'Tools: {len\\(d.get\\(\\\\\"result\\\\\",{}\\).get\\(\\\\\"tools\\\\\",[]\\)\\)}'\\) if 'result' in d else print\\(f'Error: {d}'\\)\")",
-      "WebSearch"
+      "WebSearch",
+      "Bash(cmd //c \"taskkill /F /PID 26920\")",
+      "mcp__Claude_Preview__preview_start"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"
