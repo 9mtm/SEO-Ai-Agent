@@ -19,6 +19,7 @@ import {
   Bell,
   Building2,
   Shield,
+  Gift,
 } from 'lucide-react';
 import AccountMenu from '../common/AccountMenu';
 import WorkspaceIndicator from '../common/WorkspaceIndicator';
@@ -82,6 +83,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     if (canManage) {
       navigation.push({ name: t('sidebar.billing'), href: '/profile/billing', icon: CreditCard });
     }
+    navigation.push({ name: 'Referrals', href: '/profile/referrals', icon: Gift });
     navigation.push({ name: 'Connected Apps', href: '/profile/oauth-apps', icon: Shield });
     if (canManage) {
       navigation.push({ name: t('sidebar.scraper'), href: '/profile/scraper', icon: Settings });

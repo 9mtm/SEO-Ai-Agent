@@ -61,7 +61,9 @@
       "Bash(cmd //c \"taskkill /F /PID 26920\")",
       "mcp__Claude_Preview__preview_start",
       "Bash(ssh -o:*)",
-      "WebFetch(domain:flowxtra.com)"
+      "WebFetch(domain:flowxtra.com)",
+      "Bash(/c/xampp/mysql/bin/mysql -u root -e \"SHOW DATABASES LIKE 'flowxtra_serp';\")",
+      "WebFetch(domain:console.cloud.google.com)"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"

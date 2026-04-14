@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { LayoutDashboard, Users, Building2, CreditCard, FileText, Receipt, ArrowLeft } from 'lucide-react';
+import { LayoutDashboard, Users, Building2, CreditCard, FileText, Receipt, Gift, ArrowLeft } from 'lucide-react';
 
 interface AdminLayoutProps {
     children: ReactNode;
@@ -16,6 +16,7 @@ const nav = [
     { name: 'Subscriptions', href: '/admin/subscriptions', icon: CreditCard },
     { name: 'Invoices', href: '/admin/invoices', icon: Receipt },
     { name: 'Blog Posts', href: '/admin/blog', icon: FileText },
+    { name: 'Referrals', href: '/admin/referrals', icon: Gift },
 ];
 
 export default function AdminLayout({ children, title = 'Admin' }: AdminLayoutProps) {

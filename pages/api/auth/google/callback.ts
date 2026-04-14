@@ -137,6 +137,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!pendingInvite) {
           await ensurePersonalWorkspace(user.id, googleUser.name);
         }
+
+        // Link referral if ref_code cookie exists
+        try {
+          const refCode = req.cookies?.ref_code;
+          if (refCode && /^[A-Za-z0-9]{6,10}$/.test(refCode)) {
+            const { createReferral } = await import('../../../../services/referralService');
+            const referrer = await User.findOne({ where: { referral_code: refCode } });
+            if (referrer && referrer.id !== user.id) {
+              await createReferral(referrer.id, user.id);
+            }
+          }
+        } catch (refErr) {
+          console.error('[Google Callback] Referral linking failed:', refErr);
+        }
       } else {
         // Existing user: only create a personal workspace if they have no memberships at all.
         const WorkspaceMember = (await import('../../../../database/models/workspace_member')).default;

@@ -16,6 +16,8 @@ import WorkspaceMember from './models/workspace_member';
 import WorkspaceInvitation from './models/workspace_invitation';
 import BlogPost from './models/blogPost';
 import Invoice from './models/invoice';
+import Referral from './models/referral';
+import ReferralPayout from './models/referralPayout';
 
 // MySQL connection only (SQLite removed for performance and simplicity)
 // Debugging DB Credentials
@@ -42,7 +44,7 @@ const connection = new Sequelize({
       }
    } : {},
    logging: false,
-   models: [User, Domain, Keyword, FailedJob, Post, ApiKey, ApiAuditLog, NotificationSetting, PlatformIntegration, PlatformIntegrationLog, InvoiceDetail, Workspace, WorkspaceMember, WorkspaceInvitation, BlogPost, Invoice],
+   models: [User, Domain, Keyword, FailedJob, Post, ApiKey, ApiAuditLog, NotificationSetting, PlatformIntegration, PlatformIntegrationLog, InvoiceDetail, Workspace, WorkspaceMember, WorkspaceInvitation, BlogPost, Invoice, Referral, ReferralPayout],
 });
 
 export default connection;

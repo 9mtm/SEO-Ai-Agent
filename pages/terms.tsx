@@ -228,40 +228,67 @@ const TermsOfServicePage: React.FC = () => {
                                     </div>
                                 </section>
 
-                                {/* Subscription Plans */}
+                                {/* Subscription Plans & Billing */}
                                 <section>
-                                    <h2 className="text-2xl font-bold text-neutral-900 mb-4">4. Subscription Plans & Billing</h2>
+                                    <h2 className="text-2xl font-bold text-neutral-900 mb-4">4. Subscription Plans, Billing & Refund Policy</h2>
 
                                     <h3 className="text-xl font-semibold text-neutral-900 mb-3">4.1 Plan Types</h3>
                                     <p className="text-neutral-700 leading-relaxed mb-4">
                                         SEO Agent offers the following subscription plans:
                                     </p>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                                         <div className="bg-neutral-50 p-4 rounded-lg border border-neutral-200">
                                             <h4 className="font-semibold text-neutral-900 mb-2">Free Plan</h4>
-                                            <p className="text-sm text-neutral-700">Limited features for trial purposes</p>
+                                            <p className="text-sm text-neutral-700">EUR 0.00/year — 1 domain, 9 keywords</p>
+                                        </div>
+                                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                            <h4 className="font-semibold text-neutral-900 mb-2">Basic Plan</h4>
+                                            <p className="text-sm text-neutral-700">EUR 29.00/year — 2 domains, 25 keywords</p>
                                         </div>
                                         <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                                             <h4 className="font-semibold text-neutral-900 mb-2">Pro Plan</h4>
-                                            <p className="text-sm text-neutral-700">Advanced features for growing businesses</p>
+                                            <p className="text-sm text-neutral-700">EUR 79.00/year — 5 domains, 500 keywords</p>
                                         </div>
                                         <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-                                            <h4 className="font-semibold text-neutral-900 mb-2">Enterprise Plan</h4>
-                                            <p className="text-sm text-neutral-700">Unlimited features for power users</p>
+                                            <h4 className="font-semibold text-neutral-900 mb-2">Premium Plan</h4>
+                                            <p className="text-sm text-neutral-700">EUR 199.00/year — unlimited domains, 1000 keywords</p>
                                         </div>
                                     </div>
 
                                     <h3 className="text-xl font-semibold text-neutral-900 mb-3">4.2 Payment Terms</h3>
                                     <ul className="space-y-2 ml-6 mb-6">
-                                        <li className="text-neutral-700">• Paid subscriptions are billed monthly or annually in advance</li>
-                                        <li className="text-neutral-700">• All fees are non-refundable except as required by law</li>
-                                        <li className="text-neutral-700">• We reserve the right to change pricing with 30 days' notice</li>
+                                        <li className="text-neutral-700">• All paid subscriptions are billed <strong>annually in advance</strong> (yearly billing only)</li>
+                                        <li className="text-neutral-700">• Payments are processed securely through <strong>Stripe</strong>. We do not store your credit card or payment details on our servers</li>
+                                        <li className="text-neutral-700">• All prices are in Euros (EUR) and include applicable taxes unless otherwise stated</li>
+                                        <li className="text-neutral-700">• We reserve the right to change pricing with 30 days' prior notice. Existing subscriptions will continue at the current rate until the end of the billing period</li>
                                         <li className="text-neutral-700">• Failure to pay may result in service suspension or termination</li>
                                     </ul>
 
-                                    <h3 className="text-xl font-semibold text-neutral-900 mb-3">4.3 Cancellation</h3>
+                                    <h3 className="text-xl font-semibold text-neutral-900 mb-3">4.3 Cancellation Policy</h3>
+                                    <p className="text-neutral-700 leading-relaxed mb-4">
+                                        You may cancel your subscription at any time through your account settings under <strong>Profile → Billing</strong>. When you cancel:
+                                    </p>
+                                    <ul className="space-y-2 ml-6 mb-6">
+                                        <li className="text-neutral-700">• Your subscription will <strong>not be renewed</strong> at the next billing cycle</li>
+                                        <li className="text-neutral-700">• You will <strong>retain full access</strong> to all paid features until the end of your current billing period</li>
+                                        <li className="text-neutral-700">• After your billing period expires, your account will automatically downgrade to the Free plan</li>
+                                        <li className="text-neutral-700">• Your data (domains, keywords, tracking history) will be preserved and remain accessible under Free plan limits</li>
+                                    </ul>
+
+                                    <h3 className="text-xl font-semibold text-neutral-900 mb-3">4.4 Refund Policy</h3>
+                                    <div className="bg-amber-50 p-5 rounded-lg border border-amber-200 mb-4">
+                                        <p className="text-neutral-800 leading-relaxed font-medium mb-3">
+                                            All subscription fees are <strong>non-refundable</strong>.
+                                        </p>
+                                        <ul className="space-y-2 ml-4">
+                                            <li className="text-neutral-700 text-sm">• Since all plans include a <strong>Free plan</strong> to evaluate the service before upgrading, no refunds are issued for paid subscriptions</li>
+                                            <li className="text-neutral-700 text-sm">• Partial refunds for unused periods are not available — cancellation takes effect at the end of the current billing cycle, not immediately</li>
+                                            <li className="text-neutral-700 text-sm">• No refunds are issued for plan downgrades</li>
+                                            <li className="text-neutral-700 text-sm">• Refunds required by applicable consumer protection laws (e.g., EU Consumer Rights Directive) will be honored as required by law</li>
+                                        </ul>
+                                    </div>
                                     <p className="text-neutral-700 leading-relaxed">
-                                        You may cancel your subscription at any time. Upon cancellation, you will retain access to paid features until the end of your current billing period. No refunds will be provided for partial months.
+                                        If you believe a charge was made in error, please contact us at <a href="mailto:office@dpro.at" className="text-blue-600 hover:underline font-semibold">office@dpro.at</a> within 14 days of the charge. We will review each case individually.
                                     </p>
                                 </section>
 
@@ -528,11 +555,64 @@ const TermsOfServicePage: React.FC = () => {
                                     </ul>
                                 </section>
 
+                                {/* Referral Program */}
+                                <section id="referral-program" className="scroll-mt-24">
+                                    <div className="flex items-start mb-4">
+                                        <CheckCircle className="w-6 h-6 text-blue-600 mr-3 mt-1 flex-shrink-0" />
+                                        <h2 className="text-2xl font-bold text-neutral-900">17. Referral Program</h2>
+                                    </div>
+                                    <ul className="space-y-4">
+                                        <li className="flex items-start">
+                                            <span className="font-bold text-blue-600 mr-3 mt-0.5 flex-shrink-0">17.1</span>
+                                            <span className="text-neutral-700"><strong>Eligibility.</strong> Any registered user with an active SEO Agent account may participate in the Referral Program. Participation is voluntary and subject to these terms.</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="font-bold text-blue-600 mr-3 mt-0.5 flex-shrink-0">17.2</span>
+                                            <span className="text-neutral-700"><strong>Referral Link.</strong> Each participant receives a unique referral link. When a new user registers through this link and subscribes to a paid plan, the referrer earns a commission.</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="font-bold text-blue-600 mr-3 mt-0.5 flex-shrink-0">17.3</span>
+                                            <div className="text-neutral-700">
+                                                <strong>Commission Structure.</strong> Commissions are earned based on the referred user's subscription plan. A payout of EUR 60.00 is earned when the following thresholds are met:
+                                                <ul className="mt-2 ml-4 space-y-1 list-disc text-sm">
+                                                    <li>Basic Plan (EUR 29.00/year): 4 referred subscribers</li>
+                                                    <li>Pro Plan (EUR 79.00/year): 2 referred subscribers</li>
+                                                    <li>Premium Plan (EUR 199.00/year): 1 referred subscriber</li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="font-bold text-blue-600 mr-3 mt-0.5 flex-shrink-0">17.4</span>
+                                            <span className="text-neutral-700"><strong>Payout Method.</strong> Payouts are made exclusively via PayPal. You must provide a valid PayPal email address and complete payout details in your account settings before requesting a payout.</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="font-bold text-blue-600 mr-3 mt-0.5 flex-shrink-0">17.5</span>
+                                            <span className="text-neutral-700"><strong>Payout Processing.</strong> Payout requests are reviewed and processed manually. Dpro GmbH reserves the right to approve, reject, or request additional information for any payout. Processing may take up to 30 business days.</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="font-bold text-blue-600 mr-3 mt-0.5 flex-shrink-0">17.6</span>
+                                            <span className="text-neutral-700"><strong>Tax Responsibility.</strong> Referral commissions may be subject to income tax or other taxes in your jurisdiction. You are solely responsible for reporting and paying any applicable taxes on earned commissions.</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="font-bold text-blue-600 mr-3 mt-0.5 flex-shrink-0">17.7</span>
+                                            <span className="text-neutral-700"><strong>Cancellation of Commission.</strong> If a referred user cancels their subscription or requests a refund, the associated commission may be revoked. Already paid-out commissions are not affected.</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="font-bold text-blue-600 mr-3 mt-0.5 flex-shrink-0">17.8</span>
+                                            <span className="text-neutral-700"><strong>Prohibited Conduct.</strong> Self-referrals, fake accounts, spam, misleading advertising, and any form of fraud are strictly prohibited. Violation will result in forfeiture of all pending commissions and possible account termination.</span>
+                                        </li>
+                                        <li className="flex items-start">
+                                            <span className="font-bold text-blue-600 mr-3 mt-0.5 flex-shrink-0">17.9</span>
+                                            <span className="text-neutral-700"><strong>Program Changes.</strong> Dpro GmbH reserves the right to modify, suspend, or terminate the Referral Program at any time with 30 days notice. Earned and approved commissions will be honored.</span>
+                                        </li>
+                                    </ul>
+                                </section>
+
                                 {/* Contact */}
                                 <section className="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-xl border-2 border-blue-200">
                                     <div className="flex items-start mb-4">
                                         <Mail className="w-6 h-6 text-blue-600 mr-3 mt-1 flex-shrink-0" />
-                                        <h2 className="text-2xl font-bold text-neutral-900">17. Contact Information</h2>
+                                        <h2 className="text-2xl font-bold text-neutral-900">18. Contact Information</h2>
                                     </div>
                                     <p className="text-neutral-700 leading-relaxed mb-4">
                                         If you have questions about these Terms, please contact us:

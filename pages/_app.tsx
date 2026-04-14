@@ -1,8 +1,9 @@
 
 import '../styles/globals.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import type { AppProps } from 'next/app';
+import { useRouter } from 'next/router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { LanguageProvider } from '../context/LanguageContext';
 import { Toaster } from 'react-hot-toast';
@@ -15,6 +16,16 @@ const ReactQueryDevtools = dynamic(
 );
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
+  // Capture referral code from URL into cookie
+  useEffect(() => {
+    const ref = router.query.ref;
+    if (ref && typeof ref === 'string' && /^[A-Za-z0-9]{6,10}$/.test(ref)) {
+      document.cookie = `ref_code=${ref}; path=/; max-age=${30 * 24 * 60 * 60}; SameSite=Lax`;
+    }
+  }, [router.query.ref]);
+
   const [queryClient] = React.useState(() => new QueryClient({
     defaultOptions: {
       queries: {

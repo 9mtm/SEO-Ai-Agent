@@ -62,6 +62,20 @@ export default async function handler(
     // Auto-create personal workspace for the new user
     await ensurePersonalWorkspace(user.id, name);
 
+    // Link referral if ref_code cookie exists
+    try {
+      const refCode = req.cookies?.ref_code;
+      if (refCode && /^[A-Za-z0-9]{6,10}$/.test(refCode)) {
+        const { createReferral } = await import('../../../services/referralService');
+        const referrer = await User.findOne({ where: { referral_code: refCode } });
+        if (referrer && referrer.id !== user.id) {
+          await createReferral(referrer.id, user.id);
+        }
+      }
+    } catch (refErr) {
+      console.error('[Register] Referral linking failed:', refErr);
+    }
+
     return res.status(201).json({
       success: true,
       message: 'Account created successfully',

@@ -8,7 +8,7 @@ import LandingHeader from '../components/common/LandingHeader';
 
 // Import new landing page components
 import Stats from '../components/landing/Stats';
-import HowItWorks from '../components/landing/HowItWorks';
+
 import EnhancedFeatures from '../components/landing/EnhancedFeatures';
 import AIIntegrationsShowcase from '../components/landing/AIIntegrationsShowcase';
 import Testimonials from '../components/landing/Testimonials';
@@ -253,7 +253,7 @@ const Home: NextPage = () => {
 
 
         {/* How It Works Section */}
-        <HowItWorks />
+
 
         {/* Enhanced Features Section (9 features) */}
         <EnhancedFeatures />

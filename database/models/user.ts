@@ -129,6 +129,12 @@ class User extends Model {
   @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: false })
   declare is_super_admin: boolean;
 
+  @Column({ type: DataType.STRING(8), allowNull: true, unique: true })
+  declare referral_code?: string;
+
+  @Column({ type: DataType.JSON, allowNull: true })
+  declare referral_payout_settings?: any;
+
   @HasOne(() => InvoiceDetail)
   declare invoice_profile: InvoiceDetail;
 

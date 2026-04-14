@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 user: {
                     name: user.name || user.email?.split('@')[0] || 'User',
                     email: user.email || '',
-                    picture: userData.google_picture || userData.picture || undefined,
+                    picture: userData.picture || undefined,
                     ai_api_keys: userData.ai_api_keys,
                     language: user.language || 'en',
                     subscription_plan: user.subscription_plan || 'free',

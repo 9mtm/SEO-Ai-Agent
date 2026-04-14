@@ -114,6 +114,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         } catch (invoiceErr) {
                             console.error('Failed to generate invoice:', invoiceErr);
                         }
+
+                        // Activate referral commission
+                        try {
+                            if (planId && planId !== 'free') {
+                                const { activateCommission } = await import('../../../services/referralService');
+                                await activateCommission(user.id, planId);
+                                console.log(`Referral commission checked for user ${userId} (plan: ${planId})`);
+                            }
+                        } catch (refErr) {
+                            console.error('Failed to process referral commission:', refErr);
+                        }
                     }
                 }
                 break;
@@ -134,11 +145,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
 
                     if (subscription.status === 'canceled' || subscription.status === 'unpaid') {
-                        // User model might need update too if we want to change plan name
                         const user = await User.findByPk(invoiceDetail.user_id);
                         if (user) {
-                            // user.subscription_plan = 'free';
-                            // await user.save();
+                            // Cancel referral commission
+                            try {
+                                const { cancelCommission } = await import('../../../services/referralService');
+                                await cancelCommission(user.id);
+                            } catch (refErr) {
+                                console.error('Failed to cancel referral commission:', refErr);
+                            }
                         }
                     }
                     await invoiceDetail.save();
