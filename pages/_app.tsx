@@ -15,6 +15,11 @@ const ReactQueryDevtools = dynamic(
   { ssr: false }
 );
 
+const AccessibilityWidget = dynamic(
+  () => import('../components/Accessibility/AccessibilityWidget'),
+  { ssr: false }
+);
+
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
@@ -39,6 +44,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return <QueryClientProvider client={queryClient}>
     <LanguageProvider>
       <Component {...pageProps} />
+      <AccessibilityWidget />
       <Toaster position="bottom-center" containerClassName="react_toaster" />
       {isDev && <ReactQueryDevtools initialIsOpen={false} />}
     </LanguageProvider>

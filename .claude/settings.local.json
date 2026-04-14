@@ -63,7 +63,8 @@
       "Bash(ssh -o:*)",
       "WebFetch(domain:flowxtra.com)",
       "Bash(/c/xampp/mysql/bin/mysql -u root -e \"SHOW DATABASES LIKE 'flowxtra_serp';\")",
-      "WebFetch(domain:console.cloud.google.com)"
+      "WebFetch(domain:console.cloud.google.com)",
+      "Bash(xargs cat:*)"
     ],
     "additionalDirectories": [
       "c:\\MAMP\\htdocs\\flowxtra\\hr_blogs\\seo_ai_agent"

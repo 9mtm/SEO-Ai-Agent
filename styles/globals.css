@@ -405,6 +405,91 @@ body {
 .tiptap iframe { border-radius: 0.5rem; margin: 0.75rem auto; display: block; }
 .tiptap .ProseMirror-selectednode { outline: 2px solid #3b82f6; border-radius: 0.25rem; }
 
+/* ── Accessibility Widget ── */
+.accessibility-highlight-links a {
+   background-color: yellow !important;
+   color: #000 !important;
+   text-decoration: underline !important;
+   padding: 2px 4px !important;
+   border-radius: 2px !important;
+}
+.accessibility-large-cursor,
+.accessibility-large-cursor * {
+   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><circle cx="16" cy="16" r="14" fill="none" stroke="black" stroke-width="2"/><circle cx="16" cy="16" r="2" fill="black"/></svg>') 16 16, auto !important;
+}
+.accessibility-stop-animations *,
+.accessibility-stop-animations *::before,
+.accessibility-stop-animations *::after {
+   animation-duration: 0.01ms !important;
+   animation-iteration-count: 1 !important;
+   transition-duration: 0.01ms !important;
+   scroll-behavior: auto !important;
+}
+.accessibility-high-contrast {
+   filter: contrast(1.5) brightness(1.1);
+}
+.accessibility-monochrome {
+   filter: grayscale(100%);
+}
+.accessibility-reading-mask-overlay {
+   position: fixed;
+   inset: 0;
+   pointer-events: none;
+   z-index: 9998;
+   display: none;
+}
+.accessibility-reading-mask .accessibility-reading-mask-overlay {
+   display: block;
+}
+.accessibility-readable-font {
+   font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
+   letter-spacing: 0.05em;
+}
+.accessibility-hide-images img,
+.accessibility-hide-images picture,
+.accessibility-hide-images [role="img"] {
+   display: none !important;
+}
+.accessibility-hide-images [style*="background-image"] {
+   background-image: none !important;
+}
+.accessibility-outline-focus *:focus {
+   outline: 3px solid #2563eb !important;
+   outline-offset: 2px !important;
+}
+.accessibility-outline-focus button:focus,
+.accessibility-outline-focus a:focus,
+.accessibility-outline-focus input:focus,
+.accessibility-outline-focus select:focus,
+.accessibility-outline-focus textarea:focus {
+   outline: 3px solid #2563eb !important;
+   outline-offset: 2px !important;
+   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3) !important;
+}
+.accessibility-page-structure header,
+.accessibility-page-structure nav,
+.accessibility-page-structure main,
+.accessibility-page-structure footer,
+.accessibility-page-structure section,
+.accessibility-page-structure article,
+.accessibility-page-structure aside {
+   border: 2px dashed #2563eb !important;
+   margin: 2px !important;
+   padding: 4px !important;
+}
+.accessibility-page-structure header::before,
+.accessibility-page-structure nav::before,
+.accessibility-page-structure main::before,
+.accessibility-page-structure footer::before {
+   content: attr(aria-label);
+   display: block;
+   background: #2563eb;
+   color: white;
+   padding: 2px 4px;
+   font-size: 10px;
+   margin-bottom: 2px;
+}
+
 /* Disable LastPass Icon for Secret Field */
 [autocomplete="off"]+div[data-lastpass-icon-root="true"],
 [autocomplete="off"]+div[data-lastpass-infield="true"] {
