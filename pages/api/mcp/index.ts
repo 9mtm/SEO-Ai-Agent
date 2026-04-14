@@ -22,7 +22,7 @@ import Workspace from '../../../database/models/workspace';
 import Post from '../../../database/models/post';
 import { ensureDomainSynced, readInsightData, readSCKeywordsData } from '../../../services/gscStorage';
 import { analyzeSEO } from '../../../lib/seo/analyzer';
-import { getBingQueryStats, getBingPageStats, getBingTrafficStats } from '../../../services/bingWebmaster';
+import { ensureBingDomainSynced, readBingInsightData } from '../../../services/bingStorage';
 
 // Disable Next.js body parser — the SDK handles raw streams
 export const config = {
@@ -348,48 +348,33 @@ function createMcpServer(ctx: { userId: number; workspaceId: number }) {
     });
 
     // ── Bing Webmaster Tools ──
-    server.tool('get_bing_insight', 'Get Bing Webmaster Tools stats (clicks, impressions, CTR, position) + keyword and page data for a domain.', {
+    server.tool('get_bing_insight', 'Get Bing Webmaster Tools stats (clicks, impressions, CTR, position) + keyword data for a domain. Data is cached and synced automatically.', {
         domain: z.string().describe('Domain name (e.g. example.com)'),
-    }, async ({ domain }) => {
+        days: z.number().default(30).describe('Date range in days'),
+    }, async ({ domain, days }) => {
         const d: any = await Domain.findOne({ where: { workspace_id: ctx.workspaceId, domain } });
         if (!d) return { content: [{ type: 'text', text: 'domain_not_found' }], isError: true };
-        const siteUrl = domain.startsWith('http') ? domain : `https://${domain}`;
         try {
-            const [keywords, pages, traffic] = await Promise.all([
-                getBingQueryStats(ctx.userId, siteUrl),
-                getBingPageStats(ctx.userId, siteUrl),
-                getBingTrafficStats(ctx.userId, siteUrl),
-            ]);
-            const totalClicks = traffic.reduce((s, t) => s + (t.Clicks || 0), 0);
-            const totalImpressions = traffic.reduce((s, t) => s + (t.Impressions || 0), 0);
-            const avgPosition = keywords.length > 0
-                ? keywords.reduce((s, k) => s + (k.AvgImpressionPosition || 0), 0) / keywords.length : 0;
-            return { content: [{ type: 'text', text: JSON.stringify({
-                stats: { totalClicks, totalImpressions, ctr: totalImpressions > 0 ? Math.round((totalClicks / totalImpressions) * 10000) / 100 : 0, avgPosition: Math.round(avgPosition * 10) / 10 },
-                keywords: keywords.length,
-                pages: pages.length,
-                topKeywords: keywords.slice(0, 20).map(k => ({ query: k.Query, clicks: k.Clicks, impressions: k.Impressions, position: k.AvgImpressionPosition })),
-            }) }] };
+            const plain = d.get({ plain: true });
+            await ensureBingDomainSynced(plain, ctx.userId, { source: 'mcp' });
+            const data = await readBingInsightData(d.ID, days);
+            return { content: [{ type: 'text', text: JSON.stringify(data) }] };
         } catch (err: any) {
             return { content: [{ type: 'text', text: `bing_error: ${err.message}` }], isError: true };
         }
     });
 
-    server.tool('get_bing_keywords', 'Get Bing keyword ranking data for a domain.', {
+    server.tool('get_bing_keywords', 'Get Bing keyword ranking data for a domain from cached data.', {
         domain: z.string().describe('Domain name'),
-    }, async ({ domain }) => {
+        days: z.number().default(30).describe('Date range in days'),
+    }, async ({ domain, days }) => {
         const d: any = await Domain.findOne({ where: { workspace_id: ctx.workspaceId, domain } });
         if (!d) return { content: [{ type: 'text', text: 'domain_not_found' }], isError: true };
-        const siteUrl = domain.startsWith('http') ? domain : `https://${domain}`;
         try {
-            const keywords = await getBingQueryStats(ctx.userId, siteUrl);
-            return { content: [{ type: 'text', text: JSON.stringify(keywords.map(k => ({
-                keyword: k.Query,
-                clicks: k.Clicks,
-                impressions: k.Impressions,
-                position: k.AvgImpressionPosition,
-                ctr: k.Impressions > 0 ? Math.round((k.Clicks / k.Impressions) * 10000) / 100 : 0,
-            }))) }] };
+            const plain = d.get({ plain: true });
+            await ensureBingDomainSynced(plain, ctx.userId, { source: 'mcp' });
+            const data = await readBingInsightData(d.ID, days);
+            return { content: [{ type: 'text', text: JSON.stringify(data.keywords) }] };
         } catch (err: any) {
             return { content: [{ type: 'text', text: `bing_error: ${err.message}` }], isError: true };
         }

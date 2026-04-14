@@ -1,10 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import verifyUser from '../../../utils/verifyUser';
-import {
-  getBingQueryStats,
-  getBingPageStats,
-  getBingTrafficStats,
-} from '../../../services/bingWebmaster';
+import Domain from '../../../database/models/domain';
+import { getWorkspaceContext } from '../../../utils/workspaceContext';
+import { ensureBingDomainSynced, readBingInsightData } from '../../../services/bingStorage';
+import db from '../../../database/database';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -18,51 +17,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const siteUrl = req.query.siteUrl as string;
+  const days = parseInt(req.query.days as string) || 30;
   if (!siteUrl) {
     return res.status(400).json({ error: 'siteUrl query parameter is required' });
   }
 
   try {
-    const [keywords, pages, traffic] = await Promise.all([
-      getBingQueryStats(userId, siteUrl),
-      getBingPageStats(userId, siteUrl),
-      getBingTrafficStats(userId, siteUrl),
-    ]);
+    await db.sync();
 
-    // Calculate aggregated totals from traffic stats
-    const totalClicks = traffic.reduce((sum, t) => sum + (t.Clicks || 0), 0);
-    const totalImpressions = traffic.reduce((sum, t) => sum + (t.Impressions || 0), 0);
-    const ctr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
-
-    // Avg position from keyword stats
-    const avgPosition = keywords.length > 0
-      ? keywords.reduce((sum, k) => sum + (k.AvgImpressionPosition || 0), 0) / keywords.length
-      : 0;
-
-    return res.status(200).json({
-      stats: {
-        totalClicks,
-        totalImpressions,
-        ctr: Math.round(ctr * 100) / 100,
-        avgPosition: Math.round(avgPosition * 10) / 10,
-      },
-      keywords: keywords.map((k) => ({
-        keyword: k.Query,
-        clicks: k.Clicks,
-        impressions: k.Impressions,
-        position: k.AvgImpressionPosition,
-        ctr: k.Impressions > 0
-          ? Math.round((k.Clicks / k.Impressions) * 10000) / 100
-          : 0,
-      })),
-      pages: pages.map((p) => ({
-        page: p.Url,
-        clicks: p.Clicks,
-        impressions: p.Impressions,
-        position: p.AvgImpressionPosition,
-      })),
-      countries: [],
+    // Find the domain
+    const ctx = await getWorkspaceContext(req, res);
+    const domainName = siteUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    const domain: any = await Domain.findOne({
+      where: ctx ? { workspace_id: ctx.workspaceId, domain: domainName } : { domain: domainName },
     });
+
+    if (!domain) {
+      return res.status(404).json({ error: 'Domain not found' });
+    }
+
+    // Sync Bing data (smart: cooldown + incremental)
+    await ensureBingDomainSynced(domain.get({ plain: true }), userId, { source: 'web' });
+
+    // Read cached data
+    const data = await readBingInsightData(domain.ID, days);
+
+    return res.status(200).json(data);
   } catch (error: any) {
     console.error('[Bing Stats] Error:', error);
     return res.status(500).json({ error: error.message });
