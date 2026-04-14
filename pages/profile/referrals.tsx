@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
-import { Copy, Check, Users, DollarSign, TrendingUp, Clock, Gift } from 'lucide-react';
+import { Copy, Check, Users, DollarSign, TrendingUp, Clock, Gift, ChevronDown, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLanguage } from '../../context/LanguageContext';
@@ -42,6 +42,63 @@ const COUNTRIES = [
     'Tunisia','Turkey','Turkmenistan','Tuvalu','Uganda','Ukraine','United Arab Emirates','United Kingdom','United States',
     'Uruguay','Uzbekistan','Vanuatu','Vatican City','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe',
 ];
+
+function CountrySelect({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+    const [open, setOpen] = useState(false);
+    const [search, setSearch] = useState('');
+    const ref = useRef<HTMLDivElement>(null);
+
+    const filtered = search ? COUNTRIES.filter(c => c.toLowerCase().includes(search.toLowerCase())) : COUNTRIES;
+
+    useEffect(() => {
+        const handler = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, []);
+
+    return (
+        <div ref={ref} className="relative">
+            <label className="block text-sm font-medium text-neutral-700 mb-1">Country</label>
+            <button type="button" onClick={() => setOpen(!open)} className="w-full border rounded-lg px-3 py-2 text-sm text-left flex items-center justify-between bg-white hover:border-neutral-400 transition-colors">
+                <span className={value ? 'text-neutral-900' : 'text-neutral-400'}>{value || 'Select country'}</span>
+                <ChevronDown className={`h-4 w-4 text-neutral-400 transition-transform ${open ? 'rotate-180' : ''}`} />
+            </button>
+            {open && (
+                <div className="absolute z-50 mt-1 w-full bg-white border rounded-lg shadow-lg max-h-60 overflow-hidden">
+                    <div className="p-2 border-b sticky top-0 bg-white">
+                        <div className="relative">
+                            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400" />
+                            <input
+                                type="text"
+                                placeholder="Search country..."
+                                value={search}
+                                onChange={e => setSearch(e.target.value)}
+                                className="w-full pl-8 pr-3 py-1.5 text-sm border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                autoFocus
+                            />
+                        </div>
+                    </div>
+                    <div className="overflow-y-auto max-h-48">
+                        {filtered.length === 0 ? (
+                            <div className="px-3 py-4 text-sm text-neutral-500 text-center">No country found</div>
+                        ) : (
+                            filtered.map(c => (
+                                <button
+                                    key={c}
+                                    type="button"
+                                    onClick={() => { onChange(c); setOpen(false); setSearch(''); }}
+                                    className={`w-full text-left px-3 py-2 text-sm hover:bg-blue-50 transition-colors ${c === value ? 'bg-blue-50 text-blue-700 font-medium' : 'text-neutral-700'}`}
+                                >
+                                    {c}
+                                </button>
+                            ))
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
 
 export default function ReferralsPage() {
     const { t } = useLanguage();
@@ -249,13 +306,7 @@ export default function ReferralsPage() {
                                         <label className="block text-sm font-medium text-neutral-700 mb-1">ZIP</label>
                                         <Input placeholder="ZIP code" value={settings.zip} onChange={e => setSettings({ ...settings, zip: e.target.value })} />
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-neutral-700 mb-1">Country</label>
-                                        <select value={settings.country} onChange={e => setSettings({ ...settings, country: e.target.value })} className="w-full border rounded-lg px-3 py-2 text-sm">
-                                            <option value="">Select country</option>
-                                            {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
-                                        </select>
-                                    </div>
+                                    <CountrySelect value={settings.country} onChange={(val) => setSettings({ ...settings, country: val })} />
                                 </div>
 
                                 {/* Business Toggle */}

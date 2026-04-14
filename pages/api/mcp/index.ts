@@ -31,6 +31,33 @@ export const config = {
 // ── Session store (in-memory — survives across requests on same process) ──
 const sessionTransports = new Map<string, StreamableHTTPServerTransport>();
 
+// ── MCP Trial check (Free plan = 60-day trial) ───────────────────────
+const MCP_TRIAL_DAYS = 60;
+
+async function checkMcpTrialExpired(userId: number): Promise<{ expired: boolean; daysLeft: number; message: string }> {
+    if (!userId) return { expired: false, daysLeft: MCP_TRIAL_DAYS, message: '' };
+    const user: any = await User.findByPk(userId, { attributes: ['subscription_plan', 'createdAt'] });
+    if (!user) return { expired: true, daysLeft: 0, message: 'User not found' };
+
+    // Paid users → always allowed
+    const plan = (user.subscription_plan || 'free').toLowerCase();
+    if (plan !== 'free') return { expired: false, daysLeft: -1, message: '' };
+
+    // Free users → check trial
+    const accountAgeDays = Math.floor((Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24));
+    const daysLeft = Math.max(0, MCP_TRIAL_DAYS - accountAgeDays);
+
+    if (daysLeft <= 0) {
+        return {
+            expired: true,
+            daysLeft: 0,
+            message: `Your free MCP trial has ended. Upgrade to Basic for just $29/year (only $2.42/month) to keep using your AI assistant with SEO Agent.\n\nUpgrade now: https://seo-agent.net/profile/billing\n\nWith Basic you get:\n- 2 domains & 25 keywords\n- Weekly ranking updates\n- Full MCP AI integration\n- Search Console insights`
+        };
+    }
+
+    return { expired: false, daysLeft, message: '' };
+}
+
 // ── Resolve workspace from auth context ─────────────────────────────
 async function resolveContext(req: NextApiRequest): Promise<{ userId: number; workspaceId: number } | null> {
     // 1. OAuth Bearer
@@ -62,7 +89,12 @@ function createMcpServer(ctx: { userId: number; workspaceId: number }) {
     // ── Profile ──
     server.tool('get_profile', 'Return the authenticated user profile.', {}, async () => {
         const u: any = await User.findByPk(ctx.userId);
-        return { content: [{ type: 'text', text: JSON.stringify({ id: u?.id, name: u?.name, email: u?.email, picture: u?.picture }) }] };
+        const trial = await checkMcpTrialExpired(ctx.userId);
+        return { content: [{ type: 'text', text: JSON.stringify({
+            id: u?.id, name: u?.name, email: u?.email, picture: u?.picture,
+            plan: u?.subscription_plan || 'free',
+            mcp_trial: trial.expired ? { status: 'expired', daysLeft: 0 } : { status: 'active', daysLeft: trial.daysLeft }
+        }) }] };
     });
 
     server.tool('get_current_workspace', 'Return info about the active workspace.', {}, async () => {
@@ -380,6 +412,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 jsonrpc: '2.0', id: body?.id ?? null,
                 error: { code: -32001, message: 'unauthorized' }
             });
+        }
+
+        // Check MCP trial for free users (skip for initialize — let them connect first)
+        if (ctx && !isInitialize) {
+            const trial = await checkMcpTrialExpired(ctx.userId);
+            if (trial.expired) {
+                return res.status(200).json({
+                    jsonrpc: '2.0',
+                    id: body?.id ?? null,
+                    error: { code: -32000, message: trial.message }
+                });
+            }
         }
 
         // Reuse existing session if auth matches
