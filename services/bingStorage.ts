@@ -51,14 +51,14 @@ const addDays = (d: Date, days: number) => {
 const today = () => new Date();
 
 /**
- * Parse .NET JSON date format: "/Date(1713052800000)/" → Date object
- * Also handles ISO strings and regular date strings.
+ * Parse .NET JSON date format: "/Date(1713052800000-0800)/" → Date object
+ * Handles timezone offset suffix. Also handles ISO strings.
  */
 const parseBingDate = (d: any): Date | null => {
     if (!d) return null;
-    // .NET JSON format: /Date(1234567890000)/
     if (typeof d === 'string') {
-        const match = d.match(/\/Date\((\d+)\)\//);
+        // .NET JSON format: /Date(1234567890000)/ or /Date(1234567890000-0800)/
+        const match = d.match(/\/Date\((\d+)([+-]\d+)?\)\//);
         if (match) return new Date(parseInt(match[1]));
     }
     const parsed = new Date(d);
@@ -172,7 +172,7 @@ async function runBingSync(userId: number, domainId: number, siteUrl: string, en
         console.error('[BWT SYNC] Traffic stats failed:', err.message);
     }
 
-    // 2. Keyword/query stats (GetQueryStats)
+    // 2. Keyword/query stats (GetQueryStats) — returns per-day per-keyword rows
     try {
         const keywords = await getBingQueryStats(userId, siteUrl);
         if (Array.isArray(keywords)) {
@@ -182,13 +182,15 @@ async function runBingSync(userId: number, domainId: number, siteUrl: string, en
                 const impressions = k.Impressions || 0;
                 const position = k.AvgImpressionPosition || 0;
                 const ctr = impressions > 0 ? clicks / impressions : 0;
+                const parsedDate = parseBingDate((k as any).Date);
+                const kwDate = parsedDate ? ymd(parsedDate) : endDate;
 
                 await db.query(
                     `INSERT INTO bwt_query_stats (domain_id, date, keyword, clicks, impressions, ctr, position, createdAt, updatedAt)
                      VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
                      ON DUPLICATE KEY UPDATE clicks=VALUES(clicks), impressions=VALUES(impressions),
                         ctr=VALUES(ctr), position=VALUES(position), updatedAt=NOW()`,
-                    { replacements: [domainId, endDate, keyword, clicks, impressions, ctr, position] }
+                    { replacements: [domainId, kwDate, keyword, clicks, impressions, ctr, position] }
                 );
                 rowsInserted++;
             }
