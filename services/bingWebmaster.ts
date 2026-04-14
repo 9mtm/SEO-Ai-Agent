@@ -1,6 +1,6 @@
 import { getValidMicrosoftToken } from '../utils/microsoftOAuth';
 
-const BING_API_BASE = 'https://ssl.bing.com/webmaster/api.svc/json';
+const BING_API_BASE = 'https://www.bing.com/webmaster/api.svc/json';
 
 interface BingSite {
   Url: string;
