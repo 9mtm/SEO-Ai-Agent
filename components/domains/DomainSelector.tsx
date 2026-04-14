@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { Plus, Globe, ChevronDown } from 'lucide-react';
+import { Plus, Globe, ChevronDown, Search } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
 type DomainSelectorProps = {
@@ -11,6 +11,8 @@ type DomainSelectorProps = {
 const DomainSelector = ({ domains = [], currentDomain }: DomainSelectorProps) => {
     const { t } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const searchInputRef = useRef<HTMLInputElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
@@ -24,6 +26,20 @@ const DomainSelector = ({ domains = [], currentDomain }: DomainSelectorProps) =>
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    // Focus search when dropdown opens
+    useEffect(() => {
+        if (isOpen && domains.length > 5 && searchInputRef.current) {
+            setTimeout(() => searchInputRef.current?.focus(), 100);
+        }
+        if (!isOpen) setSearchTerm('');
+    }, [isOpen, domains.length]);
+
+    const filteredDomains = useMemo(() => {
+        if (!searchTerm.trim()) return domains;
+        const q = searchTerm.toLowerCase();
+        return domains.filter(d => d.domain.toLowerCase().includes(q));
+    }, [domains, searchTerm]);
 
     const handleDomainChange = (slug: string) => {
         router.push(`/domain/insight/${slug}`);
@@ -67,9 +83,26 @@ const DomainSelector = ({ domains = [], currentDomain }: DomainSelectorProps) =>
                         {t('domainSelector.switch')}
                     </div>
 
+                    {/* Search — only show when 5+ domains */}
+                    {domains.length > 5 && (
+                        <div className="px-2 pb-2">
+                            <div className="relative">
+                                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400" />
+                                <input
+                                    ref={searchInputRef}
+                                    type="text"
+                                    placeholder="Search domains..."
+                                    value={searchTerm}
+                                    onChange={e => setSearchTerm(e.target.value)}
+                                    className="w-full pl-8 pr-3 py-1.5 text-sm border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                />
+                            </div>
+                        </div>
+                    )}
+
                     <div className="max-h-64 overflow-y-auto px-2 space-y-0.5">
-                        {domains.length > 0 ? (
-                            domains.map((domain) => (
+                        {filteredDomains.length > 0 ? (
+                            filteredDomains.map((domain) => (
                                 <button
                                     key={domain.slug}
                                     onClick={() => handleDomainChange(domain.slug)}
@@ -94,7 +127,9 @@ const DomainSelector = ({ domains = [], currentDomain }: DomainSelectorProps) =>
                                 </button>
                             ))
                         ) : (
-                            <div className="px-3 py-4 text-sm text-gray-500 text-center italic">{t('domainSelector.empty')}</div>
+                            <div className="px-3 py-4 text-sm text-gray-500 text-center italic">
+                                {searchTerm ? 'No domains found' : t('domainSelector.empty')}
+                            </div>
                         )}
                     </div>
 

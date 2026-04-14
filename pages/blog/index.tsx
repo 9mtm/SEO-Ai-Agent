@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import LandingHeader from '../../components/common/LandingHeader';
 import Footer from '../../components/common/Footer';
 
@@ -29,6 +30,8 @@ function formatDate(dateStr: string) {
 }
 
 export default function BlogPage() {
+  const router = useRouter();
+  const locale = router.locale || 'en';
   const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState<string[]>(['all']);
@@ -39,13 +42,13 @@ export default function BlogPage() {
   const searchModalInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    fetch('/api/blog')
+    fetch(`/api/blog?locale=${locale}`)
       .then((r) => r.json())
       .then((d) => {
         if (d.posts) setAllPosts(d.posts);
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [locale]);
 
   // Cmd+K shortcut
   useEffect(() => {

@@ -74,6 +74,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     navigation.push({ name: t('sidebar.profile'), href: '/profile', icon: User });
     if (canManage) {
       navigation.push(
+        { name: 'Domains', href: '/profile/domains', icon: Globe },
         { name: 'Workspaces', href: '/profile/workspaces', icon: Building2 },
         { name: 'Team Members', href: '/profile/team', icon: Users },
         { name: 'Search Console', href: '/profile/search-console', icon: Search }

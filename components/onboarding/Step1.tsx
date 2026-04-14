@@ -17,6 +17,7 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
     const [selectedSite, setSelectedSite] = useState('');
     const [loadingSites, setLoadingSites] = useState(false);
     const [checkingConnection, setCheckingConnection] = useState(true);
+    const [existingDomains, setExistingDomains] = useState<string[]>([]);
 
     // Timeout and Manual Fallback States
     const [showSkipOption, setShowSkipOption] = useState(false);
@@ -61,11 +62,19 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
     const checkGoogleConnection = async () => {
         setCheckingConnection(true);
         try {
-            const res = await fetch('/api/settings', {
-                headers: getAuthHeaders()
-            });
-            const data = await res.json();
-            if (data.settings?.google_connected) {
+            const [settingsRes, domainsRes] = await Promise.all([
+                fetch('/api/settings', { headers: getAuthHeaders() }),
+                fetch('/api/domains', { headers: getAuthHeaders() }),
+            ]);
+            const settingsData = await settingsRes.json();
+            const domainsData = await domainsRes.json();
+
+            // Store existing domain names for "Already Added" badge
+            if (domainsData.domains) {
+                setExistingDomains(domainsData.domains.map((d: any) => (d.domain || '').toLowerCase().replace(/^www\./, '')));
+            }
+
+            if (settingsData.settings?.google_connected) {
                 setIsGoogleConnected(true);
                 await fetchGscSites();
             }
@@ -120,6 +129,12 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
             .replace(/^https?:\/\//, '')
             .replace(/^sc-domain:/, '')
             .replace(/\/$/, '');
+    };
+
+    // Check if a GSC site is already added as a domain
+    const isSiteAlreadyAdded = (siteUrl: string): boolean => {
+        const clean = siteUrl.replace(/^https?:\/\//, '').replace(/^sc-domain:/, '').replace(/^www\./, '').replace(/\/$/, '').toLowerCase();
+        return existingDomains.some(d => d === clean || clean.includes(d) || d.includes(clean));
     };
 
     // Filtered sites based on search
@@ -348,6 +363,11 @@ const Step1 = ({ onNext }: { onNext: (data: any) => void }) => {
                                                         <span className="text-xs text-gray-500 truncate max-w-[300px]">{site.siteUrl}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2">
+                                                        {isSiteAlreadyAdded(site.siteUrl) && (
+                                                            <span className="text-[10px] uppercase tracking-wider bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-bold">
+                                                                Added
+                                                            </span>
+                                                        )}
                                                         {site.permissionLevel === 'siteOwner' && (
                                                             <span className="text-[10px] uppercase tracking-wider bg-green-100 text-green-700 px-2 py-0.5 rounded font-bold">
                                                                 {t('onboarding.step1.owner')}

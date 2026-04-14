@@ -18,6 +18,7 @@ import BlogPost from './models/blogPost';
 import Invoice from './models/invoice';
 import Referral from './models/referral';
 import ReferralPayout from './models/referralPayout';
+import BlogPostTranslation from './models/blogPostTranslation';
 
 // MySQL connection only (SQLite removed for performance and simplicity)
 // Debugging DB Credentials
@@ -44,7 +45,7 @@ const connection = new Sequelize({
       }
    } : {},
    logging: false,
-   models: [User, Domain, Keyword, FailedJob, Post, ApiKey, ApiAuditLog, NotificationSetting, PlatformIntegration, PlatformIntegrationLog, InvoiceDetail, Workspace, WorkspaceMember, WorkspaceInvitation, BlogPost, Invoice, Referral, ReferralPayout],
+   models: [User, Domain, Keyword, FailedJob, Post, ApiKey, ApiAuditLog, NotificationSetting, PlatformIntegration, PlatformIntegrationLog, InvoiceDetail, Workspace, WorkspaceMember, WorkspaceInvitation, BlogPost, BlogPostTranslation, Invoice, Referral, ReferralPayout],
 });
 
 export default connection;

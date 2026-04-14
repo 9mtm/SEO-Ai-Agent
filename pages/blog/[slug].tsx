@@ -40,6 +40,7 @@ function formatDateShort(dateStr: string) {
 export default function BlogPostPage() {
   const router = useRouter();
   const slug = router.query.slug as string;
+  const locale = router.locale || 'en';
   const [post, setPost] = useState<BlogPostData | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<any[]>([]);
   const [allPosts, setAllPosts] = useState<any[]>([]);
@@ -49,23 +50,23 @@ export default function BlogPostPage() {
   useEffect(() => {
     if (!slug) return;
     setLoading(true);
-    fetch(`/api/blog/${slug}`)
+    fetch(`/api/blog/${slug}?locale=${locale}`)
       .then((r) => r.json())
       .then((d) => {
         if (d.post) setPost(d.post);
       })
       .finally(() => setLoading(false));
-  }, [slug]);
+  }, [slug, locale]);
 
   // Fetch all posts for related + prev/next navigation
   useEffect(() => {
-    fetch('/api/blog')
+    fetch(`/api/blog?locale=${locale}`)
       .then((r) => r.json())
       .then((d) => {
         if (d.posts) setAllPosts(d.posts);
       })
       .catch(() => {});
-  }, []);
+  }, [locale]);
 
   // Compute previous/next and related posts
   const { previousPost, nextPost } = useMemo(() => {

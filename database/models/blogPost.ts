@@ -1,4 +1,5 @@
-import { Table, Model, Column, DataType, PrimaryKey } from 'sequelize-typescript';
+import { Table, Model, Column, DataType, PrimaryKey, HasMany } from 'sequelize-typescript';
+import BlogPostTranslation from './blogPostTranslation';
 
 @Table({ tableName: 'blog_posts', timestamps: true })
 class BlogPost extends Model {
@@ -56,6 +57,9 @@ class BlogPost extends Model {
 
     @Column({ type: DataType.INTEGER, allowNull: true })
     declare author_user_id?: number;
+
+    @HasMany(() => BlogPostTranslation, 'blog_post_id')
+    declare translations: BlogPostTranslation[];
 }
 
 export default BlogPost;
