@@ -288,7 +288,7 @@ const TermsOfServicePage: React.FC = () => {
                                         </ul>
                                     </div>
                                     <p className="text-neutral-700 leading-relaxed">
-                                        If you believe a charge was made in error, please contact us at <a href="mailto:office@dpro.at" className="text-blue-600 hover:underline font-semibold">office@dpro.at</a> within 14 days of the charge. We will review each case individually.
+                                        If you believe a charge was made in error, please contact us at <a href="mailto:office@seo-agent.net" className="text-blue-600 hover:underline font-semibold">office@seo-agent.net</a> within 14 days of the charge. We will review each case individually.
                                     </p>
                                 </section>
 
@@ -473,7 +473,7 @@ const TermsOfServicePage: React.FC = () => {
 
                                     <h3 className="text-xl font-semibold text-neutral-900 mb-3">13.1 By You</h3>
                                     <p className="text-neutral-700 leading-relaxed mb-4">
-                                        You may terminate your account at any time by contacting us at <a href="mailto:office@dpro.at" className="text-blue-600 hover:underline">office@dpro.at</a> or through your account settings.
+                                        You may terminate your account at any time by contacting us at <a href="mailto:office@seo-agent.net" className="text-blue-600 hover:underline">office@seo-agent.net</a> or through your account settings.
                                     </p>
 
                                     <h3 className="text-xl font-semibold text-neutral-900 mb-3">13.2 By Us</h3>
@@ -622,7 +622,7 @@ const TermsOfServicePage: React.FC = () => {
                                         <p className="text-neutral-700">Wipplingerstraße 20/18</p>
                                         <p className="text-neutral-700">1010 Wien, Austria</p>
                                         <p className="text-neutral-700 mt-2">
-                                            Email: <a href="mailto:office@dpro.at" className="text-blue-600 hover:underline font-semibold">office@dpro.at</a>
+                                            Email: <a href="mailto:office@seo-agent.net" className="text-blue-600 hover:underline font-semibold">office@seo-agent.net</a>
                                         </p>
                                         <p className="text-neutral-700">Phone: +43 676 905 4441</p>
                                         <p className="text-neutral-700 mt-2">VAT ID: ATU81090445</p>

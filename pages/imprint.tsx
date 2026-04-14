@@ -63,7 +63,7 @@ const ImprintPage: React.FC = () => {
       '@type': 'ContactPoint',
       telephone: '+43-676-905-4441',
       contactType: 'customer support',
-      email: 'office@dpro.at',
+      email: 'office@seo-agent.net',
       availableLanguage: ['German', 'English'],
     },
     vatID: 'ATU81090445',
@@ -228,11 +228,11 @@ const ImprintPage: React.FC = () => {
                     <div className="flex items-center text-neutral-700">
                       <Mail className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" />
                       <a
-                        href="mailto:office@dpro.at"
+                        href="mailto:office@seo-agent.net"
                         className="hover:text-blue-600 transition-colors duration-200"
                         itemProp="email"
                       >
-                        office@dpro.at
+                        office@seo-agent.net
                       </a>
                     </div>
                     <div className="flex items-start text-neutral-700">

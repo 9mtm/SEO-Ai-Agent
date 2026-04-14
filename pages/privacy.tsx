@@ -183,7 +183,7 @@ const PrivacyPolicyPage: React.FC = () => {
                                         <p className="font-semibold text-neutral-900 mb-2">Dpro GmbH</p>
                                         <p className="text-neutral-700">Wipplingerstraße 20/18</p>
                                         <p className="text-neutral-700">1010 Wien, Austria</p>
-                                        <p className="text-neutral-700 mt-2">Email: <a href="mailto:office@dpro.at" className="text-blue-600 hover:underline">office@dpro.at</a></p>
+                                        <p className="text-neutral-700 mt-2">Email: <a href="mailto:office@seo-agent.net" className="text-blue-600 hover:underline">office@seo-agent.net</a></p>
                                         <p className="text-neutral-700">Phone: +43 676 905 4441</p>
                                         <p className="text-neutral-700 mt-2">VAT ID: ATU81090445</p>
                                     </div>
@@ -423,7 +423,7 @@ const PrivacyPolicyPage: React.FC = () => {
                                         </div>
                                     </div>
                                     <p className="text-neutral-700 leading-relaxed mt-4">
-                                        To exercise these rights, contact us at <a href="mailto:office@dpro.at" className="text-blue-600 hover:underline font-semibold">office@dpro.at</a>
+                                        To exercise these rights, contact us at <a href="mailto:office@seo-agent.net" className="text-blue-600 hover:underline font-semibold">office@seo-agent.net</a>
                                     </p>
                                 </section>
 
@@ -475,7 +475,7 @@ const PrivacyPolicyPage: React.FC = () => {
                                         <p className="font-semibold text-neutral-900">Dpro GmbH - Data Protection Officer</p>
                                         <p className="text-neutral-700">Wipplingerstraße 20/18, 1010 Wien, Austria</p>
                                         <p className="text-neutral-700 mt-2">
-                                            Email: <a href="mailto:office@dpro.at" className="text-blue-600 hover:underline font-semibold">office@dpro.at</a>
+                                            Email: <a href="mailto:office@seo-agent.net" className="text-blue-600 hover:underline font-semibold">office@seo-agent.net</a>
                                         </p>
                                         <p className="text-neutral-700">Phone: +43 676 905 4441</p>
                                     </div>
