@@ -218,6 +218,19 @@ curl -X POST http://localhost:55781/api/cron -H "Authorization: Bearer YOUR_API_
 - **`AppDialog` — unified Promise-based confirm / prompt** — `components/common/AppDialog.tsx` exposes `useAppDialogs()` returning `{ confirmDialog, promptDialog, Dialogs }`. Every page-level `window.confirm` and `window.prompt` has been replaced with styled Radix dialogs supporting `variant: 'danger'`, inline validation, keyboard shortcuts, and proper focus management.
 - **Free plan adjustment** — the Free plan is now **1 domain / 9 keywords** (was 2/9) to push serious users onto Basic.
 - **Public OAuth client lookup** — `GET /api/oauth/clients/public?client_id=…` returns display-only client info (name / description / logo / website / scopes) for the consent screen, so the unauthenticated `/oauth/consent` page can show the correct app name + logo before the user has a session with that client.
+- **Referral management system** — admin and user API endpoints for referral tracking, with improved validation and error handling.
+- **MCP trial check** — subscription validation on MCP access; trial users are gated properly.
+- **Accessibility features** — accessibility widget, settings panel, and persistent user preferences (WCAG compliance).
+- **Cookie consent banner (GDPR)** — cookie consent management with granular preferences panel and consent logging.
+- **User deletion** — admin user deletion with cascading removal of all associated data + confirmation dialog.
+- **Multilingual blog** — blog posts now support `en` / `de` / `fr` translations.
+- **Sidebar i18n** — all sidebar navigation items use translation keys instead of hardcoded strings.
+- **Onboarding redirect** — after completing onboarding, users are redirected to the domains page instead of the dashboard.
+- **Contact email update** — all references updated from `office@dpro.at` to `office@seo-agent.net`.
+- **SEO Expert Skill page** — new public page + footer navigation link.
+- **Navigation cleanup** — refactored navigation components, removed unused code across multiple pages.
+- **API documentation page** — endpoint details, examples, and usage guides for the REST API.
+- **Bing Webmaster Tools integration guide** — setup instructions and API references for Bing integration.
 
 ---
 
@@ -254,13 +267,13 @@ curl -X POST http://localhost:55781/api/cron -H "Authorization: Bearer YOUR_API_
 15. **Rate limiting** on `/api/oauth/authorize`, `/api/oauth/token`, `/api/oauth/register` (currently unbounded).
 16. **Pending invitations badge** in the header bell icon.
 17. **Outbound webhooks** — `workspace.member_added`, `domain.added`, `subscription.updated`, etc., so users can wire our events into Zapier / n8n.
-18. **API documentation** — Swagger / OpenAPI for the REST endpoints and an MCP tool reference.
+18. ~~**API documentation**~~ — ✅ Done. API docs page with endpoint details and examples.
 19. **i18n for the new pages** — `/profile/team`, `/profile/workspaces`, `/profile/oauth-apps`, `/oauth/consent`, `/workspace/invitation/[token]` are English-only.
 20. **Onboarding refresh** — explain the MCP / OAuth flow and the workspace concept during signup.
 21. **Error tracking** — Sentry (or similar) in production.
 22. **Performance monitoring** — Vercel Analytics / Web Vitals.
 23. **SEO meta tags** for all new public-facing pages.
-24. **Cookie consent banner (GDPR)** — mandatory for EU traffic.
+24. ~~**Cookie consent banner (GDPR)**~~ — ✅ Done. Consent management with preferences panel and logging.
 
 ---
 

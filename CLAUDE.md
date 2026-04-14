@@ -75,7 +75,7 @@ seo_ai_agent/
 ├── email/                  # Nodemailer templates
 ├── cron.js                 # Background job entrypoint
 ├── scripts/                # One-off node scripts
-├── docs/                   # Internal docs
+├── docs/                   # Internal docs (API reference, Bing Webmaster guide)
 ├── __tests__/ + __mocks__/ # Jest tests
 ├── public/                 # Static assets
 ├── styles/                 # Global Tailwind / CSS
@@ -136,7 +136,7 @@ Sanity-check env loading: `npm run env:check`.
 - ORM: **Sequelize 6** (`database/database.ts` for runtime, `database/config.js` for CLI).
 - Migrations live in `database/migrations/` and use Sequelize CLI format with timestamp prefixes (e.g. `20260408100000-create-workspaces.js`).
 - Every migration **must** implement a reversible `down()`.
-- Models live in `database/models/*.ts` (User, Domain, Keyword, Post, Workspace, WorkspaceMember, WorkspaceInvitation, ApiKey, ApiAuditLog, NotificationLog, NotificationSetting, PlatformIntegration, PlatformIntegrationLog, InvoiceDetail, SearchAnalytics, FailedJob, Setting).
+- Models live in `database/models/*.ts` (User, Domain, Keyword, Post, Workspace, WorkspaceMember, WorkspaceInvitation, ApiKey, ApiAuditLog, NotificationLog, NotificationSetting, PlatformIntegration, PlatformIntegrationLog, Invoice, InvoiceDetail, SearchAnalytics, FailedJob, Setting, Referral, ReferralPayout, BlogPost, BlogPostTranslation).
 - Use the npm scripts — **never** drop tables by hand:
 
 ```bash
@@ -165,6 +165,11 @@ npm run db:seed             # run seeders
 - **MCP:** all 19 tools are served from `/api/mcp` (JSON-RPC 2.0). Auth = OAuth Bearer **or** personal API key. Discovery via `/.well-known/oauth-authorization-server` and `/.well-known/oauth-protected-resource`.
 - **OAuth 2.0 Provider** endpoints live under `pages/api/oauth/*` (authorize, token, register, clients/public, consent).
 - **Self-healing endpoints:** `/api/workspaces` deletes empty auto-created personal workspaces; `/api/domains` adopts orphan domains into the active workspace. Preserve this behavior when editing.
+- **Referral API:** `/api/referrals/*` — admin and user endpoints for referral tracking, payouts, and validation.
+- **Blog API:** `/api/blog/*` — multilingual blog posts with `BlogPostTranslation` for `en`/`de`/`fr`.
+- **Accessibility:** client-side widget + settings panel. Preferences stored per-user.
+- **Cookie consent:** consent management with preferences panel and server-side logging.
+- **API docs page:** `/docs/api` — endpoint reference with examples. `/docs/bing-webmaster` — Bing integration guide.
 
 ---
 
