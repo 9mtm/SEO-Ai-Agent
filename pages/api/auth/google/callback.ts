@@ -241,30 +241,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           if (onboardingStep < 3) {
             await user.update({ onboarding_step: 3 } as any);
           }
-          if (workspaceDomains.length > 0) {
-            const firstDomain: any = workspaceDomains[0].get({ plain: true });
-            return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/domain/insight/${firstDomain.slug}`);
-          }
-          // Team member of an empty workspace — land on profile page
-          return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/profile`);
+          return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/profile/domains`);
         }
 
         // Owners: run normal onboarding flow
         if (onboardingStep < 3) {
           if (workspaceDomains.length > 0) {
             await user.update({ onboarding_step: 3 } as any);
-            const firstDomain: any = workspaceDomains[0].get({ plain: true });
-            return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/domain/insight/${firstDomain.slug}`);
+            return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/profile/domains`);
           }
           return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/onboarding`);
         }
 
-        if (workspaceDomains.length > 0) {
-          const firstDomain: any = workspaceDomains[0].get({ plain: true });
-          return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/domain/insight/${firstDomain.slug}`);
-        }
-
-        return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/onboarding`);
+        return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/profile/domains`);
       }
     }
 
