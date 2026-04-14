@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { Search, Check, X } from 'lucide-react';
+import { Search, Check, X, Trash2 } from 'lucide-react';
+import { useAppDialogs } from '../../components/common/AppDialog';
 import toast from 'react-hot-toast';
 export { getServerSideProps } from '../../utils/requireSuperAdmin';
 
 const PLANS = ['free', 'basic', 'pro', 'premium', 'enterprise'];
 
 export default function AdminUsers() {
+    const { confirmDialog, Dialogs } = useAppDialogs();
     const [users, setUsers] = useState<any[]>([]);
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
@@ -32,8 +34,25 @@ export default function AdminUsers() {
         load(search);
     };
 
+    const deleteUser = async (u: any) => {
+        const ok = await confirmDialog({
+            title: `Delete ${u.name}?`,
+            description: `This will permanently delete user "${u.email}" and ALL their data: ${u.domain_count} domains, ${u.keyword_count} keywords, workspaces, posts, referrals, invoices. This cannot be undone.`,
+            confirmText: 'Delete Everything',
+            variant: 'danger',
+        });
+        if (!ok) return;
+        try {
+            const res = await fetch(`/api/admin/users?id=${u.id}`, { method: 'DELETE' });
+            const d = await res.json();
+            if (res.ok) { toast.success(d.message || 'User deleted'); load(search); }
+            else toast.error(d.error || 'Failed');
+        } catch { toast.error('Network error'); }
+    };
+
     return (
         <AdminLayout title="Users">
+            <Dialogs />
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-bold">Users ({users.length})</h1>
                 <div className="relative">
@@ -58,6 +77,7 @@ export default function AdminUsers() {
                             <th className="px-4 py-3 text-center">Keywords</th>
                             <th className="px-4 py-3 text-center">Status</th>
                             <th className="px-4 py-3 text-left">Last Login</th>
+                            <th className="px-4 py-3 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y">
@@ -85,6 +105,11 @@ export default function AdminUsers() {
                                     </button>
                                 </td>
                                 <td className="px-4 py-3 text-xs text-neutral-500">{u.last_login ? new Date(u.last_login).toLocaleDateString() : 'Never'}</td>
+                                <td className="px-4 py-3 text-right">
+                                    <button onClick={() => deleteUser(u)} className="p-1.5 hover:bg-red-50 rounded text-red-500 hover:text-red-700 transition-colors" title="Delete user & all data">
+                                        <Trash2 className="h-4 w-4" />
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
