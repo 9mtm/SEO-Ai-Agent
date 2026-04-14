@@ -22,7 +22,7 @@ import Workspace from '../../../database/models/workspace';
 import Post from '../../../database/models/post';
 import { ensureDomainSynced, readInsightData, readSCKeywordsData } from '../../../services/gscStorage';
 import { analyzeSEO } from '../../../lib/seo/analyzer';
-import { getBingQueryStats, getBingPageStats, getBingCountryStats } from '../../../services/bingWebmaster';
+import { getBingQueryStats, getBingPageStats, getBingTrafficStats } from '../../../services/bingWebmaster';
 
 // Disable Next.js body parser — the SDK handles raw streams
 export const config = {
@@ -355,20 +355,19 @@ function createMcpServer(ctx: { userId: number; workspaceId: number }) {
         if (!d) return { content: [{ type: 'text', text: 'domain_not_found' }], isError: true };
         const siteUrl = domain.startsWith('http') ? domain : `https://${domain}`;
         try {
-            const [keywords, pages, countries] = await Promise.all([
+            const [keywords, pages, traffic] = await Promise.all([
                 getBingQueryStats(ctx.userId, siteUrl),
                 getBingPageStats(ctx.userId, siteUrl),
-                getBingCountryStats(ctx.userId, siteUrl),
+                getBingTrafficStats(ctx.userId, siteUrl),
             ]);
-            const totalClicks = keywords.reduce((s, k) => s + (k.Clicks || 0), 0);
-            const totalImpressions = keywords.reduce((s, k) => s + (k.Impressions || 0), 0);
+            const totalClicks = traffic.reduce((s, t) => s + (t.Clicks || 0), 0);
+            const totalImpressions = traffic.reduce((s, t) => s + (t.Impressions || 0), 0);
             const avgPosition = keywords.length > 0
                 ? keywords.reduce((s, k) => s + (k.AvgImpressionPosition || 0), 0) / keywords.length : 0;
             return { content: [{ type: 'text', text: JSON.stringify({
                 stats: { totalClicks, totalImpressions, ctr: totalImpressions > 0 ? Math.round((totalClicks / totalImpressions) * 10000) / 100 : 0, avgPosition: Math.round(avgPosition * 10) / 10 },
                 keywords: keywords.length,
                 pages: pages.length,
-                countries: countries.length,
                 topKeywords: keywords.slice(0, 20).map(k => ({ query: k.Query, clicks: k.Clicks, impressions: k.Impressions, position: k.AvgImpressionPosition })),
             }) }] };
         } catch (err: any) {

@@ -3,7 +3,7 @@ import verifyUser from '../../../utils/verifyUser';
 import {
   getBingQueryStats,
   getBingPageStats,
-  getBingCountryStats,
+  getBingTrafficStats,
 } from '../../../services/bingWebmaster';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -23,19 +23,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const [keywords, pages, countries] = await Promise.all([
+    const [keywords, pages, traffic] = await Promise.all([
       getBingQueryStats(userId, siteUrl),
       getBingPageStats(userId, siteUrl),
-      getBingCountryStats(userId, siteUrl),
+      getBingTrafficStats(userId, siteUrl),
     ]);
 
-    // Calculate aggregated totals
-    const totalClicks = keywords.reduce((sum, k) => sum + (k.Clicks || 0), 0);
-    const totalImpressions = keywords.reduce((sum, k) => sum + (k.Impressions || 0), 0);
+    // Calculate aggregated totals from traffic stats
+    const totalClicks = traffic.reduce((sum, t) => sum + (t.Clicks || 0), 0);
+    const totalImpressions = traffic.reduce((sum, t) => sum + (t.Impressions || 0), 0);
+    const ctr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
+
+    // Avg position from keyword stats
     const avgPosition = keywords.length > 0
       ? keywords.reduce((sum, k) => sum + (k.AvgImpressionPosition || 0), 0) / keywords.length
       : 0;
-    const ctr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
 
     return res.status(200).json({
       stats: {
@@ -59,11 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         impressions: p.Impressions,
         position: p.AvgImpressionPosition,
       })),
-      countries: countries.map((c) => ({
-        country: c.Country,
-        clicks: c.Clicks,
-        impressions: c.Impressions,
-      })),
+      countries: [],
     });
   } catch (error: any) {
     console.error('[Bing Stats] Error:', error);
