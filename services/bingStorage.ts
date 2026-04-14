@@ -50,6 +50,21 @@ const addDays = (d: Date, days: number) => {
 
 const today = () => new Date();
 
+/**
+ * Parse .NET JSON date format: "/Date(1713052800000)/" → Date object
+ * Also handles ISO strings and regular date strings.
+ */
+const parseBingDate = (d: any): Date | null => {
+    if (!d) return null;
+    // .NET JSON format: /Date(1234567890000)/
+    if (typeof d === 'string') {
+        const match = d.match(/\/Date\((\d+)\)\//);
+        if (match) return new Date(parseInt(match[1]));
+    }
+    const parsed = new Date(d);
+    return isNaN(parsed.getTime()) ? null : parsed;
+};
+
 // ---------------------------------------------------------------------------
 // Sync orchestration
 // ---------------------------------------------------------------------------
@@ -137,9 +152,13 @@ async function runBingSync(userId: number, domainId: number, siteUrl: string, en
     // 1. Daily traffic stats (GetRankAndTrafficStats)
     try {
         const traffic = await getBingTrafficStats(userId, siteUrl);
+        if (traffic && traffic.length > 0) {
+            console.log('[BWT SYNC] Traffic sample:', JSON.stringify(traffic[0]));
+        }
         if (Array.isArray(traffic)) {
             for (const row of traffic) {
-                const date = row.Date ? ymd(new Date(row.Date)) : endDate;
+                const parsed = parseBingDate(row.Date);
+                const date = parsed ? ymd(parsed) : endDate;
                 await db.query(
                     `INSERT INTO bwt_daily_stats (domain_id, date, clicks, impressions, ctr, position, createdAt, updatedAt)
                      VALUES (?, ?, ?, ?, 0, 0, NOW(), NOW())
