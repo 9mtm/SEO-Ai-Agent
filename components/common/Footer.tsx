@@ -5,10 +5,12 @@ import dynamic from 'next/dynamic';
 import { useLanguage } from '@/context/LanguageContext';
 
 const AccessibilityPanel = dynamic(() => import('../Accessibility/AccessibilityPanel'), { ssr: false });
+const ConsentPreferencesPanel = dynamic(() => import('../CookieConsent/ConsentPreferences'), { ssr: false });
 
 const Footer: React.FC = () => {
    const { t } = useLanguage();
    const [showAccessibilityPanel, setShowAccessibilityPanel] = useState(false);
+   const [showConsentPreferences, setShowConsentPreferences] = useState(false);
 
    return (
       <footer className="bg-neutral-900 text-neutral-300 border-t border-neutral-800">
@@ -69,6 +71,17 @@ const Footer: React.FC = () => {
                   © 2026 SEO Agent by <a href="https://dpro.at" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Dpro GmbH</a>. All rights reserved.
                </p>
 
+               <div className="flex items-center gap-4">
+               {/* Consent Preferences */}
+               <button
+                  onClick={() => setShowConsentPreferences(true)}
+                  className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors underline decoration-1 underline-offset-2"
+                  aria-label="Consent Preferences"
+               >
+                  <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                  <span>Consent Preferences</span>
+               </button>
+
                {/* Accessibility Button */}
                <button
                   onClick={() => setShowAccessibilityPanel(true)}
@@ -82,12 +95,17 @@ const Footer: React.FC = () => {
                   </svg>
                   <span>Accessibility</span>
                </button>
+               </div>
             </div>
          </div>
 
          {/* Accessibility Panel */}
          {showAccessibilityPanel && (
             <AccessibilityPanel onClose={() => setShowAccessibilityPanel(false)} />
+         )}
+         {/* Consent Preferences Panel */}
+         {showConsentPreferences && (
+            <ConsentPreferencesPanel onClose={() => setShowConsentPreferences(false)} />
          )}
       </footer>
    );

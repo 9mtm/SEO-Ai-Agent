@@ -20,6 +20,11 @@ const AccessibilityWidget = dynamic(
   { ssr: false }
 );
 
+const CookieBanner = dynamic(
+  () => import('../components/CookieConsent/CookieBanner'),
+  { ssr: false }
+);
+
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
@@ -45,6 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <LanguageProvider>
       <Component {...pageProps} />
       <AccessibilityWidget />
+      <CookieBanner />
       <Toaster position="bottom-center" containerClassName="react_toaster" />
       {isDev && <ReactQueryDevtools initialIsOpen={false} />}
     </LanguageProvider>
