@@ -74,18 +74,18 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     navigation.push({ name: t('sidebar.profile'), href: '/profile', icon: User });
     if (canManage) {
       navigation.push(
-        { name: 'Domains', href: '/profile/domains', icon: Globe },
-        { name: 'Workspaces', href: '/profile/workspaces', icon: Building2 },
-        { name: 'Team Members', href: '/profile/team', icon: Users },
-        { name: 'Search Console', href: '/profile/search-console', icon: Search }
+        { name: t('sidebar.domains'), href: '/profile/domains', icon: Globe },
+        { name: t('sidebar.workspaces'), href: '/profile/workspaces', icon: Building2 },
+        { name: t('sidebar.teamMembers'), href: '/profile/team', icon: Users },
+        { name: t('sidebar.searchConsole'), href: '/profile/search-console', icon: Search }
       );
     }
     navigation.push({ name: t('sidebar.notifications'), href: '/profile/notifications', icon: Bell });
     if (canManage) {
       navigation.push({ name: t('sidebar.billing'), href: '/profile/billing', icon: CreditCard });
     }
-    navigation.push({ name: 'Referrals', href: '/profile/referrals', icon: Gift });
-    navigation.push({ name: 'Connected Apps', href: '/profile/oauth-apps', icon: Shield });
+    navigation.push({ name: t('sidebar.referrals'), href: '/profile/referrals', icon: Gift });
+    navigation.push({ name: t('sidebar.connectedApps'), href: '/profile/oauth-apps', icon: Shield });
     if (canManage) {
       navigation.push({ name: t('sidebar.scraper'), href: '/profile/scraper', icon: Settings });
     }
@@ -93,13 +93,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     // Default sidebar for home, /setup and other top-level pages
     navigation.push({ name: t('sidebar.myDomains'), href: '/', icon: Globe });
     if (canManage) {
-      navigation.push({ name: 'Setup', href: '/setup', icon: Settings });
+      navigation.push({ name: t('sidebar.setup'), href: '/setup', icon: Settings });
     }
     navigation.push({ name: t('sidebar.profile'), href: '/profile', icon: User });
     if (canManage) {
       navigation.push(
-        { name: 'Workspaces', href: '/profile/workspaces', icon: Building2 },
-        { name: 'Team Members', href: '/profile/team', icon: Users },
+        { name: t('sidebar.workspaces'), href: '/profile/workspaces', icon: Building2 },
+        { name: t('sidebar.teamMembers'), href: '/profile/team', icon: Users },
         { name: t('sidebar.billing'), href: '/profile/billing', icon: CreditCard }
       );
     }

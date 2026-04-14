@@ -170,9 +170,21 @@
     "connections": "Connexion",
     "billing": "Facturation",
     "myDomains": "Mes Domaines",
+    "domains": "Domaines",
+    "workspaces": "Espaces de travail",
+    "teamMembers": "Membres de l'équipe",
+    "searchConsole": "Search Console",
+    "connectedApps": "Applications connectées",
+    "referrals": "Parrainage",
+    "setup": "Configuration",
     "posts": "Articles",
     "apiKeys": "API & MCP",
     "notifications": "Notifications"
+  },
+  "workspace": {
+    "switch": "Changer d'espace de travail",
+    "personal": "personnel",
+    "manage": "Gérer les espaces de travail"
   },
   "profile": {
     "title": "Profil personnel",

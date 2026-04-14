@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Building2, Check, ChevronDown, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useLanguage } from '../../context/LanguageContext';
 
 type WorkspaceItem = {
     id: number;
@@ -21,6 +22,7 @@ type WorkspaceItem = {
 };
 
 export default function WorkspaceIndicator() {
+    const { t } = useLanguage();
     const [open, setOpen] = useState(false);
     const [workspaces, setWorkspaces] = useState<WorkspaceItem[]>([]);
     const [switching, setSwitching] = useState<number | null>(null);
@@ -84,7 +86,7 @@ export default function WorkspaceIndicator() {
             {open && (
                 <div className="absolute left-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-neutral-200 py-2 z-50">
                     <div className="px-4 pt-1 pb-2 text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
-                        Switch workspace
+                        {t('workspace.switch')}
                     </div>
                     <div className="max-h-72 overflow-y-auto px-2 space-y-0.5">
                         {workspaces.map((ws) => (
@@ -104,7 +106,7 @@ export default function WorkspaceIndicator() {
                                     <div className="flex flex-col items-start min-w-0">
                                         <span className="truncate font-medium leading-tight">{ws.name}</span>
                                         <span className="text-[10px] text-neutral-400 uppercase tracking-wide leading-tight mt-0.5">
-                                            {ws.role}{ws.is_personal ? ' • personal' : ''}
+                                            {ws.role}{ws.is_personal ? ` • ${t('workspace.personal')}` : ''}
                                         </span>
                                     </div>
                                 </div>
@@ -121,7 +123,7 @@ export default function WorkspaceIndicator() {
                             <div className="w-7 h-7 rounded-md bg-blue-50 border border-dashed border-blue-300 flex items-center justify-center flex-shrink-0">
                                 <Plus className="h-3.5 w-3.5 text-blue-600" />
                             </div>
-                            <span>Manage workspaces</span>
+                            <span>{t('workspace.manage')}</span>
                         </Link>
                     </div>
                 </div>

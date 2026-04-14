@@ -236,12 +236,20 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                             {canManage && (
                                 <>
                                     <Link
+                                        href="/profile/domains"
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                                    >
+                                        <Globe className="h-4 w-4 text-neutral-500" />
+                                        <span>{t('sidebar.domains')}</span>
+                                    </Link>
+                                    <Link
                                         href="/profile/workspaces"
                                         onClick={() => setIsMenuOpen(false)}
                                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
                                     >
                                         <Building2 className="h-4 w-4 text-neutral-500" />
-                                        <span>Workspaces</span>
+                                        <span>{t('sidebar.workspaces')}</span>
                                     </Link>
                                     <Link
                                         href="/profile/team"
@@ -249,7 +257,7 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
                                     >
                                         <Users className="h-4 w-4 text-neutral-500" />
-                                        <span>Team Members</span>
+                                        <span>{t('sidebar.teamMembers')}</span>
                                     </Link>
                                     <Link
                                         href="/profile/search-console"
@@ -257,7 +265,7 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
                                     >
                                         <Search className="h-4 w-4 text-neutral-500" />
-                                        <span>Search Console</span>
+                                        <span>{t('sidebar.searchConsole')}</span>
                                     </Link>
                                 </>
                             )}
@@ -285,7 +293,7 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                                 className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
                             >
                                 <Shield className="h-4 w-4 text-neutral-500" />
-                                <span>Connected Apps</span>
+                                <span>{t('sidebar.connectedApps')}</span>
                             </Link>
                             {canManage && (
                                 <Link

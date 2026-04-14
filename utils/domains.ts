@@ -15,8 +15,12 @@ const getdomainStats = async (domains: DomainType[]): Promise<DomainType[]> => {
    for (const domain of domains) {
       const domainWithStat = domain;
 
-      // First Get ALl The Keywords for this Domain
-      const allKeywords: Keyword[] = await Keyword.findAll({ where: { domain: domain.domain } });
+      // First Get ALl The Keywords for this Domain (search by domain name OR domain_id)
+      const { Op } = require('sequelize');
+      const kwWhere = domain.ID
+         ? { [Op.or]: [{ domain: domain.domain }, { domain_id: domain.ID }] }
+         : { domain: domain.domain };
+      const allKeywords: Keyword[] = await Keyword.findAll({ where: kwWhere });
       const keywords: KeywordType[] = parseKeywords(allKeywords.map((e) => e.get({ plain: true })));
       domainWithStat.keywordCount = keywords.length;
       const keywordPositions = keywords.reduce((acc, itm) => (acc + itm.position), 0);

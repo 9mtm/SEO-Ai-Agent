@@ -169,9 +169,21 @@
     "connections": "Connect",
     "billing": "Billing",
     "myDomains": "My Domains",
+    "domains": "Domains",
+    "workspaces": "Workspaces",
+    "teamMembers": "Team Members",
+    "searchConsole": "Search Console",
+    "connectedApps": "Connected Apps",
+    "referrals": "Referrals",
+    "setup": "Setup",
     "posts": "Posts",
     "apiKeys": "API & MCP",
     "notifications": "Notifications"
+  },
+  "workspace": {
+    "switch": "Switch workspace",
+    "personal": "personal",
+    "manage": "Manage workspaces"
   },
   "profile": {
     "title": "Personal Profile",

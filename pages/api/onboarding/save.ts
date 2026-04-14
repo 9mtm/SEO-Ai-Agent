@@ -473,6 +473,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                                             device: 'desktop',
                                             country: targetCountry,
                                             domain: domainJustCreated.domain,
+                                            domain_id: domainJustCreated.ID || (domainJustCreated as any).id,
                                             user_id: userId,
                                             workspace_id: (domainJustCreated as any).workspace_id || null,
                                             tags: JSON.stringify(['Target']),

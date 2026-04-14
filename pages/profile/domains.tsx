@@ -27,7 +27,7 @@ export default function DomainsPage() {
     const loadData = async () => {
         try {
             const [domainsRes, wsRes] = await Promise.all([
-                fetch('/api/domains', { headers: getAuthHeaders() }),
+                fetch('/api/domains?withstats=true', { headers: getAuthHeaders() }),
                 fetch('/api/workspaces', { headers: getAuthHeaders() }),
             ]);
             const domainsD = await domainsRes.json();
@@ -100,7 +100,6 @@ export default function DomainsPage() {
                                     <th className="px-4 py-3 text-left">Domain</th>
                                     <th className="px-4 py-3 text-left">Workspace</th>
                                     <th className="px-4 py-3 text-center">Keywords</th>
-                                    <th className="px-4 py-3 text-left">Added</th>
                                     <th className="px-4 py-3 text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -115,10 +114,7 @@ export default function DomainsPage() {
                                                     className="w-5 h-5 rounded-sm"
                                                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                                                 />
-                                                <div>
-                                                    <div className="font-semibold text-neutral-900">{d.domain}</div>
-                                                    <div className="text-xs text-neutral-500">{d.slug}</div>
-                                                </div>
+                                                <div className="font-semibold text-neutral-900">{d.domain}</div>
                                             </div>
                                         </td>
                                         <td className="px-4 py-3">
@@ -129,11 +125,8 @@ export default function DomainsPage() {
                                         </td>
                                         <td className="px-4 py-3 text-center">
                                             <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold">
-                                                {d.keyword_count ?? d.keywords?.length ?? '—'}
+                                                {d.keywordCount ?? d.keyword_count ?? d.keywords?.length ?? 0}
                                             </span>
-                                        </td>
-                                        <td className="px-4 py-3 text-xs text-neutral-500">
-                                            {d.createdAt ? new Date(d.createdAt).toLocaleDateString() : '—'}
                                         </td>
                                         <td className="px-4 py-3 text-right" onClick={e => e.stopPropagation()}>
                                             <button onClick={() => deleteDomain(d)} className="p-1.5 hover:bg-red-50 rounded text-red-500 hover:text-red-700 transition-colors" title="Delete domain">
