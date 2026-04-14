@@ -19,8 +19,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!user?.is_super_admin) return res.status(403).json({ error: 'Forbidden' });
 
         const view = (req.query.view as string) || 'stats';
-        const page = parseInt(req.query.page as string) || 1;
-        const limit = parseInt(req.query.limit as string) || 20;
+        const page = Math.max(1, parseInt(req.query.page as string) || 1);
+        const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 20));
 
         if (view === 'stats') {
             const stats = await adminGetOverviewStats();

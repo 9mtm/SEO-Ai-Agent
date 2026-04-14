@@ -136,7 +136,7 @@ export async function getReferralStats(userId: number) {
 export async function getReferredUsers(userId: number) {
   const referrals = await Referral.findAll({
     where: { referrer_id: userId },
-    include: [{ model: User, as: 'referred', attributes: ['id', 'name', 'email', 'subscription_plan'] }],
+    include: [{ model: User, as: 'referred', attributes: ['id', 'name', 'subscription_plan'] }],
     order: [['createdAt', 'DESC']],
   });
 
@@ -172,8 +172,21 @@ export async function updatePayoutSettings(userId: number, settings: any) {
   }
   const user = await User.findByPk(userId);
   if (!user) throw new Error('User not found');
-  await user.update({ referral_payout_settings: settings });
-  return settings;
+
+  // Whitelist only allowed fields with length limits
+  const sanitized: any = {};
+  if (settings.paypal_email) sanitized.paypal_email = String(settings.paypal_email).slice(0, 255);
+  if (settings.name) sanitized.name = String(settings.name).slice(0, 255);
+  if (settings.address) sanitized.address = String(settings.address).slice(0, 500);
+  if (settings.city) sanitized.city = String(settings.city).slice(0, 100);
+  if (settings.zip) sanitized.zip = String(settings.zip).slice(0, 20);
+  if (settings.country) sanitized.country = String(settings.country).slice(0, 100);
+  if (settings.company_name) sanitized.company_name = String(settings.company_name).slice(0, 255);
+  if (settings.vat_id) sanitized.vat_id = String(settings.vat_id).slice(0, 50);
+  sanitized.is_business = !!settings.is_business;
+
+  await user.update({ referral_payout_settings: sanitized });
+  return sanitized;
 }
 
 // --- Payout Requests ---

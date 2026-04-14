@@ -20,8 +20,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         if (req.method === 'POST') {
-            const { payoutId } = req.body;
-            if (!payoutId) return res.status(400).json({ error: 'payoutId required' });
+            const payoutId = parseInt(req.body.payoutId);
+            if (!payoutId || payoutId <= 0 || !Number.isInteger(payoutId)) return res.status(400).json({ error: 'Valid payoutId required' });
             const payout = await requestPayout(auth.userId, payoutId);
             return res.status(200).json({ payout });
         }

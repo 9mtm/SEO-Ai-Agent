@@ -22,7 +22,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!payoutId) return res.status(400).json({ error: 'Invalid payout ID' });
 
         const { status, admin_note } = req.body;
-        if (!status) return res.status(400).json({ error: 'status required' });
+        if (!status || !['approved', 'rejected', 'paid'].includes(status)) {
+            return res.status(400).json({ error: 'Invalid status. Must be: approved, rejected, or paid' });
+        }
 
         const payout = await adminUpdatePayoutStatus(payoutId, status, admin_note);
         return res.status(200).json({ payout });

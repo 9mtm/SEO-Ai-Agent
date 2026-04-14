@@ -326,6 +326,7 @@ function createMcpServer(ctx: { userId: number; workspaceId: number }) {
         let post: any;
         if (args.id) {
             post = await Post.findByPk(args.id);
+            if (post && post.domain_id !== d.ID) return { content: [{ type: 'text', text: 'forbidden' }], isError: true };
             if (post) await post.update({ title: args.title, slug, content: args.content, meta_description: args.meta_description, focus_keywords: args.focus_keywords, status: args.status, seo_score: report.score });
         } else {
             post = await Post.create({ domain_id: d.ID, title: args.title, slug, content: args.content, meta_description: args.meta_description, focus_keywords: args.focus_keywords, status: args.status, seo_score: report.score } as any);
@@ -338,6 +339,9 @@ function createMcpServer(ctx: { userId: number; workspaceId: number }) {
     }, async ({ post_id }) => {
         const post: any = await Post.findByPk(post_id);
         if (!post) return { content: [{ type: 'text', text: 'post_not_found' }], isError: true };
+        // Verify ownership via workspace
+        const d = await Domain.findOne({ where: { ID: post.domain_id, workspace_id: ctx.workspaceId } });
+        if (!d) return { content: [{ type: 'text', text: 'forbidden' }], isError: true };
         await post.destroy();
         return { content: [{ type: 'text', text: JSON.stringify({ ok: true }) }] };
     });
