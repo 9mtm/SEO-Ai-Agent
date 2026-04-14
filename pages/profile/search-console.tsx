@@ -28,6 +28,9 @@ const SearchConsolePage: NextPage = () => {
 
     // Google Search Console States
     const [settings, setSettings] = useState<any>({ google_connected: false });
+    // Bing Webmaster Tools States
+    const [bingConnected, setBingConnected] = useState(false);
+    const [showBingDisconnectDialog, setShowBingDisconnectDialog] = useState(false);
 
     const getAuthHeaders = () => {
         const headers: any = { 'Content-Type': 'application/json' };
@@ -36,7 +39,7 @@ const SearchConsolePage: NextPage = () => {
         return headers;
     };
 
-    // Fetch settings for Google Search Console
+    // Fetch settings for Google Search Console + Bing
     useEffect(() => {
         const fetchSettings = async () => {
             try {
@@ -46,6 +49,7 @@ const SearchConsolePage: NextPage = () => {
                 const data = await res.json();
                 if (data.settings) {
                     setSettings(data.settings);
+                    setBingConnected(!!data.settings.bing_connected);
                 }
             } catch (e) {
                 console.error('Failed to fetch settings', e);
@@ -55,6 +59,19 @@ const SearchConsolePage: NextPage = () => {
         };
         fetchSettings();
     }, []);
+
+    // Check URL params for Bing connection success/error
+    useEffect(() => {
+        if (router.query.success === 'bing_connected') {
+            toast.success('Bing Webmaster Tools connected successfully!');
+            setBingConnected(true);
+            router.replace('/profile/search-console', undefined, { shallow: true });
+        }
+        if (router.query.error === 'bing_auth_failed' || router.query.error === 'bing_callback_failed') {
+            toast.error('Failed to connect Bing Webmaster Tools. Please try again.');
+            router.replace('/profile/search-console', undefined, { shallow: true });
+        }
+    }, [router.query]);
 
 
 
@@ -73,6 +90,21 @@ const SearchConsolePage: NextPage = () => {
             toast.error('Failed to disconnect');
         } finally {
             setShowDisconnectDialog(false);
+        }
+    };
+
+    const confirmBingDisconnect = async () => {
+        try {
+            await fetch('/api/auth/microsoft/disconnect', {
+                method: 'POST',
+                headers: getAuthHeaders()
+            });
+            setBingConnected(false);
+            toast.success('Bing account disconnected');
+        } catch (e) {
+            toast.error('Failed to disconnect Bing');
+        } finally {
+            setShowBingDisconnectDialog(false);
         }
     };
 
@@ -150,6 +182,55 @@ const SearchConsolePage: NextPage = () => {
                         )}
                     </CardContent>
                 </Card>
+
+                {/* Bing Webmaster Tools Card */}
+                <Card className="mt-6">
+                    <CardHeader>
+                        <CardTitle>Bing Webmaster Tools</CardTitle>
+                        <CardDescription>
+                            Connect your Microsoft account to access Bing &amp; Yahoo search analytics.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        {!bingConnected ? (
+                            <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
+                                <div className="bg-neutral-100 p-4 rounded-full">
+                                    <svg className="h-12 w-12" viewBox="0 0 24 24" fill="none">
+                                        <path d="M5 3v16.5l4.5 2.5V8l5 3.5-4.5 2.5v4l9-5.5L10 7V2L5 3z" fill="#00897B"/>
+                                    </svg>
+                                </div>
+                                <h3 className="text-lg font-semibold">Connect Bing Webmaster Tools</h3>
+                                <p className="text-neutral-500 max-w-sm">
+                                    Link your Microsoft account to track Bing &amp; Yahoo keyword rankings, impressions, and clicks.
+                                </p>
+                                <Button
+                                    onClick={() => window.location.href = '/api/auth/microsoft/connect'}
+                                    size="lg"
+                                    className="gap-2 bg-teal-600 hover:bg-teal-700 text-white"
+                                >
+                                    Connect Bing
+                                </Button>
+                            </div>
+                        ) : (
+                            <div className="space-y-6">
+                                <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+                                            <path d="M5 3v16.5l4.5 2.5V8l5 3.5-4.5 2.5v4l9-5.5L10 7V2L5 3z" fill="#00897B"/>
+                                        </svg>
+                                        <div>
+                                            <h4 className="font-medium text-green-900">Bing Account Connected</h4>
+                                            <p className="text-sm text-green-700">Bing &amp; Yahoo analytics are available on your domain insight pages.</p>
+                                        </div>
+                                    </div>
+                                    <Button variant="ghost" size="sm" onClick={() => setShowBingDisconnectDialog(true)} className="text-red-600 hover:text-red-700 hover:bg-red-50">
+                                        Disconnect
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
             </div>
 
             {/* Disconnect Confirmation Dialog */}
@@ -164,6 +245,22 @@ const SearchConsolePage: NextPage = () => {
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setShowDisconnectDialog(false)}>Cancel</Button>
                         <Button variant="destructive" onClick={confirmDisconnect}>Disconnect</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Bing Disconnect Confirmation Dialog */}
+            <Dialog open={showBingDisconnectDialog} onOpenChange={setShowBingDisconnectDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Disconnect Bing Account</DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to disconnect Bing Webmaster Tools? Bing &amp; Yahoo analytics will no longer be available.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setShowBingDisconnectDialog(false)}>Cancel</Button>
+                        <Button variant="destructive" onClick={confirmBingDisconnect}>Disconnect</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

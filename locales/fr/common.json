@@ -1408,5 +1408,18 @@
     "talentManagement": "Gestion des talents",
     "ats": "Logiciel de suivi des candidats",
     "documentation": "Documentation"
+  },
+  "bing": {
+    "title": "Bing Webmaster Tools",
+    "description": "Connectez votre compte Microsoft pour accéder aux analyses de recherche Bing et Yahoo.",
+    "connect": "Connecter Bing",
+    "connectDescription": "Liez votre compte Microsoft pour suivre les classements, impressions et clics Bing et Yahoo.",
+    "connected": "Compte Bing connecté",
+    "connectedDescription": "Les analyses Bing et Yahoo sont disponibles sur vos pages d'aperçu de domaine.",
+    "disconnect": "Déconnecter",
+    "disconnectTitle": "Déconnecter le compte Bing",
+    "disconnectDescription": "Êtes-vous sûr de vouloir déconnecter les Bing Webmaster Tools ? Les analyses Bing et Yahoo ne seront plus disponibles.",
+    "notConnected": "Connectez Bing Webmaster Tools pour voir les données Bing et Yahoo.",
+    "tab": "Bing"
   }
 }

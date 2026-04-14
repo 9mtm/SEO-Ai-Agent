@@ -160,6 +160,7 @@ export const getAppSettings = async (userId?: number): Promise<SettingsType> => 
       const adwords_account_id = user.adwords_account_id ? cryptr.decrypt(user.adwords_account_id) : '';
 
       const google_connected = !!(user.google_refresh_token || user.google_access_token);
+      const bing_connected = !!(user.microsoft_refresh_token || user.microsoft_access_token);
 
       const settings: SettingsType = {
          scraper_type,
@@ -197,6 +198,8 @@ export const getAppSettings = async (userId?: number): Promise<SettingsType> => 
          adwords_account_id,
          search_console: true,
          keywordsColumns: ['Best', 'History', 'Volume', 'Search Console'],
+         // Bing Webmaster Tools
+         bing_connected,
       };
 
       return settings;

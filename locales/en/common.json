@@ -1442,5 +1442,18 @@
       "twitterTitle": "SEO Agent MCP Integration",
       "twitterDescription": "Connect Claude & ChatGPT to your real-time SEO data."
     }
+  },
+  "bing": {
+    "title": "Bing Webmaster Tools",
+    "description": "Connect your Microsoft account to access Bing & Yahoo search analytics.",
+    "connect": "Connect Bing",
+    "connectDescription": "Link your Microsoft account to track Bing & Yahoo keyword rankings, impressions, and clicks.",
+    "connected": "Bing Account Connected",
+    "connectedDescription": "Bing & Yahoo analytics are available on your domain insight pages.",
+    "disconnect": "Disconnect",
+    "disconnectTitle": "Disconnect Bing Account",
+    "disconnectDescription": "Are you sure you want to disconnect Bing Webmaster Tools? Bing & Yahoo analytics will no longer be available.",
+    "notConnected": "Connect Bing Webmaster Tools to see Bing & Yahoo data.",
+    "tab": "Bing"
   }
 }

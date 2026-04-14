@@ -12,6 +12,7 @@ import exportCSV from '../../../../utils/client/exportcsv';
 import { useFetchDomains } from '../../../../services/domains';
 import { useFetchSCInsight } from '../../../../services/searchConsole';
 import SCInsight from '../../../../components/insight/Insight';
+import BingInsight from '../../../../components/insight/BingInsight';
 import { useFetchSettings } from '../../../../services/settings';
 
 const InsightPage: NextPage = () => {
@@ -20,10 +21,12 @@ const InsightPage: NextPage = () => {
 
    const [scDateFilter, setSCDateFilter] = useState('thirtyDays');
    const [daysFilter, setDaysFilter] = useState(30); // Default to 30 days
+   const [dataSource, setDataSource] = useState<'google' | 'bing'>('google');
    const { data: appSettings } = useFetchSettings();
    const { data: domainsData } = useFetchDomains(router);
 
    const scConnected = !!(appSettings && (appSettings?.settings?.search_console_integrated || appSettings?.settings?.google_connected));
+   const bingConnected = !!(appSettings?.settings?.bing_connected);
    const { data: insightData, isLoading, isFetching } = useFetchSCInsight(router, !!(domainsData?.domains?.length) && scConnected, daysFilter);
 
    const theDomains: DomainType[] = (domainsData && domainsData.domains) || [];
@@ -70,14 +73,44 @@ const InsightPage: NextPage = () => {
             ) : (
                <div className='w-full lg:h-[100px]'></div>
             )}
-            <SCInsight
-               isPending={isLoading || isFetching}
-               domain={activDomain}
-               insight={theInsight}
-               isConsoleIntegrated={scConnected || domainHasScAPI}
-               daysFilter={daysFilter}
-               setDaysFilter={setDaysFilter}
-            />
+            {/* Source Toggle: Google / Bing */}
+            {bingConnected && (
+               <div className="flex gap-1 mb-4 bg-neutral-100 rounded-lg p-1 w-fit">
+                  <button
+                     onClick={() => setDataSource('google')}
+                     className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                        dataSource === 'google'
+                           ? 'bg-white text-neutral-900 shadow-sm'
+                           : 'text-neutral-500 hover:text-neutral-700'
+                     }`}
+                  >
+                     Google
+                  </button>
+                  <button
+                     onClick={() => setDataSource('bing')}
+                     className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                        dataSource === 'bing'
+                           ? 'bg-white text-neutral-900 shadow-sm'
+                           : 'text-neutral-500 hover:text-neutral-700'
+                     }`}
+                  >
+                     Bing
+                  </button>
+               </div>
+            )}
+
+            {dataSource === 'google' ? (
+               <SCInsight
+                  isPending={isLoading || isFetching}
+                  domain={activDomain}
+                  insight={theInsight}
+                  isConsoleIntegrated={scConnected || domainHasScAPI}
+                  daysFilter={daysFilter}
+                  setDaysFilter={setDaysFilter}
+               />
+            ) : (
+               <BingInsight domain={activDomain} />
+            )}
          </div>
 
 

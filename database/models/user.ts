@@ -135,6 +135,16 @@ class User extends Model {
   @Column({ type: DataType.JSON, allowNull: true })
   declare referral_payout_settings?: any;
 
+  // Microsoft / Bing Webmaster Tools OAuth
+  @Column({ type: DataType.TEXT, allowNull: true })
+  declare microsoft_access_token?: string;
+
+  @Column({ type: DataType.TEXT, allowNull: true })
+  declare microsoft_refresh_token?: string;
+
+  @Column({ type: DataType.DATE, allowNull: true })
+  declare microsoft_token_expiry?: Date;
+
   @HasOne(() => InvoiceDetail)
   declare invoice_profile: InvoiceDetail;
 

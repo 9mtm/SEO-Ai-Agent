@@ -22,6 +22,7 @@ import Workspace from '../../../database/models/workspace';
 import Post from '../../../database/models/post';
 import { ensureDomainSynced, readInsightData, readSCKeywordsData } from '../../../services/gscStorage';
 import { analyzeSEO } from '../../../lib/seo/analyzer';
+import { getBingQueryStats, getBingPageStats, getBingCountryStats } from '../../../services/bingWebmaster';
 
 // Disable Next.js body parser — the SDK handles raw streams
 export const config = {
@@ -344,6 +345,55 @@ function createMcpServer(ctx: { userId: number; workspaceId: number }) {
         if (!d) return { content: [{ type: 'text', text: 'forbidden' }], isError: true };
         await post.destroy();
         return { content: [{ type: 'text', text: JSON.stringify({ ok: true }) }] };
+    });
+
+    // ── Bing Webmaster Tools ──
+    server.tool('get_bing_insight', 'Get Bing Webmaster Tools stats (clicks, impressions, CTR, position) + keyword and page data for a domain.', {
+        domain: z.string().describe('Domain name (e.g. example.com)'),
+    }, async ({ domain }) => {
+        const d: any = await Domain.findOne({ where: { workspace_id: ctx.workspaceId, domain } });
+        if (!d) return { content: [{ type: 'text', text: 'domain_not_found' }], isError: true };
+        const siteUrl = domain.startsWith('http') ? domain : `https://${domain}`;
+        try {
+            const [keywords, pages, countries] = await Promise.all([
+                getBingQueryStats(ctx.userId, siteUrl),
+                getBingPageStats(ctx.userId, siteUrl),
+                getBingCountryStats(ctx.userId, siteUrl),
+            ]);
+            const totalClicks = keywords.reduce((s, k) => s + (k.Clicks || 0), 0);
+            const totalImpressions = keywords.reduce((s, k) => s + (k.Impressions || 0), 0);
+            const avgPosition = keywords.length > 0
+                ? keywords.reduce((s, k) => s + (k.AvgImpressionPosition || 0), 0) / keywords.length : 0;
+            return { content: [{ type: 'text', text: JSON.stringify({
+                stats: { totalClicks, totalImpressions, ctr: totalImpressions > 0 ? Math.round((totalClicks / totalImpressions) * 10000) / 100 : 0, avgPosition: Math.round(avgPosition * 10) / 10 },
+                keywords: keywords.length,
+                pages: pages.length,
+                countries: countries.length,
+                topKeywords: keywords.slice(0, 20).map(k => ({ query: k.Query, clicks: k.Clicks, impressions: k.Impressions, position: k.AvgImpressionPosition })),
+            }) }] };
+        } catch (err: any) {
+            return { content: [{ type: 'text', text: `bing_error: ${err.message}` }], isError: true };
+        }
+    });
+
+    server.tool('get_bing_keywords', 'Get Bing keyword ranking data for a domain.', {
+        domain: z.string().describe('Domain name'),
+    }, async ({ domain }) => {
+        const d: any = await Domain.findOne({ where: { workspace_id: ctx.workspaceId, domain } });
+        if (!d) return { content: [{ type: 'text', text: 'domain_not_found' }], isError: true };
+        const siteUrl = domain.startsWith('http') ? domain : `https://${domain}`;
+        try {
+            const keywords = await getBingQueryStats(ctx.userId, siteUrl);
+            return { content: [{ type: 'text', text: JSON.stringify(keywords.map(k => ({
+                keyword: k.Query,
+                clicks: k.Clicks,
+                impressions: k.Impressions,
+                position: k.AvgImpressionPosition,
+                ctr: k.Impressions > 0 ? Math.round((k.Clicks / k.Impressions) * 10000) / 100 : 0,
+            }))) }] };
+        } catch (err: any) {
+            return { content: [{ type: 'text', text: `bing_error: ${err.message}` }], isError: true };
+        }
     });
 
     return server;

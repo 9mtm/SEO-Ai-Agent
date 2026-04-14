@@ -1382,5 +1382,18 @@
     "talentManagement": "Talentmanagement",
     "ats": "Bewerbermanagement-Software",
     "documentation": "Dokumentation"
+  },
+  "bing": {
+    "title": "Bing Webmaster Tools",
+    "description": "Verbinden Sie Ihr Microsoft-Konto, um auf Bing- und Yahoo-Suchanalysen zuzugreifen.",
+    "connect": "Bing verbinden",
+    "connectDescription": "Verknüpfen Sie Ihr Microsoft-Konto, um Bing- und Yahoo-Keyword-Rankings, Impressionen und Klicks zu verfolgen.",
+    "connected": "Bing-Konto verbunden",
+    "connectedDescription": "Bing- und Yahoo-Analysen sind auf Ihren Domain-Insight-Seiten verfügbar.",
+    "disconnect": "Trennen",
+    "disconnectTitle": "Bing-Konto trennen",
+    "disconnectDescription": "Sind Sie sicher, dass Sie die Bing Webmaster Tools trennen möchten? Bing- und Yahoo-Analysen werden nicht mehr verfügbar sein.",
+    "notConnected": "Verbinden Sie Bing Webmaster Tools, um Bing- und Yahoo-Daten anzuzeigen.",
+    "tab": "Bing"
   }
 }

@@ -139,6 +139,7 @@ type SettingsType = {
    adwords_developer_token?: string,
    adwords_account_id?: string,
    keywordsColumns: string[]
+   bing_connected?: boolean,
 }
 
 type KeywordSCDataChild = {
