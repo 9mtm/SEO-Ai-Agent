@@ -1,14 +1,9 @@
 import { GetStaticProps } from 'next';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useLanguage } from '@/context/LanguageContext';
-import { Building2, Mail, Phone, MapPin, Menu, X } from 'lucide-react';
-import AccountMenu from '../components/common/AccountMenu';
+import { Building2, Mail, Phone, MapPin } from 'lucide-react';
+import LandingHeader from '../components/common/LandingHeader';
 import Footer from '../components/common/Footer';
-import { useFetchDomains } from '../services/domains';
 
 export const getStaticProps: GetStaticProps = async () => {
   return {
@@ -17,32 +12,6 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 const ImprintPage: React.FC = () => {
-  const router = useRouter();
-  const { t } = useLanguage();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const { data: domainsData } = useFetchDomains(router, false, { enabled: isLoggedIn });
-  const domains = domainsData?.domains || [];
-
-  const getAuthHeaders = () => {
-    const headers: any = { 'Content-Type': 'application/json' };
-    const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
-    if (token) headers.Authorization = `Bearer ${token}`;
-    return headers;
-  };
-
-  useEffect(() => {
-    fetch('/api/user', { headers: getAuthHeaders() })
-      .then((res) => {
-        if (res.ok) {
-          setIsLoggedIn(true);
-        }
-      })
-      .catch(() => {
-        // Not logged in
-      });
-  }, []);
 
   // Schema.org for organization
   const organizationSchema = {
@@ -86,91 +55,7 @@ const ImprintPage: React.FC = () => {
         />
       </Head>
 
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-md border-b border-neutral-200 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-              <Image src="/dpro_logo.png" alt="SEO Agent Logo" width={32} height={32} className="h-8 w-8" />
-              <span className="text-xl font-bold text-neutral-900">SEO Agent</span>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-6">
-              <Link href="/#features" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">
-                {t('nav.features')}
-              </Link>
-              <Link href="/mcp-seo" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">
-                {t('nav.mcpIntegration')}
-              </Link>
-
-              {isLoggedIn ? (
-                <AccountMenu domains={domains} />
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors"
-                  >
-                    {t('landing.login')}
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
-                  >
-                    {t('landing.cta')}
-                  </Link>
-                </>
-              )}
-            </div>
-
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-neutral-100"
-              aria-label="Toggle mobile menu"
-            >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-neutral-200 bg-white">
-            <div className="px-4 py-4 space-y-3">
-              <Link
-                href="/#features"
-                className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {t('nav.features')}
-              </Link>
-              <Link
-                href="/mcp-seo"
-                className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {t('nav.mcpIntegration')}
-              </Link>
-              <Link
-                href="/login"
-                className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {t('landing.login')}
-              </Link>
-              <Link
-                href="/register"
-                className="block px-4 py-2 bg-blue-600 text-white rounded-lg text-center font-semibold hover:bg-blue-700 transition-all active:scale-[0.98]"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {t('landing.cta')}
-              </Link>
-            </div>
-          </div>
-        )}
-      </nav>
+      <LandingHeader />
 
       <main className="pt-24">
         <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-white py-16">
