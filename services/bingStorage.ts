@@ -284,9 +284,13 @@ export async function readBingInsightData(domainId: number, days: number) {
         page: r.page || '',
     }));
 
-    // Totals
-    const totalClicks = stats.reduce((s: number, r: any) => s + r.clicks, 0);
-    const totalImpressions = stats.reduce((s: number, r: any) => s + r.impressions, 0);
+    // Totals — prefer daily stats if available, otherwise sum from keywords
+    const chartClicks = stats.reduce((s: number, r: any) => s + r.clicks, 0);
+    const chartImpressions = stats.reduce((s: number, r: any) => s + r.impressions, 0);
+    const kwClicks = keywords.reduce((s: number, k: any) => s + k.clicks, 0);
+    const kwImpressions = keywords.reduce((s: number, k: any) => s + k.impressions, 0);
+    const totalClicks = chartClicks > 0 ? chartClicks : kwClicks;
+    const totalImpressions = chartImpressions > 0 ? chartImpressions : kwImpressions;
     const avgPosition = keywords.length > 0
         ? keywords.reduce((s: number, k: any) => s + k.position, 0) / keywords.length
         : 0;
