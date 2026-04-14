@@ -36,14 +36,15 @@ async function bingFetch(userId: number, endpoint: string, params?: Record<strin
   }
 
   const url = new URL(`${BING_API_BASE}/${endpoint}`);
-  url.searchParams.set('access_token', token);
   if (params) {
     for (const [key, val] of Object.entries(params)) {
       url.searchParams.set(key, val);
     }
   }
 
-  const response = await fetch(url.toString());
+  const response = await fetch(url.toString(), {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
   if (!response.ok) {
     const text = await response.text();

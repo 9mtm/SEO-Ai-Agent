@@ -27,7 +27,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     client_id: process.env.BING_OAUTH_CLIENT_ID,
     redirect_uri: redirectUri,
     response_type: 'code',
-    scope: 'webmasters.read',
+    scope: 'Webmaster.read',
     state: 'connect_flow',
   });
 
