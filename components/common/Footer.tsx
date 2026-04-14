@@ -37,6 +37,7 @@ const Footer: React.FC = () => {
                   <ul className="space-y-2 text-sm">
                      <li><Link href="/#features" className="hover:text-white transition-colors">{t('nav.features')}</Link></li>
                      <li><Link href="/mcp-seo" className="hover:text-white transition-colors">{t('nav.mcpIntegration')}</Link></li>
+                     <li><Link href="/seo-expert-skill" className="hover:text-white transition-colors">SEO Expert Skill</Link></li>
                      <li><a href="https://flowxtra.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{t('footerMenu.talentManagement')}</a></li>
                      <li><a href="https://flowxtra.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">{t('footerMenu.ats')}</a></li>
                   </ul>
