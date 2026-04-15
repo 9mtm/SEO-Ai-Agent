@@ -164,6 +164,45 @@ function createMcpServer(ctx: { userId: number; workspaceId: number }) {
         return { content: [{ type: 'text', text: JSON.stringify({ id: (created as any).ID, ok: true }) }] };
     });
 
+    server.tool('delete_tracked_keyword', 'Delete a single tracked keyword by ID.', {
+        keyword_id: z.number().describe('The keyword ID to delete'),
+    }, async ({ keyword_id }) => {
+        const kw: any = await Keyword.findByPk(keyword_id);
+        if (!kw) return { content: [{ type: 'text', text: 'keyword_not_found' }], isError: true };
+        if (kw.workspace_id !== ctx.workspaceId) return { content: [{ type: 'text', text: 'forbidden' }], isError: true };
+        await kw.destroy();
+        return { content: [{ type: 'text', text: JSON.stringify({ ok: true, deleted: keyword_id }) }] };
+    });
+
+    server.tool('delete_tracked_keywords_bulk', 'Delete multiple tracked keywords by keyword text and domain. Use to clean up keywords in bulk.', {
+        domain: z.string().describe('Domain name'),
+        keywords: z.array(z.string()).describe('Array of keyword texts to delete'),
+    }, async ({ domain, keywords }) => {
+        let deleted = 0;
+        for (const kw of keywords) {
+            const count = await Keyword.destroy({ where: { workspace_id: ctx.workspaceId, domain, keyword: kw } } as any);
+            deleted += count;
+        }
+        return { content: [{ type: 'text', text: JSON.stringify({ ok: true, deleted, requested: keywords.length }) }] };
+    });
+
+    server.tool('update_tracked_keyword', 'Update a tracked keyword (change device, country, or keyword text).', {
+        keyword_id: z.number().describe('The keyword ID to update'),
+        keyword: z.string().optional().describe('New keyword text'),
+        device: z.enum(['desktop', 'mobile']).optional().describe('New device type'),
+        country: z.string().optional().describe('New country code (e.g. US, DE, AT)'),
+    }, async ({ keyword_id, keyword, device, country }) => {
+        const kw: any = await Keyword.findByPk(keyword_id);
+        if (!kw) return { content: [{ type: 'text', text: 'keyword_not_found' }], isError: true };
+        if (kw.workspace_id !== ctx.workspaceId) return { content: [{ type: 'text', text: 'forbidden' }], isError: true };
+        const updates: any = {};
+        if (keyword !== undefined) updates.keyword = keyword;
+        if (device !== undefined) updates.device = device;
+        if (country !== undefined) updates.country = country;
+        await kw.update(updates);
+        return { content: [{ type: 'text', text: JSON.stringify({ ok: true, updated: keyword_id, changes: updates }) }] };
+    });
+
     // ── Competitors ──
     server.tool('list_domain_competitors', 'List competitor domains for a domain.', {
         domain: z.string()

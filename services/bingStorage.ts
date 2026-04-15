@@ -284,8 +284,9 @@ export async function readBingInsightData(domainId: number, days: number) {
         position: Number(r.position) || 0,
     }));
 
-    // Keywords
-    const [keywordsRaw]: any = await db.query(
+    // Keywords — Bing query stats may lag behind daily stats,
+    // so fall back to all available data if the date range returns nothing
+    let [keywordsRaw]: any = await db.query(
         `SELECT keyword AS value, SUM(clicks) AS clicks, SUM(impressions) AS impressions,
                 AVG(ctr) AS ctr, AVG(position) AS position, MAX(page) AS page
          FROM bwt_query_stats
@@ -295,6 +296,20 @@ export async function readBingInsightData(domainId: number, days: number) {
          LIMIT 500`,
         { replacements: [domainId, since] }
     );
+
+    // Fallback: if no keywords in the requested range, use all available data
+    if (!keywordsRaw || keywordsRaw.length === 0) {
+        [keywordsRaw] = await db.query(
+            `SELECT keyword AS value, SUM(clicks) AS clicks, SUM(impressions) AS impressions,
+                    AVG(ctr) AS ctr, AVG(position) AS position, MAX(page) AS page
+             FROM bwt_query_stats
+             WHERE domain_id = ?
+             GROUP BY keyword
+             ORDER BY clicks DESC
+             LIMIT 500`,
+            { replacements: [domainId] }
+        );
+    }
 
     const keywords = (keywordsRaw || []).map((r: any) => ({
         keyword: r.value,

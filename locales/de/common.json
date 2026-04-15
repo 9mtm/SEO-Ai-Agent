@@ -451,7 +451,13 @@
     "noResults": "Keine Ergebnisse für \"{{query}}\"",
     "topPerformers": "Top-Performer",
     "exportCSV": "CSV Exportieren",
-    "selectTab": "Ansicht wählen"
+    "selectTab": "Ansicht wählen",
+    "syncingBing": "Bing-Daten werden synchronisiert...",
+    "bingError": "Bing-Daten konnten nicht geladen werden",
+    "noKeywordsData": "Noch keine Keyword-Daten verfügbar",
+    "bingConnectTitle": "Bing Webmaster Tools nicht verbunden",
+    "bingConnectDesc": "Verbinden Sie Ihr Bing Webmaster-Konto, um Suchleistungsdaten wie Klicks, Impressionen und Keyword-Rankings anzuzeigen.",
+    "bingConnectBtn": "Bing-Konto verbinden"
   },
   "domainHeader": {
     "last3Days": "Letzte 3 Tage",

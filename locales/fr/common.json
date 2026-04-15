@@ -451,7 +451,13 @@
     "noResults": "Aucun résultat pour \"{{query}}\"",
     "topPerformers": "Meilleurs performeurs",
     "exportCSV": "Exporter CSV",
-    "selectTab": "Sélectionner la vue"
+    "selectTab": "Sélectionner la vue",
+    "syncingBing": "Synchronisation des données Bing...",
+    "bingError": "Échec du chargement des données Bing",
+    "noKeywordsData": "Aucune donnée de mots-clés disponible",
+    "bingConnectTitle": "Bing Webmaster Tools non connecté",
+    "bingConnectDesc": "Connectez votre compte Bing Webmaster pour afficher les données de performance de recherche, y compris les clics, impressions et classements de mots-clés.",
+    "bingConnectBtn": "Connecter le compte Bing"
   },
   "domainHeader": {
     "last3Days": "3 derniers jours",

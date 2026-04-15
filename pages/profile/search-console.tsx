@@ -195,8 +195,9 @@ const SearchConsolePage: NextPage = () => {
                         {!bingConnected ? (
                             <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
                                 <div className="bg-neutral-100 p-4 rounded-full">
-                                    <svg className="h-12 w-12" viewBox="0 0 24 24" fill="none">
-                                        <path d="M5 3v16.5l4.5 2.5V8l5 3.5-4.5 2.5v4l9-5.5L10 7V2L5 3z" fill="#00897B"/>
+                                    <svg className="h-12 w-12" viewBox="0 0 35 50" fill="#008373">
+                                        <path d="M35 24.25l-22.177-7.761 4.338 10.82 6.923 3.225H35V24.25z" opacity=".7"/>
+                                        <path d="M10 38.642V3.5L0 0v44.4L10 50l25-14.382V24.25z"/>
                                     </svg>
                                 </div>
                                 <h3 className="text-lg font-semibold">Connect Bing Webmaster Tools</h3>
@@ -215,8 +216,9 @@ const SearchConsolePage: NextPage = () => {
                             <div className="space-y-6">
                                 <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
-                                            <path d="M5 3v16.5l4.5 2.5V8l5 3.5-4.5 2.5v4l9-5.5L10 7V2L5 3z" fill="#00897B"/>
+                                        <svg className="h-6 w-6" viewBox="0 0 35 50" fill="#008373">
+                                            <path d="M35 24.25l-22.177-7.761 4.338 10.82 6.923 3.225H35V24.25z" opacity=".7"/>
+                                            <path d="M10 38.642V3.5L0 0v44.4L10 50l25-14.382V24.25z"/>
                                         </svg>
                                         <div>
                                             <h4 className="font-medium text-green-900">Bing Account Connected</h4>

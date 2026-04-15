@@ -450,7 +450,13 @@
     "noResults": "No results found for \"{{query}}\"",
     "topPerformers": "Top Performers",
     "exportCSV": "Export CSV",
-    "selectTab": "Select View"
+    "selectTab": "Select View",
+    "syncingBing": "Syncing Bing data...",
+    "bingError": "Failed to load Bing data",
+    "noKeywordsData": "No keyword data available yet",
+    "bingConnectTitle": "Bing Webmaster Tools Not Connected",
+    "bingConnectDesc": "Connect your Bing Webmaster account to view search performance data including clicks, impressions, and keyword rankings.",
+    "bingConnectBtn": "Connect Bing Account"
   },
   "domainHeader": {
     "last3Days": "Last 3 Days",
