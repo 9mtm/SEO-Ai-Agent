@@ -1,0 +1,1470 @@
+{
+  "auth": {
+    "login": {
+      "title": "Giriş Yap",
+      "welcome": "Tekrar hoş geldiniz!",
+      "description": "Panelinize erişmek için giriş yapın",
+      "googleBtn": "Google ile Devam Et",
+      "backToHome": "Ana Sayfaya Dön"
+    },
+    "register": {
+      "title": "Kayıt Ol",
+      "welcome": "Hesabınızı oluşturun",
+      "description": "SEO AI Agent ile başlayın",
+      "googleBtn": "Google ile Devam Et",
+      "backToHome": "Ana Sayfaya Dön",
+      "haveAccount": "Zaten hesabınız var mı?",
+      "signIn": "Giriş yap",
+      "termsLabel": "Şunları kabul ediyorum:",
+      "termsLink": "Hizmet Şartları",
+      "and": "ve",
+      "privacyLink": "Gizlilik Politikası",
+      "newsletterLabel": "Web sitemle ilgili bültenler, raporlar ve güncellemeler almak istiyorum",
+      "termsRequired": "Devam etmek için Hizmet Şartlarını ve Gizlilik Politikasını kabul etmelisiniz"
+    }
+  },
+  "onboarding": {
+    "layout": {
+      "title": "Hepsi Bir Arada Trafik Çözümü",
+      "subtitle": "Otomatik pilotta sıralama almak ve trafik çekmek için ihtiyacınız olan her şey",
+      "feature1_title": "Google ve Yapay Zeka Aramalarında Sıralama Alın",
+      "feature1_desc": "Google, ChatGPT ve yapay zeka motorlarında sıralama almak için optimize edildi",
+      "feature2_title": "Günlük Makale Üretimi",
+      "feature2_desc": "İç bağlantılarla günlük olarak oluşturulan SEO uyumlu içerik",
+      "feature3_title": "Web Sitenize Otomatik Yayınlama",
+      "feature3_desc": "WordPress, Webflow ve Shopify'a sorunsuz yayınlama",
+      "feature4_title": "Kişiselleştirilmiş Plan",
+      "feature4_desc": "Anahtar kelime fikirleri ve içerik yol haritası ile size özel strateji"
+    },
+    "step1": {
+      "title": "Google Search Console'u Bağlayın",
+      "subtitle": "Başlamak için Google Search Console'dan doğrulanmış web sitenizi seçin.",
+      "checking": "Bağlantı kontrol ediliyor...",
+      "connectGoogleTitle": "Google Hesabınızı Bağlayın",
+      "connectGoogleDesc": "Web sitenizi otomatik olarak doğrulamak ve performans verilerine erişmek için Google Search Console'unuzu bağlayın.",
+      "connectBtn": "Google Search Console'u Bağla",
+      "connected": "Google Search Console Bağlandı",
+      "selectSiteLabel": "Web Sitenizi Seçin",
+      "loadingSites": "Siteleriniz yükleniyor...",
+      "noSitesTitle": "Google Search Console'unuzda doğrulanmış site bulunamadı.",
+      "noSitesDesc": "Lütfen önce alan adınızı Google Search Console'da doğrulayın, ardından bu sayfayı yenileyin.",
+      "chooseSite": "-- Doğrulanmış bir site seçin --",
+      "searchSitePlaceholder": "Web sitenizi arayın...",
+      "noResults": "Aramanız için sonuç bulunamadı",
+      "owner": "(Sahip)",
+      "websiteUrlLabel": "Web Sitesi URL'si",
+      "websiteUrlPlaceholder": "Yukarıdan bir site seçin",
+      "websiteUrlHelp": "bu alan seçtiğiniz siteye göre otomatik olarak doldurulur",
+      "errorSelectSite": "Lütfen Google Search Console'dan bir web sitesi seçin",
+      "errorVerifySite": "Lütfen Google Search Console'dan doğrulanmış bir site seçin",
+      "errorSave": "Kaydedilemedi",
+      "errorGeneric": "Bir hata oluştu",
+      "saving": "Hazırlanıyor...",
+      "continue": "Devam Et"
+    },
+    "step2": {
+      "title": "Bize işinizden bahsedin",
+      "subtitle": "İşinizle ilgili bazı detayları paylaşın.",
+      "nameLabel": "İsim",
+      "namePlaceholder": "Flowxtra",
+      "nameHelp": "İşletmenizin adı",
+      "nicheLabel": "Niş",
+      "nichePlaceholder": "işe alım yazılımı",
+      "nicheHelp": "Kısa ve odaklanmış (en fazla 3 kelime)",
+      "descLabel": "Açıklama",
+      "descPlaceholder": "Flowxtra ücretsiz bir Aday Takip Sistemi (ATS) sunar...",
+      "descHelp": "İşinizin neyle ilgili olduğuna dair kısa bir açıklama",
+      "importantTitle": "Önemli (En iyi sonuçlar için okuyun)",
+      "importantDesc": "Tüm alanları gözden geçirin. Emin değilseniz, otomatik doldurulan öneriyi saklayın. Her şeyin seçilen dilde yazıldığından emin olun.",
+      "errorFields": "Lütfen tüm gerekli alanları doldurun",
+      "errorNiche": "Niş en fazla 3 kelime olmalıdır",
+      "back": "Geri"
+    },
+    "step2_5": {
+      "title": "SEO Stratejinizi Belirleyin",
+      "subtitle": "İşinizi analiz ettik ve 9 odak anahtar kelimesi önerdik. Hedeflerinize uyması için bunları gözden geçirin ve düzenleyin.",
+      "aiTitle": "Yapay Zeka Tarafından Oluşturulan Anahtar Kelimeler",
+      "aiDesc": "Bu anahtar kelimeler iş açıklamanıza göre otomatik olarak oluşturuldu. Düzenlemekten çekinmeyin!",
+      "targetCountry": "Hedef Ülke",
+      "highPriorityTitle": "Yüksek Öncelik (İlk 3)",
+      "highPriorityDesc": "Domine etmeniz gereken kritik anahtar kelimeler",
+      "mediumPriorityTitle": "Orta Öncelik",
+      "mediumPriorityDesc": "Önemli destekleyici anahtar kelimeler",
+      "lowPriorityTitle": "Düşük Öncelik",
+      "lowPriorityDesc": "Uzun kuyruklu ve gelecekteki fırsatlar",
+      "keywordPlaceholder": "Anahtar Kelime",
+      "errorKeywords": "Lütfen en az bir odak anahtar kelimesi ekleyin"
+    },
+    "step3": {
+      "title": "Rakiplerinizi ekleyin",
+      "subtitle": "Analiz edilecek birincil rakipler.",
+      "placeholder": "Rakip URL'sini girin...",
+      "help": "İçerik stratejilerini analiz etmek için rakibinizin web sitesi URL'sini girin",
+      "add": "Ekle",
+      "maxReached": "(Maksimum 3'e ulaşıldı)",
+      "suggestions": "Öneriler:"
+    }
+  },
+  "dashboard": {
+    "title": "Panel",
+    "domains": "Alan Adları",
+    "keywords": "Anahtar Kelimeler",
+    "settings": "Ayarlar",
+    "addDomain": "Alan Adı Ekle",
+    "noDomains": "Alan adı bulunamadı. Başlamak için bir alan adı ekleyin!"
+  },
+  "common": {
+    "loading": "Yükleniyor...",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "logout": "Çıkış Yap",
+    "changeLanguage": "Dili Değiştir"
+  },
+  "email": {
+    "visits": "Ziyaretler",
+    "impressions": "Gösterimler",
+    "avgPosition": "Ort. Pozisyon",
+    "avgCtr": "Ort. TO",
+    "improved": "İyileşti",
+    "declined": "Geriledi",
+    "topKeywords": "En İyi Performans Gösteren Anahtar Kelimeler (Son {{days}} Gün)",
+    "topPages": "En İyi Performans Gösteren Sayfalar",
+    "keyword": "Anahtar Kelime",
+    "page": "Sayfa",
+    "clicks": "Tıklamalar",
+    "views": "Görüntülemeler",
+    "pos": "Poz.",
+    "avgPos": "Ort. Poz.",
+    "viewMore": "Panelde {{count}} anahtar kelimeyi daha görüntüle",
+    "yearsAgo": "{{count}} yıl önce",
+    "monthsAgo": "{{count}} ay önce",
+    "daysAgo": "{{count}} gün önce",
+    "hrsAgo": "{{count}} saat önce",
+    "minsAgo": "{{count}} dk önce",
+    "secsAgo": "{{count}} sn önce",
+    "subject": "[{{domain}}] Aylık Anahtar Kelime Pozisyonları Güncellemesi",
+    "keywordRankings": "Anahtar Kelime Sıralamaları",
+    "keywordsSuffix": "Anahtar Kelimeler",
+    "goToDashboard": "Panele Git",
+    "unsubscribeText": "Bu e-postaları almak istemiyor musunuz?",
+    "unsubscribe": "Abonelikten Çık",
+    "poweredBy": "Destekleyen:",
+    "position": "Pozisyon",
+    "table": {
+      "best": "En İyi",
+      "updated": "Güncellendi"
+    }
+  },
+  "sidebar": {
+    "insight": "İçgörü",
+    "tracking": "Takip",
+    "competitors": "Rakipler",
+    "discover": "Keşfet",
+    "agent": "Seo Agent",
+    "settings": "Ayarlar",
+    "profile": "Profil",
+    "scraper": "Scraper",
+    "connections": "Bağlan",
+    "billing": "Faturalandırma",
+    "myDomains": "Alan Adlarım",
+    "domains": "Alan Adları",
+    "workspaces": "Çalışma Alanları",
+    "teamMembers": "Takım Üyeleri",
+    "searchConsole": "Search Console",
+    "connectedApps": "Bağlı Uygulamalar",
+    "referrals": "Referanslar",
+    "setup": "Kurulum",
+    "posts": "Yazılar",
+    "apiKeys": "API & MCP",
+    "notifications": "Bildirimler"
+  },
+  "workspace": {
+    "switch": "Çalışma alanını değiştir",
+    "personal": "kişisel",
+    "manage": "Çalışma alanlarını yönet"
+  },
+  "profile": {
+    "title": "Kişisel Profil",
+    "description": "Kişisel bilgilerinizi ve hesap güvenliğinizi yönetin",
+    "cardTitle": "Profil Bilgileri",
+    "cardDescription": "Fotoğrafınızı ve kişisel detaylarınızı güncelleyin",
+    "photoTitle": "Profil Fotoğrafı",
+    "photoDesc": "Bu, profilinizde görüntülenecektir.",
+    "changePhoto": "Fotoğrafı Değiştir",
+    "fullName": "Tam İsim",
+    "email": "E-posta Adresi",
+    "emailNote": "E-posta adresi doğrudan değiştirilemez. Destekle iletişime geçin.",
+    "languageSettingsTitle": "Dil Tercihleri",
+    "languageSettingsDesc": "Arayüz için tercih ettiğiniz dili seçin",
+    "language": "Sistem Dili",
+    "save": "Değişiklikleri Kaydet",
+    "saving": "Kaydediliyor...",
+    "success": "Profil başarıyla güncellendi",
+    "error": "Profil güncellenemedi",
+    "deleteAccountTitle": "Hesabı Sil",
+    "deleteAccountDesc": "Hesabınızı ve tüm ilişkili verileri kalıcı olarak silin.",
+    "deleteWarning": "Bu işlem geri alınamaz. Onaylamak için lütfen \"DELETE\" yazın.",
+    "deletePlaceholder": "Onaylamak için DELETE yazın",
+    "deleteButton": "Hesabı Sil",
+    "deleting": "Siliniyor...",
+    "deleteSuccess": "Hesap başarıyla silindi",
+    "deleteError": "Hesap silinemedi"
+  },
+  "notifications": {
+    "title": "Bildirimler",
+    "description": "Nasıl ve ne zaman bildirim almak istediğinizi yönetin.",
+    "generalTitle": "E-posta Bildirimleri",
+    "generalDesc": "E-posta tercihlerinizi yapılandırın.",
+    "emailAlerts": "E-posta Uyarıları",
+    "emailAlertsDesc": "Hesap etkinliğiniz hakkında uyarılar alın.",
+    "weeklyReport": "Haftalık Rapor",
+    "weeklyReportDesc": "Alan adlarınızın performansı hakkında haftalık özet alın.",
+    "marketingEmails": "Pazarlama E-postaları",
+    "marketingEmailsDesc": "Haberler, güncellemeler ve özel teklifler alın.",
+    "securityAlerts": "Güvenlik Uyarıları",
+    "securityAlertsDesc": "Önemli güvenlik olayları hakkında bildirim alın.",
+    "save": "Değişiklikleri Kaydet",
+    "saving": "Kaydediliyor...",
+    "success": "Tercihler başarıyla güncellendi",
+    "emailSettingsTitle": "Bildirim Kanalı",
+    "emailSettingsDesc": "Bildirimlerinizi nereye göndermeliyiz?",
+    "notificationEmailLabel": "Bildirim E-postası",
+    "notificationEmailPlaceholder": "örneğin notifications@company.com",
+    "notificationEmailHelp": "Bildirimleri bu e-posta adresine göndereceğiz.",
+    "domainTitle": "Alan Adı Bildirimleri",
+    "domainDesc": "Belirli alan adları için bildirimleri etkinleştirin veya devre dışı bırakın.",
+    "domainLabel": "Şunun için güncellemeleri al:"
+  },
+  "billing": {
+    "title": "Faturalandırma & Abonelik",
+    "desc": "Faturalandırma detaylarınızı ve abonelik planınızı yönetin",
+    "tabs": {
+      "subscription": "Abonelik Planı",
+      "details": "Fatura Detayları",
+      "history": "Faturalar"
+    },
+    "currentPlan": "Mevcut Plan: {{plan}}",
+    "active": "Aktif",
+    "renewsOn": "Yenileme tarihi: {{date}}",
+    "planNames": {
+      "free": "Ücretsiz",
+      "basic": "Temel",
+      "pro": "Pro",
+      "premium": "Premium"
+    },
+    "planDesc": {
+      "free": "Sonsuza kadar ücretsiz",
+      "basic": "Başlamak için",
+      "pro": "Büyüyen işletmeler için",
+      "premium": "Güçlü kullanıcılar ve ekipler için"
+    },
+    "features": {
+      "domain": "{{count}} Alan Adı",
+      "domains": "{{count}} Alan Adı",
+      "unlimitedDomains": "Sınırsız Alan Adı",
+      "keywords": "{{count}} Anahtar Kelime",
+      "updates": "Sınırlı Güncellemeler",
+      "weekly": "Haftalık Güncellemeler",
+      "daily": "Günlük Güncellemeler",
+      "mcp": "MCP Erişimi",
+      "ai": "Yapay Zeka İçeriği",
+      "priority": "Öncelikli Destek",
+      "api": "API Erişimi"
+    },
+    "buttons": {
+      "current": "Mevcut Plan",
+      "upgrade": "Yükselt",
+      "downgrade": "Düşür"
+    },
+    "invoice": {
+      "title": "Genel Fatura Bilgileri",
+      "desc": "Tüm faturalarınız için varsayılan detayları ayarlayın",
+      "accountType": "Hesap Türü",
+      "company": "Şirket",
+      "individual": "Bireysel",
+      "nameCompany": "Şirket Adı",
+      "nameIndividual": "Tam İsim",
+      "vat": "KDV Kimliği (Opsiyonel)",
+      "address": "Fatura Adresi",
+      "city": "Şehir",
+      "zip": "Posta Kodu",
+      "country": "Ülke",
+      "email": "Fatura E-postası",
+      "save": "Varsayılanları Kaydet"
+    },
+    "history": {
+      "title": "Fatura Geçmişi",
+      "desc": "Geçmiş faturalarınızı indirin",
+      "date": "Tarih",
+      "amount": "Tutar",
+      "status": "Durum",
+      "download": "İndir"
+    },
+    "checkout": {
+      "title": "{{cycle}} Aboneliği Tamamla",
+      "desc": "Planınızı gözden geçirin ve fatura detaylarını onaylayın.",
+      "redirecting": "Stripe'a yönlendiriliyor...",
+      "monthly": "Aylık",
+      "yearly": "Yıllık",
+      "save": "yaklaşık %20 Tasarruf Et",
+      "planSummary": "{{plan}} Planı",
+      "cycle": "Faturalandırma Döngüsü",
+      "total": "Bugün ödenecek toplam",
+      "confirm": "Onayla & Öde",
+      "cancel": "İptal",
+      "billedYearly": "Yalnızca Yıllık Faturalandırılır"
+    }
+  },
+  "apiKeys": {
+    "title": "API & MCP Bağlantıları",
+    "subtitle": "SEO verilerinizi yönetmek için yapay zeka asistanlarını MCP protokolü üzerinden bağlayın",
+    "activeConnections": "Aktif Bağlantılarınız ({{count}})",
+    "noConnections": "Henüz Bağlantı Yok",
+    "noConnectionsDesc": "SEO verilerinizi Claude veya ChatGPT gibi yapay zeka asistanlarıyla konuşarak yönetmeye başlamak için ilk yapay zeka bağlantınızı oluşturun.",
+    "createFirst": "İlk Bağlantınızı Oluşturun",
+    "create": "Yeni Bağlantı Oluştur",
+    "permissions": "İZİNLER:",
+    "created": "{{date}} oluşturuldu",
+    "lastUsed": "Son kullanım {{date}}",
+    "expires": "Bitiş {{date}}",
+    "viewSetup": "Kurulumu Görüntüle",
+    "hideSetup": "Kurulumu Gizle",
+    "disable": "Devre Dışı Bırak",
+    "delete": "Sil",
+    "disabled": "Devre Dışı",
+    "setupTitle": "Bu Bağlantı Nasıl Kullanılır",
+    "setupClaude": "Claude Desktop İçin:",
+    "setupConfig": "Bunu yapılandırma dosyanıza ekleyin (gerçek API anahtarınızla değiştirin):",
+    "viewGuide": "Detaylı kurulum kılavuzunu görüntüle",
+    "securityNotice": "API Anahtarı Geri Alınamaz",
+    "securityDesc": "Güvenlik nedenleriyle API anahtarları yalnızca oluşturma sırasında bir kez gösterilir. Anahtarınızı kaybettiyseniz yeni bir bağlantı oluşturun ve bunu silin.",
+    "createModal": {
+      "title": "Yeni Bağlantı Oluştur",
+      "subtitle": "SEO verilerinize yapay zeka asistanı erişimi kurun",
+      "nameLabel": "1. Bağlantınıza İsim Verin",
+      "namePlaceholder": "örneğin, Claude Asistanım",
+      "nameHelp": "Daha sonra tanıyacağınız bir isim seçin",
+      "permLabel": "2. İzinleri Seçin",
+      "selectAll": "Tümünü Seç",
+      "deselectAll": "Tümünü Kaldır",
+      "expiryLabel": "3. Son Kullanma Tarihini Ayarlayın",
+      "expiryHelp": "Güvenlik için 30 gün öneriyoruz",
+      "cancel": "İptal",
+      "create": "Bağlantı Oluştur"
+    },
+    "successModal": {
+      "title": "Bağlantı Başarıyla Oluşturuldu!",
+      "subtitle": "Yapay zeka asistanınızı bağlamak için bu adımları izleyin",
+      "step1": "Bağlantı Anahtarınızı Kopyalayın",
+      "step1Desc": "Bu sizin benzersiz anahtarınızdır - güvenli bir yere kaydedin!",
+      "copy": "Kopyala",
+      "step2": "Yapay Zeka Asistanınıza Ekleyin",
+      "step2Desc": "Claude Desktop için bunu yapılandırma dosyanıza ekleyin:",
+      "step3": "Yeniden Başlatın & Kullanmaya Başlayın",
+      "step3Desc": "Yapay zeka asistanınızı yeniden başlatın ve sohbete başlayın!",
+      "important": "Önemli!",
+      "importantDesc": "Bu anahtar yalnızca bir kez gösterilecektir. Bu mesajı kapatmadan önce güvenli bir şekilde kaydettiğinizden emin olun.",
+      "saved": "Anahtarı Kaydettim"
+    },
+    "permLabels": {
+      "readDomains": "Alan Adlarını Görüntüle",
+      "readDomainsDesc": "Web sitesi bilgilerinizi görün",
+      "readKeywords": "Anahtar Kelimeleri Görüntüle",
+      "readKeywordsDesc": "SEO anahtar kelimelerinizi görün",
+      "readPosts": "Makaleleri Görüntüle",
+      "readPostsDesc": "Blog yazılarınızı görün",
+      "readGsc": "Analizleri Görüntüle",
+      "readGscDesc": "Google Arama verilerini görün",
+      "writePosts": "Makale Oluştur",
+      "writePostsDesc": "Blog yazıları yazın ve düzenleyin",
+      "writeKeywords": "Anahtar Kelimeleri Yönet",
+      "writeKeywordsDesc": "Anahtar kelime ekleyin ve güncelleyin",
+      "publishWordpress": "WordPress'te Yayınla",
+      "publishWordpressDesc": "Web sitenizde makaleler yayınlayın"
+    },
+    "expiryOptions": {
+      "7": "7 gün",
+      "30": "30 gün (Önerilen)",
+      "90": "90 gün",
+      "365": "1 yıl",
+      "0": "Asla sona ermez"
+    }
+  },
+  "scraperSettings": {
+    "title": "Scraper Yapılandırması",
+    "desc": "Kazıma ayarlarınızı ve entegrasyonlarınızı yönetin",
+    "configTitle": "Scraper Yapılandırması",
+    "configDesc": "Kazıyıcı ayarlarınızı ve proxy seçeneklerinizi yapılandırın",
+    "type": "Scraper Türü",
+    "typePlaceholder": "Scraper türünü seçin",
+    "none": "Hiçbiri",
+    "recommended": "Önerilen",
+    "apiKey": "API Anahtarı",
+    "apiKeyPlaceholder": "API anahtarınızı girin",
+    "delay": "Kazıma Gecikmesi",
+    "delayNone": "Hiçbiri",
+    "delay5": "5 saniye",
+    "delay10": "10 saniye",
+    "delay30": "30 saniye",
+    "retry": "Başarısızlık durumunda yeniden denemeyi etkinleştir",
+    "save": "Değişiklikleri Kaydet",
+    "saving": "Kaydediliyor...",
+    "noKey": "API anahtarınız yok mu?",
+    "signUp": "{{service}} için kaydolun",
+    "notificationInterval": "Bildirim Aralığı",
+    "notificationEmail": "Bildirim E-postası"
+  },
+  "periods": {
+    "today": "Bugün",
+    "yesterday": "Dün",
+    "last7Days": "Son 7 Gün",
+    "last30Days": "Son 30 Gün",
+    "last90Days": "Son 90 Gün",
+    "lastYear": "Geçen Yıl",
+    "lastDays": "Son {{days}} Gün"
+  },
+  "insight": {
+    "stats": "İstatistikler",
+    "keywords": "Anahtar Kelimeler",
+    "countries": "Ülkeler",
+    "pages": "Sayfalar",
+    "performanceOverview": "Performans Özeti",
+    "both": "Her ikisi",
+    "visits": "Ziyaretler",
+    "impressions": "Gösterimler",
+    "avgPosition": "Ort. Pozisyon",
+    "avgCtr": "Ort. TO",
+    "date": "Tarih",
+    "ctr": "TO",
+    "position": "Pozisyon",
+    "clicks": "Tıklamalar",
+    "connectTitle": "Google Search Console Entegre Edilmedi",
+    "connectDesc": "Gösterimler, tıklamalar ve ortalama konum dahil olmak üzere gerçek performans verilerini görüntülemek için Google Search Console hesabınızı bağlayın.",
+    "connectBtn": "Google Hesabını Bağla",
+    "last30Days": "Son 30 Gün",
+    "pageInfo": "Sayfa {{current}} / {{total}}",
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "noResults": "\"{{query}}\" için sonuç bulunamadı",
+    "topPerformers": "En İyi Performans Gösterenler",
+    "exportCSV": "CSV Dışa Aktar",
+    "selectTab": "Görünüm Seç"
+  },
+  "domainHeader": {
+    "last3Days": "Son 3 Gün",
+    "last7Days": "Son 7 Gün",
+    "last30Days": "Son 30 Gün",
+    "reloadSerps": "SERP'leri Yenile",
+    "reloadAllSerps": "Tüm SERP'leri Yenile",
+    "deleteDomain": "Alan Adını Sil",
+    "updating": "Güncelleniyor...",
+    "reload": "Yenile",
+    "addKeyword": "Anahtar Kelime Ekle",
+    "loadIdeas": "Fikirleri Yükle"
+  },
+  "keywordFilter": {
+    "filterKeywords": "Anahtar Kelimeleri Filtrele...",
+    "allCountries": "Tüm Ülkeler",
+    "allTags": "Tüm Etiketler",
+    "noTags": "Bu Alan Adı İçin Etiket Bulunamadı",
+    "addKeyword": "Anahtar Kelime Ekle",
+    "reloadSerps": "Tüm SERP'leri Yenile",
+    "desktop": "Masaüstü",
+    "mobile": "Mobil",
+    "filter": "Filtrele",
+    "sort": "Sırala",
+    "columns": "Sütunları Göster/Gizle"
+  },
+  "sortOptions": {
+    "pos_asc": "En İyi Pozisyon",
+    "pos_desc": "En Düşük Pozisyon",
+    "date_asc": "En Yeni",
+    "date_desc": "En Eski",
+    "alpha_asc": "Alfabetik (A-Z)",
+    "alpha_desc": "Alfabetik (Z-A)",
+    "vol_asc": "En Düşük Arama Hacmi",
+    "vol_desc": "En Yüksek Arama Hacmi",
+    "imp_desc": "En Çok Görüntülenen",
+    "imp_asc": "En Az Görüntülenen",
+    "visits_desc": "En Çok Ziyaret Edilen",
+    "visits_asc": "En Az Ziyaret Edilen",
+    "ctr_desc": "En Düşük TO"
+  },
+  "columns": {
+    "keyword": "Anahtar Kelime",
+    "position": "Pozisyon",
+    "url": "URL",
+    "updated": "Güncellendi",
+    "best": "En İyi",
+    "history": "Geçmiş",
+    "volume": "Hacim",
+    "searchConsole": "Search Console"
+  },
+  "scTable": {
+    "totalVisits": "Toplam Ziyaret",
+    "addToTracker": "{{count}} Anahtar Kelimeyi Takipçiye Ekle",
+    "noKeywords": "Anahtar kelime bulunamadı",
+    "adjustFilters": "Filtrelerinizi ayarlamayı deneyin."
+  },
+  "tracking": {
+    "addKeywords": {
+      "title": "Yeni Anahtar Kelimeler Ekle",
+      "placeholder": "Anahtar kelimeleri buraya yazın veya yapıştırın. Her anahtar kelimeyi yeni bir satıra ekleyin.",
+      "tagsPlaceholder": "Etiket Ekle (Opsiyonel)",
+      "cityPlaceholder": "Şehir (Opsiyonel)",
+      "cityDisabled": "{{scraper}} için mevcut değil",
+      "cityTooltip": "Kazıyıcınız {{scraper}} şehir düzeyinde kazıma özelliğine sahip değil.",
+      "trackCompetitors": "Rakipleri Takip Et (rakip sıralamalarını otomatik olarak kontrol eder)",
+      "cancel": "İptal",
+      "add": "Anahtar Kelimeleri Ekle",
+      "adding": "Ekleniyor...",
+      "errorExist": "{{keywords}} anahtar kelimeleri zaten mevcut",
+      "errorEmpty": "Lütfen bir anahtar kelime ekleyin",
+      "noTags": "Mevcut Etiket Bulunamadı...",
+      "planUsage": "Plan Kullanımı",
+      "enterKeywords": "Anahtar Kelimeler",
+      "country": "Ülke",
+      "device": "Cihaz",
+      "city": "Şehir",
+      "tags": "Etiketler",
+      "errorLimit": "Plan sınırı aşıldı. {{remaining}} daha fazla anahtar kelime ekleyebilirsiniz ({{count}} eklenmeye çalışılıyor)."
+    },
+    "manageCompetitors": {
+      "title": "Rakipleri Yönet",
+      "addLabel": "Rakip URL'si Ekle",
+      "placeholder": "https://example.com",
+      "add": "Ekle",
+      "count": "{{count}}/{{max}} rakip eklendi",
+      "currentTitle": "Mevcut Rakipler",
+      "empty": "Henüz rakip eklenmedi",
+      "cancel": "İptal",
+      "save": "Değişiklikleri Kaydet",
+      "saving": "Kaydediliyor...",
+      "errorEmpty": "Lütfen bir rakip URL'si girin",
+      "errorMax": "En fazla {{max}} rakibe izin verilir",
+      "errorExists": "Bu rakip zaten mevcut",
+      "success": "Rakipler başarıyla güncellendi!",
+      "error": "Rakipler güncellenemedi"
+    },
+    "tabs": {
+      "keywords": "Anahtar Kelimeler",
+      "competitors": "Rakipler"
+    },
+    "scraperAlert": "Henüz bir Scrapper/Proxy kurulmadı. Kurmak ve uygulamayı kullanmaya başlamak için Ayarlar'ı açın."
+  },
+  "trackingTable": {
+    "keyword": "Anahtar Kelime",
+    "best": "En İyi",
+    "history": "Geçmiş",
+    "volume": "Hacim",
+    "url": "URL",
+    "updated": "Güncellendi",
+    "scPos": "Poz.",
+    "scImp": "Gös.",
+    "scVisits": "Ziyaret",
+    "refreshKeywords": "Anahtar Kelimeleri Yenile",
+    "removeKeywords": "Anahtar Kelimeleri Kaldır",
+    "tagKeywords": "Anahtar Kelimeleri Etiketle",
+    "noKeywordsDevice": "Bu cihaz türü için anahtar kelime eklenmedi.",
+    "removeTitle": "Anahtar Kelimeleri Kaldır",
+    "removeConfirm": "{{count}} anahtar kelimeyi kaldırmak istediğinizden emin misiniz?",
+    "refreshCompetitors": "Rakipleri Yenile",
+    "yourPosition": "Senin Pozisyonun",
+    "noKeywordsMsg": "Henüz anahtar kelime eklenmedi. Anahtar Kelimeler sekmesinden anahtar kelime ekleyin.",
+    "noCompetitorsMsg": "Henüz rakip eklenmedi. Alan adı ayarlarından rakipleri ekleyin.",
+    "refresh": "Yenile",
+    "tag": "Etiketle",
+    "remove": "Kaldır",
+    "selected": "Seçildi",
+    "favorite": "Favori",
+    "unfavorite": "Favoriden Kaldır",
+    "tags": "Etiketler",
+    "updateFailed": "Güncelleme Başarısız",
+    "lastAttempt": "Son deneme",
+    "scraperError": "Scraper Hatası"
+  },
+  "domainSelector": {
+    "current": "Mevcut Alan Adı",
+    "select": "Alan Adı Seç",
+    "switch": "Alan Adı Değiştir",
+    "add": "Web Sitesi Ekle",
+    "empty": "Alan adı bulunamadı"
+  },
+  "domainSettings": {
+    "title": "Alan Adı Ayarları",
+    "myApp": "Uygulamam",
+    "tabs": {
+      "general": "Genel",
+      "integrations": "Entegrasyonlar",
+      "searchConsole": "Google Search Console",
+      "delete": "Sil"
+    },
+    "general": {
+      "cardTitle": "Genel Bilgiler",
+      "cardDesc": "Alan adınızın işletme bilgilerini ve niş detaylarını güncelleyin.",
+      "businessName": "İşletme Adı",
+      "businessNameDesc": "İşletmenizin veya markanızın resmi adı.",
+      "niche": "Niş / Sektör",
+      "nicheDesc": "Web sitenizin ana sektörü veya konusu.",
+      "description": "İşletme Açıklaması",
+      "descriptionDesc": "Yapay zeka bağlam üretimi için kullanılan kısa bir açıklama.",
+      "save": "Değişiklikleri Kaydet",
+      "saving": "Kaydediliyor..."
+    },
+    "strategy": {
+      "cardTitle": "Hedef Anahtar Kelime Stratejisi",
+      "country": "Hedef Ülke",
+      "allCountries": "Tüm Ülkeler",
+      "cardDesc": "Önem derecesine göre sıralanmış 9'a kadar odak anahtar kelimesi belirleyin. Bunlar önümüzdeki 6 ay için SEO stratejinize rehberlik eder.",
+      "high": "Yüksek Önem (İlk 3)",
+      "highDesc": "Temel iş akışını sağlamak için domine etmeniz gereken kritik anahtar kelimeler.",
+      "medium": "Orta Önem",
+      "mediumDesc": "Ana hizmetlerinizi destekleyen önemli anahtar kelimeler.",
+      "low": "Düşük Önem",
+      "lowDesc": "Uzun kuyruklu veya gelecekteki fırsat anahtar kelimeleri."
+    },
+    "competitors": {
+      "cardTitle": "Rakipler",
+      "cardDesc": "Performansınızı kıyaslamak için rakiplerinizi takip edin.",
+      "tracked": "Takip Edilen Rakipler",
+      "add": "Ekle",
+      "empty": "Henüz rakip eklenmedi.",
+      "exists": "Rakip zaten eklendi"
+    },
+    "integrations": {
+      "cardTitle": "CMS Entegrasyonları",
+      "cardDesc": "Otomatik blog özelliklerini etkinleştirmek için web sitenizin CMS'sini bağlayın.",
+      "wpDesc": "Uygulama Şifrelerini kullanarak kendi barındırdığınız WordPress sitenizi bağlayın.",
+      "shopifyDesc": "Erişim Belirteçlerini kullanarak Shopify mağazanızı bağlayın.",
+      "webflowDesc": "Webflow sitenizi sorunsuz bir şekilde bağlayın.",
+      "wixDesc": "Wix web sitenizi kolayca bağlayın.",
+      "comingSoon": "Yakında",
+      "settingsTitle": "WordPress Ayarları",
+      "helpTitle": "WordPress Kimlik Bilgilerinizi Nasıl Alırsınız",
+      "help": {
+        "urlLabel": "1. Web Sitesi URL'si:",
+        "urlDesc": "WordPress sitenizin tam URL'sini girin (örneğin, https://siteniz.com). http/https ve www/www-olmayan dahil olmak üzere tam olarak eşleştiğinden emin olun.",
+        "usernameLabel": "2. Kullanıcı Adı:",
+        "usernameDesc": "WordPress giriş kullanıcı adınızı kullanın (görünen adınızı veya e-postanızı değil). Şurada bulun: WP Admin → Kullanıcılar → Profiliniz → Kullanıcı adı alanı.",
+        "appPassLabel": "3. Uygulama Şifresi:",
+        "appPassStep1": "Şuraya gidin: WP Admin → Kullanıcılar → Profil (hesabınız)",
+        "appPassStep2": "\"Uygulama Şifreleri\" bölümüne aşağı kaydırın",
+        "appPassStep3": "Bir isim girin (örneğin, \"SEO Agent\") ve \"Yeni Uygulama Şifresi Ekle\"ye tıklayın",
+        "appPassStep4": "Oluşturulan şifreyi kopyalayın (format: xxxx xxxx xxxx xxxx)",
+        "appPassStep5": "Aşağıdaki alana yapıştırın"
+      },
+      "url": "Web Sitesi URL'si",
+      "urlPlaceholder": "https://web-siteniz.com",
+      "urlHelper": "WordPress sitenizin tam URL'si.",
+      "username": "Kullanıcı Adı",
+      "usernamePlaceholder": "admin",
+      "usernameHelper": "WordPress kullanıcı adınız (e-posta değil).",
+      "appPass": "Uygulama Şifresi",
+      "appPassPlaceholder": "xxxx xxxx xxxx xxxx",
+      "appPassHelper": "Bunu WP Admin > Kullanıcılar > Profil > Uygulama Şifreleri kısmında oluşturun.",
+      "refreshCats": "Kategorileri Yenile",
+      "availCats": "Web sitenize dayalı mevcut kategoriler",
+      "catsHelper": "Yukarıdan bağlanın, ardından kategorilerinizi görmek için \"Yenile\"ye tıklayın.",
+      "test": "Bağlantıyı Test Et",
+      "saveInt": "Entegrasyonu Kaydet",
+      "connected": "{{user}} olarak bağlandı",
+      "failed": "Bağlantı hatası",
+      "enterCreds": "Lütfen önce kimlik bilgilerini girin",
+      "foundCats": "{{count}} kategori bulundu",
+      "fetchCatsError": "Kategoriler getirilemedi",
+      "testing": "Bağlantı test ediliyor..."
+    },
+    "gsc": {
+      "cardTitle": "Google Search Console",
+      "cardDesc": "Google Search Console hesabınızı bağlayın",
+      "connected": "Google Hesabı Bağlandı",
+      "disconnect": "Bağlantıyı Kes",
+      "verifiedSites": "Doğrulanmış Siteler",
+      "refreshSites": "Siteleri Yenile",
+      "loading": "Yükleniyor...",
+      "noSites": "Doğrulanmış site bulunamadı",
+      "owner": "Sahip",
+      "full": "Tam Erişim",
+      "restricted": "Kısıtlı",
+      "unverified": "Doğrulanmamış",
+      "imported": "İçe Aktarıldı",
+      "add": "Ekle",
+      "notesTitle": "Önemli Notlar:",
+      "note1": "Yalnızca Google Search Console'da Sahibi olduğunuz siteler görünecek ve düzgün çalışacaktır.",
+      "connectBtn": "Google Hesabını Bağla",
+      "connectDesc": "Siteleri otomatik olarak doğrulamak ve performans verilerini doğrudan panelinize çekmek için Google hesabınızı bağlayın."
+    },
+    "danger": {
+      "title": "Siteyi Sil",
+      "desc": "Siteniz için geri alınamaz işlemler.",
+      "warning": "Bu siteyi ve tüm verilerini kalıcı olarak kaldırın. Bu işlem geri alınamaz.",
+      "warning1": "Tüm anahtar kelime takip verileri silinecek",
+      "warning2": "Tüm yazılar ve içerikler kaldırılacak",
+      "warning3": "Tüm analizler ve performans verileri kaybolacak",
+      "confirmLabel": "Onaylamak için lütfen {{domain}} yazın",
+      "btn": "Siteyi Sil",
+      "deleting": "Siliniyor..."
+    }
+  },
+  "posts": {
+    "pageTitle": "Yazılar",
+    "newArticleTitle": "Yeni Makale",
+    "editArticleTitle": "Makaleyi Düzenle",
+    "list": {
+      "title": "Makaleler",
+      "description": "Blog içeriğinizi yönetin ve optimize edin.",
+      "newArticle": "Yeni Makale",
+      "emptyTitle": "Makale bulunamadı",
+      "emptyDesc": "İlk yapay zeka optimize edilmiş makalenizi oluşturarak başlayın.",
+      "createBtn": "Makale Oluştur",
+      "wordpress": "WordPress"
+    },
+    "tabs": {
+      "all": "Tüm Yazılar",
+      "drafts": "Taslaklar",
+      "published": "Yayınlananlar"
+    },
+    "table": {
+      "article": "Makale",
+      "status": "Durum",
+      "lastUpdated": "Son Güncelleme",
+      "actions": "İşlemler"
+    },
+    "status": {
+      "published": "Yayınlandı",
+      "draft": "Taslak"
+    },
+    "editor": {
+      "back": "Yazılara Geri Dön",
+      "generate": "Oluştur",
+      "generating": "Oluşturuluyor...",
+      "save": "Kaydet",
+      "saving": "Kaydediliyor...",
+      "saved": "Kaydet (Kaydedildi)",
+      "newTitle": "Yeni Makale",
+      "editTitle": "Makaleyi Düzenle",
+      "description": "Blogunuz için SEO uyumlu içerik oluşturun",
+      "contentEditor": "İçerik Editörü",
+      "topicLabel": "Makale Konusu/Fikri",
+      "ready": "Hazır",
+      "topicPlaceholder": "Makale konunuzu veya ana fikrinizi girin... örneğin, '2026'da SEO sıralamaları nasıl iyileştirilir'",
+      "topicHelp": "Bu, yapay zeka tarafından makalenizi oluşturmak için kullanılacaktır. Daha iyi sonuçlar için spesifik olun.",
+      "titleLabel": "Makale Başlığı",
+      "titlePlaceholder": "Makale başlığını girin...",
+      "titleShort": "Başlık optimal SEO için çok kısa (50-60 karakter hedefleyin)",
+      "titleLong": "Başlık arama sonuçlarında kesilebilir (60 karakterin altında tutun)",
+      "featuredImage": "Öne Çıkan Görsel",
+      "clickToChange": "Değiştirmek için tıkla",
+      "clickToUpload": "Görsel yüklemek için tıkla",
+      "aiImageComingSoon": "veya yapay zeka bir tane oluşturacak (yakında)",
+      "bodyContent": "Ana İçerik",
+      "visualEditor": "Görsel Editöre Geç",
+      "sourceCode": "Kaynak Kodunu Düzenle"
+    },
+    "seo": {
+      "score": "SEO Skoru",
+      "scoreDesc": {
+        "excellent": "Mükemmel bir iş çıkarıyorsunuz! İçeriğiniz iyi optimize edilmiş",
+        "good": "Hedefinize ulaşmak için iyi bir çaba gösteriyorsunuz",
+        "improve": "SEO skorunuzu yükseltmek için içeriğiniz üzerinde çalışmaya devam edin"
+      },
+      "optimized": "Makale Optimize Edildi",
+      "suggestionsTitle": "İyileştirme Önerileri",
+      "suggestions": {
+        "addWords": "Optimal uzunluğa ulaşmak için {{count}} kelime daha ekleyin",
+        "addKeywords": "Anahtar kelimelerinizi doğal bir şekilde {{count}} kez daha ekleyin",
+        "addHeadings": "{{count}} başlık daha ekleyin (H2 veya H3)",
+        "addImage": "Etkileşimi artırmak için öne çıkan bir görsel ekleyin",
+        "addMeta": "Bir meta açıklama yazın (150-160 karakter)",
+        "titleLength": "Başlık uzunluğunu 50-60 karaktere optimize edin",
+        "includeAllKeywords": "İçeriğinizde tüm seçili anahtar kelimelere yer verin ({{current}}/{{total}} bulundu)",
+        "addPrimaryTitle": "Birincil anahtar kelimeniz olan \"{{keyword}}\" başlığa ekleyin",
+        "addPrimaryMeta": "Birincil anahtar kelimeye meta açıklamada yer verin",
+        "addInternalLinks": "Sitenizdeki diğer sayfalara en az 2-3 dahili bağlantı ekleyin",
+        "moreInternalLinks": "SEO'yu iyileştirmek için 1-2 dahili bağlantı daha ekleyin",
+        "addAllAlt": "Daha iyi SEO ve erişilebilirlik için tüm {{count}} görsele alt metin ekleyin",
+        "addRemainingAlt": "Kalan {{count}} görsele alt metin ekleyin",
+        "addH1": "Ana makale başlığı olarak bir adet H1 başlığı ekleyin",
+        "singleH1": "Yalnızca bir adet H1 başlığı kullanın (şu anda: {{count}}). Birden fazla H1 SEO'ya zarar verir",
+        "addH2": "İçeriği yapılandırmak için {{count}} adet daha H2 başlığı ekleyin (optimal: 3-6)",
+        "addH3": "Daha iyi bir içerik hiyerarşisi için {{count}} adet daha H3 alt başlığı eklemeyi düşünün (optimal: 6-12)"
+      },
+      "metrics": {
+        "wordCount": "Kelime Sayısı",
+        "keywordDensity": "Anahtar Kelime Yoğunluğu",
+        "headingStructure": "Başlık Yapısı",
+        "images": "Görseller",
+        "keywordsInContent": "İçerikteki Anahtar Kelimeler",
+        "keywordInTitle": "Başlıktaki Anahtar Kelime",
+        "keywordInMeta": "Meta Açıklamasında Anahtar Kelime",
+        "internalLinks": "Dahili Bağlantılar",
+        "externalLinks": "Harici Bağlantılar",
+        "imagesInContent": "İçerikteki Görseller",
+        "withAltText": "Alt Metinli"
+      }
+    },
+    "meta": {
+      "title": "Meta Verileri",
+      "targetKeywords": "Hedef Anahtar Kelimeler",
+      "editStrategy": "Stratejiyi Düzenle",
+      "customKeyword": "Veya özel anahtar kelime ekleyin:",
+      "keywordPlaceholder": "Anahtar kelime girin...",
+      "addBtn": "Ekle",
+      "addHelp": "Özel bir anahtar kelime eklemek için Enter'a basın veya Ekle'ye tıklayın",
+      "selectedKeywords": "Seçili Anahtar Kelimeler:",
+      "metaDescription": "Meta Açıklaması",
+      "metaPlaceholder": "Arama motorları için açıklama..."
+    },
+    "publish": {
+      "wordpress": "WordPress'te Yayınla",
+      "publishing": "Yayınlanıyor..."
+    },
+    "modal": {
+      "altTitle": "Görsel Alt Metni Düzenle",
+      "altLabel": "Alt Metin (SEO ve Erişilebilirlik için)",
+      "altHelp": "Ekran okuyucular ve arama motorları için görselde ne olduğunu açıklayın",
+      "updateAlt": "Alt Metni Güncelle",
+      "linkTitle": "Bağlantı Başlığını Düzenle",
+      "linkText": "Bağlantı Metni",
+      "linkUrl": "Bağlantı URL'si",
+      "linkTooltip": "Bağlantı Başlığı (İpucu)",
+      "linkHelp": "Bu, kullanıcılar bağlantının üzerine geldiğinde görünür",
+      "updateLink": "Başlığı Güncelle"
+    },
+    "common": {
+      "cancel": "İptal"
+    }
+  },
+  "hero": {
+    "headline": "SEO AI Agent",
+    "subheadline": "1# Sıralamaya Yükselin",
+    "description": "200'den fazla ülkede sıralamaları izleyin, GPT-5 ve Claude ile yapay zeka içeriği oluşturun ve doğrudan WordPress'te yayınlayın. Modern işletmeler için eksiksiz SEO çözümü.",
+    "bullet1": "Çok Ülkeli Takip",
+    "bullet2": "GPT-5 ve Claude ile Yapay Zeka İçeriği",
+    "bullet3": "WordPress Doğrudan Yayınlama",
+    "bullet4": "ChatGPT ve Claude MCP Entegrasyonu",
+    "trustedBy": "Dünya çapında 5.000'den fazla SEO profesyoneli tarafından güveniliyor"
+  },
+  "landing": {
+    "title": "SEO AI Agent",
+    "subtitle": "Profesyonel SEO Takip Çözümünüz",
+    "description": "Güçlü SEO araçlarımızla anahtar kelimelerinizi takip edin, sıralamaları izleyin ve işletmenizi büyütün.",
+    "cta": "Başlayın",
+    "login": "Giriş Yap",
+    "stats": {
+      "title": "Binlerce SEO Profesyoneli Tarafından Güveniliyor",
+      "activeUsers": "Aktif Kullanıcılar",
+      "keywordsTracked": "Günlük Takip Edilen Anahtar Kelimeler",
+      "reportsGenerated": "Oluşturulan Raporlar",
+      "customerSatisfaction": "Müşteri Memnuniyeti"
+    },
+    "howItWorks": {
+      "title": "Nasıl Çalışır?",
+      "subtitle": "Takip aşamasından yayınlamaya kadar eksiksiz SEO iş akışı - hepsi tek bir platformda",
+      "step1": {
+        "title": "Sıralamalarınızı Tüm Ülkelerde Takip Edin",
+        "description": "Dünya çapındaki herhangi bir Google bölgesinde pozisyonunuzu izleyin",
+        "feature1": "Web sitenizi ve hedef anahtar kelimelerinizi ekleyin",
+        "feature2": "Google Avusturya, Almanya, ABD ve herhangi bir ülkedeki sıralamaları takip edin",
+        "feature3": "Resmi veriler için Google Search Console ile bağlanın",
+        "feature4": "Otomatik olarak en fazla 3 rakiple karşılaştırın"
+      },
+      "step2": {
+        "title": "Verilerinizi Analiz Edin ve Anlayın",
+        "description": "Görsel analitiklerle kapsamlı içgörüler edinin",
+        "feature1": "Etkileşimli grafiklerle eksiksiz panel",
+        "feature2": "Doğru istatistikler: ziyaretler, gösterimler, TO",
+        "feature3": "Hangi anahtar kelimelerin size ziyaretçi getirdiğini keşfedin",
+        "feature4": "Boşlukları ve fırsatları belirleyin"
+      },
+      "step3": {
+        "title": "Yapay Zeka ile Hedefli İçerik Oluşturun",
+        "description": "Lider yapay zeka modellerini kullanarak SEO uyumlu makaleler üretin",
+        "feature1": "5'ten fazla yapay zeka modeli arasından seçim yapın: GPT-5.2, Claude 3.5 Sonnet, Gemini 2.0",
+        "feature2": "Veya MCP API aracılığıyla doğrudan ChatGPT/Claude kullanın",
+        "feature3": "Önemli anahtar kelimeleriniz için optimize edilmiş içerik",
+        "feature4": "İyileştirme önerileriyle birlikte otomatik SEO puanlaması (100 puan)"
+      },
+      "step4": {
+        "title": "Doğrudan Web Sitenizde Yayınlayın",
+        "description": "CMS platformunuza tek tıkla yayınlama",
+        "feature1": "WordPress'e tek tıkla yayınlama",
+        "feature2": "Shopify, Webflow, Wix desteği (yakında)",
+        "feature3": "Tek bir yerden eksiksiz içerik yönetimi",
+        "feature4": "Yayınladıktan sonra sıralama iyileşmelerinizi izleyin"
+      }
+    },
+    "features": {
+      "title": "Eksiksiz SEO Yönetimi İçin Güçlü Özellikler",
+      "subtitle": "Arama sıralamalarını domine etmek ve kazanan içerikler oluşturmak için ihtiyacınız olan her şey",
+      "categoryTracking": "Takip ve Analiz",
+      "categoryAI": "Yapay Zeka İçerik Oluşturma",
+      "categoryPublishing": "Yayınlama ve Entegrasyon",
+      "multiCountry": {
+        "title": "Çok Ülkeli Anahtar Kelime Takibi",
+        "description": "Sıralamalarınızı 200'den fazla ülkede gerçek zamanlı güncellemelerle takip edin",
+        "benefit1": "200'den fazla ülkede sıralamaları takip edin",
+        "benefit2": "Google Avusturya, Almanya, ABD ve daha fazlası",
+        "benefit3": "Masaüstü ve Mobil takip",
+        "benefit4": "Günlük veya saatlik güncellemeler"
+      },
+      "gscIntegration": {
+        "title": "Google Search Console Entegrasyonu",
+        "description": "Resmi performans verileri için doğrudan Google'a bağlanın",
+        "benefit1": "Google ile doğrudan bağlantı",
+        "benefit2": "Resmi veriler: ziyaretler, gösterimler, TO",
+        "benefit3": "En iyi performans gösteren anahtar kelimeleri analiz edin",
+        "benefit4": "Anahtar kelimeleri otomatik içe aktarın"
+      },
+      "competitorAnalysis": {
+        "title": "Rakip Analizi",
+        "description": "En fazla 3 rakibi takip edin ve performansınızı kıyaslayın",
+        "benefit1": "En fazla 3 rakibi takip edin",
+        "benefit2": "Aynı anahtar kelimeler için sıralamaları karşılaştırın",
+        "benefit3": "İçerik boşluklarını keşfedin",
+        "benefit4": "Rakipler sizi geçtiğinde uyarılar alın"
+      },
+      "aiContent": {
+        "title": "Yapay Zeka İçerik Üretimi",
+        "description": "Lider yapay zeka modelleriyle SEO uyumlu içerik oluşturun",
+        "benefit1": "5'ten fazla yapay zeka modeli arasından seçim yapın",
+        "benefit2": "GPT-5.2, Claude 3.5 Sonnet, Gemini 2.0",
+        "benefit3": "İçerik otomatik olarak SEO için optimize edilir",
+        "benefit4": "SEO puanlaması (100 puan)"
+      },
+      "chatIntegration": {
+        "title": "ChatGPT ve Claude Entegrasyonu",
+        "description": "MCP API aracılığıyla favori yapay zeka sohbet asistanlarınızla entegre olun",
+        "benefit1": "Doğrudan entegrasyon için MCP API",
+        "benefit2": "Sohbet üzerinden SEO kontrolleri",
+        "benefit3": "ChatGPT/Claude üzerinden içerik yazın",
+        "benefit4": "İş akışınızı otomatikleştirin"
+      },
+      "seoScoring": {
+        "title": "SEO Puanlaması ve Optimizasyon",
+        "description": "Uygulanabilir önerilerle otomatik içerik değerlendirmesi",
+        "benefit1": "Otomatik içerik değerlendirmesi",
+        "benefit2": "Anahtar kelime yoğunluğu analizi",
+        "benefit3": "Başlıklar ve bağlantılar analizi",
+        "benefit4": "Akıllı optimizasyon önerileri"
+      },
+      "wordpressPublishing": {
+        "title": "WordPress Doğrudan Yayınlama",
+        "description": "İçeriğinizi tek tıkla doğrudan WordPress'e yayınlayın",
+        "benefit1": "Tek tıkla yayınlama",
+        "benefit2": "Kategorileri ve etiketleri seçin",
+        "benefit3": "Yayınlamayı planlayın",
+        "benefit4": "Shopify, Webflow, Wix desteği (yakında)"
+      },
+      "analytics": {
+        "title": "Gelişmiş Analitik Paneli",
+        "description": "Etkileşimli grafikler ve kapsamlı raporlama",
+        "benefit1": "Etkileşimli grafikler",
+        "benefit2": "Anahtar kelime, sayfa ve ülkeye göre analiz",
+        "benefit3": "CSV dışa aktarma",
+        "benefit4": "Özel raporlar"
+      },
+      "apiWebhooks": {
+        "title": "Güçlü API ve Webhook'lar",
+        "description": "Ayrıntılı izinler ve webhook'lar içeren eksiksiz API",
+        "benefit1": "Ayrıntılı izinlere sahip tam API",
+        "benefit2": "Anlık bildirimler için webhook'lar",
+        "benefit3": "Harici araçlarla entegrasyon",
+        "benefit4": "Otomatik veri dışa aktarma"
+      }
+    },
+    "integrations": {
+      "title": "Lider Yapay Zeka Modelleri ve Platformlar Tarafından Destekleniyor",
+      "subtitle": "5'ten fazla yapay zeka modeli arasından seçim yapın ve doğrudan favori platformlarınızda yayınlayın",
+      "aiModels": "Yapay Zeka İçerik Üretimi",
+      "directPublishing": "Doğrudan Yayınlama",
+      "multiEngine": "Çoklu Motor Takibi",
+      "comingSoon": "Yakında",
+      "seoFooter": "İçerik üretimi için SEO iş akışınızı ChatGPT, Claude AI ve Google Gemini ile entegre edin. Doğrudan WordPress, Shopify ve Webflow'da yayınlayın. Google, Bing, Yahoo ve DuckDuckGo'daki sıralamaları 200'den fazla ülkede takip edin."
+    },
+    "testimonials": {
+      "title": "Müşterilerimiz Ne Diyor?",
+      "subtitle": "Çevrimiçi varlıklarını büyüten binlerce memnun müşterimize katılın",
+      "trustBadge": "100+ değerlendirmeye göre 5.0 puan",
+      "testimonial1": {
+        "position": "Dijital Pazarlama Müdürü",
+        "review": "Web sitemizin sıralamasını sadece 3 ayda %150 oranında iyileştirmemize yardımcı olan harika bir araç. Çok ülkeli takip özelliği bir devrim!"
+      },
+      "testimonial2": {
+        "position": "SEO Uzmanı",
+        "review": "Ayrıntılı raporlar ve günlük takip işimi çok kolaylaştırdı. Yapay zeka içerik üretimi inanılmaz derecede doğru ve saatlerce süren işten tasarruf sağlıyor."
+      },
+      "testimonial3": {
+        "position": "Kurucu",
+        "review": "Kullandığım en iyi SEO aracı. Arayüz basit ve sonuçlar doğru. WordPress entegrasyonu sorunsuz!"
+      }
+    },
+    "pricing": {
+      "title": "Basit, Şeffaf Fiyatlandırma",
+      "subtitle": "İhtiyaçlarınıza uygun planı seçin. Gizli ücret yok.",
+      "monthly": "Aylık",
+      "yearly": "Yıllık",
+      "perMonth": "ay",
+      "saveYearly": "Yıllık faturalandırmada %17'ye varan tasarruf",
+      "mostPopular": "En Popüler",
+      "noCreditCard": "Başlamak için kredi kartı gerekmez",
+      "cancelAnytime": "İstediğiniz zaman iptal edin. Soru sorulmaz.",
+      "seoFooter": "Uygun fiyatlı SEO takip ve yapay zeka içerik platformu. Ücretsiz plan mevcut. Anahtar kelime sıralamalarını takip edin, Google Search Console verilerini analiz edin, GPT-5.2 ve Claude ile yapay zeka içeriği oluşturun, WordPress'te yayınlayın.",
+      "free": {
+        "name": "Ücretsiz",
+        "description": "Denemek için mükemmel",
+        "feature1": "2 web sitesi",
+        "feature2": "10 anahtar kelime",
+        "feature3": "Günlük güncellemeler",
+        "feature4": "Temel raporlar",
+        "cta": "Ücretsiz Başlayın"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Büyüyen işletmeler için",
+        "feature1": "5 web sitesi",
+        "feature2": "100 anahtar kelime",
+        "feature3": "Her 6 saatte bir güncelleme",
+        "feature4": "Gelişmiş raporlar",
+        "feature5": "API Erişimi",
+        "feature6": "Rakip takibi",
+        "feature7": "Yapay zeka içerik üretimi",
+        "cta": "Şimdi Başlayın"
+      },
+      "enterprise": {
+        "name": "Kurumsal",
+        "description": "Güçlü kullanıcılar için",
+        "feature1": "Sınırsız web sitesi",
+        "feature2": "500 anahtar kelime",
+        "feature3": "Saatlik güncellemeler",
+        "feature4": "Özel raporlar",
+        "feature5": "Webhook'lar",
+        "feature6": "Öncelikli destek",
+        "feature7": "White-label (Beyaz Etiket)",
+        "feature8": "Özel hesap yöneticisi",
+        "cta": "Bize Ulaşın"
+      }
+    },
+    "billing": {
+      "title": "Faturalandırma & Abonelik",
+      "desc": "Planınızı, ödeme yöntemlerinizi ve fatura geçmişinizi yönetin.",
+      "currentPlan": "Mevcut Plan: {{plan}}",
+      "active": "Aktif",
+      "renewsOn": "Yenileme tarihi: {{date}}",
+      "tabs": {
+        "subscription": "Plan",
+        "details": "Fatura Detayları",
+        "history": "Faturalar"
+      },
+      "planNames": {
+        "free": "Ücretsiz",
+        "basic": "Temel",
+        "pro": "Pro",
+        "premium": "Premium"
+      },
+      "planDesc": {
+        "free": "Başlamak için temel özellikler.",
+        "basic": "Kişisel projeler ve basit takip için.",
+        "pro": "Profesyonel SEO uzmanları ve küçük ajanslar için.",
+        "premium": "Büyük ölçekli operasyonlar için sınırsız güç."
+      },
+      "features": {
+        "domain": "{{count}} Web Sitesi",
+        "domains": "{{count}} Web Sitesi",
+        "keywords": "{{count}} Anahtar Kelime",
+        "updates": "Günlük Güncellemeler",
+        "weekly": "Haftalık Güncellemeler",
+        "daily": "Günlük Güncellemeler",
+        "mcp": "MCP Entegrasyonu",
+        "ai": "Yapay Zeka Makale Yazarı",
+        "api": "API Erişimi",
+        "unlimitedDomains": "Sınırsız Web Sitesi",
+        "priority": "Öncelikli Destek"
+      },
+      "buttons": {
+        "current": "Mevcut Plan",
+        "upgrade": "Şimdi Yükselt",
+        "downgrade": "Düşür"
+      },
+      "checkout": {
+        "monthly": "Aylık faturalandırılır",
+        "billedYearly": "Yıllık faturalandırılır",
+        "redirecting": "Stripe'a yönlendiriliyor...",
+        "success": "Abonelik başarıyla güncellendi!",
+        "title": "{{cycle}} Abonelik Kurulumu",
+        "desc": "Tüm profesyonel özellikleri açmak için abonelik yükseltmenizi tamamlayın."
+      },
+      "invoice": {
+        "title": "Faturalandırma Bilgileri",
+        "desc": "Bu bilgiler vergi faturalarınızda görünecektir.",
+        "accountType": "Hesap Türü",
+        "company": "Şirket",
+        "individual": "Bireysel",
+        "nameCompany": "Şirket Adı",
+        "nameIndividual": "Tam İsim",
+        "vat": "KDV Kimliği (Opsiyonel)",
+        "address": "Fatura Adresi",
+        "email": "Fatura E-postası",
+        "save": "Değişiklikleri Kaydet",
+        "saved": "Faturalandırma detayları kaydedildi!"
+      },
+      "history": {
+        "title": "Fatura Geçmişi",
+        "desc": "Geçmiş faturalarınızı görüntüleyin ve indirin.",
+        "date": "Tarih",
+        "amount": "Tutar",
+        "status": "Durum",
+        "download": "İndir"
+      }
+    },
+    "faq": {
+      "title": "Sıkça Sorulan Sorular",
+      "subtitle": "SEO Agent hakkında bilmeniz gereken her şey",
+      "stillHaveQuestions": "Hâlâ sorularınız mı var?",
+      "contactUs": "Bize Ulaşın",
+      "q1": {
+        "question": "Başlamak için kredi kartı gerekiyor mu?",
+        "answer": "Hayır, kredi kartına ihtiyaç duymadan ücretsiz planla başlayabilirsiniz. Daha fazla özelliğe ihtiyaç duyduğunuzda istediğiniz zaman yükseltebilirsiniz."
+      },
+      "q2": {
+        "question": "Veriler ne sıklıkla güncelleniyor?",
+        "answer": "Veriler Ücretsiz planda günlük, Pro planda 6 saatte bir ve Kurumsal planlarda saatlik olarak güncellenir."
+      },
+      "q3": {
+        "question": "Birden fazla web sitesini takip edebilir miyim?",
+        "answer": "Evet, planınıza bağlı olarak: Ücretsiz için 2, Temel için 3, Pro için 5 ve Premium/Kurumsal için sınırsız web sitesi."
+      },
+      "q4": {
+        "question": "Çok ülkeli takip nasıl çalışır?",
+        "answer": "200'den fazla ülke arasından seçim yapabilirsiniz (Google Avusturya, Almanya, ABD gibi). Sistem, her yerel Google'daki sıralamanızı ayrı ayrı kontrol ederek size doğru, ülkeye özel veriler sunar."
+      },
+      "q5": {
+        "question": "Hangi yapay zeka modelleri destekleniyor?",
+        "answer": "OpenAI (GPT-5.2, GPT-4.1), Claude (3.5 Sonnet, 3 Opus), Google Gemini (2.0 Flash, 1.5 Pro), Perplexity Sonar ve yerel Dpro modelimizi destekliyoruz."
+      },
+      "q6": {
+        "question": "Sistemi ChatGPT veya Claude ile nasıl bağlarım?",
+        "answer": "Sistemi Claude Desktop veya ChatGPT ile bağlamanıza olanak tanıyan MCP API sağlıyoruz. Sohbet üzerinden SEO kontrolü yapabilir ve içerik yazabilirsiniz. Detaylı talimatlar için MCP Kurulum sayfamızı ziyaret edin."
+      },
+      "q7": {
+        "question": "Doğrudan WordPress'te yayınlayabilir miyim?",
+        "answer": "Evet! WordPress sitenizi bağlayabilir ve tek tıkla yayınlayabilirsiniz. Shopify, Webflow ve Wix desteği yakında sunulacaktır."
+      },
+      "q8": {
+        "question": "Google dışındaki arama motorlarını destekliyor musunuz?",
+        "answer": "Evet; Google, Bing, Yahoo ve DuckDuckGo'yu destekliyoruz."
+      },
+      "q9": {
+        "question": "İçerik için SEO puanı nasıl hesaplanıyor?",
+        "answer": "15'ten fazla faktörü kontrol ediyoruz: kelime sayısı, anahtar kelime yoğunluğu, başlık yapısı, dahili ve harici bağlantılar, görsel alt metni, meta açıklaması ve daha fazlası. Puan 100 üzerindendir."
+      },
+      "q10": {
+        "question": "Aboneliğimi istediğim zaman iptal edebilir miyim?",
+        "answer": "Kesinlikle! Aboneliğinizi herhangi bir ek ücret veya koşul olmaksızın istediğiniz zaman iptal edebilirsiniz."
+      }
+    },
+    "finalCTA": {
+      "title": "Arama Sıralamalarını Domine Etmeye Hazır mısınız?",
+      "description": "Sıralamaları takip etmek, yapay zeka içeriği oluşturmak ve çevrimiçi varlıklarını büyütmek için SEO Agent kullanan binlerce işletmeye katılın.",
+      "primaryCTA": "Ücretsiz Denemeyi Başlat",
+      "secondaryCTA": "Satışla İletişime Geçin",
+      "noCreditCard": "Kredi kartı gerekmez",
+      "users": "Kullanıcılar",
+      "keywords": "Anahtar Kelimeler",
+      "satisfaction": "Memnuniyet"
+    },
+    "footer": {
+      "rights": "Tüm hakları saklıdır."
+    }
+  },
+  "mcp": {
+    "autoConnect": {
+      "heroCta": "Yapay Zekanızı Bağlayın",
+      "heroSubtext": "Token yok, kopyalama yok — Claude Desktop'a bir URL yapıştırın ve tarayıcınızda onaylayın.",
+      "claudeTitle": "Claude Desktop'ı Bağlayın (OAuth — API anahtarı gerekmez)",
+      "cursorTitle": "Cursor'ı Bağlayın (OAuth — API anahtarı gerekmez)",
+      "chatgptTitle": "ChatGPT'yi Bağlayın (OAuth — API anahtarı gerekmez)",
+      "windsurfTitle": "Windsurf'ü Bağlayın (OAuth — API anahtarı gerekmez)",
+      "zedTitle": "Zed'i Bağlayın (OAuth — API anahtarı gerekmez)",
+      "apiTitle": "Doğrudan HTTP / JSON-RPC erişimi",
+      "doneTitle": "Hazırsınız — tarayıcınızda bir kez yetkilendirin",
+      "doneText": "İlk kullanımda, yapay zeka asistanınız sitemizde bir sekme açacak, bağlantıyı onaylamanızı isteyecek ve otomatik olarak geri yönlendirecektir. Bundan sonra her çağrı, aldığı erişim belirteci ile yönetilir.",
+      "noKeyNeeded": "API anahtarı gerekmez",
+      "oauthAutomatic": "OAuth 2.0 (otomatik)"
+    },
+    "meta": {
+      "title": "MCP SEO - ChatGPT ve Claude Desktop'ı Bağlayın",
+      "description": "MCP API kullanarak SEO Agent'ı ChatGPT ve Claude Desktop ile entegre edin. Sıralamaları takip edin, anahtar kelimeleri analiz edin ve doğrudan yapay zeka sohbetinizden içerik oluşturun."
+    },
+    "hero": {
+      "title": "SEO Agent'ı ChatGPT ve Claude Desktop ile Bağlayın",
+      "description": "SEO kontrolü yapmak, sıralamaları takip etmek ve optimize edilmiş içerik yazmak için favori yapay zeka sohbetinizden (ChatGPT, Claude veya herhangi bir MCP uyumlu araç) MCP API'mizi kullanın.",
+      "getAPIKey": "API Anahtarınızı Alın",
+      "viewDocs": "Dokümantasyonu Görüntüle"
+    },
+    "whatIs": {
+      "title": "MCP (Model Context Protocol) Nedir?",
+      "description1": "MCP, ChatGPT ve Claude gibi yapay zeka asistanlarının harici araçlar ve hizmetlerle bağlantı kurmasını sağlayan standart bir protokoldür.",
+      "description2": "MCP entegrasyonumuzla SEO verilerinize erişebilir, sıralamaları kontrol edebilir, anahtar kelimeleri analiz edebilir ve optimize edilmiş içerik üretebilirsiniz - hem de yapay zeka sohbetinizin içinden.",
+      "benefit1Title": "Doğrudan Claude Desktop Entegrasyonu",
+      "benefit1": "Yerleşik resmi MCP desteği",
+      "benefit2Title": "ChatGPT ile Uyumlu",
+      "benefit2": "Özel eylemler (Actions) aracılığıyla",
+      "benefit3Title": "Güvenli Kimlik Doğrulama",
+      "benefit3": "API anahtarları ile",
+      "benefit4Title": "Gerçek Zamanlı Veri Erişimi",
+      "benefit4": "Temel kurulum için kod gerekmez"
+    },
+    "platforms": {
+      "title": "Desteklenen Sohbet Platformları",
+      "recommended": "Önerilen",
+      "advanced": "Gelişmiş",
+      "comingSoon": "Yakında",
+      "claude1": "Yerleşik resmi MCP desteği",
+      "claude2": "Ayarlara MCP sunucumuzu ekleyin",
+      "claude3": "SEO verileriyle anında sohbete başlayın",
+      "chatgpt1": "API'mizle özel bir GPT oluşturun",
+      "chatgpt2": "SEO verilerine erişmek için eylemleri yapılandırın",
+      "chatgpt3": "ChatGPT Plus veya Kurumsal kullanım",
+      "otherTools": "Diğer MCP Araçları",
+      "moreTools": "Ve daha fazlası yakında"
+    },
+    "setup": {
+      "title": "Kurulum Kılavuzu - Adım Adım",
+      "copy": "Kopyala",
+      "copied": "Kopyalandı!",
+      "claude": {
+        "step1Title": "Adım 1: API Anahtarı Oluşturun",
+        "step1": {
+          "1": "Profil → API Anahtarları bölümüne gidin",
+          "2": "'Yeni Anahtar Oluştur'a tıklayın",
+          "3": "İzinleri seçin: read:domains, read:keywords, read:gsc, write:posts",
+          "4": "API anahtarınızı güvenli bir şekilde kopyalayın"
+        },
+        "step2Title": "Adım 2: Claude Desktop'a MCP Sunucusunu Ekleyin",
+        "step2": "Bunu Claude Desktop yapılandırmasına yapıştırın, Claude Desktop'ı yeniden başlatın ve hazırsınız! Sohbete başlayın."
+      },
+      "cursor": {
+        "title": "Cursor IDE Kurulumu",
+        "step1": "Cursor Ayarları → Özellikler → MCP bölümünü açın",
+        "step2": "'MCP Sunucusu Ekle'ye tıklayın",
+        "step3": "Aşağıdaki yapılandırma detaylarını girin",
+        "step4": "Cursor'ı yeniden başlatın ve MCP araçlarını kullanmaya başlayın"
+      },
+      "windsurf": {
+        "title": "Windsurf IDE Kurulumu",
+        "step1": "Windsurf Ayarları → Uzantılar → MCP bölümünü açın",
+        "step2": "Yeni MCP sunucusu yapılandırması ekleyin",
+        "step3": "Aşağıdaki yapılandırmayı yapıştırın",
+        "step4": "Etkinleştirmek için Windsurf'ü yeniden başlatın"
+      },
+      "zed": {
+        "title": "Zed Editör Kurulumu",
+        "step1": "Zed Ayarlarını açın (Cmd/Ctrl + ,)",
+        "step2": "MCP Sunucuları bölümüne gidin",
+        "step3": "Aşağıdaki yapılandırmayı ekleyin",
+        "step4": "Zed editörü yeniden başlatın"
+      },
+      "chatgpt": {
+        "title": "ChatGPT İçin (Özel GPT Oluşturun)",
+        "step1": "ChatGPT → Bir GPT Oluştur bölümüne gidin",
+        "step2": "OpenAPI şemamızla Eylemleri (Actions) yapılandırın",
+        "step3": "Kimlik doğrulamasına API anahtarını ekleyin",
+        "step4": "Örnek sorgularla test edin"
+      },
+      "api": {
+        "title": "Doğrudan API Çağrısı (geliştiriciler için)",
+        "description": "API'yi MCP olmadan doğrudan da kullanabilirsiniz:"
+      }
+    },
+    "functions": {
+      "title": "Mevcut MCP Araçları/Fonksiyonları",
+      "functionName": "Fonksiyon Adı",
+      "description": "Açıklama",
+      "exampleQuery": "Örnek Sorgu",
+      "listDomains": {
+        "description": "Takip edilen tüm alan adlarını getir",
+        "example": "Alan adlarımı göster"
+      },
+      "getKeywords": {
+        "description": "Bir alan adı için anahtar kelimeleri getir",
+        "example": "example.com için anahtar kelimeleri getir"
+      },
+      "getRankings": {
+        "description": "Anahtar kelime sıralamasını kontrol et",
+        "example": "'SEO araçları' için sıralamam nedir?"
+      },
+      "getGSC": {
+        "description": "Google Search Console verileri",
+        "example": "Son 30 günlük GSC istatistiklerini göster"
+      },
+      "analyzeSEO": {
+        "description": "İçerik SEO puanını analiz et",
+        "example": "Bu makalenin SEO'sunu kontrol et"
+      },
+      "createPost": {
+        "description": "SEO uyumlu yazı oluştur",
+        "example": "X hakkında makale yaz"
+      },
+      "publishPost": {
+        "description": "WordPress'te yayınla",
+        "example": "WordPress'te yayınla"
+      },
+      "getCompetitors": {
+        "description": "Rakip sıralamalarını al",
+        "example": "Rakiplerimin sıralaması nasıl?"
+      }
+    },
+    "benefits": {
+      "title": "Neden MCP Entegrasyonu Kullanmalısınız?",
+      "speed": {
+        "title": "Hız ve Verimlilik",
+        "point1": "Saniyeler içinde SEO içgörüleri alın",
+        "point2": "Araçlar arasında geçiş yapmanıza gerek yok",
+        "point3": "Doğal dilde sorgular"
+      },
+      "ai": {
+        "title": "Yapay Zeka Destekli İçgörüler",
+        "point1": "Yapay zekanın verilerinizi analiz etmesine izin verin",
+        "point2": "Otomatik olarak öneriler alın",
+        "point3": "Anında içerik üretin"
+      },
+      "security": {
+        "title": "Güvenli ve Özel",
+        "point1": "Verileriniz güvende kalır",
+        "point2": "Belirli izinlere sahip API anahtarları",
+        "point3": "Tüm eylemler için denetim günlükleri"
+      },
+      "updates": {
+        "title": "Sürekli Güncellemeler",
+        "point1": "Her zaman en güncel verileri kullanın",
+        "point2": "Gerçek zamanlı sıralama kontrolleri",
+        "point3": "GSC ile otomatik senkronizasyon"
+      }
+    },
+    "faq": {
+      "title": "Sıkça Sorulan Sorular",
+      "q1": {
+        "question": "MCP nedir ve neden kullanmalıyım?",
+        "answer": "MCP, SEO verilerinize doğrudan Claude veya ChatGPT gibi yapay zeka sohbetlerinden erişmenizi sağlayarak iş akışınızı daha hızlı ve verimli hale getirir."
+      },
+      "q2": {
+        "question": "MCP kullanımı ücretsiz mi?",
+        "answer": "Evet! MCP entegrasyonu tüm planlara dahildir. Sadece bir API anahtarına ihtiyacınız var."
+      },
+      "q3": {
+        "question": "Bu özellik ücretsiz ChatGPT ile çalışır mı?",
+        "answer": "Özel GPT'ler ChatGPT Plus veya Kurumsal abonelik gerektirir. Claude Desktop ise herhangi bir planla çalışır."
+      },
+      "q4": {
+        "question": "API anahtarını nasıl alırım?",
+        "answer": "Profil → API Anahtarları bölümüne gidin ve ihtiyacınız olan izinlerle yeni bir anahtar oluşturun."
+      },
+      "q5": {
+        "question": "API erişimini iptal edebilir miyim?",
+        "answer": "Evet, API anahtarlarını istediğiniz zaman profilinizden silebilir veya iptal edebilirsiniz."
+      },
+      "q6": {
+        "question": "MCP üzerinden hangi verilere erişebilirim?",
+        "answer": "Tüm alan adlarınız, anahtar kelimeleriniz, sıralamalarınız, GSC verileriniz, yazılarınız ve rakip bilgileriniz."
+      },
+      "q7": {
+        "question": "MCP üzerinden doğrudan WordPress'te yayınlayabilir miyim?",
+        "answer": "Evet! Ayarlarda WordPress'i bağladıysanız, sohbet üzerinden yayınlayabilirsiniz."
+      },
+      "q8": {
+        "question": "Hız sınırı var mı?",
+        "answer": "API hız sınırları planınıza bağlıdır: Ücretsiz (günde 100), Pro (günde 1000), Kurumsal (sınırsız)."
+      }
+    },
+    "finalCTA": {
+      "title": "SEO İş Akışınızı Güçlendirmeye Hazır mısınız?",
+      "description": "SEO görevlerinizi yapay zeka ile otomatikleştirmek için MCP kullanmaya başlayın",
+      "getAPIKey": "Şimdi API Anahtarı Oluşturun",
+      "readDocs": "Tam Dokümantasyonu Okuyun",
+      "joinUsers": "SEO'yu MCP ile otomatikleştiren 1.000'den fazla kullanıcıya katılın"
+    }
+  },
+  "impressum": {
+    "title": "Impressum - Yasal Bilgiler",
+    "description": "SEO Agent işletmecisi Dpro GmbH için yasal bilgiler ve şirket detayları",
+    "heading": "Impressum",
+    "subtitle": "Yasal Bilgiler & Şirket Detayları",
+    "companyInfo": "Şirket Bilgileri",
+    "contactInfo": "İletişim Bilgileri",
+    "legalInfo": "Yasal Bilgiler",
+    "uid": "KDV Numarası",
+    "fn": "Şirket Sicil Numarası",
+    "gericht": "Ticari Sicil Mahkemesi",
+    "kur": "Ticari Sicil",
+    "businessActivities": "Ticari Faaliyetler",
+    "businessDescription": "Yazılım geliştirme, web uygulamaları, SEO araçları ve dijital pazarlama çözümleri",
+    "responsibleContent": "İçerikten Sorumlu",
+    "managingDirector": "Genel Müdür",
+    "disputeResolution": "AB Uyuşmazlık Çözümü",
+    "disputeText": "Avrupa Komisyonu, çevrimiçi uyuşmazlık çözümü (OS) için bir platform sağlar:",
+    "disclaimer": "Feragatname",
+    "disclaimerContent": "İçerik Sorumluluğu",
+    "disclaimerContentText": "Sayfalarımızın içeriği büyük bir titizlikle oluşturulmuştur. Ancak, içeriğin doğruluğu, eksiksizliği ve güncelliği konusunda garanti veremeyiz.",
+    "disclaimerLinks": "Bağlantı Sorumluluğu",
+    "disclaimerLinksText": "Sitemiz harici web sitelerine bağlantılar içermektedir. Bu web sitelerinin içeriği üzerinde hiçbir etkimiz yoktur ve onlar için herhangi bir sorumluluk kabul edemeyiz.",
+    "disclaimerCopyright": "Telif Hakkı",
+    "disclaimerCopyrightText": "Site operatörleri tarafından oluşturulan içerik ve eserler Avusturya telif hakkı yasasına tabidir.",
+    "lastUpdated": "Son Güncelleme"
+  },
+  "nav": {
+    "features": "Özellikler",
+    "blog": "Blog",
+    "contact": "İletişim",
+    "mcpIntegration": "MCP Entegrasyonu",
+    "signIn": "Giriş Yap",
+    "getStarted": "Başlayın"
+  },
+  "footerMenu": {
+    "product": "Ürün",
+    "resources": "Kaynaklar",
+    "legal": "Yasal",
+    "talentManagement": "Yetenek Yönetimi",
+    "ats": "Aday Takip Yazılımı",
+    "documentation": "Dokümantasyon",
+    "seoExpertSkill": "SEO Uzmanı Yeteneği",
+    "blog": "Blog",
+    "contact": "İletişim",
+    "faq": "SSS",
+    "imprint": "Impressum",
+    "privacyPolicy": "Gizlilik Politikası",
+    "termsOfService": "Hizmet Şartları",
+    "consentPreferences": "Rıza Tercihleri",
+    "accessibility": "Erişilebilirlik"
+  },
+  "meta": {
+    "mcpSeo": {
+      "title": "SEO Agent MCP Sunucusu - Claude & ChatGPT'yi Bağlayın",
+      "description": "SEO verilerinizi Model Context Protocol (MCP) ile Claude Desktop ve ChatGPT'ye bağlayın. Gerçek zamanlı sıralamalar, analitikler ve içerik üretimi.",
+      "keywords": "mcp, seo agent, claude desktop, chatgpt, seo api, sıralama takibi, gsc",
+      "ogTitle": "Yapay Zekanızı SEO Verileriyle Güçlendirin",
+      "ogDescription": "Claude Desktop'ı doğrudan SEO metriklerinize, sıralamalarınıza ve GSC verilerinize bağlayın."
+    }
+  },
+  "seo": {
+    "mcpSeo": {
+      "title": "SEO Agent MCP Entegrasyonu",
+      "description": "Claude ve ChatGPT'yi gerçek zamanlı SEO verilerinize bağlayın."
+    }
+  },
+  "bing": {
+    "title": "Bing Webmaster Araçları",
+    "description": "Bing ve Yahoo arama analitiklerine erişmek için Microsoft hesabınızı bağlayın.",
+    "connect": "Bing'i Bağla",
+    "connectDescription": "Bing ve Yahoo anahtar kelime sıralamalarını, gösterimlerini ve tıklamalarını takip etmek için Microsoft hesabınızı bağlayın.",
+    "connected": "Bing Hesabı Bağlandı",
+    "connectedDescription": "Bing ve Yahoo analitikleri alan adı içgörü sayfalarınızda mevcuttur.",
+    "disconnect": "Bağlantıyı Kes",
+    "disconnectTitle": "Bing Hesabının Bağlantısını Kes",
+    "disconnectDescription": "Bing Webmaster Araçları bağlantısını kesmek istediğinizden emin misiniz? Bing ve Yahoo analitik verileri artık kullanılamayacak.",
+    "notConnected": "Bing ve Yahoo verilerini görmek için Bing Webmaster Araçlarını bağlayın.",
+    "tab": "Bing"
+  }
+}

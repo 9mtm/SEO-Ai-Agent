@@ -1,0 +1,40 @@
+{
+    "home": {
+        "title": "SEO Ai Agent | Google Sıralama Takipçisi",
+        "description": "Kapsamlı SEO platformu: 200'den fazla ülkede anahtar kelime sıralamalarını takip edin, Google Search Console verilerini analiz edin, GPT-5 ve Claude ile yapay zeka içeriği oluşturun, doğrudan WordPress'te yayınlayın. Ücretsiz plan mevcuttur.",
+        "keywords": "SEO takip aracı, anahtar kelime sıralama takipçisi, çok ülkeli SEO, Google Search Console entegrasyonu, yapay zeka içerik oluşturucu, ChatGPT SEO, Claude AI içeriği, WordPress otomatik yayınlama, SEO analitiği, rakip takibi, MCP API, SEO otomasyonu",
+        "ogTitle": "SEO Agent - Kapsamlı SEO Takip ve Yapay Zeka İçerik Platformu",
+        "ogDescription": "200'den fazla ülkede sıralamaları takip edin, yapay zeka içeriği oluşturun ve WordPress'te yayınlayın. MCP API aracılığıyla ChatGPT ve Claude ile entegre edin.",
+        "twitterTitle": "SEO Agent - Yapay Zeka Destekli SEO Platformu",
+        "twitterDescription": "Sıralamaları takip edin, yapay zeka içeriği oluşturun, WordPress'te yayınlayın. 200'den fazla ülke desteklenmektedir."
+    },
+    "mcpSeo": {
+        "title": "MCP SEO | ChatGPT ve Claude'u SEO Verilerine Bağlayın",
+        "description": "SEO Agent'ı MCP API aracılığıyla ChatGPT ve Claude Desktop ile entegre edin. Sıralamaları takip edin, anahtar kelimeleri analiz edin ve doğrudan yapay zeka sohbetinizden içerik oluşturun. Ücretsiz kurulum kılavuzu dahildir.",
+        "keywords": "MCP SEO, Model Context Protocol, ChatGPT entegrasyonu, Claude Desktop, yapay zeka SEO otomasyonu, SEO API, anahtar kelime takip API'si, ChatGPT SEO, Claude AI SEO, MCP sunucusu, yapay zeka asistanı SEO, konuşmalı SEO",
+        "ogTitle": "MCP SEO Entegrasyonu - ChatGPT ve Claude Desktop | SEO Agent",
+        "ogDescription": "SEO verilerinize doğrudan ChatGPT ve Claude Desktop'tan erişin. Sıralamaları takip edin, anahtar kelimeleri analiz edin ve yapay zeka ile içerik oluşturun. Kapsamlı MCP kurulum kılavuzu.",
+        "twitterTitle": "MCP SEO - ChatGPT ve Claude'u SEO Agent ile Entegre Edin",
+        "twitterDescription": "SEO verilerinize erişmek, sıralamaları takip etmek ve içerik oluşturmak için ChatGPT ve Claude Desktop'ı kullanın. Tam MCP entegrasyon kılavuzu."
+    },
+    "login": {
+        "title": "Giriş Yap - SEO Agent",
+        "description": "Panelinize erişmek, sıralamaları takip etmek ve yapay zeka içerik üretiminizi yönetmek için SEO AI Agent'a giriş yapın."
+    },
+    "register": {
+        "title": "Kayıt Ol - SEO Agent",
+        "description": "SEO AI Agent'a kayıt olun. Bugün web siteniz için SEO sıralamalarınızı takip etmeye ve yapay zeka optimize edilmiş içerik oluşturmaya başlayın."
+    },
+    "terms": {
+        "title": "Hizmet Şartları | SEO Agent",
+        "description": "SEO Agent Hizmet Şartları - SEO takip ve yapay zeka içerik oluşturma platformumuzu kullanmak için şartlarımızı ve koşullarımızı okuyun."
+    },
+    "privacy": {
+        "title": "Gizlilik Politikası | SEO Agent",
+        "description": "SEO Agent Gizlilik Politikası - Verilerinizi nasıl topladığımızı, kullandığımızı ve koruduğumuzu öğrenin. GDPR uyumlu SEO takip ve yapay zeka içerik platformu."
+    },
+    "impressum": {
+        "title": "Impressum - Yasal Bilgiler | SEO Agent",
+        "description": "SEO Agent işletmecisi Dpro GmbH için yasal bilgiler ve şirket detayları."
+    }
+}

@@ -144,7 +144,7 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
             .substring(0, 2);
     };
 
-    const currentLangLabel = selectedLang === 'de' ? 'Deutsch' : selectedLang === 'fr' ? 'Français' : selectedLang === 'es' ? 'Español' : selectedLang === 'pt' ? 'Português' : selectedLang === 'zh' ? '中文' : selectedLang === 'it' ? 'Italiano' : selectedLang === 'nl' ? 'Nederlands' : 'English';
+    const currentLangLabel = selectedLang === 'de' ? 'Deutsch' : selectedLang === 'fr' ? 'Français' : selectedLang === 'es' ? 'Español' : selectedLang === 'pt' ? 'Português' : selectedLang === 'zh' ? '中文' : selectedLang === 'it' ? 'Italiano' : selectedLang === 'nl' ? 'Nederlands' : selectedLang === 'tr' ? 'Türkçe' : 'English';
 
     return (
         <div className="flex items-center gap-4">
@@ -215,6 +215,12 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                             className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'nl' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
                         >
                             <span>Nederlands</span>
+                        </button>
+                        <button
+                            onClick={() => { setLocale('tr'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'tr' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                        >
+                            <span>Türkçe</span>
                         </button>
                     </div>
                 )}

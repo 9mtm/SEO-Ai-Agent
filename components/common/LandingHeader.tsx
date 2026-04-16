@@ -69,7 +69,7 @@ export default function LandingHeader({ activePage }: LandingHeaderProps) {
                                         className="flex items-center gap-1 text-sm font-medium text-neutral-600 hover:text-neutral-900"
                                     >
                                         <Globe className="h-4 w-4" />
-                                        {locale === 'de' ? 'DE' : locale === 'fr' ? 'FR' : locale === 'es' ? 'ES' : locale === 'it' ? 'IT' : locale === 'pt' ? 'PT' : locale === 'zh' ? 'ZH' : locale === 'nl' ? 'NL' : 'EN'}
+                                        {locale === 'de' ? 'DE' : locale === 'fr' ? 'FR' : locale === 'es' ? 'ES' : locale === 'it' ? 'IT' : locale === 'pt' ? 'PT' : locale === 'zh' ? 'ZH' : locale === 'nl' ? 'NL' : locale === 'tr' ? 'TR' : 'EN'}
                                     </button>
                                     {langMenuOpen && (
                                         <div className="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-neutral-200 py-1 z-50">
@@ -81,6 +81,7 @@ export default function LandingHeader({ activePage }: LandingHeaderProps) {
                                             <button onClick={() => { setLocale('pt'); setLangMenuOpen(false); }} className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">Português</button>
                                             <button onClick={() => { setLocale('zh'); setLangMenuOpen(false); }} className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">中文</button>
                                             <button onClick={() => { setLocale('nl'); setLangMenuOpen(false); }} className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">Nederlands</button>
+                                            <button onClick={() => { setLocale('tr'); setLangMenuOpen(false); }} className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">Türkçe</button>
                                         </div>
                                     )}
                                 </div>
@@ -123,7 +124,7 @@ export default function LandingHeader({ activePage }: LandingHeaderProps) {
                         </Link>
                         {!isLoggedIn && (
                             <>
-                                <select value={locale} onChange={(e) => setLocale(e.target.value as 'en' | 'de' | 'fr' | 'es' | 'it' | 'pt' | 'zh' | 'nl')} className="w-full px-3 py-2 bg-neutral-100 rounded-lg text-sm font-medium text-neutral-700">
+                                <select value={locale} onChange={(e) => setLocale(e.target.value as 'en' | 'de' | 'fr' | 'es' | 'it' | 'pt' | 'zh' | 'nl' | 'tr')} className="w-full px-3 py-2 bg-neutral-100 rounded-lg text-sm font-medium text-neutral-700">
                                     <option value="en">English</option>
                                     <option value="de">Deutsch</option>
                                     <option value="fr">Français</option>
@@ -132,6 +133,7 @@ export default function LandingHeader({ activePage }: LandingHeaderProps) {
                                     <option value="pt">Português</option>
                                     <option value="zh">中文</option>
                                     <option value="nl">Nederlands</option>
+                                    <option value="tr">Türkçe</option>
                                 </select>
                                 <Link href="/login" className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
                                     {t('landing.login')}
