@@ -30,8 +30,8 @@ import { useLanguage } from '../../context/LanguageContext';
 
 interface DashboardLayoutProps {
   children: ReactNode;
-  selectedLang?: 'en' | 'de' | 'fr';
-  onLanguageChange?: (lang: 'en' | 'de' | 'fr') => void;
+  selectedLang?: 'en' | 'de' | 'fr' | 'es' | 'it' | 'pt' | 'zh' | 'nl' | 'tr' | 'ar' | 'ja';
+  onLanguageChange?: (lang: 'en' | 'de' | 'fr' | 'es' | 'it' | 'pt' | 'zh' | 'nl' | 'tr' | 'ar' | 'ja') => void;
   domains?: DomainType[];
   hideSidebar?: boolean;
 }

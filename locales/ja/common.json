@@ -1,0 +1,1470 @@
+{
+  "auth": {
+    "login": {
+      "title": "ログイン",
+      "welcome": "おかえりなさい！",
+      "description": "ダッシュボードと SEO ツールにアクセスするにはログインしてください。",
+      "googleBtn": "Google でログイン",
+      "backToHome": "ホームに戻る"
+    },
+    "register": {
+      "title": "アカウント作成",
+      "welcome": "今すぐ開始！",
+      "description": "順位追跡や AI コンテンツ作成を始めるためにアカウントを作成してください。",
+      "googleBtn": "Google で登録",
+      "backToHome": "ホームに戻る",
+      "haveAccount": "既にアカウントをお持ちですか？",
+      "signIn": "こちらからログイン",
+      "termsLabel": "アカウント作成により、以下に同意したものとみなされます：",
+      "termsLink": "利用規約",
+      "and": "および",
+      "privacyLink": "プライバシーポリシー",
+      "newsletterLabel": "製品のアップデートやニュースをメールで受け取る。",
+      "termsRequired": "続行するには規約への同意が必要です。"
+    }
+  },
+  "onboarding": {
+    "layout": {
+      "title": "ワークスペースの設定",
+      "subtitle": "数秒で SEO ツールの設定を完了しましょう。",
+      "feature1_title": "正確な順位追跡",
+      "feature1_desc": "200カ国以上の Google 検索順位を監視。",
+      "feature2_title": "AI コンテンツ作成",
+      "feature2_desc": "ボタン一つで SEO 最適化された記事を作成。",
+      "feature3_title": "WordPress 連携",
+      "feature3_desc": "作成した記事をサイトに直接公開。",
+      "feature4_title": "パーソナライズされたプラン",
+      "feature4_desc": "キーワード案とコンテンツロードマップを含む特別戦略。"
+    },
+    "step1": {
+      "title": "Google Search Console の連携",
+      "subtitle": "開始するには、確認済みのサイトを Google Search Console から選択してください。",
+      "checking": "接続を確認中...",
+      "connectGoogleTitle": "Google アカウントを連携",
+      "connectGoogleDesc": "Google Search Console をリンクして、サイトの自動確認とパフォーマンスデータへのアクセスを有効にします。",
+      "connectBtn": "Google Search Console に接続",
+      "connected": "Google Search Console が連携されました",
+      "selectSiteLabel": "サイトを選択",
+      "loadingSites": "サイトを読み込み中...",
+      "noSitesTitle": "Google Search Console に確認済みのサイトが見つかりません。",
+      "noSitesDesc": "まず Google Search Console でドメインを確認してから、このページを更新してください。",
+      "chooseSite": "-- 確認済みサイトを選択 --",
+      "searchSitePlaceholder": "サイトを検索...",
+      "noResults": "検索結果が見つかりません",
+      "owner": "(オーナー)",
+      "websiteUrlLabel": "ウェブサイト URL",
+      "websiteUrlPlaceholder": "上のリストから選択してください",
+      "websiteUrlHelp": "このフィールドは選択したサイトから自動的に入力されます",
+      "errorSelectSite": "Google Search Console からサイトを選択してください",
+      "errorVerifySite": "確認済みのサイトを選択してください",
+      "errorSave": "保存に失敗しました",
+      "errorGeneric": "エラーが発生しました",
+      "saving": "準備中...",
+      "continue": "次へ"
+    },
+    "step2": {
+      "title": "ビジネスについて教えてください",
+      "subtitle": "あなたのビジネスに関する詳細を共有してください。",
+      "nameLabel": "ビジネス名",
+      "namePlaceholder": "例: Flowxtra",
+      "nameHelp": "あなたのビジネスの名前",
+      "nicheLabel": "ニッチ / ジャンル",
+      "nichePlaceholder": "例: 採用ソフトウェア",
+      "nicheHelp": "短く具体的に（最大3単語）",
+      "descLabel": "説明",
+      "descPlaceholder": "例: Flowxtra は無料の採用管理システム (ATS) を提供...",
+      "descHelp": "あなたのビジネスに関する簡単な説明",
+      "importantTitle": "重要（最良の結果を得るために）",
+      "importantDesc": "すべての項目を確認してください。不明な場合は、自動入力の提案をそのままにしてください。すべて選択した言語で記述されていることを確認してください。",
+      "errorFields": "必須項目をすべて入力してください",
+      "errorNiche": "ニッチは最大3単語までです",
+      "back": "戻る"
+    },
+    "step2_5": {
+      "title": "SEO 戦略の定義",
+      "subtitle": "ビジネス内容を分析し、9つの注力キーワードを提案しました。目標に合わせて確認・編集してください。",
+      "aiTitle": "AI 生成キーワード",
+      "aiDesc": "これらのキーワードはビジネスの説明に基づいて自動生成されました。自由に編集可能です！",
+      "targetCountry": "対象国",
+      "highPriorityTitle": "高優先度 (TOP 3)",
+      "highPriorityDesc": "攻略が不可欠な重要キーワード",
+      "mediumPriorityTitle": "中優先度",
+      "mediumPriorityDesc": "メインサービスを支える重要キーワード",
+      "lowPriorityTitle": "低優先度",
+      "lowPriorityDesc": "ロングテールや将来的な機会",
+      "keywordPlaceholder": "キーワード",
+      "errorKeywords": "少なくとも1つの注力キーワードを追加してください"
+    },
+    "step3": {
+      "title": "競合他社の追加",
+      "subtitle": "分析対象の主要な競合サイト。",
+      "placeholder": "競合の URL を入力...",
+      "help": "競合サイトの URL を入力して、そのコンテンツ戦略を分析します",
+      "add": "追加",
+      "maxReached": "（最大3件に達しました）",
+      "suggestions": "提案:"
+    }
+  },
+  "dashboard": {
+    "title": "マイドメイン",
+    "domains": "ドメイン",
+    "keywords": "キーワード",
+    "settings": "設定",
+    "addDomain": "ドメインを追加",
+    "noDomains": "ドメインがまだ追加されていません。"
+  },
+  "common": {
+    "loading": "読み込み中...",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "logout": "ログアウト",
+    "changeLanguage": "言語を変更"
+  },
+  "email": {
+    "visits": "訪問数",
+    "impressions": "表示回数",
+    "avgPosition": "平均掲載順位",
+    "avgCtr": "平均 CTR",
+    "improved": "上昇",
+    "declined": "下落",
+    "topKeywords": "上位キーワード (直近 {{days}} 日間)",
+    "topPages": "上位ページ",
+    "keyword": "キーワード",
+    "page": "ページ",
+    "clicks": "クリック数",
+    "views": "閲覧数",
+    "pos": "順位",
+    "avgPos": "平均順位",
+    "viewMore": "ダッシュボードで残り {{count}} 件のキーワードを確認",
+    "yearsAgo": "{{count}} 年前",
+    "monthsAgo": "{{count}} ヶ月前",
+    "daysAgo": "{{count}} 日前",
+    "hrsAgo": "{{count}} 時間前",
+    "minsAgo": "{{count}} 分前",
+    "secsAgo": "{{count}} 秒前",
+    "subject": "[{{domain}}] キーワード順位月次アップデート",
+    "keywordRankings": "キーワード順位",
+    "keywordsSuffix": "キーワード",
+    "goToDashboard": "ダッシュボードへ移動",
+    "unsubscribeText": "メール配信を停止しますか？",
+    "unsubscribe": "購読解除",
+    "poweredBy": "Powered by",
+    "position": "掲載順位",
+    "table": {
+      "best": "ベスト",
+      "updated": "更新日"
+    }
+  },
+  "sidebar": {
+    "insight": "インサイト",
+    "tracking": "順位追跡",
+    "competitors": "競合",
+    "discover": "発見",
+    "agent": "SEO エージェント",
+    "settings": "設定",
+    "profile": "プロフィール",
+    "scraper": "スクレイパー",
+    "connections": "接続",
+    "billing": "プランと請求",
+    "myDomains": "マイドメイン",
+    "domains": "ドメイン",
+    "workspaces": "ワークスペース",
+    "teamMembers": "チームメンバー",
+    "searchConsole": "Search Console",
+    "connectedApps": "連携アプリ",
+    "referrals": "紹介プログラム",
+    "setup": "セットアップ",
+    "posts": "記事",
+    "apiKeys": "API & MCP",
+    "notifications": "通知"
+  },
+  "workspace": {
+    "switch": "ワークスペースを切り替え",
+    "personal": "個人",
+    "manage": "ワークスペースの管理"
+  },
+  "profile": {
+    "title": "個人プロフィール",
+    "description": "個人情報とアカウントのセキュリティを管理します。",
+    "cardTitle": "プロフィール情報",
+    "cardDescription": "写真と個人詳細を更新します。",
+    "photoTitle": "プロフィール写真",
+    "photoDesc": "プロフィールに表示されます。",
+    "changePhoto": "写真を変更",
+    "fullName": "フルネーム",
+    "email": "メールアドレス",
+    "emailNote": "メールアドレスは直接変更できません。サポートにお問い合わせください。",
+    "languageSettingsTitle": "言語設定",
+    "languageSettingsDesc": "インターフェースの優先言語を選択してください。",
+    "language": "システム言語",
+    "save": "変更を保存",
+    "saving": "保存中...",
+    "success": "プロフィールを更新しました",
+    "error": "更新に失敗しました",
+    "deleteAccountTitle": "アカウント削除",
+    "deleteAccountDesc": "アカウントとすべての関連データを永久に削除します。",
+    "deleteWarning": "この操作は元に戻せません。確認のために 'DELETE' と入力してください。",
+    "deletePlaceholder": "DELETE と入力して確認",
+    "deleteButton": "アカウントを削除",
+    "deleting": "削除中...",
+    "deleteSuccess": "アカウントを削除しました",
+    "deleteError": "削除に失敗しました"
+  },
+  "notifications": {
+    "title": "通知設定",
+    "description": "通知を受け取る方法とタイミングを管理します。",
+    "generalTitle": "メール通知",
+    "generalDesc": "メールの優先設定を構成します。",
+    "emailAlerts": "メールアラート",
+    "emailAlertsDesc": "アカウントのアクティビティに関するアラートを受け取る。",
+    "weeklyReport": "週間レポート",
+    "weeklyReportDesc": "ドメインのパフォーマンスの週次サマリーを受け取る。",
+    "marketingEmails": "マーケティングメール",
+    "marketingEmailsDesc": "ニュース、アップデート、特別オファーを受け取る。",
+    "securityAlerts": "セキュリティアラート",
+    "securityAlertsDesc": "重要なセキュリティイベントに関する通知を受け取る。",
+    "save": "変更を保存",
+    "saving": "保存中...",
+    "success": "設定を更新しました",
+    "emailSettingsTitle": "通知チャンネル",
+    "emailSettingsDesc": "通知の送信先を指定してください。",
+    "notificationEmailLabel": "通知用メールアドレス",
+    "notificationEmailPlaceholder": "例: info@example.com",
+    "notificationEmailHelp": "このアドレスに通知が送信されます。",
+    "domainTitle": "ドメイン通知",
+    "domainDesc": "特定のドメインの通知を有効または無効にします。",
+    "domainLabel": "以下のアップデートを受け取る："
+  },
+  "billing": {
+    "title": "プランと請求",
+    "desc": "請求詳細と定期購入プランを管理します。",
+    "tabs": {
+      "subscription": "購読プラン",
+      "details": "請求先詳細",
+      "history": "請求書履歴"
+    },
+    "currentPlan": "現在のプラン: {{plan}}",
+    "active": "有効",
+    "renewsOn": "更新日: {{date}}",
+    "planNames": {
+      "free": "無料",
+      "basic": "ベーシック",
+      "pro": "プロ",
+      "premium": "プレミアム"
+    },
+    "planDesc": {
+      "free": "永久無料",
+      "basic": "初心者向け",
+      "pro": "成長中のビジネス向け",
+      "premium": "パワーユーザー & チーム向け"
+    },
+    "features": {
+      "domain": "{{count}} ドメイン",
+      "domains": "{{count}} ドメイン",
+      "unlimitedDomains": "ドメイン無制限",
+      "keywords": "{{count}} キーワード",
+      "updates": "制限付き更新",
+      "weekly": "週次更新",
+      "daily": "日次更新",
+      "mcp": "MCP アクセス",
+      "ai": "AI コンテンツ",
+      "priority": "優先サポート",
+      "api": "API アクセス"
+    },
+    "buttons": {
+      "current": "現在のプラン",
+      "upgrade": "アップグレード",
+      "downgrade": "ダウングレード"
+    },
+    "invoice": {
+      "title": "請求先情報",
+      "desc": "すべての請求書のデフォルト詳細を設定します。",
+      "accountType": "アカウントタイプ",
+      "company": "法人",
+      "individual": "個人",
+      "nameCompany": "会社名",
+      "nameIndividual": "フルネーム",
+      "vat": "登録番号 (任意)",
+      "address": "請求先住所",
+      "city": "市区町村",
+      "zip": "郵便番号",
+      "country": "国",
+      "email": "請求先メールアドレス",
+      "save": "デフォルトを保存"
+    },
+    "history": {
+      "title": "請求書履歴",
+      "desc": "過去の請求書をダウンロードします。",
+      "date": "日付",
+      "amount": "金額",
+      "status": "ステータス",
+      "download": "ダウンロード"
+    },
+    "checkout": {
+      "title": "{{cycle}} 購読の完了",
+      "desc": "プランを確認し、請求先詳細を確定してください。",
+      "redirecting": "Stripe にリダイレクト中...",
+      "monthly": "月払い",
+      "yearly": "年払い",
+      "save": "〜20% お得",
+      "planSummary": "{{plan}} プラン",
+      "cycle": "請求サイクル",
+      "total": "本日のお支払い合計",
+      "confirm": "確定してお支払い",
+      "cancel": "キャンセル",
+      "billedYearly": "年払いのみ"
+    }
+  },
+  "apiKeys": {
+    "title": "API & MCP 接続",
+    "subtitle": "MCP プロトコルを介して AI アシスタントを接続し、SEO データを管理します。",
+    "activeConnections": "有効な接続 ({{count}})",
+    "noConnections": "接続がありません",
+    "noConnectionsDesc": "最初の AI 接続を作成して、Claude や ChatGPT などの AI アシスタントとの対話を通じて SEO データの管理を開始しましょう。",
+    "createFirst": "最初の接続を作成",
+    "create": "新規接続を作成",
+    "permissions": "権限:",
+    "created": "作成日: {{date}}",
+    "lastUsed": "最終使用日: {{date}}",
+    "expires": "有効期限: {{date}}",
+    "viewSetup": "セットアップを表示",
+    "hideSetup": "セットアップを隠す",
+    "disable": "無効にする",
+    "delete": "削除",
+    "disabled": "無効",
+    "setupTitle": "この接続の使用方法",
+    "setupClaude": "Claude Desktop の場合:",
+    "setupConfig": "設定ファイルに以下を追加してください（実際の API キーに置き換えてください）:",
+    "viewGuide": "詳細なセットアップガイドを表示",
+    "securityNotice": "API キーは再表示できません",
+    "securityDesc": "セキュリティ上の理由により、API キーは作成時に一度だけ表示されます。キーを紛失した場合は、新しい接続を作成し、古いものを削除してください。",
+    "createModal": {
+      "title": "新規接続の作成",
+      "subtitle": "AI アシスタントの SEO データへのアクセスを設定",
+      "nameLabel": "1. 接続に名前を付ける",
+      "namePlaceholder": "例: 私の Claude アシスタント",
+      "nameHelp": "後で識別しやすい名前を選んでください",
+      "permLabel": "2. 権限を選択",
+      "selectAll": "すべて選択",
+      "deselectAll": "すべて解除",
+      "expiryLabel": "3. 有効期限を設定",
+      "expiryHelp": "セキュリティのため 30 日間を推奨します",
+      "cancel": "キャンセル",
+      "create": "接続を作成"
+    },
+    "successModal": {
+      "title": "接続が正常に作成されました！",
+      "subtitle": "以下の手順に従って AI アシスタントを接続してください",
+      "step1": "接続キーをコピーする",
+      "step1Desc": "これはあなた専用のキーです。安全な場所に保存してください！",
+      "copy": "コピー",
+      "step2": "AI アシスタントに追加する",
+      "step2Desc": "Claude Desktop の場合、設定ファイルに以下を追加します：",
+      "step3": "再起動して使用開始",
+      "step3Desc": "AI アシスタントを再起動してチャットを開始しましょう！",
+      "important": "重要！",
+      "importantDesc": "このキーは一度しか表示されません。このメッセージを閉じる前に必ず安全に保存してください。",
+      "saved": "キーを保存しました"
+    },
+    "permLabels": {
+      "readDomains": "ドメインを表示",
+      "readDomainsDesc": "ウェブサイト情報を参照",
+      "readKeywords": "キーワードを表示",
+      "readKeywordsDesc": "SEO キーワードを参照",
+      "readPosts": "記事を表示",
+      "readPostsDesc": "ブログ記事を参照",
+      "readGsc": "分析を表示",
+      "readGscDesc": "Google Search データを参照",
+      "writePosts": "記事を作成",
+      "writePostsDesc": "ブログ記事の執筆と編集",
+      "writeKeywords": "キーワードを管理",
+      "writeKeywordsDesc": "キーワードの追加と更新",
+      "publishWordpress": "WordPress に公開",
+      "publishWordpressDesc": "ウェブサイトに記事を公開"
+    },
+    "expiryOptions": {
+      "0": "無期限",
+      "7": "7 日間",
+      "30": "30 日間（推奨）",
+      "90": "90 日間",
+      "365": "1 年間"
+    }
+  },
+  "scraperSettings": {
+    "title": "スクレイパー設定",
+    "desc": "スクレイピング設定と連携を管理します",
+    "configTitle": "スクレイパー構成",
+    "configDesc": "スクレイパー設定とプロキシオプションを構成します",
+    "type": "スクレイパータイプ",
+    "typePlaceholder": "タイプを選択...",
+    "none": "なし（無効）",
+    "recommended": "推奨",
+    "apiKey": "API キー",
+    "apiKeyPlaceholder": "API キーを入力してください...",
+    "delay": "待機時間",
+    "delayNone": "なし",
+    "delay5": "5 秒",
+    "delay10": "10 秒",
+    "delay30": "30 秒",
+    "retry": "失敗時にリトライを有効にする",
+    "save": "設定を保存",
+    "saving": "保存中...",
+    "noKey": "API キーをお持ちではありませんか？",
+    "signUp": "{{service}} に登録",
+    "notificationInterval": "通知間隔",
+    "notificationEmail": "通知用メールアドレス"
+  },
+  "periods": {
+    "today": "本日",
+    "yesterday": "昨日",
+    "last7Days": "過去 7 日間",
+    "last30Days": "過去 30 日間",
+    "last90Days": "過去 90 日間",
+    "lastYear": "過去 1 年間",
+    "lastDays": "過去 {{days}} 日間"
+  },
+  "insight": {
+    "stats": "統計",
+    "keywords": "キーワード",
+    "countries": "国",
+    "pages": "ページ",
+    "performanceOverview": "パフォーマンス概要",
+    "both": "両方",
+    "visits": "訪問数",
+    "impressions": "表示回数",
+    "avgPosition": "平均順位",
+    "avgCtr": "平均 CTR",
+    "date": "日付",
+    "ctr": "CTR",
+    "position": "順位",
+    "clicks": "クリック数",
+    "connectTitle": "Google Search Console が未連携です",
+    "connectDesc": "Google Search Console アカウントを連携して、表示回数、クリック数、平均順位などの実際の掲載結果データを表示します。",
+    "connectBtn": "Google アカウントを連携",
+    "last30Days": "過去 30 日間",
+    "pageInfo": "{{total}} ページ中 {{current}} ページ目",
+    "previous": "前へ",
+    "next": "次へ",
+    "noResults": "\"{{query}}\" の結果が見つかりません",
+    "topPerformers": "トップパフォーマー",
+    "exportCSV": "CSV エクスポート",
+    "selectTab": "表示を選択"
+  },
+  "domainHeader": {
+    "last3Days": "過去 3 日間",
+    "last7Days": "過去 7 日間",
+    "last30Days": "過去 30 日間",
+    "reloadSerps": "SERP を更新",
+    "reloadAllSerps": "すべての SERP を更新",
+    "deleteDomain": "ドメインを削除",
+    "updating": "更新中...",
+    "reload": "リロード",
+    "addKeyword": "キーワード追加",
+    "loadIdeas": "案を読み込む"
+  },
+  "keywordFilter": {
+    "filterKeywords": "キーワードをフィルター...",
+    "allCountries": "すべての国",
+    "allTags": "すべてのタグ",
+    "noTags": "このドメインのタグが見つかりません",
+    "addKeyword": "キーワードを追加",
+    "reloadSerps": "すべての順位を更新",
+    "desktop": "デスクトップ",
+    "mobile": "モバイル",
+    "filter": "フィルター",
+    "sort": "並べ替え",
+    "columns": "列の表示/非表示"
+  },
+  "sortOptions": {
+    "pos_asc": "順位が高い順",
+    "pos_desc": "順位が低い順",
+    "date_asc": "最新の更新",
+    "date_desc": "最古の更新",
+    "alpha_asc": "名前順 (A-Z)",
+    "alpha_desc": "名前順 (Z-A)",
+    "vol_asc": "検索ボリューム (低)",
+    "vol_desc": "検索ボリューム (高)",
+    "imp_desc": "表示回数 (多)",
+    "imp_asc": "表示回数 (少)",
+    "visits_desc": "訪問数 (多)",
+    "visits_asc": "訪問数 (少)",
+    "ctr_desc": "CTR順"
+  },
+  "columns": {
+    "keyword": "キーワード",
+    "position": "順位",
+    "url": "URL",
+    "updated": "更新日",
+    "best": "最高順位",
+    "history": "履歴",
+    "volume": "ボリューム",
+    "searchConsole": "Search Console"
+  },
+  "scTable": {
+    "totalVisits": "総訪問数",
+    "addToTracker": "{{count}} 個のキーワードを追跡対象に追加",
+    "noKeywords": "キーワードが見つかりません",
+    "adjustFilters": "フィルターを調整してみてください。"
+  },
+  "tracking": {
+    "addKeywords": {
+      "title": "新しいキーワードを追加",
+      "placeholder": "キーワードを一行ずつ入力または貼り付けてください。",
+      "tagsPlaceholder": "タグを挿入 (任意)",
+      "cityPlaceholder": "市区町村 (任意)",
+      "cityDisabled": "{{scraper}} では利用できません",
+      "cityTooltip": "ご利用のスクレイパー {{scraper}} は市区町村レベルの取得に対応していません。",
+      "trackCompetitors": "競合他社を追跡 (競合の順位も自動チェックします)",
+      "cancel": "キャンセル",
+      "add": "キーワードを追加",
+      "adding": "追加中...",
+      "errorExist": "キーワード {{keywords}} は既に追加されています",
+      "errorEmpty": "キーワードを入力してください",
+      "noTags": "既存のタグが見つかりません...",
+      "planUsage": "プランの使用状況",
+      "enterKeywords": "キーワード",
+      "country": "国",
+      "device": "デバイス",
+      "city": "市区町村",
+      "tags": "タグ",
+      "errorLimit": "プランの制限を超えています。あと {{remaining}} 個だけ追加可能です ({{count}} 個追加しようとしています)。"
+    },
+    "manageCompetitors": {
+      "title": "競合の管理",
+      "addLabel": "競合の URL を追加",
+      "placeholder": "https://example.com",
+      "add": "追加",
+      "count": "競合追加済み: {{count}}/{{max}}",
+      "currentTitle": "現在の競合サイト",
+      "empty": "競合がまだ追加されていません",
+      "cancel": "キャンセル",
+      "save": "変更を保存",
+      "saving": "保存中...",
+      "errorEmpty": "競合の URL を入力してください",
+      "errorMax": "最大 {{max}} 件までです",
+      "errorExists": "この競合は既に追加されています",
+      "success": "競合設定を更新しました！",
+      "error": "更新に失敗しました"
+    },
+    "tabs": {
+      "keywords": "キーワード",
+      "competitors": "競合"
+    },
+    "scraperAlert": "スクレイパー/プロキシが設定されていません。ツールを機能させるには設定を開いて構成してください。"
+  },
+  "trackingTable": {
+    "keyword": "キーワード",
+    "best": "最高",
+    "history": "履歴",
+    "volume": "ボリューム",
+    "url": "URL",
+    "updated": "更新",
+    "scPos": "順位",
+    "scImp": "表示",
+    "scVisits": "訪問",
+    "refreshKeywords": "キーワードを更新",
+    "removeKeywords": "キーワードを削除",
+    "tagKeywords": "タグを付ける",
+    "noKeywordsDevice": "このデバイスタイプ用のキーワードがありません。",
+    "removeTitle": "キーワードを削除",
+    "removeConfirm": "本当に {{count}} 件のキーワードを削除しますか？",
+    "refreshCompetitors": "競合順位を更新",
+    "yourPosition": "あなたの順位",
+    "noKeywordsMsg": "キーワードがありません。「キーワード」タブから追加してください。",
+    "noCompetitorsMsg": "競合がありません。ドメイン設定から追加してください。",
+    "refresh": "更新",
+    "tag": "タグ",
+    "remove": "削除",
+    "selected": "選択済み",
+    "favorite": "お気に入りに追加",
+    "unfavorite": "お気に入りから削除",
+    "tags": "タグ",
+    "updateFailed": "更新失敗",
+    "lastAttempt": "最終試行",
+    "scraperError": "スクレイパーエラー"
+  },
+  "domainSelector": {
+    "current": "現在のドメイン",
+    "select": "ドメインを選択",
+    "switch": "ドメイン切り替え",
+    "add": "サイトを追加",
+    "empty": "ドメインが見つかりません"
+  },
+  "domainSettings": {
+    "title": "ドメイン設定",
+    "myApp": "マイアプリ",
+    "tabs": {
+      "general": "一般",
+      "integrations": "連携",
+      "searchConsole": "Google Search Console",
+      "delete": "削除"
+    },
+    "general": {
+      "cardTitle": "基本情報",
+      "cardDesc": "ドメインのビジネス情報とニッチの詳細を更新します。",
+      "businessName": "ビジネス名",
+      "businessNameDesc": "ビジネスまたはブランドの正式名称。",
+      "niche": "ニッチ / 業界",
+      "nicheDesc": "ウェブサイトの主要な業界またはトピック。",
+      "description": "ビジネス説明",
+      "descriptionDesc": "AI コンテンツ生成に使用される短い説明。",
+      "save": "変更を保存",
+      "saving": "保存中..."
+    },
+    "strategy": {
+      "cardTitle": "ターゲットキーワード戦略",
+      "country": "対象国",
+      "allCountries": "すべての国",
+      "cardDesc": "重要度順に最大 9 つの注力キーワードを定義します。これらは今後 6 ヶ月間の SEO 戦略の指針となります。",
+      "high": "高重要度 (TOP 3)",
+      "highDesc": "中核ビジネスを推進するために攻略すべき最重要キーワード。",
+      "medium": "中重要度",
+      "mediumDesc": "メインサービスをサポートする重要キーワード。",
+      "low": "低重要度",
+      "lowDesc": "ロングテールや将来の機会となるキーワード。"
+    },
+    "competitors": {
+      "cardTitle": "競合他社",
+      "cardDesc": "競合を追跡してパフォーマンスをベンチマークします。",
+      "tracked": "追跡中の競合",
+      "add": "追加",
+      "empty": "競合がまだ追加されていません。",
+      "exists": "この競合は既に追加されています"
+    },
+    "integrations": {
+      "cardTitle": "CMS 連携",
+      "cardDesc": "ウェブサイトの CMS を連携して、自動ブログ機能を有効にします。",
+      "wpDesc": "アプリケーションパスワードを使用して WordPress サイトを連携します。",
+      "shopifyDesc": "アクセストークンを使用して Shopify ストアを連携します。",
+      "webflowDesc": "Webflow サイトをシームレスに連携します。",
+      "wixDesc": "Wix サイトを簡単に連携します。",
+      "comingSoon": "近日公開",
+      "settingsTitle": "WordPress 設定",
+      "helpTitle": "WordPress 認証情報の取得方法",
+      "help": {
+        "urlLabel": "1. ウェブサイト URL:",
+        "urlDesc": "WordPress サイトの正確な URL（例: https://yoursite.com）を入力してください。http/https や www の有無を含め、正確に一致させる必要があります。",
+        "usernameLabel": "2. ユーザー名:",
+        "usernameDesc": "WordPress のログインユーザー名（表示名やメールアドレスではありません）を使用してください。管理画面の ユーザー → プロフィール で確認できます。",
+        "appPassLabel": "3. アプリケーションパスワード:",
+        "appPassStep1": "WordPress にログインします。",
+        "appPassStep2": "ユーザー → プロフィール に移動します。",
+        "appPassStep3": "「アプリケーションパスワード」セクションを探します。",
+        "appPassStep4": "名前（例: 'SEO AI Agent'）を入力し、「新しいアプリケーションパスワードを追加」をクリックします。",
+        "appPassStep5": "生成された 24 文字のパスワードをコピーして以下に貼り付けます。"
+      },
+      "url": "WordPress URL",
+      "urlPlaceholder": "https://example.com",
+      "urlHelper": "http:// または https:// を含む完全な URL。",
+      "username": "ユーザー名",
+      "usernamePlaceholder": "admin",
+      "usernameHelper": "アプリケーションパスワードを作成したユーザー名。",
+      "appPass": "アプリケーションパスワード",
+      "appPassPlaceholder": "xxxx xxxx xxxx xxxx xxxx xxxx",
+      "appPassHelper": "WordPress から取得した 24 文字のパスワード。",
+      "refreshCats": "カテゴリーを更新",
+      "availCats": "利用可能なカテゴリー",
+      "catsHelper": "新しい記事に使用するカテゴリーを選択してください。",
+      "test": "接続テスト",
+      "saveInt": "連携を保存",
+      "connected": "WordPress に正常に接続されました！",
+      "failed": "接続に失敗しました。入力内容を確認してください。",
+      "enterCreds": "必要なすべてのデータを入力してください。",
+      "foundCats": "{{count}} 個のカテゴリーが見つかりました。",
+      "fetchCatsError": "カテゴリーの取得に失敗しました。",
+      "testing": "テスト中..."
+    },
+    "gsc": {
+      "cardTitle": "Google Search Console",
+      "cardDesc": "実際のトラフィックデータとキーワードのインポートのためにサイトを連携します。",
+      "connected": "GSC 接続済み",
+      "disconnect": "接続解除",
+      "verifiedSites": "確認済みサイト",
+      "refreshSites": "サイトリストを更新",
+      "loading": "読み込み中...",
+      "noSites": "確認済みサイトが見つかりません。",
+      "owner": "オーナー",
+      "full": "フルアクセス",
+      "restricted": "制限付き",
+      "unverified": "未確認",
+      "imported": "インポート成功！",
+      "add": "確認してインポート",
+      "notesTitle": "重要事項:",
+      "note1": "Search Console アカウントでサイトが確認されている必要があります。",
+      "connectBtn": "Google と連携",
+      "connectDesc": "Google アカウントを連携して、実際のトラフィックとキーワードデータにアクセスします。"
+    },
+    "danger": {
+      "title": "危険ゾーン",
+      "desc": "以下の操作は永続的であり、元に戻すことはできません。",
+      "warning": "警告: このドメインを削除すると以下が消去されます:",
+      "warning1": "すべての追跡キーワード。",
+      "warning2": "順位履歴と過去のデータ。",
+      "warning3": "このドメイン用に生成されたすべての記事。",
+      "confirmLabel": "確認のために '{{domain}}' と入力してください:",
+      "btn": "ドメインを完全に削除",
+      "deleting": "削除中..."
+    }
+  },
+  "posts": {
+    "pageTitle": "記事一覧",
+    "newArticleTitle": "新規記事作成",
+    "editArticleTitle": "記事を編集",
+    "list": {
+      "title": "あなたの SEO 記事",
+      "description": "AI で最適化されたウェブサイトコンテンツを管理します。",
+      "newArticle": "AI で記事を作成",
+      "emptyTitle": "記事がまだありません",
+      "emptyDesc": "最初の SEO 最適化記事を作成して始めましょう。",
+      "createBtn": "記事を作成",
+      "wordpress": "WordPress"
+    },
+    "tabs": {
+      "all": "すべて",
+      "drafts": "下書き",
+      "published": "公開済み"
+    },
+    "table": {
+      "article": "記事",
+      "status": "ステータス",
+      "lastUpdated": "最終更新",
+      "actions": "操作"
+    },
+    "status": {
+      "published": "公開済み",
+      "draft": "下書き"
+    },
+    "editor": {
+      "back": "記事一覧に戻る",
+      "generate": "AI で生成",
+      "generating": "生成中...",
+      "save": "保存",
+      "saving": "保存中...",
+      "saved": "保存完了",
+      "newTitle": "新規記事",
+      "editTitle": "記事を編集",
+      "description": "SEO ツールを使用してコンテンツを検査し、上位表示される記事を執筆します。",
+      "contentEditor": "コンテンツエディター",
+      "topicLabel": "記事のトピック",
+      "ready": "準備はいいですか？",
+      "topicPlaceholder": "この記事のテーマは何ですか？",
+      "topicHelp": "このトピックに基づいて AI モデルが記事を生成します。",
+      "titleLabel": "記事タイトル",
+      "titlePlaceholder": "タイトルを入力...",
+      "titleShort": "短すぎます",
+      "titleLong": "長すぎます",
+      "featuredImage": "アイキャッチ画像",
+      "clickToChange": "クリックして変更",
+      "clickToUpload": "クリックしてアップロード",
+      "aiImageComingSoon": "AI 画像生成は近日公開予定",
+      "bodyContent": "本文内容",
+      "visualEditor": "ビジュアルエディター",
+      "sourceCode": "ソースコード"
+    },
+    "seo": {
+      "score": "SEO スコア",
+      "scoreDesc": {
+        "excellent": "素晴らしい！この記事は公開して上位を狙う準備ができています。",
+        "good": "とても良いです。いくつかの微調整で完璧になります。",
+        "improve": "上位表示を狙うには重要な改善が必要です。"
+      },
+      "optimized": "最適化済み",
+      "suggestionsTitle": "改善の提案",
+      "suggestions": {
+        "addWords": "記事が短すぎます。役立つコンテンツを追加してください。",
+        "addKeywords": "記事の冒頭にターゲットキーワードを追加してください。",
+        "addHeadings": "見出し（H2, H3）を使用してコンテンツを整理してください。",
+        "addImage": "ユーザー体験向上のため、少なくとも 1 枚の画像を追加してください。",
+        "addMeta": "魅力的なメタディスクリプションを作成してください。",
+        "titleLength": "記事のタイトルは 50〜60 文字にする必要があります。",
+        "includeAllKeywords": "すべてのターゲットキーワードが含まれていることを確認してください。",
+        "addPrimaryTitle": "メイン見出し (H1) にメインキーワードを追加してください。",
+        "addPrimaryMeta": "メタディスクリプションにメインキーワードを追加してください。",
+        "addInternalLinks": "サイト内の過去の記事へのリンクを追加してください。",
+        "moreInternalLinks": "内部リンクを増やすことでサイト構造が強化されます。",
+        "addAllAlt": "すべての画像に代替テキスト（Alt Text）を追加してください。",
+        "addRemainingAlt": "代替テキストがない画像がいくつか残っています。",
+        "addH1": "記事には 1 つの H1 見出しのみを含める必要があります。",
+        "singleH1": "一意で明確な H1 見出しが 1 つだけ存在することを確認してください。",
+        "addH2": "コンテンツを分割するために H2 見出しを追加してください。",
+        "addH3": "メイン見出しの下に H3 を使用してさらに整理してください。"
+      },
+      "metrics": {
+        "wordCount": "文字数",
+        "keywordDensity": "キーワード出現率",
+        "headingStructure": "見出し構造",
+        "images": "画像",
+        "keywordsInContent": "本文内のキーワード",
+        "keywordInTitle": "タイトル内のキーワード",
+        "keywordInMeta": "ディスクリプション内のキーワード",
+        "internalLinks": "内部リンク",
+        "externalLinks": "外部リンク",
+        "imagesInContent": "本文内の画像",
+        "withAltText": "代替テキストあり"
+      }
+    },
+    "meta": {
+      "title": "メタデータ",
+      "targetKeywords": "ターゲットキーワード",
+      "editStrategy": "戦略を編集",
+      "customKeyword": "またはカスタムキーワードを追加:",
+      "keywordPlaceholder": "キーワードを入力...",
+      "addBtn": "追加",
+      "addHelp": "Enter キーまたはクリックで追加",
+      "selectedKeywords": "選択されたキーワード:",
+      "metaDescription": "メタディスクリプション",
+      "metaPlaceholder": "検索エンジン用説明文..."
+    },
+    "publish": {
+      "wordpress": "WordPress に公開",
+      "publishing": "公開中..."
+    },
+    "modal": {
+      "altTitle": "代替テキストの編集",
+      "altLabel": "代替テキスト（SEO およびアクセシビリティ）",
+      "altHelp": "検索エンジンやスクリーンリーダー向けに画像の内容を説明します",
+      "updateAlt": "代替テキストを更新",
+      "linkTitle": "リンクタイトルの編集",
+      "linkText": "リンクテキスト",
+      "linkUrl": "URL",
+      "linkTooltip": "リンクタイトル（ヒント）",
+      "linkHelp": "ユーザーがリンクにマウスを合わせたときに表示されます",
+      "updateLink": "タイトルを更新"
+    },
+    "common": {
+      "cancel": "キャンセル"
+    }
+  },
+  "hero": {
+    "headline": "SEO AI エージェント",
+    "subheadline": "検索順位 No.1 へ押し上げる",
+    "description": "200カ国以上の順位を監視、GPT-5 と Claude による AI コンテンツ作成、WordPress への直接投稿。現代のビジネスに必要なすべてを備えた SEO ソリューション。",
+    "bullet1": "多国籍順位追跡",
+    "bullet2": "AI コンテンツ (GPT-5 & Claude)",
+    "bullet3": "WordPress 直接投稿",
+    "bullet4": "ChatGPT & Claude MCP 連携",
+    "trustedBy": "世界 5,000 人以上の SEO プロフェッショナルに信頼されています"
+  },
+  "landing": {
+    "title": "SEO AI エージェント",
+    "subtitle": "プロフェッショナルのための SEO ソリューション",
+    "description": "キーワードの追跡、順位の監視、AI による成長を支援する強力な SEO ツール。",
+    "cta": "今すぐ開始",
+    "login": "ログイン",
+    "stats": {
+      "title": "多くの SEO プロフェッショナルが選ぶ理由",
+      "activeUsers": "アクティブユーザー",
+      "keywordsTracked": "デイリー追跡数",
+      "reportsGenerated": "生成されたレポート",
+      "customerSatisfaction": "顧客満足度"
+    },
+    "howItWorks": {
+      "title": "仕組み",
+      "subtitle": "追跡から公開まで、SEO のワークフローを一つのプラットフォームで完結",
+      "step1": {
+        "title": "あらゆる国の順位を追跡",
+        "description": "世界中のあらゆる Google 地域での順位を監視",
+        "feature1": "ウェブサイトとターゲットキーワードを追加",
+        "feature2": "日本、米国、英国など、あらゆる国の順位を追跡",
+        "feature3": "Google Search Console と連携して公式データを取得",
+        "feature4": "最大 3 つの競合他社と自動比較"
+      },
+      "step2": {
+        "title": "データを分析して理解する",
+        "description": "視覚的な分析で包括的なインサイトを獲得",
+        "feature1": "インタラクティブなチャートを備えたダッシュボード",
+        "feature2": "正確な統計：訪問数、表示回数、CTR",
+        "feature3": "訪問者を呼び込んでいるキーワードを特定",
+        "feature4": "ギャップとチャンスを見つけ出す"
+      },
+      "step3": {
+        "title": "AI でターゲットを絞った記事を作成",
+        "description": "主要な AI モデルを使用して SEO 最適化記事を生成",
+        "feature1": "GPT-5.2, Claude 3.5, Gemini 2.0 など 5 つ以上のモデルに対応",
+        "feature2": "MCP API を介して ChatGPT/Claude を直接使用",
+        "feature3": "重要キーワードに最適化されたコンテンツ",
+        "feature4": "100 点満点の SEO スコアと改善提案"
+      },
+      "step4": {
+        "title": "ウェブサイトに直接公開",
+        "description": "CMS プラットフォームへワンクリックで投稿",
+        "feature1": "WordPress へのワンクリック公開",
+        "feature2": "Shopify, Webflow, Wix にも対応予定",
+        "feature3": "一つの場所からすべてのコンテンツを管理",
+        "feature4": "公開後の順位改善を継続的にチェック"
+      }
+    },
+    "features": {
+      "title": "包括的な SEO 管理のための強力な機能",
+      "subtitle": "検索順位を支配し、勝利するコンテンツを作成するために必要なすべて",
+      "categoryTracking": "追跡と分析",
+      "categoryAI": "AI コンテンツ作成",
+      "categoryPublishing": "公開と連携",
+      "multiCountry": {
+        "title": "多国籍キーワード追跡",
+        "description": "200カ国以上の順位をリアルタイム更新で追跡",
+        "benefit1": "200カ国以上に対応",
+        "benefit2": "日本、米国、欧州など各国 Google をカバー",
+        "benefit3": "デスクトップ & モバイル両対応",
+        "benefit4": "日次または時間単位の更新"
+      },
+      "gscIntegration": {
+        "title": "Google Search Console 連携",
+        "description": "Google と直接接続して公式パフォーマンスデータを取得",
+        "benefit1": "Google との直接接続",
+        "benefit2": "公式データ：訪問、表示、CTR",
+        "benefit3": "高パフォーマンスキーワードを分析",
+        "benefit4": "キーワードの自動インポート"
+      },
+      "competitorAnalysis": {
+        "title": "競合分析",
+        "description": "最大 3 つの競合を追跡し、パフォーマンスを比較",
+        "benefit1": "最大 3 社の競合を追跡",
+        "benefit2": "同一キーワードでの順位比較",
+        "benefit3": "コンテンツのギャップを発見",
+        "benefit4": "追い抜かれた際のアラート通知"
+      },
+      "aiContent": {
+        "title": "AI コンテンツ生成",
+        "description": "主要な AI モデルで SEO 最適化記事を作成",
+        "benefit1": "5 つ以上の AI モデルから選択",
+        "benefit2": "GPT-5.2, Claude 3.5, Gemini 2.0 対応",
+        "benefit3": "SEO に自動最適化された本文",
+        "benefit4": "SEO スコアリング (100点)"
+      },
+      "chatIntegration": {
+        "title": "ChatGPT & Claude 連携",
+        "description": "MCP API を通じてお気に入りの AI チャットと連携",
+        "benefit1": "直接連携のための MCP API",
+        "benefit2": "チャット内での SEO チェック",
+        "benefit3": "ChatGPT/Claude から記事を執筆",
+        "benefit4": "ワークフローの自動化"
+      },
+      "seoScoring": {
+        "title": "SEO スコアと最適化",
+        "description": "コンテンツの自動評価と実行可能な改善提案",
+        "benefit1": "本文の自動評価",
+        "benefit2": "キーワード出現率分析",
+        "benefit3": "見出しとリンクの構造チェック",
+        "benefit4": "スマートな最適化アドバイス"
+      },
+      "wordpressPublishing": {
+        "title": "WordPress 直接公開",
+        "description": "ワンクリックで WordPress にコンテンツを直接投稿",
+        "benefit1": "ワンクリック公開",
+        "benefit2": "カテゴリーとタグの選択",
+        "benefit3": "予約投稿のサポート",
+        "benefit4": "Shopify, Webflow も近日対応"
+      },
+      "analytics": {
+        "title": "高度な分析ダッシュボード",
+        "description": "インタラクティブなチャートと包括的なレポート",
+        "benefit1": "動的なグラフ表示",
+        "benefit2": "KW、ページ、国別の詳細分析",
+        "benefit3": "CSV エクスポート対応",
+        "benefit4": "カスタムレポートの作成"
+      },
+      "apiWebhooks": {
+        "title": "強力な API と Webhooks",
+        "description": "詳細な権限管理が可能な API と Webhooks を提供",
+        "benefit1": "権限の個別設定が可能な API",
+        "benefit2": "即時通知のための Webhooks",
+        "benefit3": "外部ツールとの連携",
+        "benefit4": "データの自動エクスポート"
+      }
+    },
+    "integrations": {
+      "title": "主要な AI モデルとプラットフォームをサポート",
+      "subtitle": "5つ以上の AI モデルから選んで、お好みのプラットフォームに公開",
+      "aiModels": "AI コンテンツ生成",
+      "directPublishing": "直接公開",
+      "multiEngine": "マルチエンジン追跡",
+      "comingSoon": "近日公開",
+      "seoFooter": "ChatGPT、Claude AI、Google Gemini と SEO ワークフローを統合。WordPress、Shopify、Webflow への直接公開。Google、Bing、Yahoo、DuckDuckGo の 200 カ国以上の順位を追跡します。"
+    },
+    "testimonials": {
+      "title": "お客様の声",
+      "subtitle": "オンラインでの存在感を高めている数千の顧客に加わりましょう",
+      "trustBadge": "100 件以上のレビューに基づく 5.0 評価",
+      "testimonial1": {
+        "position": "デジタルマーケティングマネージャー",
+        "review": "わずか 3 ヶ月でサイトの順位が 150% 向上した素晴らしいツールです。多国籍追跡機能は私たちにとって革新的でした！"
+      },
+      "testimonial2": {
+        "position": "SEO スペシャリスト",
+        "review": "詳細なレポートと日次追跡のおかげで仕事が格段に楽になりました。AI コンテンツ生成は驚くほど正確で、何時間もの作業を節約してくれます。"
+      },
+      "testimonial3": {
+        "position": "創業者",
+        "review": "今まで使った中で最高の SEO ツールです。インターフェースがシンプルで結果が正確。WordPress 連携も非常にスムーズです！"
+      }
+    },
+    "pricing": {
+      "title": "シンプルで透明な価格設定",
+      "subtitle": "あなたのニーズに合ったプランをお選びください。隠れた費用はありません。",
+      "monthly": "月払い",
+      "yearly": "年払い",
+      "perMonth": "月",
+      "saveYearly": "年払いで最大 17% お得",
+      "mostPopular": "一番人気",
+      "noCreditCard": "開始にクレジットカードは不要です",
+      "cancelAnytime": "いつでもキャンセル可能。質問攻めにはしません。",
+      "seoFooter": "手頃な価格の SEO 追跡と AI コンテンツプラットフォーム。無料プランあり。順位追跡、Google Search Console の分析、GPT-5.2 や Claude による AI コンテンツ生成、WordPress への公開が可能です。",
+      "free": {
+        "name": "無料",
+        "description": "お試しに最適",
+        "feature1": "2 ウェブサイト",
+        "feature2": "10 キーワード",
+        "feature3": "日次更新",
+        "feature4": "基本レポート",
+        "cta": "無料で開始"
+      },
+      "pro": {
+        "name": "プロ",
+        "description": "成長中のビジネス向け",
+        "feature1": "5 ウェブサイト",
+        "feature2": "100 キーワード",
+        "feature3": "6 時間ごとの更新",
+        "feature4": "高度なレポート",
+        "feature5": "API アクセス",
+        "feature6": "競合サイト追跡",
+        "feature7": "AI コンテンツ生成",
+        "cta": "今すぐ開始"
+      },
+      "enterprise": {
+        "name": "エンタープライズ",
+        "description": "パワーユーザー向け",
+        "feature1": "サイト数無制限",
+        "feature2": "500 キーワード",
+        "feature3": "1 時間ごとの更新",
+        "feature4": "カスタムレポート",
+        "feature5": "Webhooks 対応",
+        "feature6": "優先サポート",
+        "feature7": "ホワイトラベル対応",
+        "feature8": "専任のアカウントマネージャー",
+        "cta": "お問い合わせ"
+      }
+    },
+    "billing": {
+      "title": "プランと請求",
+      "desc": "プラン、お支払い方法、請求履歴を管理します。",
+      "currentPlan": "現在のプラン: {{plan}}",
+      "active": "有効",
+      "renewsOn": "更新日: {{date}}",
+      "tabs": {
+        "subscription": "プラン",
+        "details": "請求先詳細",
+        "history": "請求書"
+      },
+      "planNames": {
+        "free": "無料",
+        "basic": "ベーシック",
+        "pro": "プロ",
+        "premium": "プレミアム"
+      },
+      "planDesc": {
+        "free": "開始に必要な基本機能。",
+        "basic": "個人プロジェクトと単純な追跡用。",
+        "pro": "プロの SEO 担当者や小規模代理店向け。",
+        "premium": "大規模運用のための無制限のパワー。"
+      },
+      "features": {
+        "domain": "1 ウェブサイト",
+        "domains": "{{count}} ウェブサイト",
+        "keywords": "{{count}} キーワード",
+        "updates": "日次更新",
+        "weekly": "週次更新",
+        "daily": "日次更新",
+        "mcp": "MCP 連携",
+        "ai": "AI 記事代行",
+        "api": "API アクセス",
+        "unlimitedDomains": "サイト数無制限",
+        "priority": "優先サポート"
+      },
+      "buttons": {
+        "current": "現在のプラン",
+        "upgrade": "アップグレード",
+        "downgrade": "ダウングレード"
+      },
+      "checkout": {
+        "monthly": "月払い",
+        "billedYearly": "年払い",
+        "redirecting": "Stripe にリダイレクト中...",
+        "success": "購読を更新しました！",
+        "title": "{{cycle}} 購読設定",
+        "desc": "プロ機能を解放するためにアップグレードを完了してください。"
+      },
+      "invoice": {
+        "title": "請求情報",
+        "desc": "この情報は請求書に表示されます。",
+        "accountType": "アカウントタイプ",
+        "company": "法人",
+        "individual": "個人",
+        "nameCompany": "会社名",
+        "nameIndividual": "フルネーム",
+        "vat": "登録番号 (任意)",
+        "address": "請求先住所",
+        "email": "請求先メール",
+        "save": "変更を保存",
+        "saved": "保存しました！"
+      },
+      "history": {
+        "title": "請求履歴",
+        "desc": "過去の請求書の表示とダウンロード。",
+        "date": "日付",
+        "amount": "金額",
+        "status": "ステータス",
+        "download": "ダウンロード"
+      }
+    },
+    "faq": {
+      "title": "よくある質問",
+      "subtitle": "SEO エージェントについて知っておくべきこと",
+      "stillHaveQuestions": "他に質問がありますか？",
+      "contactUs": "お問い合わせ",
+      "q1": {
+        "question": "開始にクレジットカードは必要ですか？",
+        "answer": "いいえ、クレジットカードなしで無料プランから始められます。より多くの機能が必要になった際に、いつでもアップグレード可能です。"
+      },
+      "q2": {
+        "question": "データはどのくらいの頻度で更新されますか？",
+        "answer": "無料プランでは毎日、Pro プランでは 6 時間ごと、Enterprise プランでは 1 時間ごとに更新されます。"
+      },
+      "q3": {
+        "question": "複数のウェブサイトを追跡できますか？",
+        "answer": "はい、プランによります。無料は 2 サイト、Basic は 3 サイト、Pro は 5 サイト、Premium/Enterprise は無制限です。"
+      },
+      "q4": {
+        "question": "多国籍追跡はどのように機能しますか？",
+        "answer": "200 カ国以上（日本、米国、ドイツなど）から選択できます。システムは各ローカル Google の順位を個別にチェックし、国ごとの正確なデータを提供します。"
+      },
+      "q5": {
+        "question": "どの AI モデルをサポートしていますか？",
+        "answer": "OpenAI (GPT-5.2, GPT-4.1)、Claude (3.5 Sonnet, 3 Opus)、Google Gemini (2.0 Flash, 1.5 Pro)、Perplexity Sonar、そして独自の Dpro モデルをサポートしています。"
+      },
+      "q6": {
+        "question": "ChatGPT や Claude とどのように連携しますか？",
+        "answer": "MCP API を提供しており、Claude Desktop や ChatGPT に接続できます。チャットから直接 SEO の確認や記事執筆が可能です。詳細は MCP 設定ページをご覧ください。"
+      },
+      "q7": {
+        "question": "WordPress に直接投稿できますか？",
+        "answer": "はい！WordPress サイトを接続すれば、ワンクリックで公開できます。Shopify, Webflow, Wix も近日対応予定です。"
+      },
+      "q8": {
+        "question": "Google 以外の検索エンジンもサポートしていますか？",
+        "answer": "はい、Google, Bing, Yahoo, DuckDuckGo をサポートしています。"
+      },
+      "q9": {
+        "question": "コンテンツの SEO スコアはどのように計算されますか？",
+        "answer": "単語数、キーワード出現率、見出し構造、内部・外部リンク、画像代替テキスト、メタ名など 15 項目以上をチェックします。100 点満点で評価されます。"
+      },
+      "q10": {
+        "question": "購読はいつでもキャンセルできますか？",
+        "answer": "もちろんです！いつでもキャンセル可能で、追加の費用や条件はありません。"
+      }
+    },
+    "finalCTA": {
+      "title": "検索順位を支配する準備はいいですか？",
+      "description": "順位追跡、AI コンテンツ作成、そしてビジネス成長のために、すでに数千の企業が SEO エージェントを選んでいます。",
+      "primaryCTA": "無料で試してみる",
+      "secondaryCTA": "営業担当に連絡",
+      "noCreditCard": "クレジットカード不要",
+      "users": "ユーザー",
+      "keywords": "キーワード",
+      "satisfaction": "満足度"
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    }
+  },
+  "mcp": {
+    "autoConnect": {
+      "heroCta": "AI を連携する",
+      "heroSubtext": "トークンもコピーも不要 — Claude Desktop に URL を貼り付けてブラウザで承認するだけです。",
+      "claudeTitle": "Claude Desktop を連携 (OAuth — API キー不要)",
+      "cursorTitle": "Cursor を連携 (OAuth — API キー不要)",
+      "chatgptTitle": "ChatGPT を連携 (OAuth — API キー不要)",
+      "windsurfTitle": "Windsurf を連携 (OAuth — API キー不要)",
+      "zedTitle": "Zed を連携 (OAuth — API キー不要)",
+      "apiTitle": "直接 HTTP / JSON-RPC アクセス",
+      "doneTitle": "完了 — ブラウザで一度承認するだけです",
+      "doneText": "初回使用時に、AI アシスタントが当サイトのタブを開き、連携の承認を求めます。承認後は自動的にリダイレクトされ、以降の呼び出しは受け取ったアクセス権限で処理されます。",
+      "noKeyNeeded": "API キーは不要です",
+      "oauthAutomatic": "OAuth 2.0 (自動)"
+    },
+    "meta": {
+      "title": "MCP SEO - ChatGPT & Claude Desktop を連携",
+      "description": "MCP API を使用して SEO エージェントを ChatGPT や Claude Desktop と統合。AI チャットから直接、順位の追跡、キーワード分析、コンテンツ生成が可能です。"
+    },
+    "hero": {
+      "title": "SEO エージェントを ChatGPT & Claude Desktop と連携",
+      "description": "MCP API を使用して、お気に入りの AI チャット（ChatGPT、Claude、または MCP 対応ツール）から直接、SEO チェック、順位追跡、最適化されたコンテンツの執筆が可能です。",
+      "getAPIKey": "API キーを取得",
+      "viewDocs": "ドキュメントを表示"
+    },
+    "whatIs": {
+      "title": "MCP (Model Context Protocol) とは？",
+      "description1": "MCP は、ChatGPT や Claude などの AI アシスタントが外部のツールやサービスと接続できるようにする標準プロトコルです。",
+      "description2": "当社の MCP 統合により、AI チャット内から SEO データへのアクセス、順位の確認、キーワードの分析、最適化されたコンテンツの生成がすべて可能になります。",
+      "benefit1Title": "Claude Desktop との直接連携",
+      "benefit1": "公式 MCP サポートを標準装備",
+      "benefit2Title": "ChatGPT との互換性",
+      "benefit2": "カスタムアクション経由で利用可能",
+      "benefit3Title": "安全な認証",
+      "benefit3": "API キーによる認証に対応",
+      "benefit4Title": "リアルタイムデータアクセス",
+      "benefit4": "基本設定にコードは不要"
+    },
+    "platforms": {
+      "title": "サポートされているチャットプラットフォーム",
+      "recommended": "推奨",
+      "advanced": "高度な設定",
+      "comingSoon": "近日公開",
+      "claude1": "公式 MCP サポート内蔵",
+      "claude2": "設定で当社の MCP サーバーを追加",
+      "claude3": "すぐに SEO データでのチャットを開始可能",
+      "chatgpt1": "当社 API を使用してカスタム GPT を作成",
+      "chatgpt2": "SEO データにアクセスするためのアクションを構成",
+      "chatgpt3": "ChatGPT Plus または Team で利用可能",
+      "otherTools": "その他の MCP ツール",
+      "moreTools": "今後さらに追加予定"
+    },
+    "setup": {
+      "title": "セットアップガイド - ステップバイステップ",
+      "copy": "コピー",
+      "copied": "コピーしました！",
+      "claude": {
+        "step1Title": "ステップ 1: API キーの生成",
+        "step1": {
+          "1": "プロフィール → API キー に移動",
+          "2": "「新規キーを作成」をクリック",
+          "3": "権限を選択: read:domains, read:keywords, read:gsc, write:posts",
+          "4": "API キーを安全にコピー"
+        },
+        "step2Title": "ステップ 2: Claude Desktop に MCP サーバーを追加",
+        "step2": "これを Claude Desktop の設定に貼り付け、再起動すれば完了です！チャットを開始しましょう。"
+      },
+      "cursor": {
+        "title": "Cursor IDE のセットアップ",
+        "step1": "Cursor 設定 → Features → MCP を開く",
+        "step2": "「Add MCP Server」をクリック",
+        "step3": "以下の構成情報を入力",
+        "step4": "Cursor を再起動して使用開始"
+      },
+      "windsurf": {
+        "title": "Windsurf IDE のセットアップ",
+        "step1": "Windsurf 設定 → Extensions → MCP を開く",
+        "step2": "新しい MCP サーバー構成を追加",
+        "step3": "以下の構成を貼り付け",
+        "step4": "Windsurf を再起動して有効化"
+      },
+      "zed": {
+        "title": "Zed Editor のセットアップ",
+        "step1": "Zed 設定を開く (Cmd/Ctrl + ,)",
+        "step2": "MCP Servers セクションに移動",
+        "step3": "以下の構成を追加",
+        "step4": "Zed エディタを再起動"
+      },
+      "chatgpt": {
+        "title": "ChatGPT (カスタム GPT の作成)",
+        "step1": "ChatGPT → Create a GPT に移動",
+        "step2": "当社 OpenAPI スキーマを使用してアクションを構成",
+        "step3": "認証に API キーを追加",
+        "step4": "サンプルクエリでテスト"
+      },
+      "api": {
+        "title": "直接 API 呼び出し (開発者向け)",
+        "description": "MCP を使用せずに直接 API を使用することも可能です。"
+      }
+    },
+    "functions": {
+      "title": "利用可能な MCP ツール/関数",
+      "functionName": "関数名",
+      "description": "説明",
+      "exampleQuery": "クエリ例",
+      "listDomains": {
+        "description": "追跡中のすべてのドメインを取得",
+        "example": "ドメインを表示して"
+      },
+      "getKeywords": {
+        "description": "ドメインのキーワードを取得",
+        "example": "example.com のキーワードを教えて"
+      },
+      "getRankings": {
+        "description": "キーワードの順位を確認",
+        "example": "「SEO ツール」の順位は？"
+      },
+      "getGSC": {
+        "description": "Google Search Console のデータ",
+        "example": "過去 30 日間の GSC 統計を表示"
+      },
+      "analyzeSEO": {
+        "description": "コンテンツの SEO スコアを分析",
+        "example": "この記事の SEO をチェックして"
+      },
+      "createPost": {
+        "description": "SEO 最適化された記事を生成",
+        "example": "X についての記事を書いて"
+      },
+      "publishPost": {
+        "description": "WordPress に公開",
+        "example": "WordPress に公開して"
+      },
+      "getCompetitors": {
+        "description": "競合の順位を取得",
+        "example": "競合の順位はどうなってる？"
+      }
+    },
+    "benefits": {
+      "title": "なぜ MCP 連携を使用するのか？",
+      "speed": {
+        "title": "スピードと効率",
+        "point1": "数秒で SEO インサイトを取得",
+        "point2": "ツール間の切り替えが不要",
+        "point3": "自然言語でのクエリ"
+      },
+      "ai": {
+        "title": "AI によるインサイト",
+        "point1": "AI にデータを分析させる",
+        "point2": "自動的に推奨事項を取得",
+        "point3": "その場でコンテンツを生成"
+      },
+      "security": {
+        "title": "安全とプライバシー",
+        "point1": "データは安全に保持されます",
+        "point2": "特定の権限を持つ API キー",
+        "point3": "すべての操作の監査ログ"
+      },
+      "updates": {
+        "title": "継続的なアップデート",
+        "point1": "常に最新データを使用",
+        "point2": "リアルタイムの順位チェック",
+        "point3": "GSC との自動同期"
+      }
+    },
+    "faq": {
+      "title": "よくある質問",
+      "q1": {
+        "question": "MCP とは何ですか？なぜ使うべきですか？",
+        "answer": "MCP を使用すると、Claude や ChatGPT などの AI チャットから直接 SEO データにアクセスでき、ワークフローがより速く効率的になります。"
+      },
+      "q2": {
+        "question": "MCP 連携は無料ですか？",
+        "answer": "はい！MCP 連携はすべてのプランに含まれています。API キーが必要です。"
+      },
+      "q3": {
+        "question": "無料版の ChatGPT でも動作しますか？",
+        "answer": "カスタム GPT の利用には ChatGPT Plus または Team の契約が必要です。Claude Desktop はすべてのプランで動作します。"
+      },
+      "q4": {
+        "question": "API キーはどこで取得できますか？",
+        "answer": "プロフィール → API キー に移動し、必要な権限を選択して新しいキーを生成してください。"
+      },
+      "q5": {
+        "question": "API アクセスを取り消すことはできますか？",
+        "answer": "はい、プロフィールからいつでも API キーを削除または取り消すことができます。"
+      },
+      "q6": {
+        "question": "MCP 経由でどのデータにアクセスできますか？",
+        "answer": "すべてのドメイン、キーワード、順位、GSC データ、記事、および競合情報にアクセス可能です。"
+      },
+      "q7": {
+        "question": "MCP 経由で WordPress に直接公開できますか？",
+        "answer": "はい！設定で WordPress を連携していれば、チャット内から公開可能です。"
+      },
+      "q8": {
+        "question": "レート制限はありますか？",
+        "answer": "プランによって異なります: Free (100回/日), Pro (1000回/日), Enterprise (無制限)。"
+      }
+    },
+    "finalCTA": {
+      "title": "SEO ワークフローを強化する準備はできましたか？",
+      "description": "MCP を使って、AI で SEO タスクを自動化しましょう",
+      "getAPIKey": "今すぐ API キーを生成",
+      "readDocs": "ドキュメントを読む",
+      "joinUsers": "1,000 人以上のユーザーが MCP で SEO を自動化しています"
+    }
+  },
+  "impressum": {
+    "title": "法的表記 - 法的情報",
+    "description": "SEO エージェントの運営会社 Dpro GmbH に関する法的情報と会社詳細",
+    "heading": "法的表記 (Impressum)",
+    "subtitle": "法的情報と会社詳細",
+    "companyInfo": "会社情報",
+    "contactInfo": "連絡先情報",
+    "legalInfo": "法的情報",
+    "uid": "付加価値税番号 (VAT ID)",
+    "fn": "会社登録番号",
+    "gericht": "商業登記裁判所",
+    "kur": "商業登記",
+    "businessActivities": "事業内容",
+    "businessDescription": "ソフトウェア開発、ウェブアプリケーション、SEO ツール、およびデジタルマーケティングソリューション",
+    "responsibleContent": "コンテンツ責任者",
+    "managingDirector": "代表取締役",
+    "disputeResolution": "EU 紛争解決",
+    "disputeText": "欧州委員会は、オンライン紛争解決 (OS) のためのプラットフォームを提供しています。",
+    "disclaimer": "免責事項",
+    "disclaimerContent": "コンテンツの責任",
+    "disclaimerContentText": "当サイトのコンテンツは細心の注意を払って作成されていますが、その正確性、完全性、最新性を保証するものではありません。",
+    "disclaimerLinks": "リンクの責任",
+    "disclaimerLinksText": "当サイトには外部サイトへのリンクが含まれています。それらの内容について当方は一切の影響を及ぼすことができず、責任も負いかねます。",
+    "disclaimerCopyright": "著作権",
+    "disclaimerCopyrightText": "サイト運営者によって作成されたコンテンツおよび作品は、オーストリアの著作権法の対象となります。",
+    "lastUpdated": "最終更新日"
+  },
+  "nav": {
+    "features": "機能",
+    "blog": "ブログ",
+    "contact": "お問い合わせ",
+    "mcpIntegration": "MCP 連携",
+    "signIn": "ログイン",
+    "getStarted": "今すぐ開始"
+  },
+  "footerMenu": {
+    "product": "製品",
+    "resources": "リソース",
+    "legal": "法的情報",
+    "talentManagement": "タレントマネジメント",
+    "ats": "採用管理システム (ATS)",
+    "documentation": "ドキュメント",
+    "seoExpertSkill": "SEO エキスパートスキル",
+    "blog": "ブログ",
+    "contact": "お問い合わせ",
+    "faq": "よくある質問",
+    "imprint": "法的表記",
+    "privacyPolicy": "プライバシーポリシー",
+    "termsOfService": "利用規約",
+    "consentPreferences": "同意設定",
+    "accessibility": "アクセシビリティ"
+  },
+  "meta": {
+    "mcpSeo": {
+      "title": "SEO エージェント MCP サーバー - Claude と ChatGPT を連携",
+      "description": "Model Context Protocol (MCP) を使用して、SEO データを Claude Desktop や ChatGPT に接続。リアルタイム順位、分析、コンテンツ作成を実現します。",
+      "keywords": "mcp, seo agent, claude desktop, chatgpt, seo api, rank tracking, gsc, SEO, 順位追跡",
+      "ogTitle": "AI を SEO データで強化する",
+      "ogDescription": "Claude Desktop を SEO メトリクス、順位、GSC データに直接接続します。"
+    }
+  },
+  "seo": {
+    "mcpSeo": {
+      "twitterTitle": "SEO エージェント MCP 統合",
+      "twitterDescription": "Claude や ChatGPT をリアルタイムの SEO データに接続します。"
+    }
+  },
+  "bing": {
+    "title": "Bing ウェブマスターツール",
+    "description": "Microsoft アカウントを接続して、Bing と Yahoo の検索分析にアクセスします。",
+    "connect": "Bing と連携",
+    "connectDescription": "Microsoft アカウントをリンクして、Bing と Yahoo のキーワード順位、表示回数、クリック数を追跡します。",
+    "connected": "Bing アカウント接続済み",
+    "connectedDescription": "Bing と Yahoo の分析がドメインインサイトページで利用可能です。",
+    "disconnect": "接続解除",
+    "disconnectTitle": "Bing アカウントの接続解除",
+    "disconnectDescription": "Bing ウェブマスターツールの接続を解除してもよろしいですか？Bing と Yahoo の分析が利用できなくなります。",
+    "notConnected": "Bing と Yahoo のデータを表示するには、Bing ウェブマスターツールを接続してください。",
+    "tab": "Bing"
+  }
+}

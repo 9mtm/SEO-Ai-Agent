@@ -1,0 +1,40 @@
+{
+    "home": {
+        "title": "SEO AI Agent | Google 順位チェック・AI 検索最適化ツール",
+        "description": "AI 搭載型 SEO プラットフォーム。200カ国以上のキーワード順位追跡、Google Search Console の分析、GPT-5 や Claude によるコンテンツ作成、WordPress への直接投稿が可能です。無料プランあり。",
+        "keywords": "SEOツール, 順位追跡, 検索順位チェック, 国際SEO, Google Search Console 連携, AI コンテンツ作成, ChatGPT SEO, Claude SEO, WordPress 自動投稿, SEO分析, 競合調査, MCP API, SEO 自動化",
+        "ogTitle": "SEO AI Agent - AI 駆動型の包括的 SEO 順位追跡およびコンテンツ作成プラットフォーム",
+        "ogDescription": "200カ国以上の順位を追跡し、AI でコンテンツを作成して WordPress に投稿。MCP API を介して ChatGPT や Claude と連携可能です。",
+        "twitterTitle": "SEO AI Agent - AI パワーの SEO プラットフォーム",
+        "twitterDescription": "順位追跡、コンテンツ作成、WordPress 投稿を一つのツールで。200カ国以上に対応。"
+    },
+    "mcpSeo": {
+        "title": "MCP SEO | ChatGPT と Claude を SEO データに連携",
+        "description": "SEO AI Agent を MCP API 経由で ChatGPT や Claude Desktop と連携。チャット内で直接、順位追跡、キーワード分析、コンテンツ作成を行えます。無料のセットアップガイド付き。",
+        "keywords": "MCP SEO, Model Context Protocol, ChatGPT 連携, Claude Desktop, AI SEO 自動化, SEO API, キーワード追跡, ChatGPT SEO, Claude SEO, MCP サーバー, AI SEO アシスタント, 対話型 SEO",
+        "ogTitle": "MCP SEO 連携 - ChatGPT & Claude Desktop | SEO AI Agent",
+        "ogDescription": "ChatGPT や Claude Desktop から直接 SEO データにアクセス。順位追跡、キーワード分析、AI コンテンツ作成が可能です。完全な MCP セットアップガイドを提供。",
+        "twitterTitle": "MCP SEO - ChatGPT と Claude を SEO AI Agent に連携",
+        "twitterDescription": "ChatGPT や Claude Desktop を使用して、SEO データへのアクセス、順位追跡、コンテンツ作成を実現。MCP 連携ガイド付き。"
+    },
+    "login": {
+        "title": "ログイン - SEO AI Agent",
+        "description": "SEO AI Agent にログインして、ダッシュボード、順位追跡、AI コンテンツ管理にアクセスします。"
+    },
+    "register": {
+        "title": "アカウント作成 - SEO AI Agent",
+        "description": "SEO AI Agent のアカウントを作成。今すぐ SEO 順位の追跡と、AI で最適化されたコンテンツの作成を始めましょう。"
+    },
+    "terms": {
+        "title": "利用規約 | SEO AI Agent",
+        "description": "SEO AI Agent の利用規約。SEO 順位追跡および AI コンテンツ作成プラットフォームの使用に関する規約をご確認ください。"
+    },
+    "privacy": {
+        "title": "プライバシーポリシー | SEO AI Agent",
+        "description": "SEO AI Agent のプライバシーポリシー。データの収集、使用、保護方法について説明します。GDPR 準拠の SEO 追跡プラットフォーム。"
+    },
+    "impressum": {
+        "title": "法的表記 - インプレッサム | SEO AI Agent",
+        "description": "SEO AI Agent の運営会社 Dpro GmbH に関する法的情報および会社概要。"
+    }
+}

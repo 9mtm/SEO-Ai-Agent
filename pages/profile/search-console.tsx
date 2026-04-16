@@ -18,11 +18,12 @@ import {
 } from "@/components/ui/dialog";
 
 import { useFetchDomains } from '../../services/domains';
+import { Locale } from '../../context/LanguageContext';
 
 const SearchConsolePage: NextPage = () => {
     const router = useRouter();
     const { data: domainsData } = useFetchDomains(router);
-    const [selectedLang, setSelectedLang] = useState<'en' | 'de'>('en');
+    const [selectedLang, setSelectedLang] = useState<Locale>('en');
     const [isLoading, setIsLoading] = useState(true);
     const [showDisconnectDialog, setShowDisconnectDialog] = useState(false);
 
@@ -119,10 +120,18 @@ const SearchConsolePage: NextPage = () => {
         de: {
             title: 'Google Search Console',
             description: 'Verbinden und verwalten Sie Ihr Google Search Console-Konto, um Domains zu importieren und die Leistung zu verfolgen.',
+        },
+        ar: {
+            title: 'Google Search Console',
+            description: 'قم بتوصيل وإدارة حساب Google Search Console الخاص بك لاستيراد النطاقات وتتبع الأداء.',
+        },
+        ja: {
+            title: 'Google Search Console',
+            description: 'Google Search Console アカウントを連携して、ドメインのインポートとパフォーマンスの追跡を管理します。',
         }
     };
 
-    const t = translations[selectedLang];
+    const t = translations[selectedLang as keyof typeof translations] || translations.en;
 
     return (
         <DashboardLayout selectedLang={selectedLang} onLanguageChange={setSelectedLang} domains={domainsData?.domains || []}>

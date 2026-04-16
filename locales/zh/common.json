@@ -1,0 +1,1470 @@
+{
+  "auth": {
+    "login": {
+      "title": "登录",
+      "welcome": "欢迎回来！",
+      "description": "登录以访问您的仪表板",
+      "googleBtn": "使用 Google 继续",
+      "backToHome": "返回首页"
+    },
+    "register": {
+      "title": "注册",
+      "welcome": "创建您的账户",
+      "description": "开始使用 SEO AI Agent",
+      "googleBtn": "使用 Google 继续",
+      "backToHome": "返回首页",
+      "haveAccount": "已经有账户了？",
+      "signIn": "登录",
+      "termsLabel": "我同意",
+      "termsLink": "服务条款",
+      "and": "和",
+      "privacyLink": "隐私政策",
+      "newsletterLabel": "我希望接收有关我网站的新闻邮件、报告和更新",
+      "termsRequired": "您必须接受服务条款和隐私政策才能继续"
+    }
+  },
+  "onboarding": {
+    "layout": {
+      "title": "全方位流量解决方案",
+      "subtitle": "全自动排名和获取流量所需的一切程序",
+      "feature1_title": "在 Google 和 AI 搜索中排名",
+      "feature1_desc": "优化以在 Google、ChatGPT 和 AI 引擎中排名",
+      "feature2_title": "每日文章生成",
+      "feature2_desc": "每日生成带有内链的 SEO 优化内容",
+      "feature3_title": "自动发布到您的网站",
+      "feature3_desc": "无缝发布到 WordPress、Webflow 和 Shopify",
+      "feature4_title": "个性化方案",
+      "feature4_desc": "量身定制的策略，包含关键词建议和内容路线图"
+    },
+    "step1": {
+      "title": "连接 Google Search Console",
+      "subtitle": "从 Google Search Console 中选择您已验证的网站以开始。",
+      "checking": "正在检查连接...",
+      "connectGoogleTitle": "连接您的 Google 账户",
+      "connectGoogleDesc": "连接您的 Google Search Console 以自动验证您的网站并访问效果数据。",
+      "connectBtn": "连接 Google Search Console",
+      "connected": "Google Search Console 已连接",
+      "selectSiteLabel": "选择您的网站",
+      "loadingSites": "正在加载您的网站...",
+      "noSitesTitle": "在您的 Google Search Console 中未找到已验证的网站。",
+      "noSitesDesc": "请先在 Google Search Console 中验证您的域名，然后刷新此页面。",
+      "chooseSite": "-- 选择一个已验证的站点 --",
+      "searchSitePlaceholder": "搜索您的网站...",
+      "noResults": "未找到搜索结果",
+      "owner": "(所有者)",
+      "websiteUrlLabel": "网站 URL",
+      "websiteUrlPlaceholder": "在上方选择一个站点",
+      "websiteUrlHelp": "此字段将根据您选择的站点自动填充",
+      "errorSelectSite": "请从 Google Search Console 中选择一个网站",
+      "errorVerifySite": "请从 Google Search Console 中选择一个已验证的网站",
+      "errorSave": "保存失败",
+      "errorGeneric": "发生错误",
+      "saving": "正在准备...",
+      "continue": "继续"
+    },
+    "step2": {
+      "title": "告诉我们您的业务",
+      "subtitle": "分享一些关于您业务的详细信息。",
+      "nameLabel": "名称",
+      "namePlaceholder": "Flowxtra",
+      "nameHelp": "您的业务名称",
+      "nicheLabel": "垂直领域",
+      "nichePlaceholder": "招聘软件",
+      "nicheHelp": "简短且集中（最多 3 个词）",
+      "descLabel": "描述",
+      "descPlaceholder": "Flowxtra 提供了免费的申请者追踪系统 (ATS)...",
+      "descHelp": "关于您业务的简要说明",
+      "importantTitle": "重要提示（请阅读以获得最佳结果）",
+      "importantDesc": "查看所有字段。如果不确定，请保留自动填充的建议。确保所有内容均以所选语言编写。",
+      "errorFields": "请填写所有必填字段",
+      "errorNiche": "垂直领域最多包含 3 个词",
+      "back": "返回"
+    },
+    "step2_5": {
+      "title": "定义您的 SEO 策略",
+      "subtitle": "我们分析了您的业务并建议了 9 个核心关键词。请通过查看和编辑来匹配您的目标。",
+      "aiTitle": "AI 生成的关键词",
+      "aiDesc": "这些关键词是根据您的业务描述自动生成的。请随时进行修改！",
+      "targetCountry": "目标国家/地区",
+      "highPriorityTitle": "高优先级（前 3 名）",
+      "highPriorityDesc": "您必须占据优势的关键核心关键词",
+      "mediumPriorityTitle": "中优先级",
+      "mediumPriorityDesc": "重要的支撑性关键词",
+      "lowPriorityTitle": "低优先级",
+      "lowPriorityDesc": "长尾关键词和未来机会",
+      "keywordPlaceholder": "关键词",
+      "errorKeywords": "请至少添加一个核心关键词"
+    },
+    "step3": {
+      "title": "添加您的竞争对手",
+      "subtitle": "用于分析的主要竞争对手。",
+      "placeholder": "输入竞争对手 URL...",
+      "help": "输入竞争对手网站的 URL 以分析其内容策略",
+      "add": "添加",
+      "maxReached": "（已达 3 个上限）",
+      "suggestions": "建议："
+    }
+  },
+  "dashboard": {
+    "title": "仪表板",
+    "domains": "域名",
+    "keywords": "关键词",
+    "settings": "设置",
+    "addDomain": "添加域名",
+    "noDomains": "未找到域名。请添加域名以开始！"
+  },
+  "common": {
+    "loading": "正在加载...",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "logout": "注销",
+    "changeLanguage": "更换语言"
+  },
+  "email": {
+    "visits": "访问量",
+    "impressions": "展现量",
+    "avgPosition": "平均排名",
+    "avgCtr": "平均点击率",
+    "improved": "已提升",
+    "declined": "已下降",
+    "topKeywords": "表现最佳的关键词（过去 {{days}} 天）",
+    "topPages": "表现最佳的页面",
+    "keyword": "关键词",
+    "page": "页面",
+    "clicks": "点击次数",
+    "views": "浏览次数",
+    "pos": "排名",
+    "avgPos": "平均排名",
+    "viewMore": "在仪表板上查看另外 {{count}} 个关键词",
+    "yearsAgo": "{{count}} 年前",
+    "monthsAgo": "{{count}} 个月前",
+    "daysAgo": "{{count}} 天前",
+    "hrsAgo": "{{count}} 小时前",
+    "minsAgo": "{{count}} 分钟前",
+    "secsAgo": "{{count}} 秒前",
+    "subject": "[{{domain}}] 每月关键词排名更新",
+    "keywordRankings": "关键词排名",
+    "keywordsSuffix": "关键词",
+    "goToDashboard": "前往仪表板",
+    "unsubscribeText": "不想再收到这些邮件？",
+    "unsubscribe": "退订",
+    "poweredBy": "技术支持：",
+    "position": "排名",
+    "table": {
+      "best": "最佳",
+      "updated": "已更新"
+    }
+  },
+  "sidebar": {
+    "insight": "洞察",
+    "tracking": "排名追踪",
+    "competitors": "竞争对手",
+    "discover": "发现",
+    "agent": "Seo Agent",
+    "settings": "设置",
+    "profile": "个人资料",
+    "scraper": "抓取工具",
+    "connections": "连接",
+    "billing": "账单",
+    "myDomains": "我的域名",
+    "domains": "域名",
+    "workspaces": "工作区",
+    "teamMembers": "团队成员",
+    "searchConsole": "Search Console",
+    "connectedApps": "已连接应用",
+    "referrals": "推荐奖励",
+    "setup": "配置",
+    "posts": "文章",
+    "apiKeys": "API & MCP",
+    "notifications": "通知"
+  },
+  "workspace": {
+    "switch": "切换工作区",
+    "personal": "个人",
+    "manage": "管理工作区"
+  },
+  "profile": {
+    "title": "个人资料",
+    "description": "管理您的个人信息和账户安全",
+    "cardTitle": "个人资料信息",
+    "cardDescription": "更新您的照片和个人详细信息",
+    "photoTitle": "个人头像",
+    "photoDesc": "这将显示在您的个人资料中。",
+    "changePhoto": "更换照片",
+    "fullName": "姓名",
+    "email": "邮箱地址",
+    "emailNote": "邮箱地址无法直接更改。请联系支持部门。",
+    "languageSettingsTitle": "语言偏好",
+    "languageSettingsDesc": "选择您的界面语言偏好",
+    "language": "系统语言",
+    "save": "保存更改",
+    "saving": "正在保存...",
+    "success": "个人资料更新成功",
+    "error": "个人资料更新失败",
+    "deleteAccountTitle": "注销账户",
+    "deleteAccountDesc": "永久删除您的账户及所有相关数据。",
+    "deleteWarning": "此操作不可逆。请输入 \"DELETE\" 以确认。",
+    "deletePlaceholder": "输入 DELETE 以确认",
+    "deleteButton": "注销账户",
+    "deleting": "正在注销...",
+    "deleteSuccess": "账户注销成功",
+    "deleteError": "账户注销失败"
+  },
+  "notifications": {
+    "title": "通知",
+    "description": "管理您希望接收通知的方式和时间。",
+    "generalTitle": "邮件通知",
+    "generalDesc": "配置您的邮件偏好。",
+    "emailAlerts": "邮件提醒",
+    "emailAlertsDesc": "接收有关您账户活动的提醒。",
+    "weeklyReport": "周报",
+    "weeklyReportDesc": "获取您域名表现的每周摘要。",
+    "marketingEmails": "营销邮件",
+    "marketingEmailsDesc": "接收新闻、更新和特别优惠。",
+    "securityAlerts": "安全警报",
+    "securityAlertsDesc": "接收有关重要安全事件的通知。",
+    "save": "保存更改",
+    "saving": "正在保存...",
+    "success": "偏好设置更新成功",
+    "emailSettingsTitle": "通知渠道",
+    "emailSettingsDesc": "我们应该在哪里发送您的通知？",
+    "notificationEmailLabel": "通知邮箱",
+    "notificationEmailPlaceholder": "例如 notifications@company.com",
+    "notificationEmailHelp": "我们将向此邮箱地址发送通知。",
+    "domainTitle": "域名通知",
+    "domainDesc": "启用或禁用特定域名的通知。",
+    "domainLabel": "接收更新的对象"
+  },
+  "billing": {
+    "title": "账单与订阅",
+    "desc": "管理您的账单详情和订阅计划",
+    "tabs": {
+      "subscription": "订阅计划",
+      "details": "发票详情",
+      "history": "发票"
+    },
+    "currentPlan": "当前计划：{{plan}}",
+    "active": "激活",
+    "renewsOn": "续订日期：{{date}}",
+    "planNames": {
+      "free": "免费版",
+      "basic": "基础版",
+      "pro": "专业版",
+      "premium": "高级版"
+    },
+    "planDesc": {
+      "free": "永久免费",
+      "basic": "适合初创阶段",
+      "pro": "适合成长型业务",
+      "premium": "适合高级用户和团队"
+    },
+    "features": {
+      "domain": "{{count}} 个域名",
+      "domains": "{{count}} 个域名",
+      "unlimitedDomains": "无限域名",
+      "keywords": "{{count}} 个关键词",
+      "updates": "有限更新",
+      "weekly": "每周更新",
+      "daily": "每日更新",
+      "mcp": "MCP 访问权限",
+      "ai": "AI 内容创作",
+      "priority": "优先支持",
+      "api": "API 访问权限"
+    },
+    "buttons": {
+      "current": "当前计划",
+      "upgrade": "升级计划",
+      "downgrade": "降级计划"
+    },
+    "invoice": {
+      "title": "全局发票信息",
+      "desc": "设置所有发票的默认详情",
+      "accountType": "账户类型",
+      "company": "公司",
+      "individual": "个人",
+      "nameCompany": "公司名称",
+      "nameIndividual": "全名",
+      "vat": "增值税号（可选）",
+      "address": "账单地址",
+      "city": "城市",
+      "zip": "邮政编码",
+      "country": "国家/地区",
+      "email": "账单邮箱",
+      "save": "保存默认设置"
+    },
+    "history": {
+      "title": "发票历史",
+      "desc": "下载您过往的发票",
+      "date": "日期",
+      "amount": "金额",
+      "status": "状态",
+      "download": "下载"
+    },
+    "checkout": {
+      "title": "完成 {{cycle}} 订阅",
+      "desc": "查看您的计划并确认发票详情。",
+      "redirecting": "正在跳转至 Stripe...",
+      "monthly": "按月",
+      "yearly": "按年",
+      "save": "节省约 20%",
+      "planSummary": "{{plan}} 计划",
+      "cycle": "账单周期",
+      "total": "今日应付总额",
+      "confirm": "确认并支付",
+      "cancel": "取消",
+      "billedYearly": "仅按年计费"
+    }
+  },
+  "apiKeys": {
+    "title": "API & MCP 连接",
+    "subtitle": "通过 MCP 协议连接 AI 助手以管理您的 SEO 数据",
+    "activeConnections": "您的活跃连接 ({{count}})",
+    "noConnections": "暂无连接",
+    "noConnectionsDesc": "创建您的第一个 AI 连接，即可通过与 Claude 或 ChatGPT 等 AI 助手对话来管理您的 SEO 数据。",
+    "createFirst": "创建您的第一个连接",
+    "create": "创建新连接",
+    "permissions": "权限：",
+    "created": "创建于 {{date}}",
+    "lastUsed": "最后使用于 {{date}}",
+    "expires": "过期于 {{date}}",
+    "viewSetup": "查看详细配置",
+    "hideSetup": "隐藏详细配置",
+    "disable": "禁用",
+    "delete": "删除",
+    "disabled": "已禁用",
+    "setupTitle": "如何使用此连接",
+    "setupClaude": "针对 Claude Desktop：",
+    "setupConfig": "将以下内容添加到您的配置文件中（请替换为您真实的 API 密钥）：",
+    "viewGuide": "查看详细设置指南",
+    "securityNotice": "API 密钥不可找回",
+    "securityDesc": "出于安全原因，API 密钥仅在创建期间显示一次。如果您丢失了密钥，请创建一个新连接并删除此旧连接。",
+    "createModal": {
+      "title": "创建新连接",
+      "subtitle": "设置 AI 助手对您 SEO 数据的访问权限",
+      "nameLabel": "1. 为您的连接命名",
+      "namePlaceholder": "例如：我的 Claude 助手",
+      "nameHelp": "请选择一个后续易于识别的名称",
+      "permLabel": "2. 选择权限",
+      "selectAll": "全选",
+      "deselectAll": "取消全选",
+      "expiryLabel": "3. 设置有效期",
+      "expiryHelp": "出于安全考虑，我们建议设置为 30 天",
+      "cancel": "取消",
+      "create": "创建连接"
+    },
+    "successModal": {
+      "title": "连接创建成功！",
+      "subtitle": "按照以下步骤连接您的 AI 助手",
+      "step1": "复制您的连接密钥",
+      "step1Desc": "这是您的唯一密钥 - 请将其保存在安全的地方！",
+      "copy": "复制",
+      "step2": "添加到您的 AI 助手",
+      "step2Desc": "针对 Claude Desktop，将其添加到您的配置文件中：",
+      "step3": "重启并开始使用",
+      "step3Desc": "重启您的 AI 助手并开始聊天！",
+      "important": "重要提示！",
+      "importantDesc": "此密钥仅显示一次。在关闭此消息之前，请确保已安全保存。",
+      "saved": "我已经保存了密钥"
+    },
+    "permLabels": {
+      "readDomains": "查看域名",
+      "readDomainsDesc": "查看您的网站信息",
+      "readKeywords": "查看关键词",
+      "readKeywordsDesc": "查看您的 SEO 关键词",
+      "readPosts": "查看文章",
+      "readPostsDesc": "查看您的博客文章",
+      "readGsc": "查看数据分析",
+      "readGscDesc": "查看 Google Search 数据",
+      "writePosts": "撰写文章",
+      "writePostsDesc": "编写和编辑博客文章",
+      "writeKeywords": "管理关键词",
+      "writeKeywordsDesc": "添加和更新关键词",
+      "publishWordpress": "发布到 WordPress",
+      "publishWordpressDesc": "将文章发布到您的网站"
+    },
+    "expiryOptions": {
+      "7": "7 天",
+      "30": "30 天（推荐）",
+      "90": "90 天",
+      "365": "1 年",
+      "0": "永不过期"
+    }
+  },
+  "scraperSettings": {
+    "title": "抓取工具配置",
+    "desc": "管理您的抓取设置和集成",
+    "configTitle": "抓取工具配置",
+    "configDesc": "配置您的抓取工具设置和代理选项",
+    "type": "抓取工具类型",
+    "typePlaceholder": "选择抓取工具类型",
+    "none": "无",
+    "recommended": "推荐",
+    "apiKey": "API 密钥",
+    "apiKeyPlaceholder": "输入您的 API 密钥",
+    "delay": "抓取延迟",
+    "delayNone": "无",
+    "delay5": "5 秒",
+    "delay10": "10 秒",
+    "delay30": "30 秒",
+    "retry": "失败时启用重试",
+    "save": "保存更改",
+    "saving": "正在保存...",
+    "noKey": "没有 API 密钥？",
+    "signUp": "注册 {{service}}",
+    "notificationInterval": "通知间隔",
+    "notificationEmail": "通知邮箱"
+  },
+  "periods": {
+    "today": "今天",
+    "yesterday": "昨天",
+    "last7Days": "过去 7 天",
+    "last30Days": "过去 30 天",
+    "last90Days": "过去 90 天",
+    "lastYear": "去年",
+    "lastDays": "过去 {{days}} 天"
+  },
+  "insight": {
+    "stats": "统计数据",
+    "keywords": "关键词",
+    "countries": "国家/地区",
+    "pages": "页面",
+    "performanceOverview": "表现概览",
+    "both": "全部",
+    "visits": "访问量",
+    "impressions": "展现量",
+    "avgPosition": "平均排名",
+    "avgCtr": "平均点击率",
+    "date": "日期",
+    "ctr": "点击率",
+    "position": "排名",
+    "clicks": "点击次数",
+    "connectTitle": "尚未集成 Google Search Console",
+    "connectDesc": "连接您的 Google Search Console 账户以查看真实的表现数据，包括展现量、点击次数和平均排名。",
+    "connectBtn": "连接 Google 账户",
+    "last30Days": "过去 30 天",
+    "pageInfo": "第 {{current}} 页，共 {{total}} 页",
+    "previous": "上一页",
+    "next": "下一页",
+    "noResults": "未找到 \"{{query}}\" 的结果",
+    "topPerformers": "表现最佳",
+    "exportCSV": "导出 CSV",
+    "selectTab": "选择视图"
+  },
+  "domainHeader": {
+    "last3Days": "过去 3 天",
+    "last7Days": "过去 7 天",
+    "last30Days": "过去 30 天",
+    "reloadSerps": "重新加载 SERP",
+    "reloadAllSerps": "重新加载所有 SERP",
+    "deleteDomain": "删除域名",
+    "updating": "正在更新...",
+    "reload": "重新加载",
+    "addKeyword": "添加关键词",
+    "loadIdeas": "加载建议"
+  },
+  "keywordFilter": {
+    "filterKeywords": "过滤关键词...",
+    "allCountries": "所有国家/地区",
+    "allTags": "所有标签",
+    "noTags": "此域名未找到标签",
+    "addKeyword": "添加关键词",
+    "reloadSerps": "重新加载所有 SERP",
+    "desktop": "桌面端",
+    "mobile": "移动端",
+    "filter": "筛选",
+    "sort": "排序",
+    "columns": "显示/隐藏列"
+  },
+  "sortOptions": {
+    "pos_asc": "排名最高",
+    "pos_desc": "排名最低",
+    "date_asc": "最近日期",
+    "date_desc": "最早日期",
+    "alpha_asc": "字母排序 (A-Z)",
+    "alpha_desc": "字母排序 (Z-A)",
+    "vol_asc": "搜索量最低",
+    "vol_desc": "搜索量最高",
+    "imp_desc": "观看量最多",
+    "imp_asc": "观看量最少",
+    "visits_desc": "访问量最多",
+    "visits_asc": "访问量最少",
+    "ctr_desc": "点击率最低"
+  },
+  "columns": {
+    "keyword": "关键词",
+    "position": "排名",
+    "url": "URL",
+    "updated": "已更新",
+    "best": "最佳",
+    "history": "历史",
+    "volume": "搜索量",
+    "searchConsole": "Search Console"
+  },
+  "scTable": {
+    "totalVisits": "总访问量",
+    "addToTracker": "将 {{count}} 个关键词添加到追踪器",
+    "noKeywords": "未找到关键词",
+    "adjustFilters": "请尝试调整您的过滤器。"
+  },
+  "tracking": {
+    "addKeywords": {
+      "title": "添加新关键词",
+      "placeholder": "在此输入或粘贴关键词。每行输入一个关键词。",
+      "tagsPlaceholder": "插入标签（可选）",
+      "cityPlaceholder": "城市（可选）",
+      "cityDisabled": "不适用于 {{scraper}}",
+      "cityTooltip": "您的抓取工具 {{scraper}} 不具备城市级抓取功能。",
+      "trackCompetitors": "追踪竞争对手（将自动检查竞争对手排名）",
+      "cancel": "取消",
+      "add": "添加关键词",
+      "adding": "正在添加...",
+      "errorExist": "关键词 {{keywords}} 已存在",
+      "errorEmpty": "请输入关键词",
+      "noTags": "未找到现有标签...",
+      "planUsage": "计划使用情况",
+      "enterKeywords": "关键词",
+      "country": "国家/地区",
+      "device": "设备",
+      "city": "城市",
+      "tags": "标签",
+      "errorLimit": "已超过计划上限。您还可以添加 {{remaining}} 个关键词（您正尝试添加 {{count}} 个）。"
+    },
+    "manageCompetitors": {
+      "title": "管理竞争对手",
+      "addLabel": "添加竞争对手 URL",
+      "placeholder": "https://example.com",
+      "add": "添加",
+      "count": "已添加 {{count}}/{{max}} 个竞争对手",
+      "currentTitle": "当前竞争对手",
+      "empty": "尚未添加竞争对手",
+      "cancel": "取消",
+      "save": "保存更改",
+      "saving": "正在保存...",
+      "errorEmpty": "请输入竞争对手 URL",
+      "errorMax": "最多允许添加 {{max}} 个竞争对手",
+      "errorExists": "此竞争对手已存在",
+      "success": "竞争对手更新成功！",
+      "error": "更新竞争对手失败"
+    },
+    "tabs": {
+      "keywords": "关键词",
+      "competitors": "竞争对手"
+    },
+    "scraperAlert": "尚未设置抓取工具/代理。请前往“设置”进行配置并开始使用应用。"
+  },
+  "trackingTable": {
+    "keyword": "关键词",
+    "best": "最佳",
+    "history": "历史",
+    "volume": "搜索量",
+    "url": "URL",
+    "updated": "已更新",
+    "scPos": "排名",
+    "scImp": "展现",
+    "scVisits": "访问",
+    "refreshKeywords": "刷新关键词",
+    "removeKeywords": "移除关键词",
+    "tagKeywords": "标记关键词",
+    "noKeywordsDevice": "未为此设备类型添加关键词。",
+    "removeTitle": "移除关键词",
+    "removeConfirm": "您确定要移除 {{count}} 个关键词吗？",
+    "refreshCompetitors": "刷新竞争对手",
+    "yourPosition": "您的排名",
+    "noKeywordsMsg": "尚未添加关键词。请从“关键词”标签页添加关键词。",
+    "noCompetitorsMsg": "尚未添加竞争对手。请从域名设置中添加竞争对手。",
+    "refresh": "刷新",
+    "tag": "标签",
+    "remove": "移除",
+    "selected": "已选择",
+    "favorite": "收藏",
+    "unfavorite": "取消收藏",
+    "tags": "标签",
+    "updateFailed": "更新失败",
+    "lastAttempt": "最后一次尝试",
+    "scraperError": "抓取工具错误"
+  },
+  "domainSelector": {
+    "current": "当前域名",
+    "select": "选择域名",
+    "switch": "切换域名",
+    "add": "添加网站",
+    "empty": "未找到域名"
+  },
+  "domainSettings": {
+    "title": "域名设置",
+    "myApp": "我的应用",
+    "tabs": {
+      "general": "常规",
+      "integrations": "集成",
+      "searchConsole": "Google Search Console",
+      "delete": "删除"
+    },
+    "general": {
+      "cardTitle": "基本信息",
+      "cardDesc": "更新您域名的业务信息和垂直领域详情。",
+      "businessName": "业务名称",
+      "businessNameDesc": "您业务或品牌的正式名称。",
+      "niche": "垂直领域 / 行业",
+      "nicheDesc": "您网站的主要行业或主题。",
+      "description": "业务描述",
+      "descriptionDesc": "用于 AI 背景生成的简短描述。",
+      "save": "保存更改",
+      "saving": "正在保存..."
+    },
+    "strategy": {
+      "cardTitle": "目标关键词策略",
+      "country": "目标国家/地区",
+      "allCountries": "所有国家/地区",
+      "cardDesc": "定义最多 9 个按重要性排列的核心关键词。这些关键词将指导您未来 6 个月的 SEO 策略。",
+      "high": "高重要性（前 3 名）",
+      "highDesc": "为了推动核心业务，您必须占据优势的核心关键词。",
+      "medium": "中重要性",
+      "mediumDesc": "支持您主要服务的重要关键词。",
+      "low": "低重要性",
+      "lowDesc": "长尾关键词或未来机会关键词。"
+    },
+    "competitors": {
+      "cardTitle": "竞争对手",
+      "cardDesc": "追踪您的竞争对手以基准评估您的表现。",
+      "tracked": "已追踪的竞争对手",
+      "add": "添加",
+      "empty": "尚未添加竞争对手。",
+      "exists": "竞争对手已添加"
+    },
+    "integrations": {
+      "cardTitle": "CMS 集成",
+      "cardDesc": "连接您的网站 CMS 以启用自动博客功能。",
+      "wpDesc": "使用“应用密码”连接您的自托管 WordPress 网站。",
+      "shopifyDesc": "使用“访问令牌”连接您的 Shopify 商店。",
+      "webflowDesc": "无缝连接您的 Webflow 网站。",
+      "wixDesc": "轻松连接您的 Wix 网站。",
+      "comingSoon": "即将推出",
+      "settingsTitle": "WordPress 设置",
+      "helpTitle": "如何获取您的 WordPress 凭据",
+      "help": {
+        "urlLabel": "1. 网站 URL：",
+        "urlDesc": "输入您 WordPress 网站的精确 URL（例如 https://yoursite.com）。请确保完全匹配 - 包括 http/https 以及是否带有 www。",
+        "usernameLabel": "2. 用户名：",
+        "usernameDesc": "使用您的 WordPress 登录用户名（不是显示名称或电子邮件）。在以下路径查找：WP 管理后台 → 用户 → 我的个人资料 → 用户名字段。",
+        "appPassLabel": "3. 应用密码：",
+        "appPassStep1": "前往：WP 管理后台 → 用户 → 我的个人资料（您的账户）",
+        "appPassStep2": "向下滚动到“应用密码”部分",
+        "appPassStep3": "输入一个名称（例如“SEO Agent”），然后点击“添加新应用密码”",
+        "appPassStep4": "复制生成的密码（格式：xxxx xxxx xxxx xxxx）",
+        "appPassStep5": "将其粘贴到下方字段中"
+      },
+      "url": "网站 URL",
+      "urlPlaceholder": "https://yourwebsite.com",
+      "urlHelper": "您 WordPress 网站的完整 URL。",
+      "username": "用户名",
+      "usernamePlaceholder": "admin",
+      "usernameHelper": "您的 WordPress 用户名（而非邮箱）。",
+      "appPass": "应用密码",
+      "appPassPlaceholder": "xxxx xxxx xxxx xxxx",
+      "appPassHelper": "在 WP 管理后台 > 用户 > 我的个人资料 > 应用密码中创建。",
+      "refreshCats": "刷新分类",
+      "availCats": "基于您网站的可用分类",
+      "catsHelper": "先在上方连接，然后点击“刷新”以查看您的分类。",
+      "test": "测试连接",
+      "saveInt": "保存集成",
+      "connected": "已作为 {{user}} 连接",
+      "failed": "连接失败",
+      "enterCreds": "请先输入凭据",
+      "foundCats": "找到 {{count}} 个分类",
+      "fetchCatsError": "获取分类失败",
+      "testing": "正在测试连接..."
+    },
+    "gsc": {
+      "cardTitle": "Google Search Console",
+      "cardDesc": "连接您的 Google Search Console 账户",
+      "connected": "Google 账户已连接",
+      "disconnect": "断开连接",
+      "verifiedSites": "已验证的站点",
+      "refreshSites": "刷新站点",
+      "loading": "正在加载...",
+      "noSites": "未找到已验证的站点",
+      "owner": "所有者",
+      "full": "完全访问权限",
+      "restricted": "受限访问",
+      "unverified": "未验证",
+      "imported": "已导入",
+      "add": "添加",
+      "notesTitle": "重要提示：",
+      "note1": "只有您在 Google Search Console 中作为“所有者”的站点才会显示并正常工作。",
+      "connectBtn": "连接 Google 账户",
+      "connectDesc": "关联您的 Google 账户，以自动验证站点并将表现数据直接获取到您的仪表板中。"
+    },
+    "danger": {
+      "title": "删除站点",
+      "desc": "针对您站点的不可逆操作。",
+      "warning": "永久移除此站点及其所有数据。此操作无法撤销。",
+      "warning1": "所有关键词追踪数据将被删除",
+      "warning2": "所有文章和内容将被移除",
+      "warning3": "所有分析和表现数据将丢失",
+      "confirmLabel": "请输入 {{domain}} 以确认",
+      "btn": "删除站点",
+      "deleting": "正在删除..."
+    }
+  },
+  "posts": {
+    "pageTitle": "文章",
+    "newArticleTitle": "新文章",
+    "editArticleTitle": "编辑文章",
+    "list": {
+      "title": "文章列表",
+      "description": "管理并优化您的博客内容。",
+      "newArticle": "新文章",
+      "emptyTitle": "未找到文章",
+      "emptyDesc": "开始创建您的第一篇经 AI 优化的文章吧。",
+      "createBtn": "创建文章",
+      "wordpress": "WordPress"
+    },
+    "tabs": {
+      "all": "全部文章",
+      "drafts": "草稿",
+      "published": "已发布"
+    },
+    "table": {
+      "article": "文章",
+      "status": "状态",
+      "lastUpdated": "最后更新",
+      "actions": "操作"
+    },
+    "status": {
+      "published": "已发布",
+      "draft": "草稿"
+    },
+    "editor": {
+      "back": "返回文章列表",
+      "generate": "生成",
+      "generating": "正在生成...",
+      "save": "保存",
+      "saving": "正在保存...",
+      "saved": "保存（已保存）",
+      "newTitle": "新文章",
+      "editTitle": "编辑文章",
+      "description": "为您博客生成经 SEO 优化的内容",
+      "contentEditor": "内容编辑器",
+      "topicLabel": "文章主题/想法",
+      "ready": "就绪",
+      "topicPlaceholder": "输入您的文章主题或主要想法... 例如：'如何在 2026 年提高 SEO 排名'",
+      "topicHelp": "AI 将利用此内容来生成您的文章。内容越具体，效果越好。",
+      "titleLabel": "文章标题",
+      "titlePlaceholder": "输入您的文章标题...",
+      "titleShort": "标题过短，不利于 SEO 优化（建议 50-60 个字符）",
+      "titleLong": "标题在搜索结果中可能会被截断（请保持在 60 个字符以内）",
+      "featuredImage": "特色图片",
+      "clickToChange": "点击更改",
+      "clickToUpload": "点击上传图片",
+      "aiImageComingSoon": "或由 AI 生成（即将推出）",
+      "bodyContent": "正文内容",
+      "visualEditor": "切换到可视化编辑器",
+      "sourceCode": "编辑源代码"
+    },
+    "seo": {
+      "score": "SEO 评分",
+      "scoreDesc": {
+        "excellent": "做得好！您的内容已得到很好的优化",
+        "good": "您正在为达成目标而努力",
+        "improve": "请继续完善您的内容以提高 SEO 评分"
+      },
+      "optimized": "文章已优化",
+      "suggestionsTitle": "改进建议",
+      "suggestions": {
+        "addWords": "再增加 {{count}} 个字以达到最佳长度",
+        "addKeywords": "更自然地多包含关键词 {{count}} 次",
+        "addHeadings": "再增加 {{count}} 个标题（H2 或 H3）",
+        "addImage": "添加特色图片以提高用户参与度",
+        "addMeta": "编写元描述（150-160 个字符）",
+        "titleLength": "将标题长度优化为 50-60 个字符",
+        "includeAllKeywords": "在内容中包含所有选定的关键词（已找到 {{current}}/{{total}} 个）",
+        "addPrimaryTitle": "在标题中加入您的核心关键词 \"{{keyword}}\"",
+        "addPrimaryMeta": "在元描述中包含核心关键词",
+        "addInternalLinks": "添加至少 2-3 个指向您网站其他页面的内链",
+        "moreInternalLinks": "再添加 1-2 个内部链接以改善 SEO",
+        "addAllAlt": "为所有 {{count}} 张图片添加 Alt 文本，以获得更好的 SEO 和无障碍体验",
+        "addRemainingAlt": "为剩余的 {{count}} 张图片添加 Alt 文本",
+        "addH1": "添加一个 H1 标题作为文章主标题",
+        "singleH1": "请仅使用一个 H1 标题（当前：{{count}} 个）。多个 H1 会损害 SEO",
+        "addH2": "添加 {{count}} 个以上的 H2 标题来组织内容（最佳范围：3-6 个）",
+        "addH3": "考虑增加 {{count}} 个以上的 H3 子标题以获得更好的内容层级（最佳范围：6-12 个）"
+      },
+      "metrics": {
+        "wordCount": "字数统计",
+        "keywordDensity": "关键词密度",
+        "headingStructure": "标题结构",
+        "images": "图片",
+        "keywordsInContent": "内容中的关键词",
+        "keywordInTitle": "标题中的关键词",
+        "keywordInMeta": "元描述中的关键词",
+        "internalLinks": "内部链接",
+        "externalLinks": "外部链接",
+        "imagesInContent": "正文中的图片",
+        "withAltText": "带有 Alt 文本"
+      }
+    },
+    "meta": {
+      "title": "元数据",
+      "targetKeywords": "目标关键词",
+      "editStrategy": "编辑策略",
+      "customKeyword": "或添加自定义关键词：",
+      "keywordPlaceholder": "输入关键词...",
+      "addBtn": "添加",
+      "addHelp": "按回车键或点击添加以包含自定义关键词",
+      "selectedKeywords": "已选关键词：",
+      "metaDescription": "元描述",
+      "metaPlaceholder": "搜索引擎显示的描述..."
+    },
+    "publish": {
+      "wordpress": "发布到 WordPress",
+      "publishing": "正在发布..."
+    },
+    "modal": {
+      "altTitle": "编辑图片 Alt 文本",
+      "altLabel": "Alt 文本（用于 SEO 和无障碍）",
+      "altHelp": "为屏幕阅读器和搜索引擎描述图片内容",
+      "updateAlt": "更新 Alt 文本",
+      "linkTitle": "编辑链接标题",
+      "linkText": "链接文本",
+      "linkUrl": "链接 URL",
+      "linkTooltip": "链接标题（工具提示）",
+      "linkHelp": "当用户悬停在链接上时显示",
+      "updateLink": "更新标题"
+    },
+    "common": {
+      "cancel": "取消"
+    }
+  },
+  "hero": {
+    "headline": "SEO AI Agent",
+    "subheadline": "直达搜索排名第一",
+    "description": "在全球 200 多个国家/地区监测排名，利用 GPT-5 和 Claude 生成 AI 内容，并直接发布到 WordPress。适用于现代企业的全方位 SEO 解决方案。",
+    "bullet1": "多国排名追踪",
+    "bullet2": "GPT-5 与 Claude AI 内容创作",
+    "bullet3": "WordPress 直接发布",
+    "bullet4": "ChatGPT 与 Claude MCP 集成",
+    "trustedBy": "全球超过 5,000 名 SEO 专业人士信赖"
+  },
+  "landing": {
+    "title": "SEO AI Agent",
+    "subtitle": "您的专业 SEO 追踪解决方案",
+    "description": "利用我们强大的 SEO 工具追踪关键词、监测排名并发展您的业务。",
+    "cta": "立即开始",
+    "login": "登录",
+    "stats": {
+      "title": "受数千名 SEO 专业人士信赖",
+      "activeUsers": "活跃用户",
+      "keywordsTracked": "每日追踪关键词数",
+      "reportsGenerated": "已生成报告数",
+      "customerSatisfaction": "客户满意度"
+    },
+    "howItWorks": {
+      "title": "工作原理",
+      "subtitle": "从追踪到发布的全流程 SEO 工作流 - 尽在一个平台",
+      "step1": {
+        "title": "全球追踪您的排名",
+        "description": "在全球任何 Google 区域监测您的排名位置",
+        "feature1": "添加您的网站和目标关键词",
+        "feature2": "追踪 Google 奥地利、德国、美国及任何国家的排名",
+        "feature3": "连接 Google Search Console 以获取官方数据",
+        "feature4": "自动与最多 3 个竞争对手进行对比"
+      },
+      "step2": {
+        "title": "分析并理解您的数据",
+        "description": "通过可视化分析获取全面洞察",
+        "feature1": "包含交互式图表的完整仪表板",
+        "feature2": "准确的统计数据：访问量、展现量、点击率",
+        "feature3": "发现哪些关键词为您带来访客",
+        "feature4": "识别差距与机会"
+      },
+      "step3": {
+        "title": "利用 AI 创作针对性内容",
+        "description": "利用领先的 AI 模型生成经 SEO 优化的文章",
+        "feature1": "从 5 个以上 AI 模型中选择：GPT-5.2、Claude 3.5 Sonnet、Gemini 2.0",
+        "feature2": "或者通过 MCP API 直接使用 ChatGPT/Claude",
+        "feature3": "针对您的重要关键词优化内容",
+        "feature4": "自动 SEO 评分（满分 100）并提供改进建议"
+      },
+      "step4": {
+        "title": "直接发布到您的网站",
+        "description": "一键发布到您的 CMS 平台",
+        "feature1": "一键发布到 WordPress",
+        "feature2": "支持 Shopify、Webflow、Wix（即将推出）",
+        "feature3": "在一个地方完成完整内容管理",
+        "feature4": "在发布后监测您的排名改进情况"
+      }
+    },
+    "features": {
+      "title": "功能强大，实现全方位 SEO 管理",
+      "subtitle": "占据搜索排名优势并创作优质内容所需的一切工具",
+      "categoryTracking": "追踪与分析",
+      "categoryAI": "AI 内容创作",
+      "categoryPublishing": "发布与集成",
+      "multiCountry": {
+        "title": "多国关键词排名追踪",
+        "description": "在 200 多个国家/地区追踪您的排名并实时更新",
+        "benefit1": "追踪 200 多个国家/地区的排名",
+        "benefit2": "支持 Google 奥地利、德国、美国等",
+        "benefit3": "支持桌面端和移动端追踪",
+        "benefit4": "每日或每小时更新"
+      },
+      "gscIntegration": {
+        "title": "Google Search Console 集成",
+        "description": "直接连接 Google 获取官方表现数据",
+        "benefit1": "与 Google 直接连接",
+        "benefit2": "官方数据：访问量、展现量、点击率",
+        "benefit3": "分析表现最佳的关键词",
+        "benefit4": "自动导入关键词"
+      },
+      "competitorAnalysis": {
+        "title": "竞争对手分析",
+        "description": "追踪多达 3 个竞争对手并以此为基准评估您的表现",
+        "benefit1": "支持追踪多达 3 个竞争对手",
+        "benefit2": "对比相同关键词的排名情况",
+        "benefit3": "发现内容差距",
+        "benefit4": "当竞争对手排名超过您时发出提醒"
+      },
+      "aiContent": {
+        "title": "AI 内容生成",
+        "description": "利用领先的 AI 模型创作经 SEO 优化的内容",
+        "benefit1": "可从 5 个以上 AI 模型中进行选择",
+        "benefit2": "支持 GPT-5.2、Claude 3.5 Sonnet、Gemini 2.0",
+        "benefit3": "内容自动进行 SEO 优化",
+        "benefit4": "提供 SEO 评分（百分制）"
+      },
+      "chatIntegration": {
+        "title": "ChatGPT 与 Claude 集成",
+        "description": "通过 MCP API 集成您喜爱的 AI 聊天助手",
+        "benefit1": "通过 MCP API 直接集成",
+        "benefit2": "从聊天对话中进行 SEO 检查",
+        "benefit3": "直接从 ChatGPT/Claude 撰写内容",
+        "benefit4": "自动化您的工作流"
+      },
+      "seoScoring": {
+        "title": "SEO 评分与优化",
+        "description": "自动评估内容并提供可操作的建议",
+        "benefit1": "自动评估内容质量",
+        "benefit2": "关键词密度分析",
+        "benefit3": "标题与链接分析",
+        "benefit4": "智能优化建议"
+      },
+      "wordpressPublishing": {
+        "title": "WordPress 直接发布",
+        "description": "只需一键，即可将您的内容直接发布到 WordPress",
+        "benefit1": "一键快速发布",
+        "benefit2": "选择分类与标签",
+        "benefit3": "定时发布",
+        "benefit4": "支持 Shopify、Webflow、Wix（即将推出）"
+      },
+      "analytics": {
+        "title": "高级分析仪表板",
+        "description": "交互式图表与全面报告",
+        "benefit1": "交互式图表",
+        "benefit2": "按关键词、页面、国家/地区分析",
+        "benefit3": "CSV 导出",
+        "benefit4": "自定义报告"
+      },
+      "apiWebhooks": {
+        "title": "强大的 API 与 Webhooks",
+        "description": "具有细粒度权限和 Webhooks 的完整 API",
+        "benefit1": "具有细粒度权限的完整 API",
+        "benefit2": "即时通知的 Webhooks",
+        "benefit3": "与外部工具集成",
+        "benefit4": "自动数据导出"
+      }
+    },
+    "integrations": {
+      "title": "由领先的 AI 模型和平台提供动力",
+      "subtitle": "从 5 个以上 AI 模型中选择并直接发布到您喜爱的平台",
+      "aiModels": "AI 内容生成",
+      "directPublishing": "直接发布",
+      "multiEngine": "多引擎追踪",
+      "comingSoon": "即将推出",
+      "seoFooter": "将您的 SEO 工作流与 ChatGPT、Claude AI、Google Gemini 集成进行内容生成。直接发布到 WordPress、Shopify、Webflow。在全球 200 多个国家/地区追踪 Google、Bing、Yahoo 和 DuckDuckGo 的排名。"
+    },
+    "testimonials": {
+      "title": "客户评价",
+      "subtitle": "加入数千名满意的客户，共同提升在线影响力",
+      "trustBadge": "基于 100 多条评价，评分 5.0",
+      "testimonial1": {
+        "position": "数字营销经理",
+        "review": "这是一个了不起的工具，在短短 3 个月内就帮我们把网站排名提升了 150%。多国排名追踪功能简直颠覆了行业游戏规则！"
+      },
+      "testimonial2": {
+        "position": "SEO 专家",
+        "review": "详细报告和每日追踪让我的工作变得轻松多了。AI 内容生成非常准确，节省了大量工作时间。"
+      },
+      "testimonial3": {
+        "position": "创始人",
+        "review": "这是我用过的最好的 SEO 工具。界面简单，结果准确。WordPress 集成非常顺滑！"
+      }
+    },
+    "pricing": {
+      "title": "简单透明的定价",
+      "subtitle": "选择最适合您需求的计划。无隐藏费用。",
+      "monthly": "按月",
+      "yearly": "按年",
+      "perMonth": "月",
+      "saveYearly": "按年计费可节省高达 17%",
+      "mostPopular": "最受欢迎",
+      "noCreditCard": "无需信用卡即可开始",
+      "cancelAnytime": "随时取消，无需任何理由。",
+      "seoFooter": "高性价比的 SEO 追踪和 AI 内容平台。提供免费计划。追踪关键词排名，分析 Google Search Console 数据，利用 GPT-5.2 和 Claude 生成 AI 内容，并发布到 WordPress。",
+      "free": {
+        "name": "免费版",
+        "description": "试用的完美选择",
+        "feature1": "2 个网站",
+        "feature2": "10 个关键词",
+        "feature3": "每日更新",
+        "feature4": "基础报告",
+        "cta": "免费开始"
+      },
+      "pro": {
+        "name": "专业版",
+        "description": "适合成长中的业务",
+        "feature1": "5 个网站",
+        "feature2": "100 个关键词",
+        "feature3": "每 6 小时更新一次",
+        "feature4": "高级报告",
+        "feature5": "API 访问权限",
+        "feature6": "竞争对手追踪",
+        "feature7": "AI 内容生成",
+        "cta": "立即开始"
+      },
+      "enterprise": {
+        "name": "企业版",
+        "description": "适合资深用户",
+        "feature1": "不限网站数量",
+        "feature2": "500 个关键词",
+        "feature3": "每小时更新一次",
+        "feature4": "自定义报告",
+        "feature5": "Webhooks",
+        "feature6": "优先支持",
+        "feature7": "白标功能",
+        "feature8": "专属客户经理",
+        "cta": "联系我们"
+      }
+    },
+    "billing": {
+      "title": "账单与订阅",
+      "desc": "管理您的计划、支付方式和发票历史。",
+      "currentPlan": "当前计划：{{plan}}",
+      "active": "活跃",
+      "renewsOn": "续费日期：{{date}}",
+      "tabs": {
+        "subscription": "计划",
+        "details": "发票详情",
+        "history": "发票"
+      },
+      "planNames": {
+        "free": "免费版",
+        "basic": "基础版",
+        "pro": "专业版",
+        "premium": "旗舰版"
+      },
+      "planDesc": {
+        "free": "入门级必备功能。",
+        "basic": "适用于个人项目和简单追踪。",
+        "pro": "适用于专业 SEO 人员和小型机构。",
+        "premium": "为大规模运营提供无限动力。"
+      },
+      "features": {
+        "domain": "{{count}} 个网站",
+        "domains": "{{count}} 个网站",
+        "keywords": "{{count}} 个关键词",
+        "updates": "每日更新",
+        "weekly": "每周更新",
+        "daily": "每日更新",
+        "mcp": "MCP 集成",
+        "ai": "AI 文章撰写",
+        "api": "API 访问权限",
+        "unlimitedDomains": "不限网站数量",
+        "priority": "优先支持"
+      },
+      "buttons": {
+        "current": "当前计划",
+        "upgrade": "立即升级",
+        "downgrade": "降级"
+      },
+      "checkout": {
+        "monthly": "按月计费",
+        "billedYearly": "按年计费",
+        "redirecting": "正在重定向到 Stripe...",
+        "success": "订阅更新成功！",
+        "title": "{{cycle}} 订阅设置",
+        "desc": "完成您的订阅升级，解锁所有专业功能。"
+      },
+      "invoice": {
+        "title": "账单信息",
+        "desc": "此信息将显示在您的税务发票上。",
+        "accountType": "账户类型",
+        "company": "公司",
+        "individual": "个人",
+        "nameCompany": "公司名称",
+        "nameIndividual": "全名",
+        "vat": "增值税号 (选填)",
+        "address": "账单地址",
+        "email": "账单邮箱",
+        "save": "保存更改",
+        "saved": "账单详情已保存！"
+      },
+      "history": {
+        "title": "发票历史",
+        "desc": "查看并下载您过去的发票。",
+        "date": "日期",
+        "amount": "金额",
+        "status": "状态",
+        "download": "下载"
+      }
+    },
+    "faq": {
+      "title": "常见问题解答",
+      "subtitle": "关于 SEO Agent 您需要了解的一切",
+      "stillHaveQuestions": "还有其他问题？",
+      "contactUs": "联系我们",
+      "q1": {
+        "question": "我注册时需要信用卡吗？",
+        "answer": "不需要，您可以注册免费版，无需提供信用卡。当您需要更多功能时可以随时升级。"
+      },
+      "q2": {
+        "question": "数据更新的频率是多久？",
+        "answer": "免费版计划每日更新一次，专业版 (Pro) 每 6 小时更新一次，企业版计划则每小时更新一次。"
+      },
+      "q3": {
+        "question": "我可以追踪多个网站吗？",
+        "answer": "可以，具体取决于您的计划：免费版可追踪 2 个网站，基础版 3 个，专业版 5 个，旗舰版/企业版则不限数量。"
+      },
+      "q4": {
+        "question": "多国排名追踪是如何工作的？",
+        "answer": "您可以从 200 多个国家/地区（如 Google 奥地利、德国、美国）中进行选择。系统会分别检查每个本地 Google 的排名，为您提供准确的针对特定国家的数据。"
+      },
+      "q5": {
+        "question": "支持哪些 AI 模型？",
+        "answer": "我们支持 OpenAI (GPT-5.2, GPT-4.1)、Claude (3.5 Sonnet, 3 Opus)、Google Gemini (2.0 Flash, 1.5 Pro)、Perplexity Sonar 以及我们的本地 Dpro 模型。"
+      },
+      "q6": {
+        "question": "如何将系统与 ChatGPT 或 Claude 连接？",
+        "answer": "我们提供 MCP API，允许您将系统 with Claude Desktop 或 ChatGPT 连接。您可以直接从聊天对话中进行 SEO 检查并撰写内容。请访问我们的 MCP 设置页面查看详细说明。"
+      },
+      "q7": {
+        "question": "我可以直接发布到 WordPress 吗？",
+        "answer": "可以！您可以连接您的 WordPress 网站并一键发布。对 Shopify、Webflow 和 Wix 的支持即将推出。"
+      },
+      "q8": {
+        "question": "你们支持 Google 以外的搜索引擎吗？",
+        "answer": "是的，我们支持 Google、Bing、Yahoo 和 DuckDuckGo。"
+      },
+      "q9": {
+        "question": "内容 SEO 评分是如何计算的？",
+        "answer": "我们检查超过 15 个因素：字数、关键词密度、标题结构、内部和外部链接、图片 alt 文本、元描述等。评分为百分制。"
+      },
+      "q10": {
+        "question": "我可以随时取消订阅吗？",
+        "answer": "当然可以！您可以随时取消订阅，无需额外费用或条件。"
+      }
+    },
+    "finalCTA": {
+      "title": "准备好占据搜索排名优势了吗？",
+      "description": "加入数千家正在使用 SEO Agent 追踪排名、创作 AI 内容并提升在线影响力的企业行列。",
+      "primaryCTA": "开始免费试用",
+      "secondaryCTA": "联系销售人员",
+      "noCreditCard": "无需信用卡",
+      "users": "用户",
+      "keywords": "关键词",
+      "satisfaction": "满意度"
+    },
+    "footer": {
+      "rights": "版权所有。"
+    }
+  },
+  "mcp": {
+    "autoConnect": {
+      "heroCta": "连接您的 AI",
+      "heroSubtext": "无需令牌，无需复制 —— 只需在 Claude Desktop 中粘贴一个 URL，然后在浏览器中确认即可。",
+      "claudeTitle": "连接 Claude Desktop (OAuth —— 无需 API 密钥)",
+      "cursorTitle": "连接 Cursor (OAuth —— 无需 API 密钥)",
+      "chatgptTitle": "连接 ChatGPT (OAuth —— 无需 API 密钥)",
+      "windsurfTitle": "连接 Windsurf (OAuth —— 无需 API 密钥)",
+      "zedTitle": "连接 Zed (OAuth —— 无需 API 密钥)",
+      "apiTitle": "直接 HTTP / JSON-RPC 访问",
+      "doneTitle": "大功告成 —— 只需在浏览器中授权一次",
+      "doneText": "在首次使用时，您的 AI 助手将在我们的网站上打开一个标签页，要求您批准连接，并自动重定向。之后，每一次调用都将通过其获得的访问令牌进行处理。",
+      "noKeyNeeded": "无需 API 密钥",
+      "oauthAutomatic": "OAuth 2.0（自动）"
+    },
+    "meta": {
+      "title": "MCP SEO —— 连接 ChatGPT 和 Claude Desktop",
+      "description": "通过 MCP API 将 SEO Agent 与 ChatGPT 和 Claude Desktop 集成。直接通过 AI 聊天追踪排名、分析关键词并生成内容。"
+    },
+    "hero": {
+      "title": "开启您的 AI 伙伴模式 —— 连接 ChatGPT 与 Claude Desktop",
+      "description": "通过我们的 MCP API，直接在您最喜欢的 AI 聊天助手（ChatGPT、Claude 或任何兼容 MCP 的工具）中检查 SEO、追踪排名并撰写优化内容。",
+      "getAPIKey": "获取您的 API 密钥",
+      "viewDocs": "查看文档"
+    },
+    "whatIs": {
+      "title": "什么是 MCP（模型上下文协议）？",
+      "description1": "MCP 是一种标准协议，允许 ChatGPT 和 Claude 等 AI 助手与外部工具及服务无缝连接。",
+      "description2": "通过我们的 MCP 集成，您可以直接在 AI 聊天中访问 SEO 数据、检查排名、分析关键词并生成优化内容。",
+      "benefit1Title": "Claude Desktop 直接集成",
+      "benefit1": "内置官方 MCP 支持",
+      "benefit2Title": "支持 ChatGPT",
+      "benefit2": "通过自定义操作 (Actions) 实现",
+      "benefit3Title": "安全身份验证",
+      "benefit3": "使用 API 密钥确认身份",
+      "benefit4Title": "实时数据访问",
+      "benefit4": "基础设置无需编写代码"
+    },
+    "platforms": {
+      "title": "支持的聊天平台",
+      "recommended": "推荐",
+      "advanced": "进阶",
+      "comingSoon": "即将推出",
+      "claude1": "内置官方 MCP 支持",
+      "claude2": "在设置中添加我们的 MCP 服务器",
+      "claude3": "即刻开始利用 SEO 数据进行对话",
+      "chatgpt1": "使用我们的 API 创建自定义 GPT",
+      "chatgpt2": "配置 Actions 以访问 SEO 数据",
+      "chatgpt3": "支持 ChatGPT Plus 或 Team 版本",
+      "otherTools": "其他 MCP 工具",
+      "moreTools": "更多工具即将推出"
+    },
+    "setup": {
+      "title": "分步设置指南",
+      "copy": "复制",
+      "copied": "已复制！",
+      "claude": {
+        "step1Title": "第 1 步：生成 API 密钥",
+        "step1": {
+          "1": "前往：个人资料 → API 密钥",
+          "2": "点击“创建新密钥”",
+          "3": "选择权限：read:domains, read:keywords, read:gsc, write:posts",
+          "4": "安全地复制您的 API 密钥"
+        },
+        "step2Title": "第 2 步：将 MCP 服务器添加到 Claude Desktop",
+        "step2": "将此配置粘贴到 Claude Desktop 设置文件，重启 Claude Desktop 即可完成！开始对话吧。"
+      },
+      "cursor": {
+        "title": "针对 Cursor IDE 的设置",
+        "step1": "打开 Cursor 设置 → Features → MCP",
+        "step2": "点击“Add MCP Server”",
+        "step3": "输入下方的配置详情",
+        "step4": "重启 Cursor 并开始使用 MCP 工具"
+      },
+      "windsurf": {
+        "title": "针对 Windsurf IDE 的设置",
+        "step1": "打开 Windsurf 设置 → Extensions → MCP",
+        "step2": "添加新的 MCP 服务器配置",
+        "step3": "粘贴下方的配置内容",
+        "step4": "重启 Windsurf 以启用"
+      },
+      "zed": {
+        "title": "针对 Zed 编辑器的设置",
+        "step1": "打开 Zed 设置 (Cmd/Ctrl + ,)",
+        "step2": "导航到 MCP 服务器部分",
+        "step3": "添加下方的配置内容",
+        "step4": "重启 Zed 编辑器"
+      },
+      "chatgpt": {
+        "title": "针对 ChatGPT（创建自定义 GPT）",
+        "step1": "前往 ChatGPT → 创建 GPT",
+        "step2": "使用我们的 OpenAPI 架构配置 Actions",
+        "step3": "在身份验证中添加 API 密钥",
+        "step4": "使用示例查询进行测试"
+      },
+      "api": {
+        "title": "直接 API 调用（针对开发者）",
+        "description": "您也可以不通过 MCP 直接使用 API："
+       }
+     },
+     "functions": {
+       "title": "可用的 MCP 工具/函数",
+       "functionName": "函数名称",
+       "description": "描述",
+       "exampleQuery": "示例查询",
+       "listDomains": {
+         "description": "获取您所有已追踪的域名",
+         "example": "显示我的域名"
+       },
+       "getKeywords": {
+         "description": "获取某个域名的关键词",
+         "example": "获取 example.com 的关键词"
+       },
+       "getRankings": {
+         "description": "检查关键词的排名",
+         "example": "‘SEO 工具’我的排名是多少？"
+       },
+       "getGSC": {
+         "description": "Google Search Console 数据",
+         "example": "显示最近 30 天的 GSC 统计数据"
+       },
+       "analyzeSEO": {
+         "description": "分析内容 SEO 评分",
+         "example": "检查这篇文章的 SEO"
+       },
+       "createPost": {
+         "description": "生成经 SEO 优化的文章",
+         "example": "撰写关于 X 的文章"
+       },
+      "publishPost": {
+        "description": "Publish to WordPress",
+        "example": "Publish to WordPress"
+      },
+      "getCompetitors": {
+        "description": "Get competitor rankings",
+        "example": "How are my competitors ranking?"
+      }
+    },
+    "benefits": {
+      "title": "Why Use MCP Integration?",
+      "speed": {
+        "title": "Speed & Efficiency",
+        "point1": "Get SEO insights in seconds",
+        "point2": "No need to switch between tools",
+        "point3": "Natural language queries"
+      },
+      "ai": {
+        "title": "AI-Powered Insights",
+        "point1": "Let AI analyze your data",
+        "point2": "Get recommendations automatically",
+        "point3": "Generate content on the fly"
+      },
+      "security": {
+        "title": "Secure & Private",
+        "point1": "Your data stays secure",
+        "point2": "API keys with specific permissions",
+        "point3": "Audit logs for all actions"
+      },
+      "updates": {
+        "title": "Continuous Updates",
+        "point1": "Always use latest data",
+        "point2": "Real-time ranking checks",
+        "point3": "Automatic sync with GSC"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "What is MCP and why should I use it?",
+        "answer": "MCP lets you access your SEO data directly from AI chats like Claude or ChatGPT, making your workflow faster and more efficient."
+      },
+      "q2": {
+        "question": "Is MCP free to use?",
+        "answer": "Yes! MCP integration is included in all plans. You just need an API key."
+      },
+      "q3": {
+        "question": "Does this work with the free ChatGPT?",
+        "answer": "Custom GPTs require ChatGPT Plus or Team subscription. Claude Desktop works with any plan."
+      },
+      "q4": {
+        "question": "如何获取 API 密钥？",
+        "answer": "前往个人资料 → API 密钥，并根据您的需求生成具有相应权限的新密钥。"
+      },
+      "q5": {
+        "question": "我可以撤销 API 访问权限吗？",
+        "answer": "可以，您可以随时从个人资料中删除或撤销 API 密钥。"
+      },
+      "q6": {
+        "question": "我可以通过 MCP 访问哪些数据？",
+        "answer": "您所有的域名、关键词、排名、GSC 数据、文章以及竞争对手信息。"
+      },
+      "q7": {
+        "question": "我可以通过 MCP 直接发布到 WordPress 吗？",
+        "answer": "可以！如果您已经在设置中连接了 WordPress，就可以直接从聊天对话中发布。"
+      },
+      "q8": {
+        "question": "有频率限制吗？",
+        "answer": "API 频率限制取决于您的计划：免费版（100 次/天），专业版（1000 次/天），企业版（不限次数）。"
+      }
+    },
+    "finalCTA": {
+      "title": "准备好大幅提升您的 SEO 工作流了吗？",
+      "description": "开始使用 MCP，通过 AI 自动化您的 SEO 任务",
+      "getAPIKey": "立即生成 API 密钥",
+      "readDocs": "阅读完整文档",
+      "joinUsers": "加入 1,000 多名使用 MCP 自动化 SEO 的用户行列"
+    }
+  },
+  "impressum": {
+    "title": "法律声明 - 法律信息",
+    "description": "Dpro GmbH（SEO Agent 运营商）的法律信息和公司详情",
+    "heading": "法律声明",
+    "subtitle": "法律信息与公司详情",
+    "companyInfo": "公司信息",
+    "contactInfo": "联系方式",
+    "legalInfo": "法律信息",
+    "uid": "税号",
+    "fn": "公司注册号",
+    "gericht": "商业登记法院",
+    "kur": "商业登记处",
+    "businessActivities": "业务活动",
+    "businessDescription": "软件开发、Web 应用、SEO 工具及数字营销解决方案",
+    "responsibleContent": "内容责任人",
+    "managingDirector": "总经理",
+    "disputeResolution": "欧盟争议解决机制",
+    "disputeText": "欧盟委员会提供了一个在线争议解决 (OS) 平台：",
+    "disclaimer": "免责声明",
+    "disclaimerContent": "内容责任",
+    "disclaimerContentText": "我们网页的内容是经过高度审慎创作的。然而，我们无法保证内容的准确性、完整性和及时性。",
+    "disclaimerLinks": "链接责任",
+    "disclaimerLinksText": "我们的网站包含指向外部网站的链接。我们对这些网站的内容没有影响力，因此不对其承担任何责任。",
+    "disclaimerCopyright": "版权",
+    "disclaimerCopyrightText": "运营商创作的内容和作品受奥地利版权法保护。",
+    "lastUpdated": "最后更新于"
+  },
+  "nav": {
+    "features": "功能",
+    "blog": "博客",
+    "contact": "联系我们",
+    "mcpIntegration": "MCP 集成",
+    "signIn": "登录",
+    "getStarted": "立即开始"
+  },
+  "footerMenu": {
+    "product": "产品",
+    "resources": "资源",
+    "legal": "法律信息",
+    "talentManagement": "人才管理",
+    "ats": "申请人追踪软件",
+    "documentation": "文档",
+    "seoExpertSkill": "SEO 专家技能",
+    "blog": "博客",
+    "contact": "联系我们",
+    "faq": "常见问题",
+    "imprint": "法律声明",
+    "privacyPolicy": "隐私政策",
+    "termsOfService": "服务条款",
+    "consentPreferences": "偏好设置",
+    "accessibility": "无障碍访问"
+  },
+  "meta": {
+    "mcpSeo": {
+      "title": "SEO Agent MCP 服务器 —— 连接 Claude 与 ChatGPT",
+      "description": "通过模型上下文协议 (MCP) 将您的 SEO 数据连接到 Claude Desktop 和 ChatGPT。提供实时排名、分析和内容创作。",
+      "keywords": "mcp, seo agent, claude desktop, chatgpt, seo api, 排名追踪, gsc",
+      "ogTitle": "利用 SEO 数据强化您的 AI",
+      "ogDescription": "将 Claude Desktop 直接连接到您的 SEO 指标、排名和 GSC 数据。"
+    }
+  },
+  "seo": {
+    "mcpSeo": {
+      "twitterTitle": "SEO Agent MCP 集成",
+      "twitterDescription": "将 Claude 和 ChatGPT 连接到您的实时 SEO 数据。"
+    }
+  },
+  "bing": {
+    "title": "Bing 站长工具",
+    "description": "连接您的 Microsoft 账户以访问 Bing 和 Yahoo 的搜索分析数据。",
+    "connect": "连接 Bing",
+    "connectDescription": "链接您的 Microsoft 账户以追踪 Bing 和 Yahoo 的关键词排名、展现量和点击次数。",
+    "connected": "Bing 账户已连接",
+    "connectedDescription": "可在您的域名洞察页面查看 Bing 和 Yahoo 的分析数据。",
+    "disconnect": "断开连接",
+    "disconnectTitle": "断开 Bing 账户连接",
+    "disconnectDescription": "您确定要断开 Bing 站长工具的连接吗？断开后将无法再查看 Bing 和 Yahoo 的分析数据。",
+    "notConnected": "连接 Bing 站长工具以查看 Bing 和 Yahoo 数据。",
+    "tab": "Bing"
+  }
+}

@@ -53,12 +53,20 @@ const Register: NextPage = () => {
       <div className="absolute top-4 right-4">
         <select
           value={locale}
-          onChange={(e) => setLocale(e.target.value as 'en' | 'de' | 'fr')}
+          onChange={(e) => setLocale(e.target.value as any)}
           className="px-3 py-2 bg-white border border-neutral-200 rounded-lg text-sm font-medium text-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
         >
           <option value="en">English</option>
           <option value="de">Deutsch</option>
           <option value="fr">Français</option>
+          <option value="es">Español</option>
+          <option value="it">Italiano</option>
+          <option value="pt">Português</option>
+          <option value="nl">Nederlands</option>
+          <option value="tr">Türkçe</option>
+          <option value="zh">中文</option>
+          <option value="ar">العربية</option>
+          <option value="ja">日本語</option>
         </select>
       </div>
 

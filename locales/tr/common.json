@@ -1,26 +1,372 @@
 {
   "auth": {
     "login": {
-      "title": "Sign In",
-      "welcome": "Welcome back!",
-      "description": "Sign in to access your dashboard",
-      "googleBtn": "Continue with Google",
-      "backToHome": "Back to Home"
+      "title": "Giriş Yap",
+      "welcome": "Tekrar hoş geldiniz!",
+      "description": "Panelinize erişmek için giriş yapın",
+      "googleBtn": "Google ile Devam Et",
+      "backToHome": "Ana Sayfaya Dön",
+      "emailPlace": "eposta@ornek.com",
+      "pwdPlace": "Şifreniz",
+      "btn": "Giriş Yap",
+      "noAcc": "Hesabınız yok mu?",
+      "register": "Şimdi ücretsiz kaydolun"
     },
     "register": {
-      "title": "Sign Up",
-      "welcome": "Create your account",
-      "description": "Get started with SEO AI Agent",
-      "googleBtn": "Continue with Google",
-      "backToHome": "Back to Home",
-      "haveAccount": "Already have an account?",
-      "signIn": "Sign in",
-      "termsLabel": "I agree to the",
-      "termsLink": "Terms of Service",
-      "and": "and",
-      "privacyLink": "Privacy Policy",
-      "newsletterLabel": "I want to receive newsletters, reports, and updates about my website",
-      "termsRequired": "You must accept the Terms of Service and Privacy Policy to continue"
+      "title": "Kayıt Ol",
+      "welcome": "Hesabınızı oluşturun",
+      "description": "SEO AI Agent ile başlayın",
+      "googleBtn": "Google ile Devam Et",
+      "backToHome": "Ana Sayfaya Dön",
+      "haveAccount": "Zaten hesabınız var mı?",
+      "signIn": "Giriş yap",
+      "termsLabel": "Şunları kabul ediyorum:",
+      "termsLink": "Hizmet Şartları",
+      "and": "ve",
+      "privacyLink": "Gizlilik Politikası",
+      "newsletterLabel": "Web sitemle ilgili haber bültenleri, raporlar ve güncellemeler almak istiyorum",
+      "termsRequired": "Devam etmek için Hizmet Şartlarını ve Gizlilik Politikasını kabul etmelisiniz",
+      "namePlace": "Tam adınız",
+      "btn": "Hesap Oluştur",
+      "hasAcc": "Zaten hesabınız var mı?",
+      "login": "Buradan giriş yapın"
+    }
+  },
+  "scraperSettings": {
+    "title": "Tarayıcı Ayarları",
+    "description": "Web sitesi içeriğini getirmek için tercih ettiğiniz yöntemi seçin.",
+    "typeLabel": "Tarayıcı Tipi",
+    "typePlaceholder": "Tip seçin...",
+    "none": "Yok (Devre Dışı)",
+    "recommended": "Önerilen",
+    "apiKey": "API Anahtarı",
+    "apiKeyPlaceholder": "API anahtarınızı girin...",
+    "save": "Ayarları Kaydet",
+    "desc": "Manage your scraping settings and integrations",
+    "configTitle": "Scraper Configuration",
+    "configDesc": "Configure your scraper settings and proxy options",
+    "type": "Scraper Type",
+    "delay": "Scrape Delay",
+    "delayNone": "None",
+    "delay5": "5 seconds",
+    "delay10": "10 seconds",
+    "delay30": "30 seconds",
+    "retry": "Enable retry on failure",
+    "saving": "Saving...",
+    "noKey": "Don't have an API key?",
+    "signUp": "Sign up for {{service}}",
+    "notificationInterval": "Notification Interval",
+    "notificationEmail": "Notification Email"
+  },
+  "dashboard": {
+    "title": "Alan Adlarım",
+    "description": "Tüm alan adlarınızın SEO performansını tek bir yerden yönetin ve izleyin.",
+    "addDomain": "Alan Adı Ekle",
+    "searchPlaceholder": "Alan adı ara...",
+    "noDomains": "Henüz alan adı eklenmemiş.",
+    "addFirst": "İlk alan adınızı ekleyerek başlayın.",
+    "stats": {
+      "totalKeywords": "Toplam Anahtar Kelime",
+      "avgPosition": "Ort. Pozisyon",
+      "totalTraffic": "Tahmini Trafik",
+      "topRankings": "İlk 3'teki Sıralamalar"
+    },
+    "domains": "Domains",
+    "keywords": "Keywords",
+    "settings": "Settings"
+  },
+  "domainSettings": {
+    "title": "Alan Adı Ayarları",
+    "description": "{{domain}} için ayarları ve entegrasyonları yönetin.",
+    "tabs": {
+      "general": "Genel",
+      "integrations": "Entegrasyonlar",
+      "gsc": "Search Console",
+      "danger": "Tehlike Bölgesi",
+      "searchConsole": "Google Search Console",
+      "delete": "Delete"
+    },
+    "general": {
+      "title": "Genel Ayarlar",
+      "nameLabel": "Alan Adı Adı",
+      "urlLabel": "Alan Adı URL'si",
+      "saveBtn": "Ayarları Güncelle",
+      "success": "Alan adı başarıyla güncellendi!",
+      "cardTitle": "General Information",
+      "cardDesc": "Update your domain's business information and niche details.",
+      "businessName": "Business Name",
+      "businessNameDesc": "The official name of your business or brand.",
+      "niche": "Niche / Industry",
+      "nicheDesc": "The primary industry or topic of your website.",
+      "description": "Business Description",
+      "descriptionDesc": "A short description used for AI context generation.",
+      "save": "Save Changes",
+      "saving": "Saving..."
+    },
+    "integrations": {
+      "title": "WordPress Entegrasyonu",
+      "desc": "Yapay zeka tarafından oluşturulan makaleleri doğrudan yayınlamak için WordPress sitenizi bağlayın.",
+      "help": {
+        "title": "Nasıl Bağlanır?",
+        "appPassTitle": "Uygulama Şifresi Kullanın",
+        "appPassStep1": "WordPress panelinize giriş yapın.",
+        "appPassStep2": "Kullanıcılar → Profil bölümüne gidin.",
+        "appPassStep3": "'Uygulama Şifreleri' bölümünü bulun.",
+        "appPassStep4": "Bir ad girin (örn. 'SEO AI Agent') ve 'Yeni Uygulama Şifresi Ekle'ye tıklayın.",
+        "appPassStep5": "Oluşturulan 24 karakterlik şifreyi kopyalayıp aşağıya yapıştırın.",
+        "urlLabel": "1. Website URL:",
+        "urlDesc": "Enter the exact URL of your WordPress site (e.g., https://yoursite.com). Make sure it matches exactly - including http/https and www/non-www.",
+        "usernameLabel": "2. Username:",
+        "usernameDesc": "Use your WordPress login username (not your display name or email). Find it in: WP Admin → Users → Your Profile → Username field.",
+        "appPassLabel": "3. Application Password:"
+      },
+      "url": "WordPress Site URL'si",
+      "urlPlaceholder": "https://ornek.com",
+      "urlHelper": "http:// veya https:// dahil tam URL",
+      "username": "Kullanıcı Adı",
+      "usernamePlaceholder": "admin",
+      "usernameHelper": "Uygulama şifresini oluşturduğunuz kullanıcı adı.",
+      "appPass": "Uygulama Şifresi",
+      "appPassPlaceholder": "xxxx xxxx xxxx xxxx xxxx xxxx",
+      "appPassHelper": "WordPress'ten aldığınız 24 karakterlik şifre.",
+      "refreshCats": "Kategorileri Yenile",
+      "availCats": "Mevcut Kategoriler",
+      "catsHelper": "Yeni makaleler için kullanılacak kategorileri seçin.",
+      "test": "Bağlantıyı Test Et",
+      "saveInt": "Entegrasyonu Kaydet",
+      "connected": "WordPress'e başarıyla bağlandı!",
+      "failed": "Bağlantı başarısız. Lütfen bilgilerinizi kontrol edin.",
+      "enterCreds": "Lütfen gerekli tüm bilgileri girin.",
+      "foundCats": "{{count}} kategori bulundu.",
+      "fetchCatsError": "Kategoriler getirilemedi",
+      "testing": "Bağlantı test ediliyor...",
+      "cardTitle": "CMS Integrations",
+      "cardDesc": "Connect your website CMS to enable auto-blogging features.",
+      "wpDesc": "Connect your self-hosted WordPress site using Application Passwords.",
+      "shopifyDesc": "Connect your Shopify store using Access Tokens.",
+      "webflowDesc": "Connect your Webflow site seamlessly.",
+      "wixDesc": "Connect your Wix website easily.",
+      "comingSoon": "Coming Soon",
+      "settingsTitle": "WordPress Settings",
+      "helpTitle": "How to Get Your WordPress Credentials"
+    },
+    "gsc": {
+      "cardTitle": "Google Search Console",
+      "cardDesc": "Google Search Console hesabınızı bağlayın",
+      "connected": "Google Hesabı Bağlandı",
+      "disconnect": "Bağlantıyı Kes",
+      "verifiedSites": "Doğrulanmış Siteler",
+      "refreshSites": "Siteleri Yenile",
+      "loading": "Yükleniyor...",
+      "noSites": "Doğrulanmış site bulunamadı",
+      "owner": "Sahip",
+      "full": "Tam Erişim",
+      "restricted": "Kısıtlı",
+      "unverified": "Doğrulanmamış",
+      "imported": "İçe Aktarıldı",
+      "add": "Ekle",
+      "notesTitle": "Önemli Notlar:",
+      "note1": "Yalnızca Google Search Console'da Sahibi olduğunuz siteler görünecek ve düzgün çalışacaktır.",
+      "connectBtn": "Google Hesabını Bağla",
+      "connectDesc": "Siteleri otomatik olarak doğrulamak ve performans verilerini doğrudan panelinize çekmek için Google hesabınızı bağlayın."
+    },
+    "danger": {
+      "title": "Siteyi Sil",
+      "desc": "Siteniz için geri alınamaz işlemler.",
+      "warning": "Bu siteyi ve tüm verilerini kalıcı olarak kaldırın. Bu işlem geri alınamaz.",
+      "warning1": "Tüm anahtar kelime takip verileri silinecek",
+      "warning2": "Tüm yazılar ve içerikler kaldırılacak",
+      "warning3": "Tüm analizler ve performans verileri kaybolacak",
+      "confirmLabel": "Onaylamak için lütfen {{domain}} yazın",
+      "btn": "Siteyi Sil",
+      "deleting": "Siliniyor..."
+    },
+    "myApp": "My App",
+    "strategy": {
+      "cardTitle": "Target Keywords Strategy",
+      "country": "Target Country",
+      "allCountries": "All Countries",
+      "cardDesc": "Define up to 9 focus keywords ranked by importance. These guide your SEO strategy for the next 6 months.",
+      "high": "High Importance (Top 3)",
+      "highDesc": "Critical keywords you must dominate to drive core business.",
+      "medium": "Medium Importance",
+      "mediumDesc": "Important keywords that support your main services.",
+      "low": "Low Importance",
+      "lowDesc": "Long-tail or future opportunity keywords."
+    },
+    "competitors": {
+      "cardTitle": "Competitors",
+      "cardDesc": "Track your competitors to benchmark your performance.",
+      "tracked": "Tracked Competitors",
+      "add": "Add",
+      "empty": "No competitors added yet.",
+      "exists": "Competitor already added"
+    }
+  },
+  "posts": {
+    "pageTitle": "Makaleler",
+    "newArticleTitle": "Yeni Makale",
+    "editArticleTitle": "Makaleyi Düzenle",
+    "list": {
+      "title": "SEO Makaleleriniz",
+      "description": "Yapay zeka ile optimize edilmiş web sitesi içeriğinizi yönetin.",
+      "newArticle": "Yeni AI Makalesi",
+      "emptyTitle": "Henüz makale yok",
+      "emptyDesc": "Siteniz için ilk SEO uyumlu makalenizi oluşturmaya başlayın.",
+      "createBtn": "Makale Oluştur",
+      "wordpress": "WordPress"
+    },
+    "tabs": {
+      "all": "Hepsi",
+      "drafts": "Taslaklar",
+      "published": "Yayınlananlar"
+    },
+    "table": {
+      "article": "Makale",
+      "status": "Durum",
+      "lastUpdated": "Son Güncelleme",
+      "actions": "İşlemler"
+    },
+    "status": {
+      "published": "Yayınlandı",
+      "draft": "Taslak"
+    },
+    "editor": {
+      "back": "Makalelere Dön",
+      "generate": "AI ile Oluştur",
+      "generating": "Oluşturuluyor...",
+      "save": "Kaydet",
+      "saving": "Kaydediliyor...",
+      "saved": "Kaydedildi",
+      "newTitle": "Yeni Makale",
+      "editTitle": "Makaleyi Düzenle",
+      "description": "Sıralama alan içerikler yazmak için SEO analiz araçlarımızı kullanın.",
+      "contentEditor": "İçerik Editörü",
+      "topicLabel": "Makale Konusu",
+      "ready": "Hazır mısınız?",
+      "topicPlaceholder": "Bu makale ne hakkında?",
+      "topicHelp": "Bu konu AI modellerimize rehberlik edecektir.",
+      "titleLabel": "Makale Başlığı",
+      "titlePlaceholder": "Başlık girin...",
+      "titleShort": "Çok kısa",
+      "titleLong": "Çok uzun",
+      "featuredImage": "Öne Çıkan Görsel",
+      "clickToChange": "Değiştirmek için tıkla",
+      "clickToUpload": "Yüklemek için tıkla",
+      "aiImageComingSoon": "AI Görsel Oluşturma Yakında",
+      "bodyContent": "Makale İçeriği",
+      "visualEditor": "Görsel Editör",
+      "sourceCode": "Kaynak Kodu"
+    },
+    "seo": {
+      "score": "SEO Puanı",
+      "scoreDesc": {
+        "excellent": "Mükemmel! Makaleniz yayınlanmaya ve sıralama almaya hazır.",
+        "good": "Çok iyi, birkaç küçük değişiklikle mükemmel olabilir.",
+        "improve": "Üst sıralarda rekabet edebilmek için önemli iyileştirmeler gerekiyor."
+      },
+      "optimized": "Optimize Edildi",
+      "suggestionsTitle": "İyileştirme Önerileri",
+      "suggestions": {
+        "addWords": "Makale çok kısa. Lütfen daha fazla faydalı içerik ekleyin.",
+        "addKeywords": "Hedef anahtar kelimeleri makalenizin başına ekleyin.",
+        "addHeadings": "İçeriği düzenlemek için alt başlıklar (H2, H3) kullanın.",
+        "addImage": "Daha iyi kullanıcı deneyimi için en az bir görsel ekleyin.",
+        "addMeta": "Etkileyici bir meta açıklaması yazdığınızdan emin olun.",
+        "titleLength": "Makale başlığı 50-60 karakter arasında olmalıdır.",
+        "includeAllKeywords": "İçerikte tüm hedef anahtar kelimelerin geçtiğinden emin olun.",
+        "addPrimaryTitle": "Ana anahtar kelimeyi ana başlığa (H1) ekleyin.",
+        "addPrimaryMeta": "Ana anahtar kelimeyi meta açıklamasına ekleyin.",
+        "addInternalLinks": "Sitenizdeki önceki içeriklere bağlantılar ekleyin.",
+        "moreInternalLinks": "Daha fazla iç bağlantı sitenizin yapısını güçlendirecektir.",
+        "addAllAlt": "Eklediğiniz tüm görsellere alt metin ekleyin.",
+        "addRemainingAlt": "Bazı görseller hala alt metinsiz (Alt Text).",
+        "addH1": "Makale sadece bir adet H1 başlığı içermelidir.",
+        "singleH1": "Benzersiz ve net bir H1 başlığınız olduğundan emin olun.",
+        "addH2": "İçeriği bölmek için H2 düzeyinde başlıklar ekleyin.",
+        "addH3": "Daha fazla düzen için ana başlıkların altında H3 başlıkları kullanın."
+      },
+      "metrics": {
+        "wordCount": "Kelime Sayısı",
+        "keywordDensity": "Anahtar Kelime Yoğunluğu",
+        "headingStructure": "Başlık Yapısı",
+        "images": "Görseller",
+        "keywordsInContent": "İçerikteki Anahtar Kelimeler",
+        "keywordInTitle": "Başlıktaki Anahtar Kelime",
+        "keywordInMeta": "Metadaki Anahtar Kelime",
+        "internalLinks": "İç Bağlantılar",
+        "externalLinks": "Dış Bağlantılar",
+        "imagesInContent": "İçerikteki Görseller",
+        "withAltText": "Alt Metinli"
+      }
+    },
+    "meta": {
+      "title": "Meta Bilgileri",
+      "targetKeywords": "Hedef Anahtar Kelimeler",
+      "editStrategy": "Stratejiyi Düzenle",
+      "customKeyword": "Veya özel kelime ekle:",
+      "keywordPlaceholder": "Kelime girin...",
+      "addBtn": "Ekle",
+      "addHelp": "Kelime eklemek için Enter'a basın veya tıklayın",
+      "selectedKeywords": "Seçili Anahtar Kelimeler:",
+      "metaDescription": "Meta Açıklaması",
+      "metaPlaceholder": "Arama motorları için açıklama..."
+    },
+    "publish": {
+      "wordpress": "WordPress'te Yayınla",
+      "publishing": "Yayınlanıyor..."
+    },
+    "modal": {
+      "altTitle": "Görsel Alt Metni Düzenle",
+      "altLabel": "Alt Metin (SEO ve Erişilebilirlik)",
+      "altHelp": "Arama motorları ve ekran okuyucular için görseli tanımlayın",
+      "updateAlt": "Alt Metني Güncelle",
+      "linkTitle": "Bağlantı Başlığını Düzenle",
+      "linkText": "Bağlantı Metni",
+      "linkUrl": "Bağlantı URL",
+      "linkTooltip": "Bağlantı İpucu (Tooltip)",
+      "linkHelp": "Bu, kullanıcı bağlantının üzerine geldiğinde görünür",
+      "updateLink": "Başlığı Güncelle"
+    },
+    "common": {
+      "cancel": "İptal"
+    }
+  },
+  "footerMenu": {
+    "product": "Ürün",
+    "resources": "Kaynaklar",
+    "company": "Şirket",
+    "legal": "Yasal",
+    "talentManagement": "Talent Management",
+    "ats": "Applicant Tracking Software",
+    "documentation": "Documentation",
+    "seoExpertSkill": "SEO Expert Skill",
+    "blog": "Blog",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "imprint": "Imprint",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "consentPreferences": "Consent Preferences",
+    "accessibility": "Accessibility"
+  },
+  "nav": {
+    "features": "Özellikler",
+    "blog": "Blog",
+    "contact": "İletişim",
+    "mcpIntegration": "MCP Entegrasyonu",
+    "signIn": "Giriş Yap",
+    "getStarted": "Başlayın"
+  },
+  "seo": {
+    "mcpSeo": {
+      "title": "SEO Agent MCP - ChatGPT ve Claude Desktop'ı Bağlayın",
+      "description": "SEO verilerinizi Model Context Protocol (MCP) ile Claude Desktop ve ChatGPT'ye bağlayın. Gerçek zamanlı sıralamalar, analitikler ve içerik üretimi.",
+      "keywords": "mcp, seo agent, claude desktop, chatgpt, seo api, sıralama takibi, gsc",
+      "ogTitle": "Yapay Zekanızı SEO Verileriyle Güçlendirin",
+      "ogDescription": "Claude Desktop'ı doğrudan SEO metriklerinize, sıralamalarınıza ve GSC verilerinize bağlayın.",
+      "twitterTitle": "SEO Agent MCP - Yapay Zeka SEO Otomasyonu",
+      "twitterDescription": "Gerçek SEO verilerinizi ChatGPT ve Claude'a bağlayın."
     }
   },
   "onboarding": {
@@ -104,14 +450,6 @@
       "maxReached": "(Max 3 reached)",
       "suggestions": "Suggestions:"
     }
-  },
-  "dashboard": {
-    "title": "Dashboard",
-    "domains": "Domains",
-    "keywords": "Keywords",
-    "settings": "Settings",
-    "addDomain": "Add Domain",
-    "noDomains": "No domains found. Add a domain to get started!"
   },
   "common": {
     "loading": "Loading...",
@@ -385,36 +723,12 @@
       "publishWordpressDesc": "Publish articles to your website"
     },
     "expiryOptions": {
+      "0": "Never expires",
       "7": "7 days",
       "30": "30 days (Recommended)",
       "90": "90 days",
-      "365": "1 year",
-      "0": "Never expires"
+      "365": "1 year"
     }
-  },
-  "scraperSettings": {
-    "title": "Scraper Configuration",
-    "desc": "Manage your scraping settings and integrations",
-    "configTitle": "Scraper Configuration",
-    "configDesc": "Configure your scraper settings and proxy options",
-    "type": "Scraper Type",
-    "typePlaceholder": "Select scraper type",
-    "none": "None",
-    "recommended": "Recommended",
-    "apiKey": "API Key",
-    "apiKeyPlaceholder": "Enter your API key",
-    "delay": "Scrape Delay",
-    "delayNone": "None",
-    "delay5": "5 seconds",
-    "delay10": "10 seconds",
-    "delay30": "30 seconds",
-    "retry": "Enable retry on failure",
-    "save": "Save Changes",
-    "saving": "Saving...",
-    "noKey": "Don't have an API key?",
-    "signUp": "Sign up for {{service}}",
-    "notificationInterval": "Notification Interval",
-    "notificationEmail": "Notification Email"
   },
   "periods": {
     "today": "Today",
@@ -450,13 +764,7 @@
     "noResults": "No results found for \"{{query}}\"",
     "topPerformers": "Top Performers",
     "exportCSV": "Export CSV",
-    "selectTab": "Select View",
-    "syncingBing": "Syncing Bing data...",
-    "bingError": "Failed to load Bing data",
-    "noKeywordsData": "No keyword data available yet",
-    "bingConnectTitle": "Bing Webmaster Tools Not Connected",
-    "bingConnectDesc": "Connect your Bing Webmaster account to view search performance data including clicks, impressions, and keyword rankings.",
-    "bingConnectBtn": "Connect Bing Account"
+    "selectTab": "Select View"
   },
   "domainHeader": {
     "last3Days": "Last 3 Days",
@@ -597,251 +905,6 @@
     "switch": "Switch Domain",
     "add": "Add Website",
     "empty": "No domains found"
-  },
-  "domainSettings": {
-    "title": "Domain Settings",
-    "myApp": "My App",
-    "tabs": {
-      "general": "General",
-      "integrations": "Integrations",
-      "searchConsole": "Google Search Console",
-      "delete": "Delete"
-    },
-    "general": {
-      "cardTitle": "General Information",
-      "cardDesc": "Update your domain's business information and niche details.",
-      "businessName": "Business Name",
-      "businessNameDesc": "The official name of your business or brand.",
-      "niche": "Niche / Industry",
-      "nicheDesc": "The primary industry or topic of your website.",
-      "description": "Business Description",
-      "descriptionDesc": "A short description used for AI context generation.",
-      "save": "Save Changes",
-      "saving": "Saving..."
-    },
-    "strategy": {
-      "cardTitle": "Target Keywords Strategy",
-      "country": "Target Country",
-      "allCountries": "All Countries",
-      "cardDesc": "Define up to 9 focus keywords ranked by importance. These guide your SEO strategy for the next 6 months.",
-      "high": "High Importance (Top 3)",
-      "highDesc": "Critical keywords you must dominate to drive core business.",
-      "medium": "Medium Importance",
-      "mediumDesc": "Important keywords that support your main services.",
-      "low": "Low Importance",
-      "lowDesc": "Long-tail or future opportunity keywords."
-    },
-    "competitors": {
-      "cardTitle": "Competitors",
-      "cardDesc": "Track your competitors to benchmark your performance.",
-      "tracked": "Tracked Competitors",
-      "add": "Add",
-      "empty": "No competitors added yet.",
-      "exists": "Competitor already added"
-    },
-    "integrations": {
-      "cardTitle": "CMS Integrations",
-      "cardDesc": "Connect your website CMS to enable auto-blogging features.",
-      "wpDesc": "Connect your self-hosted WordPress site using Application Passwords.",
-      "shopifyDesc": "Connect your Shopify store using Access Tokens.",
-      "webflowDesc": "Connect your Webflow site seamlessly.",
-      "wixDesc": "Connect your Wix website easily.",
-      "comingSoon": "Coming Soon",
-      "settingsTitle": "WordPress Settings",
-      "helpTitle": "How to Get Your WordPress Credentials",
-      "help": {
-        "urlLabel": "1. Website URL:",
-        "urlDesc": "Enter the exact URL of your WordPress site (e.g., https://yoursite.com). Make sure it matches exactly - including http/https and www/non-www.",
-        "usernameLabel": "2. Username:",
-        "usernameDesc": "Use your WordPress login username (not your display name or email). Find it in: WP Admin → Users → Your Profile → Username field.",
-        "appPassLabel": "3. Application Password:",
-        "appPassStep1": "Go to: WP Admin → Users → Profile (your account)",
-        "appPassStep2": "Scroll down to \"Application Passwords\" section",
-        "appPassStep3": "Enter a name (e.g., \"SEO Agent\") and click \"Add New Application Password\"",
-        "appPassStep4": "Copy the generated password (format: xxxx xxxx xxxx xxxx)",
-        "appPassStep5": "Paste it in the field below"
-      },
-      "url": "Website URL",
-      "urlPlaceholder": "https://yourwebsite.com",
-      "urlHelper": "The full URL of your WordPress site.",
-      "username": "Username",
-      "usernamePlaceholder": "admin",
-      "usernameHelper": "Your WordPress username (not email).",
-      "appPass": "Application Password",
-      "appPassPlaceholder": "xxxx xxxx xxxx xxxx",
-      "appPassHelper": "Create this in WP Admin > Users > Profile > Application Passwords.",
-      "refreshCats": "Refresh Categories",
-      "availCats": "Available Categories based on your website",
-      "catsHelper": "Connect above, then click \"Refresh\" to see your categories.",
-      "test": "Test Connection",
-      "saveInt": "Save Integration",
-      "connected": "Connected as {{user}}",
-      "failed": "Connection failed",
-      "enterCreds": "Please enter credentials first",
-      "foundCats": "Found {{count}} categories",
-      "fetchCatsError": "Failed to fetch categories",
-      "testing": "Testing connection..."
-    },
-    "gsc": {
-      "cardTitle": "Google Search Console",
-      "cardDesc": "Connect your Google Search Console account",
-      "connected": "Google Account Connected",
-      "disconnect": "Disconnect",
-      "verifiedSites": "Verified Sites",
-      "refreshSites": "Refresh Sites",
-      "loading": "Loading...",
-      "noSites": "No verified sites found",
-      "owner": "Owner",
-      "full": "Full Access",
-      "restricted": "Restricted",
-      "unverified": "Unverified",
-      "imported": "Imported",
-      "add": "Add",
-      "notesTitle": "Important Notes:",
-      "note1": "Only sites where you are the Owner in Google Search Console will appear and work properly.",
-      "connectBtn": "Connect Google Account",
-      "connectDesc": "Link your Google account to automatically verify sites and fetch performance data directly into your dashboard."
-    },
-    "danger": {
-      "title": "Delete Site",
-      "desc": "Irreversible actions for your site.",
-      "warning": "Permanently remove this site and all its data. This action cannot be undone.",
-      "warning1": "All keyword tracking data will be deleted",
-      "warning2": "All posts and content will be removed",
-      "warning3": "All analytics and performance data will be lost",
-      "confirmLabel": "Please type {{domain}} to confirm",
-      "btn": "Delete Site",
-      "deleting": "Deleting..."
-    }
-  },
-  "posts": {
-    "pageTitle": "Posts",
-    "newArticleTitle": "New Article",
-    "editArticleTitle": "Edit Article",
-    "list": {
-      "title": "Articles",
-      "description": "Manage and optimize your blog content.",
-      "newArticle": "New Article",
-      "emptyTitle": "No articles found",
-      "emptyDesc": "Get started by creating your first AI-optimized article.",
-      "createBtn": "Create Article",
-      "wordpress": "WordPress"
-    },
-    "tabs": {
-      "all": "All Posts",
-      "drafts": "Drafts",
-      "published": "Published"
-    },
-    "table": {
-      "article": "Article",
-      "status": "Status",
-      "lastUpdated": "Last Updated",
-      "actions": "Actions"
-    },
-    "status": {
-      "published": "Published",
-      "draft": "Draft"
-    },
-    "editor": {
-      "back": "Back to Posts",
-      "generate": "Generate",
-      "generating": "Generating...",
-      "save": "Save",
-      "saving": "Saving...",
-      "saved": "Save (Saved)",
-      "newTitle": "New Article",
-      "editTitle": "Edit Article",
-      "description": "Generate SEO-optimized content for your blog",
-      "contentEditor": "Content Editor",
-      "topicLabel": "Article Topic/Idea",
-      "ready": "Ready",
-      "topicPlaceholder": "Enter your article topic or main idea... e.g., 'How to improve SEO rankings in 2026'",
-      "topicHelp": "This will be used by AI to generate your article. Be specific for better results.",
-      "titleLabel": "Article Title",
-      "titlePlaceholder": "Enter your article title...",
-      "titleShort": "Title is too short for optimal SEO (aim for 50-60 characters)",
-      "titleLong": "Title may be truncated in search results (keep it under 60 characters)",
-      "featuredImage": "Featured Image",
-      "clickToChange": "Click to change",
-      "clickToUpload": "Click to upload image",
-      "aiImageComingSoon": "or AI will generate one (coming soon)",
-      "bodyContent": "Body Content",
-      "visualEditor": "Switch to Visual Editor",
-      "sourceCode": "Edit Source Code"
-    },
-    "seo": {
-      "score": "SEO Score",
-      "scoreDesc": {
-        "excellent": "You're doing an excellent job! Your content is well optimized",
-        "good": "You're doing a good effort to reach your goal",
-        "improve": "Keep working on your content to improve your SEO score"
-      },
-      "optimized": "Article Optimized",
-      "suggestionsTitle": "Suggestions to Improve",
-      "suggestions": {
-        "addWords": "Add {{count}} more words to reach optimal length",
-        "addKeywords": "Include your keywords {{count}} more times naturally",
-        "addHeadings": "Add {{count}} more heading(s) (H2 or H3)",
-        "addImage": "Add a featured image to improve engagement",
-        "addMeta": "Write a meta description (150-160 chars)",
-        "titleLength": "Optimize title length to 50-60 characters",
-        "includeAllKeywords": "Include all selected keywords in your content ({{current}}/{{total}} found)",
-        "addPrimaryTitle": "Add your primary keyword \"{{keyword}}\" to the title",
-        "addPrimaryMeta": "Include primary keyword in meta description",
-        "addInternalLinks": "Add at least 2-3 internal links to other pages on your site",
-        "moreInternalLinks": "Add 1-2 more internal links to improve SEO",
-        "addAllAlt": "Add alt text to all {{count}} images for better SEO and accessibility",
-        "addRemainingAlt": "Add alt text to the remaining {{count}} images",
-        "addH1": "Add one H1 heading as the main article title",
-        "singleH1": "Use only one H1 heading (currently: {{count}}). Multiple H1s hurt SEO",
-        "addH2": "Add {{count}} more H2 headings to structure content (optimal: 3-6)",
-        "addH3": "Consider adding {{count}} more H3 sub-headings for better content hierarchy (optimal: 6-12)"
-      },
-      "metrics": {
-        "wordCount": "Word Count",
-        "keywordDensity": "Keyword Density",
-        "headingStructure": "Heading Structure",
-        "images": "Images",
-        "keywordsInContent": "Keywords in Content",
-        "keywordInTitle": "Keyword in Title",
-        "keywordInMeta": "Keyword in Meta",
-        "internalLinks": "Internal Links",
-        "externalLinks": "External Links",
-        "imagesInContent": "Images in Content",
-        "withAltText": "With Alt Text"
-      }
-    },
-    "meta": {
-      "title": "Meta Data",
-      "targetKeywords": "Target Keywords",
-      "editStrategy": "Edit Strategy",
-      "customKeyword": "Or add custom keyword:",
-      "keywordPlaceholder": "Enter keyword...",
-      "addBtn": "Add",
-      "addHelp": "Press Enter or click Add to include a custom keyword",
-      "selectedKeywords": "Selected Keywords:",
-      "metaDescription": "Meta Description",
-      "metaPlaceholder": "Description for search engines..."
-    },
-    "publish": {
-      "wordpress": "Publish to WordPress",
-      "publishing": "Publishing..."
-    },
-    "modal": {
-      "altTitle": "Edit Image Alt Text",
-      "altLabel": "Alt Text (for SEO & Accessibility)",
-      "altHelp": "Describe what's in the image for screen readers and search engines",
-      "updateAlt": "Update Alt Text",
-      "linkTitle": "Edit Link Title",
-      "linkText": "Link Text",
-      "linkUrl": "Link URL",
-      "linkTooltip": "Link Title (Tooltip)",
-      "linkHelp": "This appears when users hover over the link",
-      "updateLink": "Update Title"
-    },
-    "common": {
-      "cancel": "Cancel"
-    }
   },
   "hero": {
     "headline": "SEO AI Agent",
@@ -1420,31 +1483,6 @@
     "disclaimerCopyrightText": "The content and works created by the site operators are subject to Austrian copyright law.",
     "lastUpdated": "Last Updated"
   },
-  "nav": {
-    "features": "Features",
-    "blog": "Blog",
-    "contact": "Contact",
-    "mcpIntegration": "MCP Integration",
-    "signIn": "Sign In",
-    "getStarted": "Get Started"
-  },
-  "footerMenu": {
-    "product": "Product",
-    "resources": "Resources",
-    "legal": "Legal",
-    "talentManagement": "Talent Management",
-    "ats": "Applicant Tracking Software",
-    "documentation": "Documentation",
-    "seoExpertSkill": "SEO Expert Skill",
-    "blog": "Blog",
-    "contact": "Contact",
-    "faq": "FAQ",
-    "imprint": "Imprint",
-    "privacyPolicy": "Privacy Policy",
-    "termsOfService": "Terms of Service",
-    "consentPreferences": "Consent Preferences",
-    "accessibility": "Accessibility"
-  },
   "meta": {
     "mcpSeo": {
       "title": "SEO Agent MCP Server - Connect Claude & ChatGPT",
@@ -1452,12 +1490,6 @@
       "keywords": "mcp, seo agent, claude desktop, chatgpt, seo api, rank tracking, gsc",
       "ogTitle": "Supercharge your AI with SEO Data",
       "ogDescription": "Connect Claude Desktop directly to your SEO metrics, rankings, and GSC data."
-    }
-  },
-  "seo": {
-    "mcpSeo": {
-      "twitterTitle": "SEO Agent MCP Integration",
-      "twitterDescription": "Connect Claude & ChatGPT to your real-time SEO data."
     }
   },
   "bing": {

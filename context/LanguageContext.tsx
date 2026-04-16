@@ -3,11 +3,27 @@ import { useRouter } from 'next/router';
 import enCommon from '../locales/en/common.json';
 import deCommon from '../locales/de/common.json';
 import frCommon from '../locales/fr/common.json';
+import esCommon from '../locales/es/common.json';
 import enMeta from '../locales/en/metadata.json';
 import deMeta from '../locales/de/metadata.json';
 import frMeta from '../locales/fr/metadata.json';
+import esMeta from '../locales/es/metadata.json';
+import ptCommon from '../locales/pt/common.json';
+import ptMeta from '../locales/pt/metadata.json';
+import zhCommon from '../locales/zh/common.json';
+import zhMeta from '../locales/zh/metadata.json';
+import itCommon from '../locales/it/common.json';
+import itMeta from '../locales/it/metadata.json';
+import nlCommon from '../locales/nl/common.json';
+import nlMeta from '../locales/nl/metadata.json';
+import commonTR from '../locales/tr/common.json';
+import metadataTR from '../locales/tr/metadata.json';
+import commonAR from '../locales/ar/common.json';
+import metadataAR from '../locales/ar/metadata.json';
+import commonJA from '../locales/ja/common.json';
+import metadataJA from '../locales/ja/metadata.json';
 
-type Locale = 'en' | 'de' | 'fr';
+export type Locale = 'en' | 'de' | 'fr' | 'es' | 'it' | 'pt' | 'zh' | 'nl' | 'tr' | 'ar' | 'ja';
 
 interface LanguageContextType {
     locale: Locale;
@@ -19,8 +35,16 @@ interface LanguageContextType {
 const en = { ...enCommon, meta: enMeta };
 const de = { ...deCommon, meta: deMeta };
 const fr = { ...frCommon, meta: frMeta };
+const es = { ...esCommon, meta: esMeta };
+const pt = { ...ptCommon, meta: ptMeta };
+const zh = { ...zhCommon, meta: zhMeta };
+const it = { ...itCommon, meta: itMeta };
+const nl = { ...nlCommon, meta: nlMeta };
+const tr = { ...commonTR, meta: metadataTR };
+const ar = { ...commonAR, meta: metadataAR };
+const ja = { ...commonJA, meta: metadataJA };
 
-const translationsMap = { en, de, fr };
+const translationsMap = { en, de, fr, es, it, pt, zh, nl, tr, ar, ja };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
@@ -55,7 +79,18 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
         syncFromDb();
     }, []);
 
-    const setLocale = (newLocale: Locale) => {
+    useEffect(() => {
+    // Force RTL for Arabic, LTR for others
+    if (locale === 'ar') {
+      document.documentElement.dir = 'rtl';
+      document.documentElement.lang = 'ar';
+    } else {
+      document.documentElement.dir = 'ltr';
+      document.documentElement.lang = locale;
+    }
+  }, [locale]);
+
+  const setLocale = (newLocale: Locale) => {
         // Save preference to localStorage
         localStorage.setItem('app_locale', newLocale);
 

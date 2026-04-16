@@ -1,0 +1,40 @@
+{
+    "home": {
+        "title": "SEO AI Agent | Google Rank Tracker",
+        "description": "Compleet SEO-platform: Volg zoekwoordposities in 200+ landen, analyseer Google Search Console-data, genereer AI-content met GPT-5 & Claude, en publiceer direct naar WordPress. Gratis plan beschikbaar.",
+        "keywords": "SEO tracking tool, zoekwoord rank tracker, multi-country SEO, Google Search Console integratie, AI-content generator, ChatGPT SEO, Claude AI content, WordPress auto-publish, SEO analytics, concurrenten volgen, MCP API, SEO automatisering",
+        "ogTitle": "SEO Agent - Compleet SEO Tracking & AI Content Platform",
+        "ogDescription": "Volg rankings in 200+ landen, genereer AI-content en publiceer naar WordPress. Integreer met ChatGPT & Claude via de MCP API.",
+        "twitterTitle": "SEO Agent - AI-Powered SEO Platform",
+        "twitterDescription": "Volg rankings, maak AI-content, publiceer naar WordPress. 200+ landen ondersteund."
+    },
+    "mcpSeo": {
+        "title": "MCP SEO | Verbind ChatGPT & Claude met SEO-data",
+        "description": "Integreer SEO Agent met ChatGPT en Claude Desktop via de MCP API. Volg rankings, analyseer zoekwoorden en genereer content direct vanuit je AI-chat. Inclusief gratis installatiehandleiding.",
+        "keywords": "MCP SEO, Model Context Protocol, ChatGPT integratie, Claude Desktop, AI SEO automatisering, SEO API, zoekwoord tracking API, ChatGPT SEO, Claude AI SEO, MCP server, AI-assistent SEO, conversatie SEO",
+        "ogTitle": "MCP SEO Integratie - ChatGPT & Claude Desktop | SEO Agent",
+        "ogDescription": "Krijg direct toegang tot je SEO-gegevens vanuit ChatGPT en Claude Desktop. Volg rankings, analyseer zoekwoorden en maak content met AI. Volledige MCP-installatiegids.",
+        "twitterTitle": "MCP SEO - Integreer ChatGPT & Claude met SEO Agent",
+        "twitterDescription": "Gebruik ChatGPT en Claude Desktop om toegang te krijgen tot je SEO-gegevens, rankings te volgen en content te genereren. Volledige MCP-integratiegids."
+    },
+    "login": {
+        "title": "Inloggen - SEO Agent",
+        "description": "Log in bij SEO AI Agent om toegang te krijgen tot je dashboard, rankings te volgen en je AI-contentgeneratie te beheren."
+    },
+    "register": {
+        "title": "Aanmelden - SEO Agent",
+        "description": "Meld je aan voor SEO AI Agent. Begin vandaag nog met het volgen van je SEO-rankings en het genereren van AI-geoptimaliseerde content voor je website."
+    },
+    "terms": {
+        "title": "Algemene Voorwaarden | SEO Agent",
+        "description": "Algemene Voorwaarden voor SEO Agent - Lees onze voorwaarden voor het gebruik van ons SEO tracking- en AI-contentgeneratieplatform."
+    },
+    "privacy": {
+        "title": "Privacybeleid | SEO Agent",
+        "description": "Privacybeleid voor SEO Agent - Lees hoe we je gegevens verzamelen, gebruiken en beschermen. GDPR-compliant SEO tracking- en AI-contentplatform."
+    },
+    "impressum": {
+        "title": "Impressum - Juridische Informatie | SEO Agent",
+        "description": "Juridische informatie en bedrijfsgegevens van Dpro GmbH, exploitant van SEO Agent."
+    }
+}

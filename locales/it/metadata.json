@@ -1,0 +1,40 @@
+{
+    "home": {
+        "title": "SEO Ai Agent | Tracker dei Posizionamenti Google",
+        "description": "Piattaforma SEO completa: traccia i posizionamenti delle parole chiave in oltre 200 paesi, analizza i dati di Google Search Console, genera contenuti AI con GPT-5 e Claude, pubblica direttamente su WordPress. Piano gratuito disponibile.",
+        "keywords": "strumento di tracciamento SEO, tracker posizionamento parole chiave, SEO multi-paese, integrazione Google Search Console, generatore contenuti AI, ChatGPT SEO, contenuto Claude AI, autopubblicazione WordPress, analisi SEO, tracciamento concorrenti, API MCP, automazione SEO",
+        "ogTitle": "SEO Agent - Piattaforma Completa di Tracciamento SEO e Contenuti AI",
+        "ogDescription": "Traccia i posizionamenti in oltre 200 paesi, genera contenuti AI e pubblica su WordPress. Integrati con ChatGPT e Claude tramite l'API MCP.",
+        "twitterTitle": "SEO Agent - Piattaforma SEO basata sull'AI",
+        "twitterDescription": "Traccia i posizionamenti, crea contenuti AI, pubblica su WordPress. Oltre 200 paesi supportati."
+    },
+    "mcpSeo": {
+        "title": "MCP SEO | Connetti ChatGPT e Claude ai Dati SEO",
+        "description": "Integra SEO Agent con ChatGPT e Claude Desktop tramite l'API MCP. Traccia i posizionamenti, analizza le parole chiave e genera contenuti direttamente dalla tua chat AI. Guida alla configurazione gratuita inclusa.",
+        "keywords": "MCP SEO, Model Context Protocol, integrazione ChatGPT, Claude Desktop, automazione SEO AI, API SEO, API tracciamento parole chiave, ChatGPT SEO, Claude AI SEO, server MCP, assistente AI SEO, SEO conversazionale",
+        "ogTitle": "Integrazione MCP SEO - ChatGPT e Claude Desktop | SEO Agent",
+        "ogDescription": "Accedi ai tuoi dati SEO direttamente da ChatGPT e Claude Desktop. Traccia i posizionamenti, analizza le parole chiave e crea contenuti con l'AI. Guida completa alla configurazione MCP.",
+        "twitterTitle": "MCP SEO - Integra ChatGPT e Claude con SEO Agent",
+        "twitterDescription": "Usa ChatGPT e Claude Desktop per accedere ai tuoi dati SEO, tracciare i posizionamenti e generare contenuti. Guida completa all'integrazione MCP."
+    },
+    "login": {
+        "title": "Accedi - SEO Agent",
+        "description": "Accedi a SEO AI Agent per consultare la tua dashboard, tracciare i posizionamenti e gestire la generazione di contenuti AI."
+    },
+    "register": {
+        "title": "Registrati - SEO Agent",
+        "description": "Registrati a SEO AI Agent. Inizia oggi stesso a tracciare i tuoi posizionamenti SEO e a generare contenuti ottimizzati dall'AI per il tuo sito web."
+    },
+    "terms": {
+        "title": "Termini di Servizio | SEO Agent",
+        "description": "Termini di Servizio per SEO Agent - Leggi i nostri termini e condizioni per l'utilizzo della nostra piattaforma di tracciamento SEO e generazione di contenuti AI."
+    },
+    "privacy": {
+        "title": "Informativa sulla Privacy | SEO Agent",
+        "description": "Informativa sulla Privacy per SEO Agent - Scopri come raccogliamo, utilizziamo e proteggiamo i tuoi dati. Piattaforma SEO e tracciamento conforme al GDPR."
+    },
+    "impressum": {
+        "title": "Impressum - Informazioni Legali | SEO Agent",
+        "description": "Informazioni legali e dettagli societari di Dpro GmbH, operatore di SEO Agent."
+    }
+}

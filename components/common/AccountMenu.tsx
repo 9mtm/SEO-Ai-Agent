@@ -144,7 +144,7 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
             .substring(0, 2);
     };
 
-    const currentLangLabel = selectedLang === 'de' ? 'Deutsch' : selectedLang === 'fr' ? 'Français' : 'English';
+    const currentLangLabel = selectedLang === 'de' ? 'Deutsch' : selectedLang === 'fr' ? 'Français' : selectedLang === 'es' ? 'Español' : selectedLang === 'pt' ? 'Português' : selectedLang === 'zh' ? '中文' : selectedLang === 'it' ? 'Italiano' : selectedLang === 'nl' ? 'Nederlands' : selectedLang === 'tr' ? 'Türkçe' : selectedLang === 'ar' ? 'العربية' : selectedLang === 'ja' ? '日本語' : 'English';
 
     return (
         <div className="flex items-center gap-4">
@@ -185,6 +185,55 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                             className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'fr' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
                         >
                             <span>Français</span>
+                        </button>
+                        <button
+                            onClick={() => { setLocale('es'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'es' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                        >
+                            <span>Español</span>
+                        </button>
+                        <button
+                            onClick={() => { setLocale('pt'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'pt' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                        >
+                            <span>Português</span>
+                        </button>
+                        <button
+                            onClick={() => { setLocale('zh'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'zh' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                        >
+                            <span>中文</span>
+                        </button>
+                        <button
+                            onClick={() => { setLocale('it'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'it' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                        >
+                            <span>Italiano</span>
+                        </button>
+                        <button
+                            onClick={() => { setLocale('nl'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'nl' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                        >
+                            <span>Nederlands</span>
+                        </button>
+                        <button
+                            onClick={() => { setLocale('tr'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'tr' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                        >
+                            <span>Türkçe</span>
+                        </button>
+                        <button
+                            onClick={() => { setLocale('ar'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors ${selectedLang === 'ar' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                            dir="rtl"
+                        >
+                            <span>العربية</span>
+                        </button>
+                        <button
+                            onClick={() => { setLocale('ja'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'ja' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                        >
+                            <span>日本語</span>
                         </button>
                     </div>
                 )}

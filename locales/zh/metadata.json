@@ -1,0 +1,40 @@
+{
+    "home": {
+        "title": "SEO AI Agent | Google 排名追踪工具",
+        "description": "全方位 SEO 平台：追踪 200 多个国家/地区的关键词排名，分析 Google Search Console 数据，使用 GPT-5 和 Claude 生成 AI 内容，并直接发布到 WordPress。提供免费计划。",
+        "keywords": "SEO 追踪工具, 关键词排名追踪, 多国 SEO, Google Search Console 集成, AI 内容生成器, ChatGPT SEO, Claude AI 内容, WordPress 自动发布, SEO 分析, 竞争对手追踪, MCP API, SEO 自动化",
+        "ogTitle": "SEO Agent - 全方位 SEO 追踪与 AI 内容平台",
+        "ogDescription": "追踪 200 多个国家/地区的排名，生成 AI 内容，并发布到 WordPress。通过 MCP API 与 ChatGPT 和 Claude 集成。",
+        "twitterTitle": "SEO Agent - AI 驱动的 SEO 平台",
+        "twitterDescription": "追踪排名，创作 AI 内容，并发布到 WordPress。支持 200 多个国家/地区。"
+    },
+    "mcpSeo": {
+        "title": "MCP SEO | 将 ChatGPT 和 Claude 连接到 SEO 数据",
+        "description": "通过 MCP API 将 SEO Agent 与 ChatGPT 和 Claude Desktop 集成。直接通过 AI 对话追踪排名、分析关键词并生成内容。包含免费设置指南。",
+        "keywords": "MCP SEO, 模型上下文协议, ChatGPT 集成, Claude Desktop, AI SEO 自动化, SEO API, 关键词追踪 API, ChatGPT SEO, Claude AI SEO, MCP 服务器, AI 助手 SEO, 对话式 SEO",
+        "ogTitle": "MCP SEO 集成 - ChatGPT 与 Claude Desktop | SEO Agent",
+        "ogDescription": "直接通过 ChatGPT 和 Claude Desktop 访问您的 SEO 数据。追踪排名、分析关键词并利用 AI 创作内容。包含完整的 MCP 设置指南。",
+        "twitterTitle": "MCP SEO - 将 ChatGPT 和 Claude 与 SEO Agent 集成",
+        "twitterDescription": "使用 ChatGPT 和 Claude Desktop 访问您的 SEO 数据、追踪排名并生成内容。包含完整 MCP 集成指南。"
+    },
+    "login": {
+        "title": "登录 - SEO Agent",
+        "description": "登录 SEO AI Agent 以访问您的仪表板、追踪排名并管理您的 AI 内容生成。"
+    },
+    "register": {
+        "title": "注册 - SEO Agent",
+        "description": "注册 SEO AI Agent。今天就开始追踪您的 SEO 排名，并为您的网站生成经 AI 优化的内容。"
+    },
+    "terms": {
+        "title": "服务条款 | SEO Agent",
+        "description": "SEO Agent 的服务条款 - 阅读我们关于使用 SEO 追踪和 AI 内容生成平台的条款和条件。"
+    },
+    "privacy": {
+        "title": "隐私政策 | SEO Agent",
+        "description": "SEO Agent 的隐私政策 - 了解我们如何收集、使用和保护您的数据。符合 GDPR 标准的 SEO 追踪和 AI 内容平台。"
+    },
+    "impressum": {
+        "title": "法律信息 | SEO Agent",
+        "description": "SEO Agent 运营商 Dpro GmbH 的法律信息和公司详情。"
+    }
+}
