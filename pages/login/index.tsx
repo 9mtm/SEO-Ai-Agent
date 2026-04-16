@@ -25,7 +25,7 @@ const Login: NextPage = () => {
          <div className="absolute top-4 right-4">
             <select
                value={locale}
-               onChange={(e) => setLocale(e.target.value as 'en' | 'de' | 'fr' | 'es' | 'pt')}
+               onChange={(e) => setLocale(e.target.value as 'en' | 'de' | 'fr' | 'es' | 'pt' | 'zh')}
                className="px-3 py-2 bg-white border border-neutral-200 rounded-lg text-sm font-medium text-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
             >
                <option value="en">English</option>
@@ -33,6 +33,7 @@ const Login: NextPage = () => {
                <option value="fr">Français</option>
                <option value="es">Español</option>
                <option value="pt">Português</option>
+               <option value="zh">中文</option>
             </select>
          </div>
 
