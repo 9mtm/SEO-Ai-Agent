@@ -3,11 +3,15 @@ import { useRouter } from 'next/router';
 import enCommon from '../locales/en/common.json';
 import deCommon from '../locales/de/common.json';
 import frCommon from '../locales/fr/common.json';
+import esCommon from '../locales/es/common.json';
 import enMeta from '../locales/en/metadata.json';
 import deMeta from '../locales/de/metadata.json';
 import frMeta from '../locales/fr/metadata.json';
+import esMeta from '../locales/es/metadata.json';
+import ptCommon from '../locales/pt/common.json';
+import ptMeta from '../locales/pt/metadata.json';
 
-type Locale = 'en' | 'de' | 'fr';
+type Locale = 'en' | 'de' | 'fr' | 'es' | 'pt';
 
 interface LanguageContextType {
     locale: Locale;
@@ -19,8 +23,10 @@ interface LanguageContextType {
 const en = { ...enCommon, meta: enMeta };
 const de = { ...deCommon, meta: deMeta };
 const fr = { ...frCommon, meta: frMeta };
+const es = { ...esCommon, meta: esMeta };
+const pt = { ...ptCommon, meta: ptMeta };
 
-const translationsMap = { en, de, fr };
+const translationsMap = { en, de, fr, es, pt };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 

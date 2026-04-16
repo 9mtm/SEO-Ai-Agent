@@ -14,6 +14,8 @@ const LOCALES = [
     { code: 'en', label: 'English', flag: '🇬🇧' },
     { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
     { code: 'fr', label: 'Français', flag: '🇫🇷' },
+    { code: 'es', label: 'Español', flag: '🇪🇸' },
+    { code: 'pt', label: 'Português', flag: '🇧🇷' },
 ];
 
 const CATEGORIES = ['SEO Strategies', 'AI & Search', 'Keyword Research', 'Content Marketing', 'Technical SEO', 'Case Studies', 'Product Updates', 'Industry News'];
