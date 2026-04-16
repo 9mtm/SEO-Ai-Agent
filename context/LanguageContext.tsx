@@ -12,8 +12,10 @@ import ptCommon from '../locales/pt/common.json';
 import ptMeta from '../locales/pt/metadata.json';
 import zhCommon from '../locales/zh/common.json';
 import zhMeta from '../locales/zh/metadata.json';
+import itCommon from '../locales/it/common.json';
+import itMeta from '../locales/it/metadata.json';
 
-type Locale = 'en' | 'de' | 'fr' | 'es' | 'pt' | 'zh';
+type Locale = 'en' | 'de' | 'fr' | 'es' | 'it' | 'pt' | 'zh';
 
 interface LanguageContextType {
     locale: Locale;
@@ -28,8 +30,9 @@ const fr = { ...frCommon, meta: frMeta };
 const es = { ...esCommon, meta: esMeta };
 const pt = { ...ptCommon, meta: ptMeta };
 const zh = { ...zhCommon, meta: zhMeta };
+const it = { ...itCommon, meta: itMeta };
 
-const translationsMap = { en, de, fr, es, pt, zh };
+const translationsMap = { en, de, fr, es, it, pt, zh };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
