@@ -1416,6 +1416,8 @@
   },
   "nav": {
     "features": "Características",
+    "blog": "Blog",
+    "contact": "Contacto",
     "mcpIntegration": "Integración MCP",
     "signIn": "Iniciar Sesión",
     "getStarted": "Empezar Ahora"
@@ -1426,7 +1428,16 @@
     "legal": "Legal",
     "talentManagement": "Gestión de Talento",
     "ats": "Software de Rastreo de Solicitantes",
-    "documentation": "Documentación"
+    "documentation": "Documentación",
+    "seoExpertSkill": "Habilidad de Experto en SEO",
+    "blog": "Blog",
+    "contact": "Contacto",
+    "faq": "Preguntas Frecuentes",
+    "imprint": "Aviso Legal",
+    "privacyPolicy": "Política de Privacidad",
+    "termsOfService": "Términos de Servicio",
+    "consentPreferences": "Preferencias de Consentimiento",
+    "accessibility": "Accesibilidad"
   },
   "meta": {
     "mcpSeo": {

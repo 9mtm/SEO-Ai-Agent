@@ -50,10 +50,10 @@ export default function LandingHeader({ activePage }: LandingHeaderProps) {
                             {t('nav.features')}
                         </Link>
                         <Link href="/blog" className={linkClass('blog')}>
-                            Blog
+                            {t('nav.blog')}
                         </Link>
                         <Link href="/contact" className={linkClass('contact')}>
-                            Contact
+                            {t('nav.contact')}
                         </Link>
                         <Link href="/mcp-seo" className={linkClass()}>
                             {t('nav.mcpIntegration')}
@@ -111,10 +111,10 @@ export default function LandingHeader({ activePage }: LandingHeaderProps) {
                             {t('nav.features')}
                         </Link>
                         <Link href="/blog" className={`block px-4 py-2 rounded-lg ${activePage === 'blog' ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-neutral-600 hover:bg-neutral-50'}`} onClick={() => setMobileMenuOpen(false)}>
-                            Blog
+                            {t('nav.blog')}
                         </Link>
                         <Link href="/contact" className={`block px-4 py-2 rounded-lg ${activePage === 'contact' ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-neutral-600 hover:bg-neutral-50'}`} onClick={() => setMobileMenuOpen(false)}>
-                            Contact
+                            {t('nav.contact')}
                         </Link>
                         <Link href="/mcp-seo" className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
                             {t('nav.mcpIntegration')}

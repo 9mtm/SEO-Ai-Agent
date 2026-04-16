@@ -1416,9 +1416,11 @@
   },
   "nav": {
     "features": "功能",
+    "blog": "博客",
+    "contact": "联系我们",
     "mcpIntegration": "MCP 集成",
     "signIn": "登录",
-    "getStarted": "免费开始"
+    "getStarted": "立即开始"
   },
   "footerMenu": {
     "product": "产品",
@@ -1426,7 +1428,16 @@
     "legal": "法律信息",
     "talentManagement": "人才管理",
     "ats": "申请人追踪软件",
-    "documentation": "文档"
+    "documentation": "文档",
+    "seoExpertSkill": "SEO 专家技能",
+    "blog": "博客",
+    "contact": "联系我们",
+    "faq": "常见问题",
+    "imprint": "法律声明",
+    "privacyPolicy": "隐私政策",
+    "termsOfService": "服务条款",
+    "consentPreferences": "偏好设置",
+    "accessibility": "无障碍访问"
   },
   "meta": {
     "mcpSeo": {

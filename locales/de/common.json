@@ -1370,6 +1370,8 @@
   },
   "nav": {
     "features": "Funktionen",
+    "blog": "Blog",
+    "contact": "Kontakt",
     "mcpIntegration": "MCP Integration",
     "signIn": "Anmelden",
     "getStarted": "Jetzt Starten"
@@ -1381,7 +1383,16 @@
     "legal": "Rechtliches",
     "talentManagement": "Talentmanagement",
     "ats": "Bewerbermanagement-Software",
-    "documentation": "Dokumentation"
+    "documentation": "Dokumentation",
+    "seoExpertSkill": "SEO Expert Skill",
+    "blog": "Blog",
+    "contact": "Kontakt",
+    "faq": "FAQ",
+    "imprint": "Impressum",
+    "privacyPolicy": "Datenschutzerklärung",
+    "termsOfService": "Nutzungsbedingungen",
+    "consentPreferences": "Cookie-Einstellungen",
+    "accessibility": "Barrierefreiheit"
   },
   "bing": {
     "title": "Bing Webmaster Tools",

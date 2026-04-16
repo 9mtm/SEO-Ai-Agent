@@ -1416,6 +1416,8 @@
   },
   "nav": {
     "features": "Features",
+    "blog": "Blog",
+    "contact": "Contact",
     "mcpIntegration": "MCP Integration",
     "signIn": "Sign In",
     "getStarted": "Get Started"
@@ -1426,7 +1428,16 @@
     "legal": "Legal",
     "talentManagement": "Talent Management",
     "ats": "Applicant Tracking Software",
-    "documentation": "Documentation"
+    "documentation": "Documentation",
+    "seoExpertSkill": "SEO Expert Skill",
+    "blog": "Blog",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "imprint": "Imprint",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "consentPreferences": "Consent Preferences",
+    "accessibility": "Accessibility"
   },
   "meta": {
     "mcpSeo": {

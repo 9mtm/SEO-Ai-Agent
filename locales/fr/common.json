@@ -1396,6 +1396,8 @@
   },
   "nav": {
     "features": "Fonctionnalités",
+    "blog": "Blog",
+    "contact": "Contact",
     "mcpIntegration": "Intégration MCP",
     "signIn": "Se connecter",
     "getStarted": "Commencer"
@@ -1407,7 +1409,16 @@
     "legal": "Légal",
     "talentManagement": "Gestion des talents",
     "ats": "Logiciel de suivi des candidats",
-    "documentation": "Documentation"
+    "documentation": "Documentation",
+    "seoExpertSkill": "Compétence Expert SEO",
+    "blog": "Blog",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "imprint": "Mentions Légales",
+    "privacyPolicy": "Politique de Confidentialité",
+    "termsOfService": "Conditions d'Utilisation",
+    "consentPreferences": "Préférences de Consentement",
+    "accessibility": "Accessibilité"
   },
   "bing": {
     "title": "Bing Webmaster Tools",
