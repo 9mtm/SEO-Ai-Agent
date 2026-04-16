@@ -385,11 +385,11 @@
       "publishWordpressDesc": "Pubblica articoli sul tuo sito web"
     },
     "expiryOptions": {
+      "0": "Mai",
       "7": "7 giorni",
       "30": "30 giorni (Consigliato)",
       "90": "90 giorni",
-      "365": "1 anno",
-      "0": "Mai"
+      "365": "1 anno"
     }
   },
   "scraperSettings": {
@@ -760,7 +760,8 @@
       "aiImageComingSoon": "o l'AI ne genererà una (prossimamente)",
       "bodyContent": "Contenuto del Corpo",
       "visualEditor": "Passa all'Editor Visuale",
-      "sourceCode": "Modifica Codice Sorgente"
+      "sourceCode": "Modifica Codice Sorgente",
+      "topicLabel": "Article Topic/Idea"
     },
     "seo": {
       "score": "Punteggio SEO",
@@ -1100,7 +1101,14 @@
         "address": "Billing Address",
         "email": "Email di Fatturazione",
         "save": "Salva Modifiche",
-        "saved": "Dettagli di fatturazione salvati!"
+        "saved": "Dettagli di fatturazione salvati!",
+        "title": "Billing Information",
+        "desc": "This information will appear on your tax invoices.",
+        "accountType": "Account Type",
+        "company": "Company",
+        "individual": "Individual",
+        "nameCompany": "Company Name",
+        "nameIndividual": "Full Name"
       },
       "history": {
         "title": "Cronologia Fatture",

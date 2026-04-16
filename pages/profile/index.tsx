@@ -233,7 +233,7 @@ const ProfilePage: NextPage = () => {
                      <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                            <Label htmlFor="language">{t('profile.language')}</Label>
-                           <Select value={currentLocale} onValueChange={async (val: 'en' | 'de' | 'fr' | 'es' | 'it' | 'pt' | 'zh' | 'nl' | 'tr') => {
+                           <Select value={currentLocale} onValueChange={async (val: 'en' | 'de' | 'fr' | 'es' | 'it' | 'pt' | 'zh' | 'nl' | 'tr' | 'ar') => {
                               setLocale(val);
                               // Explicitly save to ensure DB is updated
                               try {
@@ -266,6 +266,7 @@ const ProfilePage: NextPage = () => {
                                  <SelectItem value="zh">中文</SelectItem>
                                  <SelectItem value="nl">Nederlands</SelectItem>
                                  <SelectItem value="tr">Türkçe</SelectItem>
+                                 <SelectItem value="ar">العربية</SelectItem>
                               </SelectContent>
                            </Select>
                         </div>

@@ -16,10 +16,12 @@ import itCommon from '../locales/it/common.json';
 import itMeta from '../locales/it/metadata.json';
 import nlCommon from '../locales/nl/common.json';
 import nlMeta from '../locales/nl/metadata.json';
-import trCommon from '../locales/tr/common.json';
-import trMeta from '../locales/tr/metadata.json';
+import commonTR from '../locales/tr/common.json';
+import metadataTR from '../locales/tr/metadata.json';
+import commonAR from '../locales/ar/common.json';
+import metadataAR from '../locales/ar/metadata.json';
 
-type Locale = 'en' | 'de' | 'fr' | 'es' | 'it' | 'pt' | 'zh' | 'nl' | 'tr';
+export type Locale = 'en' | 'de' | 'fr' | 'es' | 'it' | 'pt' | 'zh' | 'nl' | 'tr' | 'ar';
 
 interface LanguageContextType {
     locale: Locale;
@@ -36,9 +38,10 @@ const pt = { ...ptCommon, meta: ptMeta };
 const zh = { ...zhCommon, meta: zhMeta };
 const it = { ...itCommon, meta: itMeta };
 const nl = { ...nlCommon, meta: nlMeta };
-const tr = { ...trCommon, meta: trMeta };
+const tr = { ...commonTR, meta: metadataTR };
+const ar = { ...commonAR, meta: metadataAR };
 
-const translationsMap = { en, de, fr, es, it, pt, zh, nl, tr };
+const translationsMap = { en, de, fr, es, it, pt, zh, nl, tr, ar };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
@@ -73,7 +76,18 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
         syncFromDb();
     }, []);
 
-    const setLocale = (newLocale: Locale) => {
+    useEffect(() => {
+    // Force RTL for Arabic, LTR for others
+    if (locale === 'ar') {
+      document.documentElement.dir = 'rtl';
+      document.documentElement.lang = 'ar';
+    } else {
+      document.documentElement.dir = 'ltr';
+      document.documentElement.lang = locale;
+    }
+  }, [locale]);
+
+  const setLocale = (newLocale: Locale) => {
         // Save preference to localStorage
         localStorage.setItem('app_locale', newLocale);
 

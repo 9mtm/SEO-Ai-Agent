@@ -386,11 +386,11 @@
       "publishWordpressDesc": "Publier des articles sur votre site"
     },
     "expiryOptions": {
+      "0": "N'expire jamais",
       "7": "7 jours",
       "30": "30 jours (Recommandé)",
       "90": "90 jours",
-      "365": "1 an",
-      "0": "N'expire jamais"
+      "365": "1 an"
     }
   },
   "scraperSettings": {
@@ -1257,6 +1257,27 @@
       "api": {
         "title": "Appel API direct (pour développeurs)",
         "description": "Vous pouvez aussi utiliser l'API directement sans MCP :"
+      },
+      "cursor": {
+        "title": "Setup for Cursor IDE",
+        "step1": "Open Cursor Settings → Features → MCP",
+        "step2": "Click 'Add MCP Server'",
+        "step3": "Enter the configuration details below",
+        "step4": "Restart Cursor and start using MCP tools"
+      },
+      "windsurf": {
+        "title": "Setup for Windsurf IDE",
+        "step1": "Open Windsurf Settings → Extensions → MCP",
+        "step2": "Add new MCP server configuration",
+        "step3": "Paste the configuration below",
+        "step4": "Restart Windsurf to activate"
+      },
+      "zed": {
+        "title": "Setup for Zed Editor",
+        "step1": "Open Zed Settings (Cmd/Ctrl + ,)",
+        "step2": "Navigate to MCP Servers section",
+        "step3": "Add the configuration below",
+        "step4": "Restart Zed editor"
       }
     },
     "functions": {
@@ -1432,5 +1453,20 @@
     "disconnectDescription": "Êtes-vous sûr de vouloir déconnecter les Bing Webmaster Tools ? Les analyses Bing et Yahoo ne seront plus disponibles.",
     "notConnected": "Connectez Bing Webmaster Tools pour voir les données Bing et Yahoo.",
     "tab": "Bing"
+  },
+  "meta": {
+    "mcpSeo": {
+      "title": "SEO Agent MCP Server - Connect Claude & ChatGPT",
+      "description": "Connect your SEO data to Claude Desktop and ChatGPT with the Model Context Protocol (MCP). Real-time rankings, analytics, and content creation.",
+      "keywords": "mcp, seo agent, claude desktop, chatgpt, seo api, rank tracking, gsc",
+      "ogTitle": "Supercharge your AI with SEO Data",
+      "ogDescription": "Connect Claude Desktop directly to your SEO metrics, rankings, and GSC data."
+    }
+  },
+  "seo": {
+    "mcpSeo": {
+      "twitterTitle": "SEO Agent MCP Integration",
+      "twitterDescription": "Connect Claude & ChatGPT to your real-time SEO data."
+    }
   }
 }
