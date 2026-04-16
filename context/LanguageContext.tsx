@@ -20,8 +20,10 @@ import commonTR from '../locales/tr/common.json';
 import metadataTR from '../locales/tr/metadata.json';
 import commonAR from '../locales/ar/common.json';
 import metadataAR from '../locales/ar/metadata.json';
+import commonJA from '../locales/ja/common.json';
+import metadataJA from '../locales/ja/metadata.json';
 
-export type Locale = 'en' | 'de' | 'fr' | 'es' | 'it' | 'pt' | 'zh' | 'nl' | 'tr' | 'ar';
+export type Locale = 'en' | 'de' | 'fr' | 'es' | 'it' | 'pt' | 'zh' | 'nl' | 'tr' | 'ar' | 'ja';
 
 interface LanguageContextType {
     locale: Locale;
@@ -40,8 +42,9 @@ const it = { ...itCommon, meta: itMeta };
 const nl = { ...nlCommon, meta: nlMeta };
 const tr = { ...commonTR, meta: metadataTR };
 const ar = { ...commonAR, meta: metadataAR };
+const ja = { ...commonJA, meta: metadataJA };
 
-const translationsMap = { en, de, fr, es, it, pt, zh, nl, tr, ar };
+const translationsMap = { en, de, fr, es, it, pt, zh, nl, tr, ar, ja };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
