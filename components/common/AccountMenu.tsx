@@ -144,7 +144,7 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
             .substring(0, 2);
     };
 
-    const currentLangLabel = selectedLang === 'de' ? 'Deutsch' : selectedLang === 'fr' ? 'Français' : selectedLang === 'es' ? 'Español' : selectedLang === 'pt' ? 'Português' : selectedLang === 'zh' ? '中文' : 'English';
+    const currentLangLabel = selectedLang === 'de' ? 'Deutsch' : selectedLang === 'fr' ? 'Français' : selectedLang === 'es' ? 'Español' : selectedLang === 'pt' ? 'Português' : selectedLang === 'zh' ? '中文' : selectedLang === 'it' ? 'Italiano' : selectedLang === 'nl' ? 'Nederlands' : 'English';
 
     return (
         <div className="flex items-center gap-4">
@@ -203,6 +203,18 @@ const AccountMenu = ({ domains = [], currentDomain }: AccountMenuProps) => {
                             className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'zh' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
                         >
                             <span>中文</span>
+                        </button>
+                        <button
+                            onClick={() => { setLocale('it'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'it' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                        >
+                            <span>Italiano</span>
+                        </button>
+                        <button
+                            onClick={() => { setLocale('nl'); setIsLangOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left ${selectedLang === 'nl' ? 'bg-blue-50 text-blue-700' : 'text-neutral-700 hover:bg-neutral-50'}`}
+                        >
+                            <span>Nederlands</span>
                         </button>
                     </div>
                 )}

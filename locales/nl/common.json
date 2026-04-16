@@ -1,0 +1,1465 @@
+{
+  "auth": {
+    "login": {
+      "title": "Inloggen",
+      "welcome": "Welkom terug!",
+      "description": "Log in om toegang te krijgen tot je dashboard",
+      "googleBtn": "Doorgaan met Google",
+      "backToHome": "Terug naar Home"
+    },
+    "register": {
+      "title": "Registreren",
+      "welcome": "Maak je account aan",
+      "description": "Ga aan de slag met SEO AI Agent",
+      "googleBtn": "Doorgaan met Google",
+      "backToHome": "Terug naar Home",
+      "haveAccount": "Heb je al een account?",
+      "signIn": "Inloggen",
+      "termsLabel": "Ik ga akkoord met de",
+      "termsLink": "Algemene Voorwaarden",
+      "and": "en",
+      "privacyLink": "Privacybeleid",
+      "newsletterLabel": "Ik wil nieuwsbrieven, rapporten en updates over mijn website ontvangen",
+      "termsRequired": "Je moet de Algemene Voorwaarden en het Privacybeleid accepteren om door te gaan"
+    }
+  },
+  "onboarding": {
+    "layout": {
+      "title": "Alles-in-één Verkeersoplossing",
+      "subtitle": "Alles wat je nodig hebt om op de automatische piloot te ranken en verkeer te krijgen",
+      "feature1_title": "Rank op Google & AI Search",
+      "feature1_desc": "Geoptimaliseerd om te ranken op Google, ChatGPT en AI-zoekmachines",
+      "feature2_title": "Dagelijkse Artikelgeneratie",
+      "feature2_desc": "SEO-geoptimaliseerde content die dagelijks wordt gegenereerd met interne links",
+      "feature3_title": "Automatisch Publiceren naar je Website",
+      "feature3_desc": "Naadloze publicatie naar WordPress, Webflow en Shopify",
+      "feature4_title": "Gepersonaliseerd Plan",
+      "feature4_desc": "Op maat gemaakte strategie met zoekwoordideeën en content-roadmap"
+    },
+    "step1": {
+      "title": "Verbind Google Search Console",
+      "subtitle": "Selecteer je geverifieerde website uit Google Search Console om aan de slag te gaan.",
+      "checking": "Verbinding controleren...",
+      "connectGoogleTitle": "Verbind je Google-account",
+      "connectGoogleDesc": "Koppel je Google Search Console om automatisch je website te verifiëren en toegang te krijgen tot prestatiegegevens.",
+      "connectBtn": "Verbind Google Search Console",
+      "connected": "Google Search Console Verbonden",
+      "selectSiteLabel": "Selecteer je Website",
+      "loadingSites": "Je sites laden...",
+      "noSitesTitle": "Geen geverifieerde sites gevonden in je Google Search Console.",
+      "noSitesDesc": "Verifieer eerst je domein in Google Search Console en ververs daarna deze pagina.",
+      "chooseSite": "-- Kies een geverifieerde site --",
+      "searchSitePlaceholder": "Zoek je website...",
+      "noResults": "Geen resultaten gevonden voor je zoekopdracht",
+      "owner": "(Eigenaar)",
+      "websiteUrlLabel": "Website URL",
+      "websiteUrlPlaceholder": "Selecteer hierboven een site",
+      "websiteUrlHelp": "Dit veld wordt automatisch ingevuld op basis van de geselecteerde site",
+      "errorSelectSite": "Selecteer een website uit Google Search Console",
+      "errorVerifySite": "Selecteer een geverifieerde site uit Google Search Console",
+      "errorSave": "Opslaan mislukt",
+      "errorGeneric": "Er is een fout opgetreden",
+      "saving": "Voorbereiden...",
+      "continue": "Doorgaan"
+    },
+    "step2": {
+      "title": "Vertel ons over je bedrijf",
+      "subtitle": "Deel enkele details over je bedrijf.",
+      "nameLabel": "Naam",
+      "namePlaceholder": "Flowxtra",
+      "nameHelp": "Je bedrijfsnaam",
+      "nicheLabel": "Niche",
+      "nichePlaceholder": "recruitment software",
+      "nicheHelp": "Kort en gefocust (max. 3 woorden)",
+      "descLabel": "Beschrijving",
+      "descPlaceholder": "Flowxtra biedt een gratis Applicant Tracking System (ATS)...",
+      "descHelp": "Een korte beschrijving van wat je bedrijf doet",
+      "importantTitle": "Belangrijk (Lees voor de beste resultaten)",
+      "importantDesc": "Controleer alle velden. Bij twijfel kun je de automatisch ingevulde suggestie behouden. Zorg ervoor dat alles in de geselecteerde taal is geschreven.",
+      "errorFields": "Vul alle verplichte velden in",
+      "errorNiche": "Niche mag maximaal 3 woorden bevatten",
+      "back": "Terug"
+    },
+    "step2_5": {
+      "title": "Definieer je SEO-strategie",
+      "subtitle": "We hebben je bedrijf geanalyseerd en 9 zoekwoorden voorgesteld om op te focussen. Bekijk en bewerk ze zodat ze passen bij je doelen.",
+      "aiTitle": "AI-gegenereerde Zoekwoorden",
+      "aiDesc": "Deze zoekwoorden zijn automatisch gegenereerd op basis van je bedrijfsbeschrijving. Voel je vrij om ze te bewerken!",
+      "targetCountry": "Doelland",
+      "highPriorityTitle": "Hoge Prioriteit (Top 3)",
+      "highPriorityDesc": "Cruciale zoekwoorden die je moet domineren",
+      "mediumPriorityTitle": "Gemiddelde Prioriteit",
+      "mediumPriorityDesc": "Belangrijke ondersteunende zoekwoorden",
+      "lowPriorityTitle": "Lage Prioriteit",
+      "lowPriorityDesc": "Long-tail & toekomstige kansen",
+      "keywordPlaceholder": "Zoekwoord",
+      "errorKeywords": "Voeg minimaal één focus-zoekwoord toe"
+    },
+    "step3": {
+      "title": "Voeg je concurrenten toe",
+      "subtitle": "Belangrijkste concurrenten om te analyseren.",
+      "placeholder": "Voer URL van concurrent in...",
+      "help": "Voer de website-URL van je concurrent in om hun contentstrategie te analyseren",
+      "add": "Toevoegen",
+      "maxReached": "(Max. 3 bereikt)",
+      "suggestions": "Suggesties:"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "domains": "Domeinen",
+    "keywords": "Zoekwoorden",
+    "settings": "Instellingen",
+    "addDomain": "Domein Toevoegen",
+    "noDomains": "Geen domeinen gevonden. Voeg een domein toe om aan de slag te gaan!"
+  },
+  "common": {
+    "loading": "Laden...",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "logout": "Uitloggen",
+    "changeLanguage": "Taal Wijzigen"
+  },
+  "email": {
+    "visits": "Bezoeken",
+    "impressions": "Impressies",
+    "avgPosition": "Gem. Positie",
+    "avgCtr": "Gem. CTR",
+    "improved": "Verbeterd",
+    "declined": "Gedaald",
+    "topKeywords": "Best Presterende Zoekwoorden (Laatste {{days}} Dagen)",
+    "topPages": "Best Presterende Pagina's",
+    "keyword": "Zoekwoord",
+    "page": "Pagina",
+    "clicks": "Klikken",
+    "views": "Weergaven",
+    "pos": "Pos",
+    "avgPos": "Gem. Pos",
+    "viewMore": "Bekijk {{count}} meer zoekwoorden op het dashboard",
+    "yearsAgo": "{{count}} jaar geleden",
+    "monthsAgo": "{{count}} maanden geleden",
+    "daysAgo": "{{count}} dagen geleden",
+    "hrsAgo": "{{count}} uur geleden",
+    "minsAgo": "{{count}} min geleden",
+    "secsAgo": "{{count}} sec geleden",
+    "subject": "[{{domain}}] Maandelijkse Update Zoekwoordposities",
+    "keywordRankings": "Zoekwoord Rankings",
+    "keywordsSuffix": "Zoekwoorden",
+    "goToDashboard": "Ga naar Dashboard",
+    "unsubscribeText": "Wilt u deze e-mails niet meer ontvangen?",
+    "unsubscribe": "Afmelden",
+    "poweredBy": "Mogelijk gemaakt door",
+    "position": "Positie",
+    "table": {
+      "best": "Beste",
+      "updated": "Bijgewerkt"
+    }
+  },
+  "sidebar": {
+    "insight": "Inzicht",
+    "tracking": "Tracking",
+    "competitors": "Concurrenten",
+    "discover": "Ontdekken",
+    "agent": "Seo Agent",
+    "settings": "Instellingen",
+    "profile": "Profiel",
+    "scraper": "Scraper",
+    "connections": "Verbinden",
+    "billing": "Facturering",
+    "myDomains": "Mijn Domeinen",
+    "domains": "Domeinen",
+    "workspaces": "Workspaces",
+    "teamMembers": "Teamleden",
+    "searchConsole": "Search Console",
+    "connectedApps": "Gekoppelde Apps",
+    "referrals": "Verwijzingen",
+    "setup": "Configuratie",
+    "posts": "Artikelen",
+    "apiKeys": "API & MCP",
+    "notifications": "Meldingen"
+  },
+  "workspace": {
+    "switch": "Wissel van workspace",
+    "personal": "persoonlijk",
+    "manage": "Beheer workspaces"
+  },
+  "profile": {
+    "title": "Persoonlijk Profiel",
+    "description": "Beheer je persoonlijke gegevens en accountbeveiliging",
+    "cardTitle": "Profielinformatie",
+    "cardDescription": "Werk je foto en persoonlijke details bij",
+    "photoTitle": "Profielfoto",
+    "photoDesc": "Dit wordt weergegeven op je profiel.",
+    "changePhoto": "Foto Wijzigen",
+    "fullName": "Volledige Naam",
+    "email": "E-mailadres",
+    "emailNote": "E-mailadres kan niet rechtstreeks worden gewijzigd. Neem contact op met support.",
+    "languageSettingsTitle": "Taalvoorkeuren",
+    "languageSettingsDesc": "Kies je voorkeurstaal voor de interface",
+    "language": "Systeemtaal",
+    "save": "Wijzigingen Opslaan",
+    "saving": "Opslaan...",
+    "success": "Profiel succesvol bijgewerkt",
+    "error": "Profiel bijwerken mislukt",
+    "deleteAccountTitle": "Account Verwijderen",
+    "deleteAccountDesc": "Verwijder je account en alle gekoppelde gegevens permanent.",
+    "deleteWarning": "Deze actie is onomkeerbaar. Typ a.u.b. \"DELETE\" om te bevestigen.",
+    "deletePlaceholder": "Typ DELETE om te bevestigen",
+    "deleteButton": "Account Verwijderen",
+    "deleting": "Verwijderen...",
+    "deleteSuccess": "Account succesvol verwijderd",
+    "deleteError": "Account verwijderen mislukt"
+  },
+  "notifications": {
+    "title": "Meldingen",
+    "description": "Beheer hoe en wanneer je op de hoogte wilt worden gehouden.",
+    "generalTitle": "E-mailmeldingen",
+    "generalDesc": "Configureer je e-mailvoorkeuren.",
+    "emailAlerts": "E-mailwaarschuwingen",
+    "emailAlertsDesc": "Ontvang waarschuwingen over je accountactiviteit.",
+    "weeklyReport": "Wekelijks Rapport",
+    "weeklyReportDesc": "Ontvang een wekelijkse samenvatting van de prestaties van je domeinen.",
+    "marketingEmails": "Marketing E-mails",
+    "marketingEmailsDesc": "Ontvang nieuws, updates en speciale aanbiedingen.",
+    "securityAlerts": "Veiligheidswaarschuwingen",
+    "securityAlertsDesc": "Blijf op de hoogte van belangrijke veiligheidsgebeurtenissen.",
+    "save": "Wijzigingen Opslaan",
+    "saving": "Opslaan...",
+    "success": "Voorkeuren succesvol bijgewerkt",
+    "emailSettingsTitle": "Meldingskanaal",
+    "emailSettingsDesc": "Waar moeten we je meldingen naartoe sturen?",
+    "notificationEmailLabel": "E-mailadres voor meldingen",
+    "notificationEmailPlaceholder": "bijv. meldingen@bedrijf.nl",
+    "notificationEmailHelp": "We sturen meldingen naar dit e-mailadres.",
+    "domainTitle": "Domeinmeldingen",
+    "domainDesc": "Schakel meldingen in of uit voor specifieke domeinen.",
+    "domainLabel": "Ontvang updates voor"
+  },
+  "billing": {
+    "title": "Facturering & Abonnement",
+    "desc": "Beheer je facturatiegegevens en abonnement",
+    "tabs": {
+      "subscription": "Abonnement",
+      "details": "Factuurgegevens",
+      "history": "Facturen"
+    },
+    "currentPlan": "Huidig Plan: {{plan}}",
+    "active": "Actief",
+    "renewsOn": "Vernieuwt op: {{date}}",
+    "planNames": {
+      "free": "Gratis",
+      "basic": "Basis",
+      "pro": "Pro",
+      "premium": "Premium"
+    },
+    "planDesc": {
+      "free": "Altijd gratis",
+      "basic": "Om aan de slag te gaan",
+      "pro": "Voor groeiende bedrijven",
+      "premium": "Voor power users & teams"
+    },
+    "features": {
+      "domain": "{{count}} Domein",
+      "domains": "{{count}} Domeinen",
+      "unlimitedDomains": "Onbeperkt aantal domeinen",
+      "keywords": "{{count}} Zoekwoorden",
+      "updates": "Beperkte Updates",
+      "weekly": "Wekelijkse Updates",
+      "daily": "Dagelijkse Updates",
+      "mcp": "MCP Toegang",
+      "ai": "AI-content",
+      "priority": "Prioritaire Ondersteuning",
+      "api": "API-toegang"
+    },
+    "buttons": {
+      "current": "Huidig Plan",
+      "upgrade": "Upgraden",
+      "downgrade": "Downgraden"
+    },
+    "invoice": {
+      "title": "Algemene Factuurinformatie",
+      "desc": "Stel standaardgegevens in voor al je facturen",
+      "accountType": "Account Type",
+      "company": "Bedrijf",
+      "individual": "Individueel",
+      "nameCompany": "Bedrijfsnaam",
+      "nameIndividual": "Volledige Naam",
+      "vat": "BTW-nummer (Optioneel)",
+      "address": "Factuuradres",
+      "city": "Stad",
+      "zip": "Postcode",
+      "country": "Land",
+      "email": "E-mailadres voor facturatie",
+      "save": "Standaardgegevens Opslaan"
+    },
+    "history": {
+      "title": "Factuurgeschiedenis",
+      "desc": "Download je eerdere facturen",
+      "date": "Datum",
+      "amount": "Bedrag",
+      "status": "Status",
+      "download": "Downloaden"
+    },
+    "checkout": {
+      "title": "Abonnement {{cycle}} Voltooien",
+      "desc": "Controleer je plan en bevestig de factuurgegevens.",
+      "redirecting": "Doorsturen naar Stripe...",
+      "monthly": "Maandelijks",
+      "yearly": "Jaarlijks",
+      "save": "Bespaar ~20%",
+      "planSummary": "{{plan}} Plan",
+      "cycle": "Facturatiecyclus",
+      "total": "Totaal vandaag verschuldigd",
+      "confirm": "Bevestigen & Betalen",
+      "cancel": "Annuleren",
+      "billedYearly": "Alleen jaarlijks gefactureerd"
+    }
+  },
+  "apiKeys": {
+    "title": "API & MCP Verbindingen",
+    "subtitle": "Koppel AI-assistenten via het MCP-protocol om je SEO-gegevens te beheren",
+    "activeConnections": "Je actieve verbindingen ({{count}})",
+    "noConnections": "Nog geen verbindingen",
+    "noConnectionsDesc": "Maak je eerste AI-verbinding om je SEO-gegevens te beheren via gesprekken met AI-assistenten zoals Claude of ChatGPT.",
+    "createFirst": "Maak je eerste verbinding",
+    "create": "Nieuwe verbinding maken",
+    "permissions": "RECHTEN:",
+    "created": "Aangemaakt op {{date}}",
+    "lastUsed": "Laatst gebruikt op {{date}}",
+    "expires": "Verloopt op {{date}}",
+    "viewSetup": "Bekijk configuratie",
+    "hideSetup": "Verberg configuratie",
+    "disable": "Uitschakelen",
+    "delete": "Verwijderen",
+    "disabled": "Uitgeschakeld",
+    "setupTitle": "Hoe je deze verbinding gebruikt",
+    "setupClaude": "Voor Claude Desktop:",
+    "setupConfig": "Voeg dit toe aan je configuratiebestand (vervang door je echte API-sleutel):",
+    "viewGuide": "Bekijk de uitgebreide handleiding",
+    "securityNotice": "API-sleutel niet opvraagbaar",
+    "securityDesc": "Om veiligheidsredenen worden API-sleutels slechts één keer getoond bij aanmaak. Als je de sleutel bent kwijtgeraakt, maak dan een nieuwe verbinding en verwijder deze.",
+    "createModal": {
+      "title": "Nieuwe Verbinding Maken",
+      "subtitle": "Stel toegang voor AI-assistenten tot je SEO-gegevens in",
+      "nameLabel": "1. Geef je verbinding een naam",
+      "namePlaceholder": "bijv. Mijn Claude Assistent",
+      "nameHelp": "Kies een naam die je later makkelijk herkent",
+      "permLabel": "2. Kies Rechten",
+      "selectAll": "Selecteer Alles",
+      "deselectAll": "Deselecteer Alles",
+      "expiryLabel": "3. Stel Vervaldatum In",
+      "expiryHelp": "Voor de veiligheid raden we 30 dagen aan",
+      "cancel": "Annuleren",
+      "create": "Verbinding Maken"
+    },
+    "successModal": {
+      "title": "Verbinding Succesvol Aangemaakt!",
+      "subtitle": "Volg deze stappen om je AI-assistent te koppelen",
+      "step1": "Kopieer je verbindingssleutel",
+      "step1Desc": "Dit is je unieke sleutel - bewaar deze goed!",
+      "copy": "Kopiëren",
+      "step2": "Toevoegen aan je AI-assistent",
+      "step2Desc": "Voeg dit toe aan je configuratiebestand voor Claude Desktop:",
+      "step3": "Herstarten & Gebruiken",
+      "step3Desc": "Herstart je AI-assistent en begin met chatten!",
+      "important": "Belangrijk!",
+      "importantDesc": "Deze sleutel wordt slechts één keer getoond. Zorg ervoor dat je deze veilig opslaat voordat je dit bericht sluit.",
+      "saved": "Ik heb de sleutel opgeslagen"
+    },
+    "permLabels": {
+      "readDomains": "Domeinen Bekijken",
+      "readDomainsDesc": "Informatie over je websites bekijken",
+      "readKeywords": "Zoekwoorden Bekijken",
+      "readKeywordsDesc": "Je SEO-zoekwoorden bekijken",
+      "readPosts": "Artikelen Bekijken",
+      "readPostsDesc": "Je blogberichten bekijken",
+      "readGsc": "Analytics Bekijken",
+      "readGscDesc": "Google Search Console-gegevens bekijken",
+      "writePosts": "Artikelen Maken",
+      "writePostsDesc": "Blogberichten schrijven en bewerken",
+      "writeKeywords": "Zoekwoorden Beheren",
+      "writeKeywordsDesc": "Zoekwoorden toevoegen en bijwerken",
+      "publishWordpress": "Publiceren naar WordPress",
+      "publishWordpressDesc": "Artikelen naar je website publiceren"
+    },
+    "expiryOptions": {
+      "7": "7 dagen",
+      "30": "30 dagen (Aanbevolen)",
+      "90": "90 dagen",
+      "365": "1 jaar",
+      "0": "Verloopt nooit"
+    }
+  },
+  "scraperSettings": {
+    "title": "Scraper Configuratie",
+    "desc": "Beheer je scraper-instellingen en integraties",
+    "configTitle": "Scraper Configuratie",
+    "configDesc": "Configureer je scraper-instellingen en proxy-opties",
+    "type": "Scraper Type",
+    "delay": "Scrape Vertraging",
+    "delayNone": "Geen",
+    "delay5": "5 seconden",
+    "delay10": "10 seconden",
+    "delay30": "30 seconden",
+    "retry": "Opnieuw proberen bij fout inschakelen",
+    "save": "Wijzigingen Opslaan",
+    "saving": "Opslaan...",
+    "noKey": "Nog geen API-sleutel?",
+    "signUp": "Meld je aan voor {{service}}",
+    "notificationInterval": "Meldingsinterval",
+    "notificationEmail": "E-mailadres voor meldingen"
+  },
+  "periods": {
+    "today": "Vandaag",
+    "yesterday": "Gisteren",
+    "last7Days": "Laatste 7 Dagen",
+    "last30Days": "Laatste 30 Dagen",
+    "last90Days": "Laatste 90 Dagen",
+    "lastYear": "Vorig Jaar",
+    "lastDays": "Laatste {{days}} Dagen"
+  },
+  "insight": {
+    "stats": "Statistieken",
+    "keywords": "Zoekwoorden",
+    "countries": "Landen",
+    "pages": "Pagina's",
+    "performanceOverview": "Prestatieoverzicht",
+    "both": "Beide",
+    "visits": "Bezoeken",
+    "impressions": "Impressies",
+    "avgPosition": "Gem. Positie",
+    "avgCtr": "Gem. CTR",
+    "date": "Datum",
+    "ctr": "CTR",
+    "position": "Positie",
+    "clicks": "Klikken",
+    "connectTitle": "Google Search Console niet gekoppeld",
+    "connectDesc": "Verbind je Google Search Console-account om echte prestatiegegevens te bekijken, waaronder impressies, klikken en de gemiddelde positie.",
+    "connectBtn": "Google-account Verbinden",
+    "last30Days": "Laatste 30 Dagen",
+    "pageInfo": "Pagina {{current}} van {{total}}",
+    "previous": "Vorige",
+    "next": "Volgende",
+    "noResults": "Geen resultaten gevonden voor \"{{query}}\"",
+    "topPerformers": "Beste Presteerders",
+    "exportCSV": "Exporteer CSV",
+    "selectTab": "Selecteer Weergave"
+  },
+  "domainHeader": {
+    "last3Days": "Laatste 3 Dagen",
+    "last7Days": "Laatste 7 Dagen",
+    "last30Days": "Laatste 30 Dagen",
+    "reloadSerps": "SERPs Herladen",
+    "reloadAllSerps": "Alle SERPs Herladen",
+    "deleteDomain": "Domein Verwijderen",
+    "updating": "Bijwerken...",
+    "reload": "Herladen",
+    "addKeyword": "Zoekwoord Toevoegen",
+    "loadIdeas": "Ideeën Laden"
+  },
+  "keywordFilter": {
+    "filterKeywords": "Zoekwoorden filteren...",
+    "allCountries": "Alle Landen",
+    "allTags": "Alle Tags",
+    "noTags": "Geen tags gevonden voor dit domein",
+    "addKeyword": "Zoekwoord Toevoegen",
+    "reloadSerps": "Alle SERPs Herladen",
+    "desktop": "Desktop",
+    "mobile": "Mobiel",
+    "filter": "Filteren",
+    "sort": "Sorteren",
+    "columns": "Kolommen Tonen/Verbergen"
+  },
+  "sortOptions": {
+    "pos_asc": "Beste Positie",
+    "pos_desc": "Laagste Positie",
+    "date_asc": "Meest Recent",
+    "date_desc": "Oudst",
+    "alpha_asc": "Alfabetisch (A-Z)",
+    "alpha_desc": "Alfabetisch (Z-A)",
+    "vol_asc": "Laagste Zoekvolume",
+    "vol_desc": "Hoogste Zoekvolume",
+    "imp_desc": "Meest Bekeken",
+    "imp_asc": "Minst Bekeken",
+    "visits_desc": "Meeste Bezoeken",
+    "visits_asc": "Minste Bezoeken",
+    "ctr_desc": "Laagste CTR"
+  },
+  "columns": {
+    "keyword": "Zoekwoord",
+    "position": "Positie",
+    "url": "URL",
+    "updated": "Bijgewerkt",
+    "best": "Beste",
+    "history": "Geschiedenis",
+    "volume": "Volume",
+    "searchConsole": "Search Console"
+  },
+  "scTable": {
+    "totalVisits": "Totaal Bezoeken",
+    "addToTracker": "{{count}} Zoekwoorden toevoegen aan Tracker",
+    "noKeywords": "Geen zoekwoorden gevonden",
+    "adjustFilters": "Probeer je filters aan te passen."
+  },
+  "tracking": {
+    "addKeywords": {
+      "title": "Nieuwe Zoekwoorden Toevoegen",
+      "placeholder": "Typ of plak zoekwoorden hier. Voer elk zoekwoord in op een nieuwe regel.",
+      "tagsPlaceholder": "Tags Toevoegen (Optioneel)",
+      "cityPlaceholder": "Stad (Optioneel)",
+      "cityDisabled": "Niet beschikbaar voor {{scraper}}",
+      "cityTooltip": "Je scraper {{scraper}} heeft geen functie voor scrapen op stadsniveau.",
+      "trackCompetitors": "Concurrenten volgen (controleert automatisch de rankings van concurrenten)",
+      "cancel": "Annuleren",
+      "add": "Zoekwoorden Toevoegen",
+      "adding": "Toevoegen...",
+      "errorExist": "Zoekwoorden {{keywords}} bestaan al",
+      "errorEmpty": "Voer a.u.b. een zoekwoord in",
+      "noTags": "Geen bestaande tags gevonden...",
+      "planUsage": "Planverbruik",
+      "enterKeywords": "Zoekwoorden",
+      "country": "Land",
+      "device": "Apparaat",
+      "city": "Stad",
+      "tags": "Tags",
+      "errorLimit": "Limiet van abonnement overschreden. Je kunt nog {{remaining}} zoekwoorden toevoegen (je probeert er {{count}} toe te voegen)."
+    },
+    "manageCompetitors": {
+      "title": "Concurrenten Beheren",
+      "addLabel": "URL van concurrent toevoegen",
+      "placeholder": "https://voorbeeld.nl",
+      "add": "Toevoegen",
+      "count": "{{count}}/{{max}} concurrenten toegevoegd",
+      "currentTitle": "Huidige Concurrenten",
+      "empty": "Nog geen concurrenten toegevoegd",
+      "cancel": "Annuleren",
+      "save": "Wijzigingen Opslaan",
+      "saving": "Opslaan...",
+      "errorEmpty": "Voer a.u.b. een URL van een concurrent in",
+      "errorMax": "Maximaal {{max}} concurrenten toegestaan",
+      "errorExists": "Deze concurrent bestaat al",
+      "success": "Concurrenten succesvol bijgewerkt!",
+      "error": "Concurrenten bijwerken mislukt"
+    },
+    "tabs": {
+      "keywords": "Zoekwoorden",
+      "competitors": "Concurrenten"
+    },
+    "scraperAlert": "Er is nog geen Scraper/Proxy ingesteld. Open Instellingen om dit te configureren en de app te gaan gebruiken."
+  },
+  "trackingTable": {
+    "keyword": "Zoekwoord",
+    "best": "Beste",
+    "history": "Geschiedenis",
+    "volume": "Volume",
+    "url": "URL",
+    "updated": "Bijgewerkt",
+    "scPos": "Pos",
+    "scImp": "Imp",
+    "scVisits": "Visits",
+    "refreshKeywords": "Zoekwoorden Vernieuwen",
+    "removeKeywords": "Zoekwoorden Verwijderen",
+    "tagKeywords": "Zoekwoorden Taggen",
+    "noKeywordsDevice": "Geen zoekwoorden toegevoegd voor dit type apparaat.",
+    "removeTitle": "Zoekwoorden Verwijderen",
+    "removeConfirm": "Weet je zeker dat je {{count}} zoekwoord(en) wilt verwijderen?",
+    "refreshCompetitors": "Concurrenten Vernieuwen",
+    "yourPosition": "Jouw Positie",
+    "noKeywordsMsg": "Nog geen zoekwoorden toegevoegd. Voeg zoekwoorden toe via het tabblad Zoekwoorden.",
+    "noCompetitorsMsg": "Nog geen concurrenten toegevoegd. Voeg concurrenten toe via de domeininstellingen.",
+    "refresh": "Vernieuwen",
+    "tag": "Tag",
+    "remove": "Verwijderen",
+    "selected": "Geselecteerd",
+    "favorite": "Favoriet",
+    "unfavorite": "Favoriet verwijderen",
+    "tags": "Tags",
+    "updateFailed": "Update mislukt",
+    "lastAttempt": "Laatste poging",
+    "scraperError": "Scraper Fout"
+  },
+  "domainSelector": {
+    "current": "Huidig Domein",
+    "select": "Selecteer Domein",
+    "switch": "Domein Wisselen",
+    "add": "Website Toevoegen",
+    "empty": "Geen domeinen gevonden"
+  },
+  "domainSettings": {
+    "title": "Domeininstellingen",
+    "myApp": "Mijn App",
+    "tabs": {
+      "general": "Algemeen",
+      "integrations": "Integraties",
+      "searchConsole": "Google Search Console",
+      "delete": "Verwijderen"
+    },
+    "general": {
+      "cardTitle": "Algemene Informatie",
+      "cardDesc": "Werk de bedrijfsinformatie en niche-details van je domein bij.",
+      "businessName": "Bedrijfsnaam",
+      "businessNameDesc": "De officiële naam van je bedrijf of merk.",
+      "niche": "Niche / Branche",
+      "nicheDesc": "De belangrijkste branche of het onderwerp van je website.",
+      "description": "Bedrijfsomschrijving",
+      "descriptionDesc": "Een korte beschrijving die wordt gebruikt voor AI-contextgeneratie.",
+      "save": "Wijzigingen Opslaan",
+      "saving": "Opslaan..."
+    },
+    "strategy": {
+      "cardTitle": "Strategie voor Doelzoekwoorden",
+      "country": "Doelland",
+      "allCountries": "Alle Landen",
+      "cardDesc": "Definieer tot 9 focus-zoekwoorden, gerangschikt op belang. Deze leiden je SEO-strategie voor de komende 6 maanden.",
+      "high": "Hoog Belang (Top 3)",
+      "highDesc": "Cruciale zoekwoorden die je moet domineren voor je kernactiviteiten.",
+      "medium": "Gemiddeld Belang",
+      "mediumDesc": "Belangrijke zoekwoorden die je belangrijkste diensten ondersteunen.",
+      "low": "Laag Belang",
+      "lowDesc": "Long-tail zoekwoorden of toekomstige kansen."
+    },
+    "competitors": {
+      "cardTitle": "Concurrenten",
+      "cardDesc": "Volg je concurrenten om je eigen prestaties te meten.",
+      "tracked": "Gevolgde Concurrenten",
+      "add": "Toevoegen",
+      "empty": "Nog geen concurrenten toegevoegd.",
+      "exists": "Concurrent is al toegevoegd"
+    },
+    "integrations": {
+      "cardTitle": "CMS-integraties",
+      "cardDesc": "Koppel het CMS van je website om automatische blogfuncties in te schakelen.",
+      "wpDesc": "Koppel je zelf-gehoste WordPress-site met behulp van Applicatiewachtwoorden.",
+      "shopifyDesc": "Koppel je Shopify-winkel met behulp van Access Tokens.",
+      "webflowDesc": "Koppel je Webflow-site naadloos.",
+      "wixDesc": "Koppel je Wix-website eenvoudig.",
+      "comingSoon": "Binnenkort beschikbaar",
+      "settingsTitle": "WordPress-instellingen",
+      "helpTitle": "Hoe je WordPress-inloggegevens verkrijgt",
+      "help": {
+        "urlLabel": "1. Website URL:",
+        "urlDesc": "Voer de exacte URL van je WordPress-site in (bijv. https://jouwsite.nl). Zorg ervoor dat deze precies overeenkomt - inclusief http/https en www/non-www.",
+        "usernameLabel": "2. Gebruikersnaam:",
+        "usernameDesc": "Gebruik je WordPress-gebruikersnaam (niet je weergavenaam of e-mail). Je vindt deze in: WP Admin → Gebruikers → Jouw profiel → veld Gebruikersnaam.",
+        "appPassLabel": "3. Applicatiewachtwoord:",
+        "appPassStep1": "Ga naar: WP Admin → Gebruikers → Profiel (jouw account)",
+        "appPassStep2": "Scroll omlaag naar de sectie \"Applicatiewachtwoorden\"",
+        "appPassStep3": "Voer een naam in (bijv. \"SEO Agent\") en klik op \"Nieuw applicatiewachtwoord toevoegen\"",
+        "appPassStep4": "Kopieer het gegenereerde wachtwoord (formaat: xxxx xxxx xxxx xxxx)",
+        "appPassStep5": "Plak het in het veld hieronder"
+      },
+      "url": "Website URL",
+      "urlPlaceholder": "https://jouwwebsite.nl",
+      "urlHelper": "De volledige URL van je WordPress-site.",
+      "username": "Gebruikersnaam",
+      "usernamePlaceholder": "admin",
+      "usernameHelper": "Je WordPress-gebruikersnaam (geen e-mail).",
+      "appPass": "Applicatiewachtwoord",
+      "appPassPlaceholder": "xxxx xxxx xxxx xxxx",
+      "appPassHelper": "Maak dit aan in WP Admin > Gebruikers > Profiel > Applicatiewachtwoorden.",
+      "refreshCats": "Categorieën Vernieuwen",
+      "availCats": "Beschikbare categorieën op basis van je website",
+      "catsHelper": "Maak hierboven verbinding en klik vervolgens op \"Vernieuwen\" om je categorieën te zien.",
+      "test": "Verbinding Testen",
+      "saveInt": "Integratie Opslaan",
+      "connected": "Verbonden als {{user}}",
+      "failed": "Verbinding mislukt",
+      "enterCreds": "Voer eerst inloggegevens in",
+      "foundCats": "{{count}} categorieën gevonden",
+      "fetchCatsError": "Categorieën ophalen mislukt",
+      "testing": "Verbinding testen..."
+    },
+    "gsc": {
+      "cardTitle": "Google Search Console",
+      "cardDesc": "Koppel je Google Search Console-account",
+      "connected": "Google-account Verbonden",
+      "disconnect": "Ontkoppelen",
+      "verifiedSites": "Geverifieerde Sites",
+      "refreshSites": "Sites Vernieuwen",
+      "loading": "Laden...",
+      "noSites": "Geen geverifieerde sites gevonden",
+      "owner": "Eigenaar",
+      "full": "Volledige Toegang",
+      "restricted": "Beperkt",
+      "unverified": "Niet geverifieerd",
+      "imported": "Geïmporteerd",
+      "add": "Toevoegen",
+      "notesTitle": "Belangrijke Opmerkingen:",
+      "note1": "Alleen sites waarvan je Eigenaar bent in Google Search Console zullen verschijnen en correct werken.",
+      "connectBtn": "Google-account Verbinden",
+      "connectDesc": "Koppel je Google-account om automatisch sites te verifiëren en prestatiegegevens direct in je dashboard op te halen."
+    },
+    "danger": {
+      "title": "Site Verwijderen",
+      "desc": "Onomkeerbare acties voor je site.",
+      "warning": "Verwijder deze site en alle bijbehorende gegevens permanent. Deze actie kan niet ongedaan worden gemaakt.",
+      "warning1": "Alle zoekwoord-trackinggegevens worden verwijderd",
+      "warning2": "Alle artikelen en inhoud worden verwijderd",
+      "warning3": "Alle analytics- en prestatiegegevens gaan verloren",
+      "confirmLabel": "Typ a.u.b. {{domain}} om te bevestigen",
+      "btn": "Site Verwijderen",
+      "deleting": "Verwijderen..."
+    }
+  },
+  "posts": {
+    "pageTitle": "Artikelen",
+    "newArticleTitle": "Nieuw Artikel",
+    "editArticleTitle": "Artikel Bewerken",
+    "list": {
+      "title": "Artikelen",
+      "description": "Beheer en optimaliseer de blogcontent van je website.",
+      "newArticle": "Nieuw Artikel",
+      "emptyTitle": "Geen artikelen gevonden",
+      "emptyDesc": "Ga aan de slag door je eerste AI-geoptimaliseerde artikel te maken.",
+      "createBtn": "Artikel Maken",
+      "wordpress": "WordPress"
+    },
+    "tabs": {
+      "all": "Alle Artikelen",
+      "drafts": "Concepten",
+      "published": "Gepubliceerd"
+    },
+    "table": {
+      "article": "Artikel",
+      "status": "Status",
+      "lastUpdated": "Laatst Bijgewerkt",
+      "actions": "Acties"
+    },
+    "status": {
+      "published": "Gepubliceerd",
+      "draft": "Concept"
+    },
+    "editor": {
+      "back": "Terug naar Artikelen",
+      "generate": "Genereren",
+      "generating": "Genereren...",
+      "save": "Opslaan",
+      "saving": "Opslaan...",
+      "saved": "Opslaan (Opgeslagen)",
+      "newTitle": "Nieuw Artikel",
+      "editTitle": "Artikel Bewerken",
+      "description": "Genereer SEO-geoptimaliseerde content voor je blog",
+      "contentEditor": "Content Editor",
+      "topicLabel": "Onderwerp/Idee voor artikel",
+      "ready": "Gereed",
+      "topicPlaceholder": "Voer het onderwerp of het hoofdidee van je artikel in... bijv. 'Hoe je SEO-rankings kunt verbeteren in 2026'",
+      "topicHelp": "Dit wordt door de AI gebruikt om je artikel te genereren. Wees specifiek voor de beste resultaten.",
+      "titleLabel": "Titel van artikel",
+      "titlePlaceholder": "Voer de titel van je artikel in...",
+      "titleShort": "De titel is te kort voor optimale SEO (streef naar 50-60 tekens)",
+      "titleLong": "De titel kan worden afgebroken in zoekresultaten (houd deze onder de 60 tekens)",
+      "featuredImage": "Uitgelichte Afbeelding",
+      "clickToChange": "Klik om te wijzigen",
+      "clickToUpload": "Klik om afbeelding te uploaden",
+      "aiImageComingSoon": "of de AI genereert er een (binnenkort beschikbaar)",
+      "bodyContent": "Inhoud",
+      "visualEditor": "Schakel naar Visuele Editor",
+      "sourceCode": "Broncode Bewerken"
+    },
+    "seo": {
+      "score": "SEO Score",
+      "scoreDesc": {
+        "excellent": "Je doet het uitstekend! Je content is goed geoptimaliseerd",
+        "good": "Je doet een goede poging om je doel te bereiken",
+        "improve": "Blijf aan je content werken om je SEO-score te verbeteren"
+      },
+      "optimized": "Artikel Geoptimaliseerd",
+      "suggestionsTitle": "Suggesties voor Verbetering",
+      "suggestions": {
+        "addWords": "Voeg nog {{count}} woorden toe om de optimale lengte te bereiken",
+        "addKeywords": "Verwerk je zoekwoorden nog {{count}} keer op een natuurlijke manier",
+        "addHeadings": "Voeg nog {{count}} koptekst(en) toe (H2 of H3)",
+        "addImage": "Voeg een uitgelichte afbeelding toe voor meer betrokkenheid",
+        "addMeta": "Schrijf een meta-omschrijving (150-160 tekens)",
+        "titleLength": "Optimaliseer de titellengte naar 50-60 tekens",
+        "includeAllKeywords": "Verwerk alle geselecteerde zoekwoorden in je inhoud ({{current}}/{{total}} gevonden)",
+        "addPrimaryTitle": "Voeg je primaire zoekwoord \"{{keyword}}\" toe aan de titel",
+        "addPrimaryMeta": "Verwerk het primaire zoekwoord in de meta-omschrijving",
+        "addInternalLinks": "Voeg ten minste 2-3 interne links toe naar andere pagina's op je site",
+        "moreInternalLinks": "Voeg 1-2 extra interne links toe om de SEO te verbeteren",
+        "addAllAlt": "Voeg alt-tekst toe aan alle {{count}} afbeeldingen voor betere SEO en toegankelijkheid",
+        "addRemainingAlt": "Voeg alt-tekst toe aan de resterende {{count}} afbeeldingen",
+        "addH1": "Voeg één H1-kop toe als de hoofdtitel van het artikel",
+        "singleH1": "Gebruik slechts één H1-kop (momenteel: {{count}}). Meerdere H1's zijn schadelijk voor SEO",
+        "addH2": "Voeg nog {{count}} H2-koppen toe om de inhoud te structureren (optimaal: 3-6)",
+        "addH3": "Overweeg nog {{count}} H3-subkoppen toe te voegen voor een betere hiërarchie (optimaal: 6-12)"
+      },
+      "metrics": {
+        "wordCount": "Aantal woorden",
+        "keywordDensity": "Zoekwoorddichtheid",
+        "headingStructure": "Kopstructuur",
+        "images": "Afbeeldingen",
+        "keywordsInContent": "Zoekwoorden in Inhoud",
+        "keywordInTitle": "Zoekwoord in Titel",
+        "keywordInMeta": "Zoekwoord in Meta",
+        "internalLinks": "Interne Links",
+"externalLinks": "Externe Links",
+        "imagesInContent": "Afbeeldingen in Inhoud",
+        "withAltText": "Met Alt-tekst"
+      }
+    },
+    "meta": {
+      "title": "Meta Data",
+      "targetKeywords": "Doelzoekwoorden",
+      "editStrategy": "Strategie Bewerken",
+      "customKeyword": "Of voeg aangepast zoekwoord toe:",
+      "keywordPlaceholder": "Voer zoekwoord in...",
+      "addBtn": "Toevoegen",
+      "addHelp": "Druk op Enter of klik op Toevoegen om een aangepast zoekwoord op te nemen",
+      "selectedKeywords": "Geselecteerde Zoekwoorden:",
+      "metaDescription": "Meta-omschrijving",
+      "metaPlaceholder": "Omschrijving voor zoekmachines..."
+    },
+    "publish": {
+      "wordpress": "Publiceren naar WordPress",
+      "publishing": "Publiceren..."
+    },
+    "modal": {
+      "altTitle": "Alt-tekst van Afbeelding Bewerken",
+      "altLabel": "Alt-tekst (voor SEO & Toegankelijkheid)",
+      "altHelp": "Beschrijf wat er op de afbeelding te zien is voor schermlezers en zoekmachines",
+      "updateAlt": "Alt-tekst Bijwerken",
+      "linkTitle": "Linktitel Bewerken",
+      "linkText": "Linktekst",
+      "linkUrl": "Link URL",
+      "linkTooltip": "Linktitel (Tooltip)",
+      "linkHelp": "Dit verschijnt wanneer gebruikers over de link hoeven",
+      "updateLink": "Titel Bijwerken"
+    },
+    "common": {
+      "cancel": "Annuleren"
+    }
+  },
+  "hero": {
+    "headline": "SEO AI Agent",
+    "subheadline": "Bereik jouw #1 positie",
+    "description": "Monitor rankings in meer dan 200 landen, genereer AI-content met GPT-5 & Claude, en publiceer direct naar WordPress. De complete SEO-oplossing voor moderne bedrijven.",
+    "bullet1": "Tracking in meerdere landen",
+    "bullet2": "AI-content met GPT-5 & Claude",
+    "bullet3": "Direct publiceren naar WordPress",
+    "bullet4": "ChatGPT & Claude MCP-integratie",
+    "trustedBy": "Vertrouwd door meer dan 5.000 SEO-professionals wereldwijd"
+  },
+  "landing": {
+    "title": "SEO AI Agent",
+    "subtitle": "Je Professionele SEO Tracking Oplossing",
+    "description": "Volg je zoekwoorden, monitor rankings en laat je bedrijf groeien met onze krachtige SEO-tools.",
+    "cta": "Aan de slag",
+    "login": "Inloggen",
+    "stats": {
+      "title": "Vertrouwd door duizenden SEO-professionals",
+      "activeUsers": "Actieve Gebruikers",
+      "keywordsTracked": "Zoekwoorden Dagelijks Gevolgd",
+      "reportsGenerated": "Rapporten Gegenereerd",
+      "customerSatisfaction": "Klanttevredenheid"
+    },
+    "howItWorks": {
+      "title": "Hoe het werkt",
+      "subtitle": "Complete SEO-workflow van tracking tot publiceren - alles in één platform",
+      "step1": {
+        "title": "Volg je rankings in alle landen",
+        "description": "Monitor je positie in elke Google-regio wereldwijd",
+        "feature1": "Voeg je website en doelzoekwoorden toe",
+        "feature2": "Volg rankings in Google Nederland, België, VS en elk ander land",
+        "feature3": "Koppel met Google Search Console voor officiële data",
+        "feature4": "Vergelijk automatisch met maximaal 3 concurrenten"
+      },
+      "step2": {
+        "title": "Analyseer & Begrijp je data",
+        "description": "Krijg uitgebreide inzichten met visuele analyses",
+        "feature1": "Compleet dashboard met interactieve grafieken",
+        "feature2": "Nauwkeurige statistieken: bezoeken, impressies, CTR",
+        "feature3": "Ontdek welke zoekwoorden bezoekers opleveren",
+        "feature4": "Identificeer hiaten en kansen"
+      },
+      "step3": {
+        "title": "Maak doelgerichte content met AI",
+        "description": "Genereer SEO-geoptimaliseerde artikelen met toonaangevende AI-modellen",
+        "feature1": "Kies uit meer dan 5 AI-modellen: GPT-5.2, Claude 3.5 Sonnet, Gemini 2.0",
+        "feature2": "Of gebruik ChatGPT/Claude direct via de MCP API",
+        "feature3": "Content geoptimaliseerd voor je belangrijkste zoekwoorden",
+        "feature4": "Automatische SEO-score (100 punten) met suggesties voor verbetering"
+      },
+      "step4": {
+        "title": "Publiceer direct naar je website",
+        "description": "Publiceren met één klik naar je CMS-platform",
+        "feature1": "Met één klik publiceren naar WordPress",
+        "feature2": "Ondersteuning voor Shopify, Webflow, Wix (binnenkort)",
+        "feature3": "Volledig contentbeheer vanaf één plek",
+        "feature4": "Monitor de verbetering van je rankings na publicatie"
+      }
+    },
+    "features": {
+      "title": "Krachtige functies voor compleet SEO-beheer",
+      "subtitle": "Alles wat je nodig hebt om de zoekresultaten te domineren en winnende content te maken",
+      "categoryTracking": "Tracking & Analyse",
+      "categoryAI": "AI-contentcreatie",
+      "categoryPublishing": "Publicatie & Integratie",
+      "multiCountry": {
+        "title": "Zoekwoordtracking in meerdere landen",
+        "description": "Volg je rankings in meer dan 200 landen met realtime updates",
+        "benefit1": "Volg rankings in 200+ landen",
+        "benefit2": "Google Nederland, België, VS en meer",
+        "benefit3": "Volgen op Desktop & Mobiel",
+        "benefit4": "Dagelijkse of uurlijkse updates"
+      },
+      "gscIntegration": {
+        "title": "Google Search Console Integratie",
+        "description": "Maak direct verbinding met Google voor officiële prestatiegegevens",
+        "benefit1": "Directe verbinding met Google",
+        "benefit2": "Officiële data: bezoeken, impressies, CTR",
+        "benefit3": "Analyseer best presterende zoekwoorden",
+        "benefit4": "Automatisch zoekwoorden importeren"
+      },
+      "competitorAnalysis": {
+        "title": "Concurrentieanalyse",
+        "description": "Volg tot 3 concurrenten en meet je eigen prestaties",
+        "benefit1": "Volg tot 3 concurrenten",
+        "benefit2": "Vergelijk rankings voor dezelfde zoekwoorden",
+        "benefit3": "Ontdek hiaten in je content",
+        "benefit4": "Waarschuwingen wanneer concurrenten je inhalen"
+      },
+      "aiContent": {
+        "title": "AI-contentgeneratie",
+        "description": "Maak SEO-geoptimaliseerde content met toonaangevende AI-modellen",
+        "benefit1": "Kies uit 5+ AI-modellen",
+        "benefit2": "GPT-5.2, Claude 3.5 Sonnet, Gemini 2.0",
+        "benefit3": "Content automatisch geoptimaliseerd voor SEO",
+        "benefit4": "SEO-score (100 punten)"
+      },
+      "chatIntegration": {
+        "title": "ChatGPT & Claude Integratie",
+        "description": "Integreer met je favoriete AI-chatassistenten via de MCP API",
+        "benefit1": "MCP API voor directe integratie",
+        "benefit2": "SEO-controles vanuit de chat",
+        "benefit3": "Content schrijven vanuit ChatGPT/Claude",
+        "benefit4": "Automatiseer je workflow"
+      },
+      "seoScoring": {
+        "title": "SEO Scoring & Optimalisatie",
+        "description": "Automatische evaluatie van content met praktische suggesties",
+        "benefit1": "Automatische content-evaluatie",
+        "benefit2": "Analyse van zoekwoorddichtheid",
+        "benefit3": "Analyse van koppen en links",
+        "benefit4": "Slimme optimalisatiesuggesties"
+      },
+      "wordpressPublishing": {
+        "title": "Direct Publiceren naar WordPress",
+        "description": "Publiceer je content direct naar WordPress met één klik",
+        "benefit1": "Publiceren met één klik",
+        "benefit2": "Selecteer categorieën en tags",
+        "benefit3": "Publicatie inplannen",
+        "benefit4": "Ondersteuning voor Shopify, Webflow, Wix (binnenkort)"
+      },
+      "analytics": {
+        "title": "Geavanceerd Analytics Dashboard",
+        "description": "Interactieve grafieken en uitgebreide rapportages",
+        "benefit1": "Interactieve grafieken",
+        "benefit2": "Analyse per zoekwoord, pagina en land",
+        "benefit3": "CSV-export",
+        "benefit4": "Aangepaste rapporten"
+      },
+      "apiWebhooks": {
+        "title": "Krachtige API & Webhooks",
+        "description": "Volledige API met gedetailleerde machtigingen en webhooks",
+        "benefit1": "Complete API met fijmazige rechten",
+        "benefit2": "Webhooks voor directe meldingen",
+        "benefit3": "Integreer met externe tools",
+        "benefit4": "Automatische data-export"
+      }
+    },
+    "integrations": {
+      "title": "Aangedreven door toonaangevende AI-modellen & platforms",
+      "subtitle": "Kies uit meer dan 5 AI-modellen en publiceer direct naar je favoriete platforms",
+      "aiModels": "AI-contentgeneratie",
+      "directPublishing": "Direct Publiceren",
+      "multiEngine": "Multi-Engine Tracking",
+      "comingSoon": "Binnenkort beschikbaar",
+      "seoFooter": "Integreer je SEO-workflow met ChatGPT, Claude AI, Google Gemini voor contentgeneratie. Publiceer direct naar WordPress, Shopify, Webflow. Volg rankings op Google, Bing, Yahoo en DuckDuckGo in meer dan 200 landen."
+    },
+    "testimonials": {
+      "title": "Wat onze klanten zeggen",
+      "subtitle": "Sluit je aan bij duizenden tevreden klanten die hun online aanwezigheid vergroten",
+      "trustBadge": "Beoordeeld met 5.0 op basis van 100+ reviews",
+      "testimonial1": {
+        "position": "Digital Marketing Manager",
+        "review": "Een geweldige tool die ons heeft geholpen onze website-ranking met 150% te verbeteren in slechts 3 maanden. De tracking-functie voor meerdere landen is een echte game-changer!"
+      },
+      "testimonial2": {
+        "position": "SEO Specialist",
+        "review": "De gedetailleerde rapporten en dagelijkse tracking maken mijn werk veel gemakkelijker. De AI-contentgeneratie is ongelooflijk nauwkeurig en bespaart uren werk."
+      },
+      "testimonial3": {
+        "position": "Oprichter",
+        "review": "De beste SEO-tool die ik ooit heb gebruikt. De interface is eenvoudig en de resultaten zijn nauwkeurig. De WordPress-integratie is naadloos!"
+      }
+    },
+    "pricing": {
+      "title": "Eenvoudige, transparante prijzen",
+      "subtitle": "Kies het plan dat bij je behoeften past. Geen verborgen kosten.",
+      "monthly": "Maandelijks",
+      "yearly": "Jaarlijks",
+      "perMonth": "maand",
+      "saveYearly": "Bespaar tot 17% bij jaarlijkse facturatie",
+      "mostPopular": "Meest Populair",
+      "noCreditCard": "Geen creditcard nodig om te starten",
+      "cancelAnytime": "Altijd opzegbaar. Geen vragen gesteld.",
+      "seoFooter": "Betaalbare SEO-tracking en AI-contentplatform. Gratis plan beschikbaar. Volg zoekwoordposities, analyseer Google Search Console-data, genereer AI-content met GPT-5.2 en Claude, publiceer naar WordPress.",
+      "free": {
+        "name": "Gratis",
+        "description": "Perfect om uit te proberen",
+        "feature1": "2 websites",
+        "feature2": "10 zoekwoorden",
+        "feature3": "Dagelijkse updates",
+        "feature4": "Basis rapportages",
+        "cta": "Start Gratis"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Voor groeiende bedrijven",
+        "feature1": "5 websites",
+        "feature2": "100 zoekwoorden",
+        "feature3": "Updates elke 6 uur",
+        "feature4": "Geavanceerde rapportages",
+        "feature5": "API-toegang",
+        "feature6": "Concurrententraining",
+        "feature7": "AI-contentgeneratie",
+        "cta": "Nu Starten"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "Voor ervaren gebruikers",
+        "feature1": "Onbeperkt aantal websites",
+        "feature2": "500 zoekwoorden",
+        "feature3": "Uurlijkse updates",
+        "feature4": "Aangepaste rapportages",
+        "feature5": "Webhooks",
+        "feature6": "Prioritaire ondersteuning",
+        "feature7": "White-label",
+        "feature8": "Toegewezen accountmanager",
+        "cta": "Contacteer ons"
+      }
+    },
+    "billing": {
+      "title": "Facturering & Abonnement",
+      "desc": "Beheer je plan, betaalmethoden en factuurgeschiedenis.",
+      "currentPlan": "Huidig Plan: {{plan}}",
+      "active": "Actief",
+      "renewsOn": "Vernieuwt op: {{date}}",
+      "tabs": {
+        "subscription": "Plan",
+        "details": "Factuurgegevens",
+        "history": "Facturen"
+      },
+      "planNames": {
+        "free": "Gratis",
+        "basic": "Basis",
+        "pro": "Pro",
+        "premium": "Premium"
+      },
+      "planDesc": {
+        "free": "Essentiële functies om aan de slag te gaan.",
+        "basic": "Voor persoonlijke projecten en eenvoudige tracking.",
+        "pro": "Voor professionele SEO's en kleine bureaus.",
+        "premium": "Onbeperkte kracht voor grootschalige operaties."
+      },
+      "features": {
+        "domain": "{{count}} Website",
+        "domains": "{{count}} Websites",
+        "keywords": "{{count}} Zoekwoorden",
+        "updates": "Dagelijkse Updates",
+        "weekly": "Wekelijkse Updates",
+        "daily": "Dagelijkse Updates",
+        "mcp": "MCP-integratie",
+        "ai": "AI-artikelschrijver",
+        "api": "API-toegang",
+        "unlimitedDomains": "Onbeperkt aantal websites",
+        "priority": "Prioritaire Ondersteuning"
+      },
+      "buttons": {
+        "current": "Huidig Plan",
+        "upgrade": "Nu Upgraden",
+        "downgrade": "Downgraden"
+      },
+      "checkout": {
+        "monthly": "Maandelijks gefactureerd",
+        "billedYearly": "Jaarlijks gefactureerd",
+        "redirecting": "Doorsturen naar Stripe...",
+        "success": "Abonnement succesvol bijgewerkt!",
+        "title": "Configuratie {{cycle}} Abonnement",
+        "desc": "Voltooi je abonnement-upgrade om alle professionele functies te ontgrendelen."
+      },
+      "invoice": {
+        "title": "Factuurinformatie",
+        "desc": "Deze informatie zal op je facturen verschijnen.",
+        "accountType": "Account Type",
+        "company": "Bedrijf",
+        "individual": "Individueel",
+        "nameCompany": "Bedrijfsnaam",
+        "nameIndividual": "Volledige Naam",
+        "vat": "BTW-nummer (Optioneel)",
+        "address": "Factuuradres",
+        "email": "E-mailadres voor facturatie",
+        "save": "Wijzigingen Opslaan",
+        "saved": "Factuurgegevens opgeslagen!"
+      },
+      "history": {
+        "title": "Factuurgeschiedenis",
+        "desc": "Bekijk en download je eerdere facturen.",
+        "date": "Datum",
+        "amount": "Bedrag",
+        "status": "Status",
+        "download": "Downloaden"
+      }
+    },
+    "faq": {
+      "title": "Veelgestelde vragen",
+      "subtitle": "Alles wat je moet weten over SEO Agent",
+      "stillHaveQuestions": "Heb je nog vragen?",
+      "contactUs": "Contacteer ons",
+      "q1": {
+        "question": "Heb ik een creditcard nodig om te starten?",
+        "answer": "Nee, je kunt starten met het gratis plan zonder creditcard. Je kunt op elk moment upgraden wanneer je meer functies nodig hebt."
+      },
+      "q2": {
+        "question": "Hoe vaak worden de gegevens bijgewerkt?",
+        "answer": "Gegevens worden dagelijks bijgewerkt voor het Gratis plan, elke 6 uur voor Pro, en elk uur voor Enterprise plannen."
+      },
+      "q3": {
+        "question": "Kan ik meerdere websites volgen?",
+        "answer": "Ja, afhankelijk van je plan: 2 websites voor Gratis, 3 voor Basis, 5 voor Pro, en onbeperkt voor Premium/Enterprise."
+      },
+      "q4": {
+        "question": "Hoe werkt tracking in meerdere landen?",
+        "answer": "Je kunt kiezen uit meer dan 200 landen (zoals Google Nederland, België, VS). Het systeem controleert je ranking in elke lokale Google afzonderlijk, wat je nauwkeurige landspecifieke gegevens oplevert."
+      },
+      "q5": {
+        "question": "Welke AI-modellen worden ondersteund?",
+        "answer": "We ondersteunen OpenAI (GPT-5.2, GPT-4.1), Claude (3.5 Sonnet, 3 Opus), Google Gemini (2.0 Flash, 1.5 Pro), Perplexity Sonar en ons lokale Dpro model."
+      },
+      "q6": {
+        "question": "Hoe verbind ik het systeem met ChatGPT of Claude?",
+        "answer": "We bieden een MCP API waarmee je het systeem kunt verbinden met Claude Desktop of ChatGPT. Je kunt SEO-controles uitvoeren en content schrijven direct vanuit de chat. Bezoek onze MCP Setup-pagina voor gedetailleerde instructies."
+      },
+      "q7": {
+        "question": "Kan ik direct naar WordPress publiceren?",
+        "answer": "Ja! Je kunt je WordPress-site koppelen en met één klik publiceren. Ondersteuning voor Shopify, Webflow en Wix is binnenkort beschikbaar."
+      },
+      "q8": {
+        "question": "Ondersteunen jullie andere zoekmachines dan Google?",
+        "answer": "Ja, we ondersteunen Google, Bing, Yahoo en DuckDuckGo."
+      },
+      "q9": {
+        "question": "Hoe wordt de SEO-score voor content berekend?",
+        "answer": "We controleren meer dan 15 factoren: aantal woorden, zoekwoorddichtheid, kopstructuur, interne en externe links, alt-tekst van afbeeldingen, meta-omschrijving en meer. De score is gebaseerd op een maximum van 100 punten."
+      },
+      "q10": {
+        "question": "Kan ik mijn abonnement op elk moment opzeggen?",
+        "answer": "Absoluut! Je kunt je abonnement op elk moment opzeggen zonder extra kosten of voorwaarden."
+      }
+    },
+    "finalCTA": {
+      "title": "Klaar om de zoekresultaten te domineren?",
+      "description": "Sluit je aan bij duizenden bedrijven die SEO Agent gebruiken om rankings te volgen, AI-content te maken en hun online aanwezigheid te vergroten.",
+      "primaryCTA": "Start Gratis Proefperiode",
+      "secondaryCTA": "Contacteer Sales",
+      "noCreditCard": "Geen creditcard nodig",
+      "users": "Gebruikers",
+      "keywords": "Zoekwoorden",
+      "satisfaction": "Tevredenheid"
+    },
+    "footer": {
+      "rights": "Alle rechten voorbehouden."
+    }
+  },
+  "mcp": {
+    "autoConnect": {
+      "heroCta": "Verbind je AI",
+      "heroSubtext": "Geen tokens, geen kopieerwerk — plak één URL in Claude Desktop en keur goed in je browser.",
+      "claudeTitle": "Claude Desktop verbinden (OAuth — geen API-sleutel nodig)",
+      "cursorTitle": "Cursor verbinden (OAuth — geen API-sleutel nodig)",
+      "chatgptTitle": "ChatGPT verbinden (OAuth — geen API-sleutel nodig)",
+      "windsurfTitle": "Windsurf verbinden (OAuth — geen API-sleutel nodig)",
+      "zedTitle": "Zed verbinden (OAuth — geen API-sleutel nodig)",
+      "apiTitle": "Directe HTTP / JSON-RPC toegang",
+      "doneTitle": "Klaar — autoriseer één keer in je browser",
+      "doneText": "Bij het eerste gebruik opent je AI-assistent een tabblad op onze site, vraagt je om de verbinding goed te keuren en wordt automatisch teruggestuurd. Daarna wordt elke aanroep afgehandeld door het ontvangen toegangstoken.",
+      "noKeyNeeded": "Geen API-sleutel nodig",
+      "oauthAutomatic": "OAuth 2.0 (automatisch)"
+    },
+    "meta": {
+      "title": "MCP SEO - Verbind ChatGPT & Claude Desktop",
+      "description": "Integreer SEO Agent met ChatGPT en Claude Desktop via de MCP API. Volg rankings, analyseer zoekwoorden en genereer content direct vanuit je AI-chat."
+    },
+    "hero": {
+      "title": "Verbind SEO Agent met ChatGPT & Claude Desktop",
+      "description": "Gebruik onze MCP API om SEO te controleren, rankings te volgen en geoptimaliseerde content te schrijven direct vanuit je favoriete AI-chat - ChatGPT, Claude of elke andere MCP-compatibele tool.",
+      "getAPIKey": "Ontvang je API-sleutel",
+      "viewDocs": "Bekijk Documentatie"
+    },
+    "whatIs": {
+      "title": "Wat is MCP (Model Context Protocol)?",
+      "description1": "MCP is een standaardprotocol waarmee AI-assistenten zoals ChatGPT en Claude verbinding kunnen maken met externe tools en diensten.",
+      "description2": "Met onze MCP-integratie heb je toegang tot je SEO-gegevens, kun je rankings controleren, zoekwoorden analyseren en geoptimaliseerde content genereren - allemaal vanuit je AI-chat.",
+      "benefit1Title": "Directe Claude Desktop Integratie",
+      "benefit1": "Ingebouwde officiële MCP-ondersteuning",
+      "benefit2Title": "Compatibel met ChatGPT",
+      "benefit2": "Via aangepaste acties",
+      "benefit3Title": "Beveiligde Authenticatie",
+      "benefit3": "Met API-sleutels",
+      "benefit4Title": "Realtime Toegang tot Data",
+      "benefit4": "Geen code vereist voor basisconfiguratie"
+    },
+    "platforms": {
+      "title": "Ondersteunde Chatplatforms",
+      "recommended": "Aanbevolen",
+      "advanced": "Geavanceerd",
+      "comingSoon": "Binnenkort beschikbaar",
+      "claude1": "Officiële MCP-ondersteuning ingebouwd",
+      "claude2": "Voeg onze MCP-server toe in de instellingen",
+      "claude3": "Start direct met chatten met SEO-data",
+      "chatgpt1": "Maak een aangepaste GPT met onze API",
+      "chatgpt2": "Configureer acties om toegang te krijgen tot SEO-data",
+      "chatgpt3": "Gebruik in ChatGPT Plus of Team",
+      "otherTools": "Andere MCP-tools",
+      "moreTools": "En meer binnenkort beschikbaar"
+    },
+    "setup": {
+      "title": "Configuratiehandleiding - Stap voor Stap",
+      "copy": "Kopiëren",
+      "copied": "Gekopieerd!",
+      "claude": {
+        "step1Title": "Stap 1: API-sleutel Genereren",
+        "step1": {
+          "1": "Ga naar Profiel → API-sleutels",
+          "2": "Klik op 'Nieuwe sleutel maken'",
+          "3": "Selecteer rechten: read:domains, read:keywords, read:gsc, write:posts",
+          "4": "Bewaar je API-sleutel op een veilige plek"
+        },
+        "step2Title": "Stap 2: MCP-server toevoegen aan Claude Desktop",
+        "step2": "Plak dit in de configuratie van Claude Desktop, herstart Claude Desktop en je bent klaar! Begin met chatten."
+      },
+      "cursor": {
+        "title": "Configuratie voor Cursor IDE",
+        "step1": "Open Cursor Instellingen → Features → MCP",
+        "step2": "Klik op 'Add MCP Server'",
+        "step3": "Voer de onderstaande configuratiegegevens in",
+        "step4": "Herstart Cursor en start met het gebruik van MCP-tools"
+      },
+      "windsurf": {
+        "title": "Configuratie voor Windsurf IDE",
+        "step1": "Open Windsurf Instellingen → Extensions → MCP",
+        "step2": "Voeg nieuwe MCP-serverconfiguratie toe",
+        "step3": "Plak de onderstaande configuratie",
+        "step4": "Herstart Windsurf om te activeren"
+      },
+      "zed": {
+        "title": "Configuratie voor Zed Editor",
+        "step1": "Open Zed Instellingen (Cmd/Ctrl + ,)",
+        "step2": "Navigeer naar de sectie MCP Servers",
+        "step3": "Voeg de onderstaande configuratie toe",
+        "step4": "Herstart de Zed editor"
+      },
+      "chatgpt": {
+        "title": "Voor ChatGPT (Maak een aangepaste GPT)",
+        "step1": "Ga naar ChatGPT → Create a GPT",
+        "step2": "Configureer Acties met ons OpenAPI-schema",
+        "step3": "Voeg API-sleutel toe bij authenticatie",
+        "step4": "Test met voorbeeldvragen"
+      },
+      "api": {
+        "title": "Directe API-aanroep (voor ontwikkelaars)",
+        "description": "Je kunt de API ook direct gebruiken zonder MCP:"
+      }
+    },
+    "functions": {
+      "title": "Beschikbare MCP Tools/Functies",
+      "functionName": "Functienaam",
+      "description": "Beschrijving",
+      "exampleQuery": "Voorbeeldvraag",
+      "listDomains": {
+        "description": "Haal al je gevolgde domeinen op",
+        "example": "Toon mijn domeinen"
+      },
+      "getKeywords": {
+        "description": "Haal zoekwoorden op voor een domein",
+        "example": "Toon zoekwoorden voor voorbeeld.nl"
+      },
+      "getRankings": {
+        "description": "Controleer ranking voor een zoekwoord",
+        "example": "Wat is mijn ranking voor 'SEO tools'?"
+      },
+      "getGSC": {
+        "description": "Google Search Console data",
+        "example": "Toon GSC-statistieken voor de laatste 30 dagen"
+      },
+      "analyzeSEO": {
+        "description": "Analyseer de SEO-score van content",
+        "example": "Controleer de SEO van dit artikel"
+      },
+      "createPost": {
+        "description": "Genereer SEO-geoptimaliseerde post",
+        "example": "Schrijf artikel over X"
+      },
+      "publishPost": {
+        "description": "Publiceren naar WordPress",
+        "example": "Publiceer naar WordPress"
+      },
+      "getCompetitors": {
+        "description": "Haal rankings van concurrenten op",
+        "example": "Hoe ranken mijn concurrenten?"
+      }
+    },
+    "benefits": {
+      "title": "Waarom MCP-integratie gebruiken?",
+      "speed": {
+        "title": "Snelheid & Efficiëntie",
+        "point1": "Krijg SEO-inzichten in seconden",
+        "point2": "Geen noodzaak om tussen tools te schakelen",
+        "point3": "Vragen in natuurlijke taal"
+      },
+      "ai": {
+        "title": "AI-gestuurde Inzichten",
+        "point1": "Laat AI je data analyseren",
+        "point2": "Ontvang automatisch aanbevelingen",
+        "point3": "Genereer direct content"
+      },
+      "security": {
+        "title": "Veilig & Privé",
+        "point1": "Je data blijft veilig",
+        "point2": "API-sleutels met specifieke rechten",
+        "point3": "Auditlogs voor alle acties"
+      },
+      "updates": {
+        "title": "Continue Updates",
+        "point1": "Gebruik altijd de nieuwste data",
+        "point2": "Realtime rankingcontroles",
+        "point3": "Automatische synchronisatie met GSC"
+      }
+    },
+    "faq": {
+      "title": "Veelgestelde vragen",
+      "q1": {
+        "question": "Wat is MCP en waarom zou ik het gebruiken?",
+        "answer": "MCP geeft je direct toegang tot je SEO-gegevens vanuit AI-chats zoals Claude of ChatGPT, waardoor je workflow sneller en efficiënter wordt."
+      },
+      "q2": {
+        "question": "Is MCP gratis te gebruiken?",
+        "answer": "Ja! MCP-integratie is inbegrepen in alle plannen. Je hebt alleen een API-sleutel nodig."
+      },
+      "q3": {
+        "question": "Werkt dit met de gratis versie van ChatGPT?",
+        "answer": "Custom GPT's vereisen een ChatGPT Plus of Team abonnement. Claude Desktop werkt met elk plan."
+      },
+      "q4": {
+        "question": "Hoe krijg ik een API-sleutel?",
+        "answer": "Ga naar Profiel → API-sleutels en genereer een nieuwe sleutel met de rechten die je nodig hebt."
+      },
+      "q5": {
+        "question": "Kan ik de API-toegang intrekken?",
+        "answer": "Ja, je kunt API-sleutels op elk moment verwijderen of intrekken in je profiel."
+      },
+      "q6": {
+        "question": "Welke data kan ik via MCP inkijken?",
+        "answer": "Al je domeinen, zoekwoorden, rankings, GSC-data, posts en concurrentie-informatie."
+      },
+      "q7": {
+        "question": "Kan ik direct naar WordPress publiceren via MCP?",
+        "answer": "Ja! Als je WordPress hebt gekoppeld in de instellingen, kun je vanuit de chat publiceren."
+      },
+      "q8": {
+        "question": "Is er een limiet (rate limit)?",
+        "answer": "De API-limieten zijn afhankelijk van je plan: Gratis (100/dag), Pro (1000/dag), Enterprise (onbeperkt)."
+      }
+    },
+    "finalCTA": {
+      "title": "Klaar om je SEO-workflow te boosten?",
+      "description": "Start vandaag nog met het automatiseren van je SEO-taken met AI via MCP",
+      "getAPIKey": "Genereer nu je API-sleutel",
+      "readDocs": "Lees de volledige documentatie",
+      "joinUsers": "Sluit je aan bij meer dan 1.000 gebruikers die hun SEO automatiseren met MCP"
+    }
+  },
+  "impressum": {
+    "title": "Impressum - Juridische Informatie",
+    "description": "Juridische informatie en bedrijfsgegevens van Dpro GmbH, exploitant van SEO Agent",
+    "heading": "Impressum",
+    "subtitle": "Juridische Informatie & Bedrijfsgegevens",
+    "companyInfo": "Bedrijfsinformatie",
+    "contactInfo": "Contactinformatie",
+    "legalInfo": "Juridische Informatie",
+    "uid": "BTW-identificatienummer",
+    "fn": "Handelsregisternummer",
+    "gericht": "Rechtbank van Koophandel",
+    "kur": "Handelsregister",
+    "businessActivities": "Bedrijfsactiviteiten",
+    "businessDescription": "Softwareontwikkeling, webapplicaties, SEO-tools en digitale marketingoplossingen",
+    "responsibleContent": "Verantwoordelijk voor de inhoud",
+    "managingDirector": "Algemeen Directeur",
+    "disputeResolution": "EU-geschillenbeslechting",
+    "disputeText": "De Europese Commissie biedt een platform voor online geschillenbeslechting (OS):",
+    "disclaimer": "Disclaimer",
+    "disclaimerContent": "Aansprakelijkheid voor inhoud",
+    "disclaimerContentText": "De inhoud van onze pagina's is met de grootste zorg samengesteld. Wij kunnen echter niet instaan voor de juistheid, volledigheid en actualiteit van de inhoud.",
+    "disclaimerLinks": "Aansprakelijkheid voor links",
+    "disclaimerLinksText": "Onze site bevat links naar externe websites. Wij hebben geen invloed op de inhoud van deze websites en kunnen daarvoor geen verantwoordelijkheid aanvaarden.",
+    "disclaimerCopyright": "Auteursrecht",
+    "disclaimerCopyrightText": "De door de exploitanten van de site gecreëerde inhoud en werken zijn onderworpen aan het Oostenrijkse auteursrecht.",
+    "lastUpdated": "Laatst bijgewerkt"
+  },
+  "nav": {
+    "features": "Functies",
+    "blog": "Blog",
+    "contact": "Contact",
+    "mcpIntegration": "MCP-integratie",
+    "signIn": "Inloggen",
+    "getStarted": "Aan de slag"
+  },
+  "footerMenu": {
+    "product": "Product",
+    "resources": "Bronnen",
+    "legal": "Juridisch",
+    "talentManagement": "Talentbeheer",
+    "ats": "Applicant Tracking Software",
+    "documentation": "Documentatie",
+    "seoExpertSkill": "SEO Expert Skill",
+    "blog": "Blog",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "imprint": "Afdruk (Imprint)",
+    "privacyPolicy": "Privacybeleid",
+    "termsOfService": "Algemene Voorwaarden",
+    "consentPreferences": "Toestemmingsvoorkeuren",
+    "accessibility": "Toegankelijkheid"
+  },
+  "meta": {
+    "mcpSeo": {
+      "title": "SEO Agent MCP Server - Verbind Claude & ChatGPT",
+      "description": "Verbind je SEO-gegevens met Claude Desktop en ChatGPT via het Model Context Protocol (MCP). Realtime rankings, analytics en contentcreatie.",
+      "keywords": "mcp, seo agent, claude desktop, chatgpt, seo api, rank tracking, gsc",
+      "ogTitle": "Geef je AI een boost met SEO-data",
+      "ogDescription": "Verbind Claude Desktop direct met je SEO-metrieken, rankings en GSC-gegevens."
+    }
+  },
+  "seo": {
+    "mcpSeo": {
+      "twitterTitle": "SEO Agent MCP Integratie",
+      "twitterDescription": "Verbind Claude & ChatGPT met je realtime SEO-gegevens."
+    }
+  },
+  "bing": {
+    "title": "Bing Webmaster Tools",
+    "description": "Verbind je Microsoft-account voor toegang tot Bing & Yahoo zoekanalyses.",
+    "connect": "Bing Verbinden",
+    "connectDescription": "Koppel je Microsoft-account om Bing & Yahoo zoekwoordrankings, impressies en klikken te volgen.",
+    "connected": "Bing-account Verbonden",
+    "connectedDescription": "Bing & Yahoo analyses zijn beschikbaar op je domein-inzichtpagina's.",
+    "disconnect": "Ontkoppelen",
+    "disconnectTitle": "Bing-account Ontkoppelen",
+    "disconnectDescription": "Weet je zeker dat je Bing Webmaster Tools wilt ontkoppelen? Bing & Yahoo analyses zullen niet langer beschikbaar zijn.",
+    "notConnected": "Verbind Bing Webmaster Tools om Bing & Yahoo gegevens te zien.",
+    "tab": "Bing"
+  }
+}
