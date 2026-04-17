@@ -120,7 +120,8 @@
     "delete": "削除",
     "edit": "編集",
     "logout": "ログアウト",
-    "changeLanguage": "言語を変更"
+    "changeLanguage": "言語を変更",
+    "search": "検索"
   },
   "email": {
     "visits": "訪問数",
@@ -402,9 +403,9 @@
     "none": "なし（無効）",
     "recommended": "推奨",
     "apiKey": "API キー",
-    "apiKeyPlaceholder": "API キーを入力してください...",
+    "apiKeyPlaceholder": "API キー/トークン",
     "delay": "待機時間",
-    "delayNone": "なし",
+    "delayNone": "遅延なし",
     "delay5": "5 秒",
     "delay10": "10 秒",
     "delay30": "30 秒",
@@ -414,7 +415,27 @@
     "noKey": "API キーをお持ちではありませんか？",
     "signUp": "{{service}} に登録",
     "notificationInterval": "通知間隔",
-    "notificationEmail": "通知用メールアドレス"
+    "notificationEmail": "通知用メールアドレス",
+    "method": "スクレイピング方法",
+    "selectScraper": "スクレーパーを選択",
+    "apiKeyLabel": "スクレーパー API キーまたはトークン",
+    "proxyList": "プロキシリスト",
+    "frequency": "スクレイピング頻度",
+    "restartNote": "このオプションを有効にするにはサーバー/Docker インスタンスの再起動が必要です。",
+    "scrapeDelay": "キーワードスクレイプ遅延",
+    "delaySettings": "遅延設定",
+    "autoRetry": "失敗したキーワードスクレイプを自動再試行",
+    "clearFailed": "失敗した再試行キューをクリア",
+    "clearFailedBtn": "失敗キューをクリア",
+    "keywordsCount": "({{count}} キーワード)",
+    "scraperNone": "なし",
+    "freqDaily": "毎日",
+    "freqOtherDay": "2 日ごと",
+    "freqWeekly": "毎週",
+    "freqMonthly": "毎月",
+    "freqNever": "なし",
+    "delaySeconds": "{{count}} 秒",
+    "delayMinutes": "{{count}} 分"
   },
   "periods": {
     "today": "本日",
@@ -450,7 +471,13 @@
     "noResults": "\"{{query}}\" の結果が見つかりません",
     "topPerformers": "トップパフォーマー",
     "exportCSV": "CSV エクスポート",
-    "selectTab": "表示を選択"
+    "selectTab": "表示を選択",
+    "syncingBing": "Bing データを同期中...",
+    "bingError": "Bing データの読み込みに失敗しました",
+    "noKeywordsData": "キーワードデータはまだありません",
+    "bingConnectTitle": "Bing Webmaster Tools が接続されていません",
+    "bingConnectDesc": "Bing Webmaster アカウントを接続して、クリック、表示回数、キーワード順位などの検索パフォーマンスデータを表示します。",
+    "bingConnectBtn": "Bing アカウントを接続"
   },
   "domainHeader": {
     "last3Days": "過去 3 日間",
@@ -490,7 +517,8 @@
     "imp_asc": "表示回数 (少)",
     "visits_desc": "訪問数 (多)",
     "visits_asc": "訪問数 (少)",
-    "ctr_desc": "CTR順"
+    "ctr_desc": "CTR順",
+    "ctr_asc": "CTR 最高"
   },
   "columns": {
     "keyword": "キーワード",
@@ -1466,5 +1494,60 @@
     "disconnectDescription": "Bing ウェブマスターツールの接続を解除してもよろしいですか？Bing と Yahoo の分析が利用できなくなります。",
     "notConnected": "Bing と Yahoo のデータを表示するには、Bing ウェブマスターツールを接続してください。",
     "tab": "Bing"
+  },
+  "setupProgress": {
+    "title": "セットアップガイド",
+    "step1": "アカウントとサイトを接続",
+    "step2": "スクレーパー設定",
+    "step3": "AI アシスタントを接続",
+    "continueBtn": "設定を続ける"
+  },
+  "notificationSettings": {
+    "frequency": "通知頻度",
+    "settingsLabel": "通知設定",
+    "emails": "通知メール",
+    "emailsPlaceholder": "test@gmail.com, test2@test.com",
+    "smtpConfigTitle": "ℹ️ SMTP 設定:",
+    "smtpConfigDesc": "メール設定は環境変数で構成されており、ここでは変更できません。",
+    "smtpServer": "SMTP サーバー",
+    "smtpServerPlaceholder": "mail.example.com",
+    "smtpPort": "SMTP ポート",
+    "smtpPortPlaceholder": "587 または 465",
+    "smtpUser": "SMTP ユーザー名",
+    "smtpUserPlaceholder": "username@example.com",
+    "smtpPass": "SMTP パスワード",
+    "fromEmail": "送信元メールアドレス",
+    "fromEmailPlaceholder": "no-reply@mydomain.com",
+    "fromName": "送信元名",
+    "fromNamePlaceholder": "SEO Ai Agent",
+    "freqDaily": "毎日",
+    "freqWeekly": "毎週",
+    "freqMonthly": "毎月",
+    "freqNever": "なし"
+  },
+  "searchConsoleSettings": {
+    "googleConnectionTitle": "Google アカウント接続（推奨）",
+    "connectedToGoogle": "Google に接続済み",
+    "disconnect": "接続解除",
+    "importSites": "Google から確認済みサイトをインポート",
+    "connectDesc": "Google アカウントを接続すると、確認済みサイトが自動的にインポートされ、キーを扱わずに Search Console データにアクセスできます。",
+    "connectBtn": "Google アカウントを接続",
+    "importSitesTitle": "サイトをインポート",
+    "noSitesFound": "確認済みサイトが見つかりません。",
+    "importBtn": "インポート",
+    "disconnectDialogTitle": "Google アカウントの接続を解除",
+    "disconnectDialogDesc": "本当に Google アカウントの接続を解除しますか？自動サイトマップインポートと分析トラッキングが停止します。",
+    "cancel": "キャンセル",
+    "errDisconnect": "接続解除に失敗しました",
+    "errNoSites": "サイトが見つからないか、取得中にエラーが発生しました。",
+    "errFetchSites": "サイトの取得中にエラーが発生しました",
+    "imported": "{{site}} をインポートしました",
+    "errImport": "サイトのインポートに失敗しました",
+    "errImportGeneric": "サイトのインポート中にエラーが発生しました"
+  },
+  "adwordsSettings": {
+    "updateVolumeTitle": "キーワードボリュームデータを更新",
+    "updateVolumeDesc": "追跡中のすべてのキーワードのボリュームデータを更新します。",
+    "updateVolumeBtn": "ボリュームデータを更新"
   }
 }

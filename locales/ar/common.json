@@ -2,30 +2,19 @@
   "auth": {
     "login": {
       "title": "تسجيل الدخول",
-      "subtitle": "أهلاً بك مجدداً! سجل الدخول لإدارة موقعك.",
       "welcome": "أهلاً بك مجدداً!",
       "description": "سجل الدخول للوصول إلى لوحة التحكم وأدوات السيو الخاصة بك.",
       "googleBtn": "تسجيل الدخول عبر جوجل",
-      "backToHome": "العودة للرئيسية",
-      "emailPlace": "email@example.com",
-      "pwdPlace": "كلمة المرور الخاصة بك",
-      "btn": "تسجيل الدخول",
-      "noAcc": "ليس لديك حساب؟",
-      "register": "سجل الآن مجاناً"
+      "backToHome": "العودة للرئيسية"
     },
     "register": {
       "title": "إنشاء حساب",
-      "subtitle": "ابدأ رحلة تحسين محركات البحث اليوم.",
       "welcome": "ابدأ الآن!",
       "description": "أنشئ حساباً لبدء تتبع ترتيبك وإنشاء محتوى بالذكاء الاصطناعي.",
       "googleBtn": "تسجيل الاشتراك عبر جوجل",
       "backToHome": "العودة للرئيسية",
       "haveAccount": "لديك حساب بالفعل؟",
       "signIn": "سجل دخولك هنا",
-      "namePlace": "اسمك الكامل",
-      "btn": "إنشاء الحساب",
-      "hasAcc": "لديك حساب بالفعل؟",
-      "login": "سجل دخولك هنا",
       "termsLabel": "بإنشائك للحساب، أنت توافق على",
       "termsLink": "شروط الخدمة",
       "and": "و",
@@ -47,7 +36,6 @@
       "feature4_title": "خطة مخصصة",
       "feature4_desc": "استراتيجية مدروسة مع أفكار للكلمات المفتاحية وخارطة طريق للمحتوى"
     },
-    "title": "أضف نطاقك الأول",
     "step1": {
       "title": "ربط جوجل سيرش كونسول",
       "subtitle": "اختر موقعك المؤكد من جوجل سيرش كونسول للبدء.",
@@ -119,20 +107,18 @@
   },
   "scraperSettings": {
     "title": "إعدادات أداة السحب",
-    "description": "اختر الطريقة المفضلة لجلب محتوى الموقع وفحصه.",
-    "typeLabel": "نوع الأداة",
     "typePlaceholder": "اختر النوع...",
     "none": "بدون (تعطيل)",
     "recommended": "موصى به",
     "apiKey": "مفتاح API",
-    "apiKeyPlaceholder": "أدخل مفتاح API الخاص بك...",
+    "apiKeyPlaceholder": "مفتاح API/توكن",
     "save": "حفظ الإعدادات",
     "desc": "إدارة إعدادات السحب والتكاملات الخاصة بك",
     "configTitle": "تكوين أداة السحب",
     "configDesc": "تكوين إعدادات أداة السحب وخيارات البروكسي",
     "type": "نوع أداة السحب",
     "delay": "تأخير السحب",
-    "delayNone": "بدون",
+    "delayNone": "بدون تأخير",
     "delay5": "5 ثوانٍ",
     "delay10": "10 ثوانٍ",
     "delay30": "30 ثانية",
@@ -141,42 +127,45 @@
     "noKey": "ليس لديك مفتاح API؟",
     "signUp": "سجل في {{service}}",
     "notificationInterval": "فترة الإشعارات",
-    "notificationEmail": "بريد الإشعارات"
+    "notificationEmail": "بريد الإشعارات",
+    "method": "طريقة الجمع",
+    "selectScraper": "اختر الأداة",
+    "apiKeyLabel": "مفتاح أو توكن API",
+    "proxyList": "قائمة البروكسي",
+    "frequency": "تكرار الجمع",
+    "restartNote": "يتطلب هذا الخيار إعادة تشغيل السيرفر/الدوكر لتفعيله.",
+    "scrapeDelay": "تأخير جمع الكلمات",
+    "delaySettings": "إعدادات التأخير",
+    "autoRetry": "إعادة محاولة تلقائية للكلمات الفاشلة",
+    "clearFailed": "مسح قائمة الإعادة الفاشلة",
+    "clearFailedBtn": "مسح القائمة الفاشلة",
+    "keywordsCount": "({{count}} كلمة)",
+    "scraperNone": "لا شيء",
+    "freqDaily": "يومي",
+    "freqOtherDay": "كل يومين",
+    "freqWeekly": "أسبوعي",
+    "freqMonthly": "شهري",
+    "freqNever": "أبداً",
+    "delaySeconds": "{{count}} ثانية",
+    "delayMinutes": "{{count}} دقيقة"
   },
   "dashboard": {
     "title": "نطاقاتي",
-    "description": "إدارة وتتبع أداء السيو لجميع مواقعك من مكان واحد.",
     "addDomain": "إضافة نطاق",
-    "searchPlaceholder": "البحث عن نطاق...",
     "noDomains": "لا يوجد نطاقات مضافة بعد.",
-    "addFirst": "ابدأ بإضافة أول نطاق لك.",
-    "stats": {
-      "totalKeywords": "إجمالي الكلمات",
-      "avgPosition": "متوسط الترتيب",
-      "totalTraffic": "الزيارات المتوقعة",
-      "topRankings": "كلمات في المراكز الـ 3 الأولى"
-    },
     "domains": "النطاقات",
     "keywords": "الكلمات المفتاحية",
     "settings": "الإعدادات"
   },
   "domainSettings": {
     "title": "إعدادات النطاق",
-    "description": "إدارة الإعدادات والتكاملات لـ {{domain}}.",
     "tabs": {
       "general": "عام",
       "integrations": "التكاملات",
-      "gsc": "سيرش كونسول",
-      "danger": "منطقة الخطر",
       "searchConsole": "جوجل سيرش كونسول",
       "delete": "حذف"
     },
     "general": {
-      "title": "الإعدادات العامة",
-      "nameLabel": "اسم النطاق",
-      "urlLabel": "عنوان URL للنطاق",
-      "saveBtn": "تحديث الإعدادات",
-      "success": "تم تحديث النطاق!",
       "cardTitle": "المعلومات العامة",
       "cardDesc": "تحديث معلومات عملك وتفاصيل التخصص لنطاقك.",
       "businessName": "اسم العمل / الشركة",
@@ -189,11 +178,7 @@
       "saving": "جاري الحفظ..."
     },
     "integrations": {
-      "title": "تكامل ووردبريس",
-      "desc": "اربط موقع ووردبريس الخاص بك لنشر المقالات المولدة بالذكاء الاصطناعي مباشرة.",
       "help": {
-        "title": "كيفية الربط؟",
-        "appPassTitle": "استخدم كلمة مرور التطبيق (App Password)",
         "appPassStep1": "سجل الدخول لووردبريس الخاص بك.",
         "appPassStep2": "اذهب لـ المستخدمين ← الملف الشخصي.",
         "appPassStep3": "ابحث عن قسم 'كلمات مرور التطبيق'.",
@@ -622,7 +607,13 @@
     "noResults": "لم يتم العثور على نتائج لـ \"{{query}}\"",
     "topPerformers": "أفضل الأداء",
     "exportCSV": "تصدير CSV",
-    "selectTab": "اختر العرض"
+    "selectTab": "اختر العرض",
+    "syncingBing": "جاري مزامنة بيانات Bing...",
+    "bingError": "فشل تحميل بيانات Bing",
+    "noKeywordsData": "لا توجد بيانات كلمات مفتاحية حالياً",
+    "bingConnectTitle": "أدوات مشرفي Bing غير متصلة",
+    "bingConnectDesc": "اربط حسابك في Bing Webmaster لعرض بيانات أداء البحث بما في ذلك النقرات والظهور وتصنيفات الكلمات المفتاحية.",
+    "bingConnectBtn": "ربط حساب Bing"
   },
   "domainHeader": {
     "last3Days": "آخر 3 أيام",
@@ -662,7 +653,8 @@
     "imp_asc": "الأقل ظهوراً",
     "visits_desc": "الأكثر زيارة",
     "visits_asc": "الأقل زيارة",
-    "ctr_desc": "أقل نسبة نقر"
+    "ctr_desc": "أقل نسبة نقر",
+    "ctr_asc": "أعلى CTR"
   },
   "columns": {
     "keyword": "الكلمة المفتاحية",
@@ -720,8 +712,6 @@
   },
   "seo": {
     "mcpSeo": {
-      "title": "تكامل SEO Agent MCP",
-      "description": "اربط Claude و ChatGPT ببيانات السيو اللحظية الخاصة بك.",
       "twitterTitle": "تكامل SEO Agent MCP",
       "twitterDescription": "اربط Claude و ChatGPT ببيانات السيو اللحظية الخاصة بك."
     }
@@ -958,7 +948,8 @@
     "delete": "حذف",
     "edit": "تعديل",
     "logout": "تسجيل الخروج",
-    "changeLanguage": "تغيير اللغة"
+    "changeLanguage": "تغيير اللغة",
+    "search": "بحث"
   },
   "email": {
     "visits": "الزيارات",
@@ -1503,5 +1494,60 @@
     "disconnectDescription": "هل أنت متأكد من رغبتك في قطع اتصال أدوات مشرفي المواقع من بينج؟ لن تتوفر تحليلات بينج وياهو بعد الآن.",
     "notConnected": "اربط أدوات مشرفي المواقع من بينج لرؤية بيانات بينج وياهو.",
     "tab": "بينج (Bing)"
+  },
+  "setupProgress": {
+    "title": "دليل الإعداد",
+    "step1": "ربط الحساب والموقع",
+    "step2": "إعدادات الجمع",
+    "step3": "ربط مساعد الذكاء الاصطناعي",
+    "continueBtn": "متابعة الإعداد"
+  },
+  "notificationSettings": {
+    "frequency": "تكرار الإشعارات",
+    "settingsLabel": "إعدادات الإشعارات",
+    "emails": "بريد الإشعارات",
+    "emailsPlaceholder": "test@gmail.com, test2@test.com",
+    "smtpConfigTitle": "ℹ️ إعدادات SMTP:",
+    "smtpConfigDesc": "إعدادات البريد معدّة عبر متغيرات البيئة ولا يمكن تغييرها هنا.",
+    "smtpServer": "خادم SMTP",
+    "smtpServerPlaceholder": "mail.example.com",
+    "smtpPort": "منفذ SMTP",
+    "smtpPortPlaceholder": "587 أو 465",
+    "smtpUser": "اسم مستخدم SMTP",
+    "smtpUserPlaceholder": "username@example.com",
+    "smtpPass": "كلمة مرور SMTP",
+    "fromEmail": "البريد المرسل منه",
+    "fromEmailPlaceholder": "no-reply@mydomain.com",
+    "fromName": "اسم المرسل",
+    "fromNamePlaceholder": "SEO Ai Agent",
+    "freqDaily": "يومي",
+    "freqWeekly": "أسبوعي",
+    "freqMonthly": "شهري",
+    "freqNever": "أبداً"
+  },
+  "searchConsoleSettings": {
+    "googleConnectionTitle": "ربط حساب Google (موصى به)",
+    "connectedToGoogle": "متصل بـ Google",
+    "disconnect": "قطع الاتصال",
+    "importSites": "استيراد المواقع الموثقة من Google",
+    "connectDesc": "اربط حساب Google الخاص بك لاستيراد مواقعك الموثقة تلقائياً والوصول إلى بيانات Search Console دون التعامل مع المفاتيح.",
+    "connectBtn": "ربط حساب Google",
+    "importSitesTitle": "استيراد المواقع",
+    "noSitesFound": "لا توجد مواقع موثقة.",
+    "importBtn": "استيراد",
+    "disconnectDialogTitle": "قطع اتصال حساب Google",
+    "disconnectDialogDesc": "هل أنت متأكد من قطع اتصال حساب Google؟ سيتوقف استيراد خرائط المواقع وتتبع التحليلات تلقائياً.",
+    "cancel": "إلغاء",
+    "errDisconnect": "فشل قطع الاتصال",
+    "errNoSites": "لا توجد مواقع أو حدث خطأ أثناء الجلب.",
+    "errFetchSites": "خطأ في جلب المواقع",
+    "imported": "تم استيراد {{site}}",
+    "errImport": "فشل استيراد الموقع",
+    "errImportGeneric": "خطأ في استيراد الموقع"
+  },
+  "adwordsSettings": {
+    "updateVolumeTitle": "تحديث بيانات حجم الكلمات",
+    "updateVolumeDesc": "تحديث بيانات الحجم لجميع كلماتك المتتبعة.",
+    "updateVolumeBtn": "تحديث بيانات حجم الكلمات"
   }
 }

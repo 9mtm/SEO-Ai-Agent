@@ -120,7 +120,8 @@
     "delete": "Verwijderen",
     "edit": "Bewerken",
     "logout": "Uitloggen",
-    "changeLanguage": "Taal Wijzigen"
+    "changeLanguage": "Taal Wijzigen",
+    "search": "Zoeken"
   },
   "email": {
     "visits": "Bezoeken",
@@ -399,7 +400,7 @@
     "configDesc": "Configureer je scraper-instellingen en proxy-opties",
     "type": "Scraper Type",
     "delay": "Scrape Vertraging",
-    "delayNone": "Geen",
+    "delayNone": "Geen vertraging",
     "delay5": "5 seconden",
     "delay10": "10 seconden",
     "delay30": "30 seconden",
@@ -414,7 +415,27 @@
     "none": "None",
     "recommended": "Recommended",
     "apiKey": "API Key",
-    "apiKeyPlaceholder": "Enter your API key"
+    "apiKeyPlaceholder": "API-sleutel/Token",
+    "method": "Scraping-methode",
+    "selectScraper": "Scraper selecteren",
+    "apiKeyLabel": "Scraper-API-sleutel of token",
+    "proxyList": "Proxylijst",
+    "frequency": "Scraping-frequentie",
+    "restartNote": "Deze optie vereist een herstart van de server/Docker-instantie om van kracht te worden.",
+    "scrapeDelay": "Vertraging zoekwoord-scraping",
+    "delaySettings": "Vertragingsinstellingen",
+    "autoRetry": "Mislukte zoekwoord-scraping automatisch opnieuw proberen",
+    "clearFailed": "Wachtrij mislukte herpogingen wissen",
+    "clearFailedBtn": "Mislukte wachtrij wissen",
+    "keywordsCount": "({{count}} zoekwoorden)",
+    "scraperNone": "Geen",
+    "freqDaily": "Dagelijks",
+    "freqOtherDay": "Om de dag",
+    "freqWeekly": "Wekelijks",
+    "freqMonthly": "Maandelijks",
+    "freqNever": "Nooit",
+    "delaySeconds": "{{count}} seconden",
+    "delayMinutes": "{{count}} minuten"
   },
   "periods": {
     "today": "Vandaag",
@@ -450,7 +471,13 @@
     "noResults": "Geen resultaten gevonden voor \"{{query}}\"",
     "topPerformers": "Beste Presteerders",
     "exportCSV": "Exporteer CSV",
-    "selectTab": "Selecteer Weergave"
+    "selectTab": "Selecteer Weergave",
+    "syncingBing": "Bing-gegevens synchroniseren...",
+    "bingError": "Bing-gegevens laden mislukt",
+    "noKeywordsData": "Nog geen zoekwoordgegevens beschikbaar",
+    "bingConnectTitle": "Bing Webmaster Tools niet verbonden",
+    "bingConnectDesc": "Verbind je Bing Webmaster-account om zoekprestatiegegevens te bekijken, zoals klikken, vertoningen en zoekwoordrankings.",
+    "bingConnectBtn": "Bing-account verbinden"
   },
   "domainHeader": {
     "last3Days": "Laatste 3 Dagen",
@@ -490,7 +517,8 @@
     "imp_asc": "Minst Bekeken",
     "visits_desc": "Meeste Bezoeken",
     "visits_asc": "Minste Bezoeken",
-    "ctr_desc": "Laagste CTR"
+    "ctr_desc": "Laagste CTR",
+    "ctr_asc": "Hoogste CTR"
   },
   "columns": {
     "keyword": "Zoekwoord",
@@ -1466,5 +1494,60 @@
     "disconnectDescription": "Weet je zeker dat je Bing Webmaster Tools wilt ontkoppelen? Bing & Yahoo analyses zullen niet langer beschikbaar zijn.",
     "notConnected": "Verbind Bing Webmaster Tools om Bing & Yahoo gegevens te zien.",
     "tab": "Bing"
+  },
+  "setupProgress": {
+    "title": "Instellingengids",
+    "step1": "Account & site verbinden",
+    "step2": "Scraper-configuratie",
+    "step3": "AI-assistent verbinden",
+    "continueBtn": "Instellen voortzetten"
+  },
+  "notificationSettings": {
+    "frequency": "Meldingsfrequentie",
+    "settingsLabel": "Meldingsinstellingen",
+    "emails": "Meldings-e-mails",
+    "emailsPlaceholder": "test@gmail.com, test2@test.com",
+    "smtpConfigTitle": "ℹ️ SMTP-configuratie:",
+    "smtpConfigDesc": "E-mailinstellingen worden geconfigureerd via omgevingsvariabelen en kunnen hier niet worden gewijzigd.",
+    "smtpServer": "SMTP-server",
+    "smtpServerPlaceholder": "mail.example.com",
+    "smtpPort": "SMTP-poort",
+    "smtpPortPlaceholder": "587 of 465",
+    "smtpUser": "SMTP-gebruikersnaam",
+    "smtpUserPlaceholder": "username@example.com",
+    "smtpPass": "SMTP-wachtwoord",
+    "fromEmail": "Afzender-e-mailadres",
+    "fromEmailPlaceholder": "no-reply@mydomain.com",
+    "fromName": "Naam afzender",
+    "fromNamePlaceholder": "SEO Ai Agent",
+    "freqDaily": "Dagelijks",
+    "freqWeekly": "Wekelijks",
+    "freqMonthly": "Maandelijks",
+    "freqNever": "Nooit"
+  },
+  "searchConsoleSettings": {
+    "googleConnectionTitle": "Google-accountverbinding (aanbevolen)",
+    "connectedToGoogle": "Verbonden met Google",
+    "disconnect": "Verbinding verbreken",
+    "importSites": "Geverifieerde sites importeren uit Google",
+    "connectDesc": "Verbind je Google-account om je geverifieerde sites automatisch te importeren en toegang te krijgen tot Search Console-gegevens zonder sleutels te beheren.",
+    "connectBtn": "Google-account verbinden",
+    "importSitesTitle": "Sites importeren",
+    "noSitesFound": "Geen geverifieerde sites gevonden.",
+    "importBtn": "Importeren",
+    "disconnectDialogTitle": "Google-account ontkoppelen",
+    "disconnectDialogDesc": "Weet je zeker dat je je Google-account wilt ontkoppelen? Hierdoor worden automatische sitemap-imports en analyse-tracking gestopt.",
+    "cancel": "Annuleren",
+    "errDisconnect": "Verbinding verbreken mislukt",
+    "errNoSites": "Geen sites gevonden of fout bij ophalen.",
+    "errFetchSites": "Fout bij het ophalen van sites",
+    "imported": "{{site}} geïmporteerd",
+    "errImport": "Site importeren mislukt",
+    "errImportGeneric": "Fout bij het importeren van de site"
+  },
+  "adwordsSettings": {
+    "updateVolumeTitle": "Zoekwoordvolumegegevens bijwerken",
+    "updateVolumeDesc": "Volumegegevens bijwerken voor al uw bijgehouden zoekwoorden.",
+    "updateVolumeBtn": "Volumegegevens bijwerken"
   }
 }

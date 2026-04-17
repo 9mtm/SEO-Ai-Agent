@@ -2,6 +2,7 @@ import React from 'react';
 import SelectField from '../common/SelectField';
 import SecretField from '../common/SecretField';
 import InputField from '../common/InputField';
+import { useLanguage } from '../../context/LanguageContext';
 
 type NotificationSettingsProps = {
    settings: SettingsType,
@@ -13,6 +14,7 @@ type NotificationSettingsProps = {
 }
 
 const NotificationSettings = ({ settings, settingsError, updateSettings }: NotificationSettingsProps) => {
+   const { t } = useLanguage();
    const labelStyle = 'mb-2 font-semibold inline-block text-sm text-gray-700 capitalize';
 
    return (
@@ -20,16 +22,16 @@ const NotificationSettings = ({ settings, settingsError, updateSettings }: Notif
          <div className='settings__content styled-scrollbar p-6 text-sm'>
             <div className="settings__section__input mb-5">
                <SelectField
-                  label='Notification Frequency'
+                  label={t('notificationSettings.frequency')}
                   multiple={false}
                   selected={[settings.notification_interval]}
                   options={[
-                     { label: 'Daily', value: 'daily' },
-                     { label: 'Weekly', value: 'weekly' },
-                     { label: 'Monthly', value: 'monthly' },
-                     { label: 'Never', value: 'never' },
+                     { label: t('notificationSettings.freqDaily'), value: 'daily' },
+                     { label: t('notificationSettings.freqWeekly'), value: 'weekly' },
+                     { label: t('notificationSettings.freqMonthly'), value: 'monthly' },
+                     { label: t('notificationSettings.freqNever'), value: 'never' },
                   ]}
-                  defaultLabel={'Notification Settings'}
+                  defaultLabel={t('notificationSettings.settingsLabel')}
                   updateField={(updated: string[]) => updated[0] && updateSettings('notification_interval', updated[0])}
                   rounded='rounded'
                   maxHeight={48}
@@ -40,46 +42,46 @@ const NotificationSettings = ({ settings, settingsError, updateSettings }: Notif
                <>
                   <div className="settings__section__input mb-5">
                      <InputField
-                        label='Notification Emails'
+                        label={t('notificationSettings.emails')}
                         hasError={settingsError?.type === 'no_email'}
                         value={settings?.notification_email}
-                        placeholder={'test@gmail.com, test2@test.com'}
+                        placeholder={t('notificationSettings.emailsPlaceholder')}
                         onChange={(value: string) => updateSettings('notification_email', value)}
                      />
                   </div>
 
                   {settings.smtp_from_env && (
                      <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded text-sm text-blue-700">
-                        <strong>ℹ️ SMTP Configuration:</strong> Email settings are configured via environment variables and cannot be changed here.
+                        <strong>{t('notificationSettings.smtpConfigTitle')}</strong> {t('notificationSettings.smtpConfigDesc')}
                      </div>
                   )}
 
                   <div className="settings__section__input mb-5">
                      <InputField
-                        label='SMTP Server'
+                        label={t('notificationSettings.smtpServer')}
                         hasError={settingsError?.type === 'no_smtp_server'}
                         value={settings?.smtp_server || ''}
-                        placeholder={'mail.example.com'}
+                        placeholder={t('notificationSettings.smtpServerPlaceholder')}
                         onChange={(value: string) => updateSettings('smtp_server', value)}
                         disabled={settings.smtp_from_env}
                      />
                   </div>
                   <div className="settings__section__input mb-5">
                      <InputField
-                        label='SMTP Port'
+                        label={t('notificationSettings.smtpPort')}
                         hasError={settingsError?.type === 'no_smtp_port'}
                         value={settings?.smtp_port || ''}
-                        placeholder={'587 or 465'}
+                        placeholder={t('notificationSettings.smtpPortPlaceholder')}
                         onChange={(value: string) => updateSettings('smtp_port', value)}
                         disabled={settings.smtp_from_env}
                      />
                   </div>
                   <div className="settings__section__input mb-5">
                      <InputField
-                        label='SMTP Username'
+                        label={t('notificationSettings.smtpUser')}
                         hasError={settingsError?.type === 'no_smtp_port'}
                         value={settings?.smtp_username || ''}
-                        placeholder={'username@example.com'}
+                        placeholder={t('notificationSettings.smtpUserPlaceholder')}
                         onChange={(value: string) => updateSettings('smtp_username', value)}
                         disabled={settings.smtp_from_env}
                      />
@@ -87,7 +89,7 @@ const NotificationSettings = ({ settings, settingsError, updateSettings }: Notif
                   {!settings.smtp_from_env && (
                      <div className="settings__section__input mb-5">
                         <SecretField
-                           label='SMTP Password'
+                           label={t('notificationSettings.smtpPass')}
                            value={settings?.smtp_password || ''}
                            onChange={(value: string) => updateSettings('smtp_password', value)}
                         />
@@ -95,20 +97,20 @@ const NotificationSettings = ({ settings, settingsError, updateSettings }: Notif
                   )}
                   <div className="settings__section__input mb-5">
                      <InputField
-                        label='From Email Address'
+                        label={t('notificationSettings.fromEmail')}
                         hasError={settingsError?.type === 'no_smtp_from'}
                         value={settings?.notification_email_from || ''}
-                        placeholder="no-reply@mydomain.com"
+                        placeholder={t('notificationSettings.fromEmailPlaceholder')}
                         onChange={(value: string) => updateSettings('notification_email_from', value)}
                         disabled={settings.smtp_from_env}
                      />
                   </div>
                   <div className="settings__section__input mb-5">
                      <InputField
-                        label='Email From Name'
+                        label={t('notificationSettings.fromName')}
                         hasError={settingsError?.type === 'no_smtp_from'}
                         value={settings?.notification_email_from_name || 'SEO Ai Agent'}
-                        placeholder="SEO Ai Agent"
+                        placeholder={t('notificationSettings.fromNamePlaceholder')}
                         onChange={(value: string) => updateSettings('notification_email_from_name', value)}
                         disabled={settings.smtp_from_env}
                      />

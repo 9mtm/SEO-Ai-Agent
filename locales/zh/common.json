@@ -120,7 +120,8 @@
     "delete": "删除",
     "edit": "编辑",
     "logout": "注销",
-    "changeLanguage": "更换语言"
+    "changeLanguage": "更换语言",
+    "search": "搜索"
   },
   "email": {
     "visits": "访问量",
@@ -385,11 +386,11 @@
       "publishWordpressDesc": "将文章发布到您的网站"
     },
     "expiryOptions": {
+      "0": "永不过期",
       "7": "7 天",
       "30": "30 天（推荐）",
       "90": "90 天",
-      "365": "1 年",
-      "0": "永不过期"
+      "365": "1 年"
     }
   },
   "scraperSettings": {
@@ -402,9 +403,9 @@
     "none": "无",
     "recommended": "推荐",
     "apiKey": "API 密钥",
-    "apiKeyPlaceholder": "输入您的 API 密钥",
+    "apiKeyPlaceholder": "API 密钥/令牌",
     "delay": "抓取延迟",
-    "delayNone": "无",
+    "delayNone": "无延迟",
     "delay5": "5 秒",
     "delay10": "10 秒",
     "delay30": "30 秒",
@@ -414,7 +415,27 @@
     "noKey": "没有 API 密钥？",
     "signUp": "注册 {{service}}",
     "notificationInterval": "通知间隔",
-    "notificationEmail": "通知邮箱"
+    "notificationEmail": "通知邮箱",
+    "method": "抓取方式",
+    "selectScraper": "选择抓取器",
+    "apiKeyLabel": "抓取器 API 密钥或令牌",
+    "proxyList": "代理列表",
+    "frequency": "抓取频率",
+    "restartNote": "此选项需要重启服务器/Docker 实例才能生效。",
+    "scrapeDelay": "关键词抓取延迟",
+    "delaySettings": "延迟设置",
+    "autoRetry": "自动重试失败的关键词抓取",
+    "clearFailed": "清除失败重试队列",
+    "clearFailedBtn": "清除失败队列",
+    "keywordsCount": "({{count}} 个关键词)",
+    "scraperNone": "无",
+    "freqDaily": "每日",
+    "freqOtherDay": "隔天",
+    "freqWeekly": "每周",
+    "freqMonthly": "每月",
+    "freqNever": "从不",
+    "delaySeconds": "{{count}} 秒",
+    "delayMinutes": "{{count}} 分钟"
   },
   "periods": {
     "today": "今天",
@@ -450,7 +471,13 @@
     "noResults": "未找到 \"{{query}}\" 的结果",
     "topPerformers": "表现最佳",
     "exportCSV": "导出 CSV",
-    "selectTab": "选择视图"
+    "selectTab": "选择视图",
+    "syncingBing": "正在同步 Bing 数据...",
+    "bingError": "加载 Bing 数据失败",
+    "noKeywordsData": "暂无关键词数据",
+    "bingConnectTitle": "Bing 网站管理员工具未连接",
+    "bingConnectDesc": "连接您的 Bing 网站管理员帐户以查看搜索性能数据，包括点击量、展示次数和关键词排名。",
+    "bingConnectBtn": "连接 Bing 帐户"
   },
   "domainHeader": {
     "last3Days": "过去 3 天",
@@ -490,7 +517,8 @@
     "imp_asc": "观看量最少",
     "visits_desc": "访问量最多",
     "visits_asc": "访问量最少",
-    "ctr_desc": "点击率最低"
+    "ctr_desc": "点击率最低",
+    "ctr_asc": "最高 CTR"
   },
   "columns": {
     "keyword": "关键词",
@@ -1277,37 +1305,37 @@
       "api": {
         "title": "直接 API 调用（针对开发者）",
         "description": "您也可以不通过 MCP 直接使用 API："
-       }
-     },
-     "functions": {
-       "title": "可用的 MCP 工具/函数",
-       "functionName": "函数名称",
-       "description": "描述",
-       "exampleQuery": "示例查询",
-       "listDomains": {
-         "description": "获取您所有已追踪的域名",
-         "example": "显示我的域名"
-       },
-       "getKeywords": {
-         "description": "获取某个域名的关键词",
-         "example": "获取 example.com 的关键词"
-       },
-       "getRankings": {
-         "description": "检查关键词的排名",
-         "example": "‘SEO 工具’我的排名是多少？"
-       },
-       "getGSC": {
-         "description": "Google Search Console 数据",
-         "example": "显示最近 30 天的 GSC 统计数据"
-       },
-       "analyzeSEO": {
-         "description": "分析内容 SEO 评分",
-         "example": "检查这篇文章的 SEO"
-       },
-       "createPost": {
-         "description": "生成经 SEO 优化的文章",
-         "example": "撰写关于 X 的文章"
-       },
+      }
+    },
+    "functions": {
+      "title": "可用的 MCP 工具/函数",
+      "functionName": "函数名称",
+      "description": "描述",
+      "exampleQuery": "示例查询",
+      "listDomains": {
+        "description": "获取您所有已追踪的域名",
+        "example": "显示我的域名"
+      },
+      "getKeywords": {
+        "description": "获取某个域名的关键词",
+        "example": "获取 example.com 的关键词"
+      },
+      "getRankings": {
+        "description": "检查关键词的排名",
+        "example": "‘SEO 工具’我的排名是多少？"
+      },
+      "getGSC": {
+        "description": "Google Search Console 数据",
+        "example": "显示最近 30 天的 GSC 统计数据"
+      },
+      "analyzeSEO": {
+        "description": "分析内容 SEO 评分",
+        "example": "检查这篇文章的 SEO"
+      },
+      "createPost": {
+        "description": "生成经 SEO 优化的文章",
+        "example": "撰写关于 X 的文章"
+      },
       "publishPost": {
         "description": "Publish to WordPress",
         "example": "Publish to WordPress"
@@ -1466,5 +1494,60 @@
     "disconnectDescription": "您确定要断开 Bing 站长工具的连接吗？断开后将无法再查看 Bing 和 Yahoo 的分析数据。",
     "notConnected": "连接 Bing 站长工具以查看 Bing 和 Yahoo 数据。",
     "tab": "Bing"
+  },
+  "setupProgress": {
+    "title": "设置指南",
+    "step1": "连接账户和网站",
+    "step2": "抓取器配置",
+    "step3": "连接 AI 助手",
+    "continueBtn": "继续设置"
+  },
+  "notificationSettings": {
+    "frequency": "通知频率",
+    "settingsLabel": "通知设置",
+    "emails": "通知邮箱",
+    "emailsPlaceholder": "test@gmail.com, test2@test.com",
+    "smtpConfigTitle": "ℹ️ SMTP 配置：",
+    "smtpConfigDesc": "邮件设置通过环境变量配置，无法在此处更改。",
+    "smtpServer": "SMTP 服务器",
+    "smtpServerPlaceholder": "mail.example.com",
+    "smtpPort": "SMTP 端口",
+    "smtpPortPlaceholder": "587 或 465",
+    "smtpUser": "SMTP 用户名",
+    "smtpUserPlaceholder": "username@example.com",
+    "smtpPass": "SMTP 密码",
+    "fromEmail": "发件人邮箱地址",
+    "fromEmailPlaceholder": "no-reply@mydomain.com",
+    "fromName": "发件人名称",
+    "fromNamePlaceholder": "SEO Ai Agent",
+    "freqDaily": "每日",
+    "freqWeekly": "每周",
+    "freqMonthly": "每月",
+    "freqNever": "从不"
+  },
+  "searchConsoleSettings": {
+    "googleConnectionTitle": "Google 账户连接（推荐）",
+    "connectedToGoogle": "已连接到 Google",
+    "disconnect": "断开连接",
+    "importSites": "从 Google 导入已验证的站点",
+    "connectDesc": "连接您的 Google 账户，自动导入已验证的站点并访问 Search Console 数据，无需处理原始密钥。",
+    "connectBtn": "连接 Google 账户",
+    "importSitesTitle": "导入站点",
+    "noSitesFound": "未找到已验证的站点。",
+    "importBtn": "导入",
+    "disconnectDialogTitle": "断开 Google 账户",
+    "disconnectDialogDesc": "确定要断开 Google 账户连接吗？这将停止自动站点地图导入和分析跟踪。",
+    "cancel": "取消",
+    "errDisconnect": "断开连接失败",
+    "errNoSites": "未找到站点或获取站点时出错。",
+    "errFetchSites": "获取站点时出错",
+    "imported": "已导入 {{site}}",
+    "errImport": "导入站点失败",
+    "errImportGeneric": "导入站点时出错"
+  },
+  "adwordsSettings": {
+    "updateVolumeTitle": "更新关键词搜索量数据",
+    "updateVolumeDesc": "更新您跟踪的所有关键词的搜索量数据。",
+    "updateVolumeBtn": "更新搜索量数据"
   }
 }

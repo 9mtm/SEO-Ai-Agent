@@ -120,7 +120,8 @@
     "delete": "Eliminar",
     "edit": "Editar",
     "logout": "Cerrar sesión",
-    "changeLanguage": "Cambiar idioma"
+    "changeLanguage": "Cambiar idioma",
+    "search": "Buscar"
   },
   "email": {
     "visits": "Visitas",
@@ -385,11 +386,11 @@
       "publishWordpressDesc": "Publicar artículos en tu sitio web"
     },
     "expiryOptions": {
+      "0": "Nunca caduca",
       "7": "7 días",
       "30": "30 días (Recomendado)",
       "90": "90 días",
-      "365": "1 año",
-      "0": "Nunca caduca"
+      "365": "1 año"
     }
   },
   "scraperSettings": {
@@ -402,9 +403,9 @@
     "none": "Ninguno",
     "recommended": "Recomendado",
     "apiKey": "Clave API",
-    "apiKeyPlaceholder": "Introduce tu clave API",
+    "apiKeyPlaceholder": "Clave API/token",
     "delay": "Retraso de Scrape",
-    "delayNone": "Ninguno",
+    "delayNone": "Sin retraso",
     "delay5": "5 segundos",
     "delay10": "10 segundos",
     "delay30": "30 segundos",
@@ -414,7 +415,27 @@
     "noKey": "¿No tienes una clave API?",
     "signUp": "Regístrate en {{service}}",
     "notificationInterval": "Intervalo de notificación",
-    "notificationEmail": "Correo de notificación"
+    "notificationEmail": "Correo de notificación",
+    "method": "Método de scraping",
+    "selectScraper": "Seleccionar scraper",
+    "apiKeyLabel": "Clave API o token del scraper",
+    "proxyList": "Lista de proxy",
+    "frequency": "Frecuencia de scraping",
+    "restartNote": "Esta opción requiere reiniciar el servidor/instancia Docker para surtir efecto.",
+    "scrapeDelay": "Retraso de scraping de palabras clave",
+    "delaySettings": "Configuración de retraso",
+    "autoRetry": "Reintentar automáticamente palabras clave fallidas",
+    "clearFailed": "Borrar cola de reintentos fallidos",
+    "clearFailedBtn": "Borrar cola fallida",
+    "keywordsCount": "({{count}} palabras clave)",
+    "scraperNone": "Ninguno",
+    "freqDaily": "Diario",
+    "freqOtherDay": "Cada dos días",
+    "freqWeekly": "Semanal",
+    "freqMonthly": "Mensual",
+    "freqNever": "Nunca",
+    "delaySeconds": "{{count}} segundos",
+    "delayMinutes": "{{count}} minutos"
   },
   "periods": {
     "today": "Hoy",
@@ -450,7 +471,13 @@
     "noResults": "No se encontraron resultados para \"{{query}}\"",
     "topPerformers": "Mejores resultados",
     "exportCSV": "Exportar CSV",
-    "selectTab": "Seleccionar Vista"
+    "selectTab": "Seleccionar Vista",
+    "syncingBing": "Sincronizando datos de Bing...",
+    "bingError": "Error al cargar los datos de Bing",
+    "noKeywordsData": "Aún no hay datos de palabras clave disponibles",
+    "bingConnectTitle": "Bing Webmaster Tools no conectado",
+    "bingConnectDesc": "Conecta tu cuenta de Bing Webmaster para ver datos de rendimiento de búsqueda, incluyendo clics, impresiones y clasificaciones de palabras clave.",
+    "bingConnectBtn": "Conectar cuenta de Bing"
   },
   "domainHeader": {
     "last3Days": "Últimos 3 Días",
@@ -490,7 +517,8 @@
     "imp_asc": "Menos Visto",
     "visits_desc": "Más Visitado",
     "visits_asc": "Menos Visitado",
-    "ctr_desc": "CTR Más Bajo"
+    "ctr_desc": "CTR Más Bajo",
+    "ctr_asc": "CTR más alto"
   },
   "columns": {
     "keyword": "Palabra Clave",
@@ -1466,5 +1494,60 @@
     "disconnectDescription": "¿Estás seguro de que deseas desconectar Bing Webmaster Tools? Los análisis de datos de Bing y Yahoo ya no estarán disponibles.",
     "notConnected": "Conecta Bing Webmaster Tools para ver los datos de Bing y Yahoo.",
     "tab": "Bing"
+  },
+  "setupProgress": {
+    "title": "Guía de configuración",
+    "step1": "Conectar cuenta y sitio",
+    "step2": "Configuración del scraper",
+    "step3": "Conectar asistente de IA",
+    "continueBtn": "Continuar configuración"
+  },
+  "notificationSettings": {
+    "frequency": "Frecuencia de notificaciones",
+    "settingsLabel": "Configuración de notificaciones",
+    "emails": "Correos de notificación",
+    "emailsPlaceholder": "test@gmail.com, test2@test.com",
+    "smtpConfigTitle": "ℹ️ Configuración SMTP:",
+    "smtpConfigDesc": "La configuración de correo se establece mediante variables de entorno y no se puede cambiar aquí.",
+    "smtpServer": "Servidor SMTP",
+    "smtpServerPlaceholder": "mail.example.com",
+    "smtpPort": "Puerto SMTP",
+    "smtpPortPlaceholder": "587 o 465",
+    "smtpUser": "Usuario SMTP",
+    "smtpUserPlaceholder": "username@example.com",
+    "smtpPass": "Contraseña SMTP",
+    "fromEmail": "Dirección de correo del remitente",
+    "fromEmailPlaceholder": "no-reply@mydomain.com",
+    "fromName": "Nombre del remitente",
+    "fromNamePlaceholder": "SEO Ai Agent",
+    "freqDaily": "Diario",
+    "freqWeekly": "Semanal",
+    "freqMonthly": "Mensual",
+    "freqNever": "Nunca"
+  },
+  "searchConsoleSettings": {
+    "googleConnectionTitle": "Conexión de cuenta de Google (recomendado)",
+    "connectedToGoogle": "Conectado a Google",
+    "disconnect": "Desconectar",
+    "importSites": "Importar sitios verificados de Google",
+    "connectDesc": "Conecta tu cuenta de Google para importar automáticamente tus sitios verificados y acceder a los datos de Search Console sin gestionar claves.",
+    "connectBtn": "Conectar cuenta de Google",
+    "importSitesTitle": "Importar sitios",
+    "noSitesFound": "No se encontraron sitios verificados.",
+    "importBtn": "Importar",
+    "disconnectDialogTitle": "Desconectar cuenta de Google",
+    "disconnectDialogDesc": "¿Estás seguro de que quieres desconectar tu cuenta de Google? Esto detendrá las importaciones automáticas de mapas de sitio y el seguimiento de análisis.",
+    "cancel": "Cancelar",
+    "errDisconnect": "Error al desconectar",
+    "errNoSites": "No se encontraron sitios o error al obtenerlos.",
+    "errFetchSites": "Error al obtener los sitios",
+    "imported": "{{site}} importado",
+    "errImport": "Error al importar el sitio",
+    "errImportGeneric": "Error al importar el sitio"
+  },
+  "adwordsSettings": {
+    "updateVolumeTitle": "Actualizar datos de volumen de palabras clave",
+    "updateVolumeDesc": "Actualiza los datos de volumen para todas tus palabras clave rastreadas.",
+    "updateVolumeBtn": "Actualizar datos de volumen"
   }
 }

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Circle, ChevronRight } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function SetupProgress() {
     const [status, setStatus] = useState<any>(null);
     const router = useRouter();
+    const { t } = useLanguage();
 
     useEffect(() => {
         fetch('/api/user/setup-status')
@@ -29,7 +31,7 @@ export default function SetupProgress() {
         <div className="mx-3 mb-6 bg-white border border-blue-100 rounded-xl shadow-sm overflow-hidden">
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 border-b border-blue-100">
                 <div className="flex justify-between items-center mb-2">
-                    <h4 className="text-sm font-bold text-blue-900">Setup Guide</h4>
+                    <h4 className="text-sm font-bold text-blue-900">{t('setupProgress.title')}</h4>
                     <span className="text-xs font-bold px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full">
                         {status.percentage}%
                     </span>
@@ -43,9 +45,9 @@ export default function SetupProgress() {
             </div>
 
             <div className="p-3 space-y-3">
-                <StepItem label="Connect Account & Site" done={status.steps.gsc_domain} active={!status.steps.gsc_domain} />
-                <StepItem label="Scraper Configuration" done={status.steps.scraper} active={status.steps.gsc_domain && !status.steps.scraper} />
-                <StepItem label="Connect AI Assistant" done={status.steps.ai_connected} active={status.steps.scraper && !status.steps.ai_connected} />
+                <StepItem label={t('setupProgress.step1')} done={status.steps.gsc_domain} active={!status.steps.gsc_domain} />
+                <StepItem label={t('setupProgress.step2')} done={status.steps.scraper} active={status.steps.gsc_domain && !status.steps.scraper} />
+                <StepItem label={t('setupProgress.step3')} done={status.steps.ai_connected} active={status.steps.scraper && !status.steps.ai_connected} />
             </div>
 
             <div className="p-3 pt-0">
@@ -54,7 +56,7 @@ export default function SetupProgress() {
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all text-xs h-8"
                     onClick={() => router.push('/setup')}
                 >
-                    Continue Setup <ChevronRight className="h-3 w-3 ml-1" />
+                    {t('setupProgress.continueBtn')} <ChevronRight className="h-3 w-3 ml-1" />
                 </Button>
             </div>
         </div>

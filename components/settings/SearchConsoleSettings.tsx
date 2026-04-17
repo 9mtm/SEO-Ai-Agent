@@ -12,6 +12,7 @@ import {
    DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '../../context/LanguageContext';
 
 type SearchConsoleSettingsProps = {
    settings: SettingsType,
@@ -23,6 +24,7 @@ type SearchConsoleSettingsProps = {
 }
 
 const SearchConsoleSettings = ({ settings, settingsError, updateSettings }: SearchConsoleSettingsProps) => {
+   const { t } = useLanguage();
    const [loadingSites, setLoadingSites] = useState(false);
    const [sites, setSites] = useState<{ siteUrl: string, permissionLevel: string }[]>([]);
    const [showSitesModal, setShowSitesModal] = useState(false);
@@ -43,7 +45,7 @@ const SearchConsoleSettings = ({ settings, settingsError, updateSettings }: Sear
          await fetch('/api/auth/google/disconnect', { method: 'POST' });
          window.location.reload();
       } catch (e) {
-         toast.error('Failed to disconnect');
+         toast.error(t('searchConsoleSettings.errDisconnect'));
       } finally {
          setShowDisconnectDialog(false);
       }
@@ -58,19 +60,16 @@ const SearchConsoleSettings = ({ settings, settingsError, updateSettings }: Sear
             setSites(data.sites);
             setShowSitesModal(true);
          } else {
-            toast.error('No sites found or error fetching sites.');
+            toast.error(t('searchConsoleSettings.errNoSites'));
          }
       } catch (e) {
-         toast.error('Error fetching sites');
+         toast.error(t('searchConsoleSettings.errFetchSites'));
       } finally {
          setLoadingSites(false);
       }
    };
 
    const importSite = async (siteUrl: string) => {
-      // Logic to add site. Since we don't have a direct 'add domain' prop here, 
-      // we can call the API directly or redirect to dashboard with param.
-      // Easiest is to call the API to add domain.
       try {
          const res = await fetch('/api/domains', {
             method: 'POST',
@@ -78,32 +77,31 @@ const SearchConsoleSettings = ({ settings, settingsError, updateSettings }: Sear
             body: JSON.stringify({ domains: [siteUrl] })
          });
          if (res.ok) {
-            toast.success(`Imported ${siteUrl}`);
-            // Optional: Remove from list or show success
+            toast.success(t('searchConsoleSettings.imported', { site: siteUrl }));
             window.location.href = '/domains';
          } else {
-            toast.error('Failed to import site');
+            toast.error(t('searchConsoleSettings.errImport'));
          }
       } catch (e) {
-         toast.error('Error importing site');
+         toast.error(t('searchConsoleSettings.errImportGeneric'));
       }
    };
 
    return (
       <div>
          <div className="mb-8 border-b border-gray-200 pb-8">
-            <h3 className="font-bold text-gray-700 mb-4">Google Account Connection (Recommended)</h3>
+            <h3 className="font-bold text-gray-700 mb-4">{t('searchConsoleSettings.googleConnectionTitle')}</h3>
             {settings.google_connected ? (
                <div className="bg-green-50 border border-green-200 rounded p-4">
                   <div className="flex items-center justify-between mb-4">
                      <div className="flex items-center text-green-700 font-semibold">
                         <Icon type="check" size={18} classes="mr-2" />
-                        Connected to Google
+                        {t('searchConsoleSettings.connectedToGoogle')}
                      </div>
                      <button
                         onClick={disconnectGoogle}
                         className="text-red-600 text-sm hover:underline">
-                        Disconnect
+                        {t('searchConsoleSettings.disconnect')}
                      </button>
                   </div>
                   <div className="flex gap-3">
@@ -112,34 +110,33 @@ const SearchConsoleSettings = ({ settings, settingsError, updateSettings }: Sear
                         disabled={loadingSites}
                         className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 text-sm font-medium flex items-center">
                         {loadingSites ? <Icon type="loading" size={16} classes="mr-2" /> : <Icon type="search" size={16} classes="mr-2" />}
-                        Import Verified Sites from Google
+                        {t('searchConsoleSettings.importSites')}
                      </button>
                   </div>
                </div>
             ) : (
                <div className="bg-gray-50 border border-gray-200 rounded p-4 text-center">
-                  <p className="text-gray-600 mb-4 text-sm">Connect your Google Account to automatically import your verified sites and access Search Console data without handling raw keys.</p>
+                  <p className="text-gray-600 mb-4 text-sm">{t('searchConsoleSettings.connectDesc')}</p>
                   <button
                      onClick={connectGoogle}
                      className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded shadow-sm hover:bg-gray-50 flex items-center mx-auto transition-colors">
                      <Icon type="google" size={18} classes="mr-2" />
-                     Connect Google Account
+                     {t('searchConsoleSettings.connectBtn')}
                   </button>
                </div>
             )}
          </div>
 
-         {/* Sites Modal - Simplified inline for now */}
          {showSitesModal && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
                <div className="bg-white rounded-lg p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto">
                   <div className="flex justify-between items-center mb-4">
-                     <h3 className="text-lg font-bold">Import Sites</h3>
+                     <h3 className="text-lg font-bold">{t('searchConsoleSettings.importSitesTitle')}</h3>
                      <button onClick={() => setShowSitesModal(false)}><Icon type="close" size={20} /></button>
                   </div>
                   <div className="space-y-2">
                      {sites.length === 0 ? (
-                        <p>No verified sites found.</p>
+                        <p>{t('searchConsoleSettings.noSitesFound')}</p>
                      ) : (
                         sites.map((site) => (
                            <div key={site.siteUrl} className="flex justify-between items-center p-3 border rounded hover:bg-gray-50">
@@ -147,7 +144,7 @@ const SearchConsoleSettings = ({ settings, settingsError, updateSettings }: Sear
                               <button
                                  onClick={() => importSite(site.siteUrl)}
                                  className="text-blue-600 hover:text-blue-800 text-sm font-semibold border border-blue-200 px-3 py-1 rounded hover:bg-blue-50">
-                                 Import
+                                 {t('searchConsoleSettings.importBtn')}
                               </button>
                            </div>
                         ))
@@ -183,14 +180,14 @@ const SearchConsoleSettings = ({ settings, settingsError, updateSettings }: Sear
          <Dialog open={showDisconnectDialog} onOpenChange={setShowDisconnectDialog}>
             <DialogContent>
                <DialogHeader>
-                  <DialogTitle>Disconnect Google Account</DialogTitle>
+                  <DialogTitle>{t('searchConsoleSettings.disconnectDialogTitle')}</DialogTitle>
                   <DialogDescription>
-                     Are you sure you want to disconnect your Google Account? This will stop automatic sitemap imports and analytics tracking.
+                     {t('searchConsoleSettings.disconnectDialogDesc')}
                   </DialogDescription>
                </DialogHeader>
                <DialogFooter>
-                  <Button variant="outline" onClick={() => setShowDisconnectDialog(false)}>Cancel</Button>
-                  <Button variant="destructive" onClick={confirmDisconnect}>Disconnect</Button>
+                  <Button variant="outline" onClick={() => setShowDisconnectDialog(false)}>{t('searchConsoleSettings.cancel')}</Button>
+                  <Button variant="destructive" onClick={confirmDisconnect}>{t('searchConsoleSettings.disconnect')}</Button>
                </DialogFooter>
             </DialogContent>
          </Dialog>

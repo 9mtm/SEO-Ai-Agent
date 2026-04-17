@@ -120,7 +120,8 @@
     "delete": "Elimina",
     "edit": "Modifica",
     "logout": "Disconnetti",
-    "changeLanguage": "Cambia Lingua"
+    "changeLanguage": "Cambia Lingua",
+    "search": "Cerca"
   },
   "email": {
     "visits": "Visite",
@@ -402,9 +403,9 @@
     "none": "Nessuno",
     "recommended": "Consigliato",
     "apiKey": "Chiave API",
-    "apiKeyPlaceholder": "Inserisci la tua chiave API",
+    "apiKeyPlaceholder": "Chiave API/Token",
     "delay": "Ritardo di Scraping",
-    "delayNone": "Nessuno",
+    "delayNone": "Nessun ritardo",
     "delay5": "5 secondi",
     "delay10": "10 secondi",
     "delay30": "30 secondi",
@@ -414,7 +415,27 @@
     "noKey": "Non hai una chiave API?",
     "signUp": "Iscriviti a {{service}}",
     "notificationInterval": "Intervallo Notifiche",
-    "notificationEmail": "Email di Notifica"
+    "notificationEmail": "Email di Notifica",
+    "method": "Metodo di scraping",
+    "selectScraper": "Seleziona scraper",
+    "apiKeyLabel": "Chiave API o token dello scraper",
+    "proxyList": "Elenco proxy",
+    "frequency": "Frequenza di scraping",
+    "restartNote": "Questa opzione richiede il riavvio del server/istanza Docker per avere effetto.",
+    "scrapeDelay": "Ritardo di scraping parole chiave",
+    "delaySettings": "Impostazioni ritardo",
+    "autoRetry": "Riprova automaticamente scraping parole chiave fallite",
+    "clearFailed": "Cancella coda tentativi falliti",
+    "clearFailedBtn": "Cancella coda fallita",
+    "keywordsCount": "({{count}} parole chiave)",
+    "scraperNone": "Nessuno",
+    "freqDaily": "Giornaliero",
+    "freqOtherDay": "Un giorno sì, uno no",
+    "freqWeekly": "Settimanale",
+    "freqMonthly": "Mensile",
+    "freqNever": "Mai",
+    "delaySeconds": "{{count}} secondi",
+    "delayMinutes": "{{count}} minuti"
   },
   "periods": {
     "today": "Oggi",
@@ -450,7 +471,13 @@
     "noResults": "Nessun risultato trovato per \"{{query}}\"",
     "topPerformers": "Migliori Risultati",
     "exportCSV": "Esporta CSV",
-    "selectTab": "Seleziona Vista"
+    "selectTab": "Seleziona Vista",
+    "syncingBing": "Sincronizzazione dati Bing...",
+    "bingError": "Impossibile caricare i dati di Bing",
+    "noKeywordsData": "Nessun dato sulle parole chiave disponibile",
+    "bingConnectTitle": "Bing Webmaster Tools non connesso",
+    "bingConnectDesc": "Collega il tuo account Bing Webmaster per visualizzare i dati sulle prestazioni della ricerca, inclusi clic, impressioni e classifiche delle parole chiave.",
+    "bingConnectBtn": "Collega account Bing"
   },
   "domainHeader": {
     "last3Days": "Ultimi 3 giorni",
@@ -490,7 +517,8 @@
     "imp_asc": "Meno Visualizzati",
     "visits_desc": "Più Visitati",
     "visits_asc": "Meno Visitati",
-    "ctr_desc": "CTR più basso"
+    "ctr_desc": "CTR più basso",
+    "ctr_asc": "CTR più alto"
   },
   "columns": {
     "keyword": "Parola Chiave",
@@ -1466,5 +1494,60 @@
     "disconnectDescription": "Sei sicuro di voler disconnettere Bing Webmaster Tools? Le analisi di Bing e Yahoo non saranno più disponibili.",
     "notConnected": "Connetti Bing Webmaster Tools per vedere i dati di Bing e Yahoo.",
     "tab": "Bing"
+  },
+  "setupProgress": {
+    "title": "Guida alla configurazione",
+    "step1": "Collega account e sito",
+    "step2": "Configurazione scraper",
+    "step3": "Collega assistente AI",
+    "continueBtn": "Continua configurazione"
+  },
+  "notificationSettings": {
+    "frequency": "Frequenza notifiche",
+    "settingsLabel": "Impostazioni notifiche",
+    "emails": "E-mail di notifica",
+    "emailsPlaceholder": "test@gmail.com, test2@test.com",
+    "smtpConfigTitle": "ℹ️ Configurazione SMTP:",
+    "smtpConfigDesc": "Le impostazioni email sono configurate tramite variabili d'ambiente e non possono essere modificate qui.",
+    "smtpServer": "Server SMTP",
+    "smtpServerPlaceholder": "mail.example.com",
+    "smtpPort": "Porta SMTP",
+    "smtpPortPlaceholder": "587 o 465",
+    "smtpUser": "Nome utente SMTP",
+    "smtpUserPlaceholder": "username@example.com",
+    "smtpPass": "Password SMTP",
+    "fromEmail": "Indirizzo e-mail mittente",
+    "fromEmailPlaceholder": "no-reply@mydomain.com",
+    "fromName": "Nome mittente",
+    "fromNamePlaceholder": "SEO Ai Agent",
+    "freqDaily": "Giornaliero",
+    "freqWeekly": "Settimanale",
+    "freqMonthly": "Mensile",
+    "freqNever": "Mai"
+  },
+  "searchConsoleSettings": {
+    "googleConnectionTitle": "Connessione account Google (consigliato)",
+    "connectedToGoogle": "Connesso a Google",
+    "disconnect": "Disconnetti",
+    "importSites": "Importa siti verificati da Google",
+    "connectDesc": "Collega il tuo account Google per importare automaticamente i siti verificati e accedere ai dati Search Console senza gestire chiavi.",
+    "connectBtn": "Collega account Google",
+    "importSitesTitle": "Importa siti",
+    "noSitesFound": "Nessun sito verificato trovato.",
+    "importBtn": "Importa",
+    "disconnectDialogTitle": "Disconnetti account Google",
+    "disconnectDialogDesc": "Sei sicuro di voler disconnettere il tuo account Google? Ciò interromperà le importazioni automatiche delle sitemap e il tracciamento delle analisi.",
+    "cancel": "Annulla",
+    "errDisconnect": "Disconnessione non riuscita",
+    "errNoSites": "Nessun sito trovato o errore nel recupero.",
+    "errFetchSites": "Errore nel recupero dei siti",
+    "imported": "{{site}} importato",
+    "errImport": "Impossibile importare il sito",
+    "errImportGeneric": "Errore nell'importazione del sito"
+  },
+  "adwordsSettings": {
+    "updateVolumeTitle": "Aggiorna dati sul volume delle parole chiave",
+    "updateVolumeDesc": "Aggiorna i dati sul volume per tutte le parole chiave tracciate.",
+    "updateVolumeBtn": "Aggiorna dati volume"
   }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { useMutateKeywordsVolume, useTestAdwordsIntegration } from '../../services/adwords';
 import Icon from '../common/Icon';
 import SecretField from '../common/SecretField';
+import { useLanguage } from '../../context/LanguageContext';
 
 type AdWordsSettingsProps = {
    settings: SettingsType,
@@ -15,6 +16,7 @@ type AdWordsSettingsProps = {
 }
 
 const AdWordsSettings = ({ settings, settingsError, updateSettings, performUpdate, closeSettings }: AdWordsSettingsProps) => {
+   const { t } = useLanguage();
    const {
       adwords_client_id = '',
       adwords_client_secret = '',
@@ -120,10 +122,10 @@ const AdWordsSettings = ({ settings, settingsError, updateSettings, performUpdat
          </div> */}
             <div className='mt-4 mb-4 border-b border-gray-100 pt-4 pb-0 relative'>
                {!hasAllCredentials && <div className=' absolute w-full h-full z-50' />}
-               <h4 className=' mb-3 font-semibold text-blue-700'>Update Keyword Volume Data</h4>
+               <h4 className=' mb-3 font-semibold text-blue-700'>{t('adwordsSettings.updateVolumeTitle')}</h4>
                <div className={!hasAllCredentials ? 'opacity-40' : ''}>
                   <div className="settings__section__input mb-4 flex justify-between items-center w-full">
-                     <p>Update Volume data for all your Tracked Keywords.</p>
+                     <p>{t('adwordsSettings.updateVolumeDesc')}</p>
                   </div>
                   <div className="settings__section__input mb-4 flex justify-between items-center w-full">
                      <button
@@ -131,7 +133,7 @@ const AdWordsSettings = ({ settings, settingsError, updateSettings, performUpdat
                   ${hasAllCredentials ? 'cursor-pointer' : 'cursor-not-allowed opacity-40'}
                   hover:bg-blue-700 hover:text-white transition`}
                         onClick={updateVolumeData}>
-                        <Icon type={isUpdatingVolume ? 'loading' : 'reload'} size={isUpdatingVolume ? 16 : 12} /> Update Keywords Volume Data
+                        <Icon type={isUpdatingVolume ? 'loading' : 'reload'} size={isUpdatingVolume ? 16 : 12} /> {t('adwordsSettings.updateVolumeBtn')}
                      </button>
                   </div>
                </div>

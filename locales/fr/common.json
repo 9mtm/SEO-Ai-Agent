@@ -403,9 +403,9 @@
     "none": "Aucun",
     "recommended": "Recommandé",
     "apiKey": "Clé API",
-    "apiKeyPlaceholder": "Entrez votre clé API",
+    "apiKeyPlaceholder": "Clé API/Jeton",
     "delay": "Délai de scraping",
-    "delayNone": "Aucun",
+    "delayNone": "Aucun délai",
     "delay5": "5 secondes",
     "delay10": "10 secondes",
     "delay30": "30 secondes",
@@ -415,7 +415,27 @@
     "noKey": "Pas de clé API ?",
     "signUp": "S'inscrire à {{service}}",
     "notificationInterval": "Intervalle de notification",
-    "notificationEmail": "E-mail de notification"
+    "notificationEmail": "E-mail de notification",
+    "method": "Méthode de scraping",
+    "selectScraper": "Sélectionner le scraper",
+    "apiKeyLabel": "Clé API ou jeton du scraper",
+    "proxyList": "Liste de proxy",
+    "frequency": "Fréquence du scraping",
+    "restartNote": "Cette option nécessite un redémarrage du serveur/de l'instance Docker pour prendre effet.",
+    "scrapeDelay": "Délai de scraping des mots-clés",
+    "delaySettings": "Paramètres de délai",
+    "autoRetry": "Réessayer automatiquement le scraping des mots-clés échoués",
+    "clearFailed": "Effacer la file d'attente des nouvelles tentatives échouées",
+    "clearFailedBtn": "Effacer la file d'attente échouée",
+    "keywordsCount": "({{count}} mots-clés)",
+    "scraperNone": "Aucun",
+    "freqDaily": "Quotidien",
+    "freqOtherDay": "Tous les deux jours",
+    "freqWeekly": "Hebdomadaire",
+    "freqMonthly": "Mensuel",
+    "freqNever": "Jamais",
+    "delaySeconds": "{{count}} secondes",
+    "delayMinutes": "{{count}} minutes"
   },
   "periods": {
     "today": "Aujourd'hui",
@@ -497,7 +517,8 @@
     "imp_asc": "Moins vu",
     "visits_desc": "Plus visité",
     "visits_asc": "Moins visité",
-    "ctr_desc": "CTR le plus bas"
+    "ctr_desc": "CTR le plus bas",
+    "ctr_asc": "CTR le plus élevé"
   },
   "columns": {
     "keyword": "Mot-clé",
@@ -1430,7 +1451,6 @@
     "getStarted": "Commencer"
   },
   "footerMenu": {
-    "companyDesc": "Plateforme complète de suivi SEO et contenu IA par Dpro GmbH",
     "product": "Produit",
     "resources": "Ressources",
     "legal": "Légal",
@@ -1474,5 +1494,60 @@
       "twitterTitle": "SEO Agent MCP Integration",
       "twitterDescription": "Connect Claude & ChatGPT to your real-time SEO data."
     }
+  },
+  "setupProgress": {
+    "title": "Guide de configuration",
+    "step1": "Connecter compte et site",
+    "step2": "Configuration du scraper",
+    "step3": "Connecter l'assistant IA",
+    "continueBtn": "Continuer la configuration"
+  },
+  "notificationSettings": {
+    "frequency": "Fréquence des notifications",
+    "settingsLabel": "Paramètres de notification",
+    "emails": "E-mails de notification",
+    "emailsPlaceholder": "test@gmail.com, test2@test.com",
+    "smtpConfigTitle": "ℹ️ Configuration SMTP :",
+    "smtpConfigDesc": "Les paramètres e-mail sont configurés via des variables d'environnement et ne peuvent pas être modifiés ici.",
+    "smtpServer": "Serveur SMTP",
+    "smtpServerPlaceholder": "mail.example.com",
+    "smtpPort": "Port SMTP",
+    "smtpPortPlaceholder": "587 ou 465",
+    "smtpUser": "Nom d'utilisateur SMTP",
+    "smtpUserPlaceholder": "username@example.com",
+    "smtpPass": "Mot de passe SMTP",
+    "fromEmail": "Adresse e-mail d'expéditeur",
+    "fromEmailPlaceholder": "no-reply@mydomain.com",
+    "fromName": "Nom de l'expéditeur",
+    "fromNamePlaceholder": "SEO Ai Agent",
+    "freqDaily": "Quotidien",
+    "freqWeekly": "Hebdomadaire",
+    "freqMonthly": "Mensuel",
+    "freqNever": "Jamais"
+  },
+  "searchConsoleSettings": {
+    "googleConnectionTitle": "Connexion du compte Google (recommandé)",
+    "connectedToGoogle": "Connecté à Google",
+    "disconnect": "Déconnecter",
+    "importSites": "Importer les sites vérifiés depuis Google",
+    "connectDesc": "Connectez votre compte Google pour importer automatiquement vos sites vérifiés et accéder aux données Search Console sans gérer de clés.",
+    "connectBtn": "Connecter le compte Google",
+    "importSitesTitle": "Importer les sites",
+    "noSitesFound": "Aucun site vérifié trouvé.",
+    "importBtn": "Importer",
+    "disconnectDialogTitle": "Déconnecter le compte Google",
+    "disconnectDialogDesc": "Voulez-vous vraiment déconnecter votre compte Google ? Cela arrêtera les importations automatiques de sitemaps et le suivi analytique.",
+    "cancel": "Annuler",
+    "errDisconnect": "Échec de la déconnexion",
+    "errNoSites": "Aucun site trouvé ou erreur lors de la récupération.",
+    "errFetchSites": "Erreur lors de la récupération des sites",
+    "imported": "{{site}} importé",
+    "errImport": "Échec de l'importation du site",
+    "errImportGeneric": "Erreur lors de l'importation du site"
+  },
+  "adwordsSettings": {
+    "updateVolumeTitle": "Mettre à jour les données de volume des mots-clés",
+    "updateVolumeDesc": "Mettez à jour les données de volume pour tous vos mots-clés suivis.",
+    "updateVolumeBtn": "Mettre à jour les volumes"
   }
 }

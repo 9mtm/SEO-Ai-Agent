@@ -120,7 +120,8 @@
     "delete": "Delete",
     "edit": "Edit",
     "logout": "Logout",
-    "changeLanguage": "Change Language"
+    "changeLanguage": "Change Language",
+    "search": "Search"
   },
   "email": {
     "visits": "Visits",
@@ -385,11 +386,11 @@
       "publishWordpressDesc": "Publish articles to your website"
     },
     "expiryOptions": {
+      "0": "Never expires",
       "7": "7 days",
       "30": "30 days (Recommended)",
       "90": "90 days",
-      "365": "1 year",
-      "0": "Never expires"
+      "365": "1 year"
     }
   },
   "scraperSettings": {
@@ -402,9 +403,9 @@
     "none": "None",
     "recommended": "Recommended",
     "apiKey": "API Key",
-    "apiKeyPlaceholder": "Enter your API key",
+    "apiKeyPlaceholder": "API Key/Token",
     "delay": "Scrape Delay",
-    "delayNone": "None",
+    "delayNone": "No Delay",
     "delay5": "5 seconds",
     "delay10": "10 seconds",
     "delay30": "30 seconds",
@@ -414,7 +415,27 @@
     "noKey": "Don't have an API key?",
     "signUp": "Sign up for {{service}}",
     "notificationInterval": "Notification Interval",
-    "notificationEmail": "Notification Email"
+    "notificationEmail": "Notification Email",
+    "method": "Scraping Method",
+    "selectScraper": "Select Scraper",
+    "apiKeyLabel": "Scraper API Key or Token",
+    "proxyList": "Proxy List",
+    "frequency": "Scraping Frequency",
+    "restartNote": "This option requires Server/Docker Instance Restart to take Effect.",
+    "scrapeDelay": "Keyword Scrape Delay",
+    "delaySettings": "Delay Settings",
+    "autoRetry": "Auto Retry Failed Keyword Scrape",
+    "clearFailed": "Clear Failed Retry Queue",
+    "clearFailedBtn": "Clear Failed Queue",
+    "keywordsCount": "({{count}} Keywords)",
+    "scraperNone": "None",
+    "freqDaily": "Daily",
+    "freqOtherDay": "Every Other Day",
+    "freqWeekly": "Weekly",
+    "freqMonthly": "Monthly",
+    "freqNever": "Never",
+    "delaySeconds": "{{count}} Seconds",
+    "delayMinutes": "{{count}} Minutes"
   },
   "periods": {
     "today": "Today",
@@ -496,7 +517,8 @@
     "imp_asc": "Least Viewed",
     "visits_desc": "Most Visited",
     "visits_asc": "Least Visited",
-    "ctr_desc": "Lowest CTR"
+    "ctr_desc": "Lowest CTR",
+    "ctr_asc": "Highest CTR"
   },
   "columns": {
     "keyword": "Keyword",
@@ -1472,5 +1494,60 @@
     "disconnectDescription": "Are you sure you want to disconnect Bing Webmaster Tools? Bing & Yahoo analytics will no longer be available.",
     "notConnected": "Connect Bing Webmaster Tools to see Bing & Yahoo data.",
     "tab": "Bing"
+  },
+  "setupProgress": {
+    "title": "Setup Guide",
+    "step1": "Connect Account & Site",
+    "step2": "Scraper Configuration",
+    "step3": "Connect AI Assistant",
+    "continueBtn": "Continue Setup"
+  },
+  "notificationSettings": {
+    "frequency": "Notification Frequency",
+    "settingsLabel": "Notification Settings",
+    "emails": "Notification Emails",
+    "emailsPlaceholder": "test@gmail.com, test2@test.com",
+    "smtpConfigTitle": "ℹ️ SMTP Configuration:",
+    "smtpConfigDesc": "Email settings are configured via environment variables and cannot be changed here.",
+    "smtpServer": "SMTP Server",
+    "smtpServerPlaceholder": "mail.example.com",
+    "smtpPort": "SMTP Port",
+    "smtpPortPlaceholder": "587 or 465",
+    "smtpUser": "SMTP Username",
+    "smtpUserPlaceholder": "username@example.com",
+    "smtpPass": "SMTP Password",
+    "fromEmail": "From Email Address",
+    "fromEmailPlaceholder": "no-reply@mydomain.com",
+    "fromName": "Email From Name",
+    "fromNamePlaceholder": "SEO Ai Agent",
+    "freqDaily": "Daily",
+    "freqWeekly": "Weekly",
+    "freqMonthly": "Monthly",
+    "freqNever": "Never"
+  },
+  "searchConsoleSettings": {
+    "googleConnectionTitle": "Google Account Connection (Recommended)",
+    "connectedToGoogle": "Connected to Google",
+    "disconnect": "Disconnect",
+    "importSites": "Import Verified Sites from Google",
+    "connectDesc": "Connect your Google Account to automatically import your verified sites and access Search Console data without handling raw keys.",
+    "connectBtn": "Connect Google Account",
+    "importSitesTitle": "Import Sites",
+    "noSitesFound": "No verified sites found.",
+    "importBtn": "Import",
+    "disconnectDialogTitle": "Disconnect Google Account",
+    "disconnectDialogDesc": "Are you sure you want to disconnect your Google Account? This will stop automatic sitemap imports and analytics tracking.",
+    "cancel": "Cancel",
+    "errDisconnect": "Failed to disconnect",
+    "errNoSites": "No sites found or error fetching sites.",
+    "errFetchSites": "Error fetching sites",
+    "imported": "Imported {{site}}",
+    "errImport": "Failed to import site",
+    "errImportGeneric": "Error importing site"
+  },
+  "adwordsSettings": {
+    "updateVolumeTitle": "Update Keyword Volume Data",
+    "updateVolumeDesc": "Update Volume data for all your Tracked Keywords.",
+    "updateVolumeBtn": "Update Keywords Volume Data"
   }
 }
