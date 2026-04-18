@@ -141,8 +141,10 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
         return key;
     };
 
-    if (!isLoaded) return null; // Prevent hydration mismatch
-
+    // Always render children — returning null on first client render caused a
+    // hydration mismatch (SSR renders content, client returns null), which made
+    // React keep the SSR tree and mount a fresh one next to it, producing
+    // duplicate DOM (two <Component/>, two <Toaster/>, etc.).
     return (
         <LanguageContext.Provider value={{ locale, setLocale, t, translations: translationsMap[locale] }}>
             {children}
