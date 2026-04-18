@@ -1,10 +1,12 @@
-import type { NextPage } from 'next';
+import type { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { BarChart3, TrendingUp, ChevronRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import LandingHeader from '../components/common/LandingHeader';
+import { tStatic, buildHreflangs, OG_LOCALE_MAP, SUPPORTED_LOCALES } from '../utils/i18nHelpers';
+import { loadMessages } from '../utils/serverTranslate';
 
 // Import new landing page components
 import Stats from '../components/landing/Stats';
@@ -17,22 +19,32 @@ import FAQ from '../components/landing/FAQ';
 import FinalCTA from '../components/landing/FinalCTA';
 import Footer from '../components/common/Footer';
 
-const Home: NextPage = () => {
+type HomeProps = {
+  ssrMessages: Record<string, any>;
+  ssrLocale: string;
+};
+
+const Home: NextPage<HomeProps> = ({ ssrMessages, ssrLocale }) => {
   const router = useRouter();
   const { locale, setLocale, t } = useLanguage();
+  const tSSR = (key: string, vars?: Record<string, any>) => tStatic(ssrMessages, key, vars);
+  const canonicalPath = ssrLocale === 'en' ? '/' : `/${ssrLocale}/`;
+  const canonicalUrl = `https://seo-agent.net${canonicalPath}`;
+  const hreflangs = buildHreflangs('/');
+  const ogLocale = OG_LOCALE_MAP[ssrLocale] || 'en_US';
+  const ogLocaleAlternates = SUPPORTED_LOCALES.filter(l => l !== ssrLocale).map(l => OG_LOCALE_MAP[l]);
 
-  // Organization Schema for SEO
+  // SoftwareApplication Schema (no fake reviews — add only when real verifiable reviews exist)
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: 'SEO Agent',
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
+    url: canonicalUrl,
     image: 'https://seo-agent.net/logo.png',
-    brand: {
-      '@type': 'Brand',
-      name: 'SEO Agent',
-    },
+    description: tSSR('meta.home.description'),
+    brand: { '@type': 'Brand', name: 'SEO Agent' },
     offers: {
       '@type': 'AggregateOffer',
       priceCurrency: 'EUR',
@@ -40,64 +52,6 @@ const Home: NextPage = () => {
       highPrice: '99',
       offerCount: '3',
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '5.0',
-      reviewCount: '3',
-    },
-    review: [
-      {
-        '@type': 'Review',
-        itemReviewed: {
-          '@type': 'SoftwareApplication',
-          name: 'SEO Agent',
-        },
-        author: {
-          '@type': 'Person',
-          name: 'Sarah Ahmed',
-        },
-        reviewRating: {
-          '@type': 'Rating',
-          ratingValue: '5',
-          bestRating: '5',
-        },
-        reviewBody: 'An amazing tool that helped us improve our website ranking by 150% in just 3 months. The multi-country tracking feature is a game-changer!',
-      },
-      {
-        '@type': 'Review',
-        itemReviewed: {
-          '@type': 'SoftwareApplication',
-          name: 'SEO Agent',
-        },
-        author: {
-          '@type': 'Person',
-          name: 'Michael Schmidt',
-        },
-        reviewRating: {
-          '@type': 'Rating',
-          ratingValue: '5',
-          bestRating: '5',
-        },
-        reviewBody: 'The detailed reports and daily tracking made my job so much easier. The AI content generation is incredibly accurate and saves hours of work.',
-      },
-      {
-        '@type': 'Review',
-        itemReviewed: {
-          '@type': 'SoftwareApplication',
-          name: 'SEO Agent',
-        },
-        author: {
-          '@type': 'Person',
-          name: 'Lisa Chen',
-        },
-        reviewRating: {
-          '@type': 'Rating',
-          ratingValue: '5',
-          bestRating: '5',
-        },
-        reviewBody: 'Best SEO tool I\'ve ever used. The interface is simple and the results are accurate. The WordPress integration is seamless!',
-      },
-    ],
     author: {
       '@type': 'Organization',
       name: 'Dpro GmbH',
@@ -105,40 +59,64 @@ const Home: NextPage = () => {
     },
   };
 
+  // FAQPage schema built from 10 FAQ entries in landing.faq.q1..q10
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: Array.from({ length: 10 }, (_, i) => i + 1).map(n => ({
+      '@type': 'Question',
+      name: tSSR(`landing.faq.q${n}.question`),
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: tSSR(`landing.faq.q${n}.answer`),
+      },
+    })),
+  };
+
+  // BreadcrumbList schema
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: canonicalUrl },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Head>
         {/* Primary Meta Tags */}
-        <title>{t('meta.home.title')}</title>
-        <meta name="description" content={t('meta.home.description')} />
-        <meta name="keywords" content={t('meta.home.keywords')} />
-        <link rel="canonical" href={`https://seo-agent.net${router.locale === 'en' ? '' : '/' + router.locale}/`} />
+        <title>{tSSR('meta.home.title')}</title>
+        <meta name="description" content={tSSR('meta.home.description')} />
+        <meta name="keywords" content={tSSR('meta.home.keywords')} />
+        <link rel="canonical" href={canonicalUrl} />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="author" content="Dpro GmbH" />
 
-        {/* Hreflang Tags for Multi-language Support */}
-        <link rel="alternate" hrefLang="en" href="https://seo-agent.net/" />
-        <link rel="alternate" hrefLang="de" href="https://seo-agent.net/de/" />
-        <link rel="alternate" hrefLang="fr" href="https://seo-agent.net/fr/" />
-        <link rel="alternate" hrefLang="x-default" href="https://seo-agent.net/" />
+        {/* Hreflang Tags for Multi-language Support (11 locales + x-default) */}
+        {hreflangs.map(h => (
+          <link key={h.hrefLang} rel="alternate" hrefLang={h.hrefLang} href={h.href} />
+        ))}
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={`https://seo-agent.net${router.locale === 'en' ? '' : '/' + router.locale}/`} />
-        <meta property="og:title" content={t('meta.home.ogTitle')} />
-        <meta property="og:description" content={t('meta.home.ogDescription')} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={tSSR('meta.home.ogTitle')} />
+        <meta property="og:description" content={tSSR('meta.home.ogDescription')} />
         <meta property="og:image" content="https://seo-agent.net/ogImage.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:site_name" content="SEO Agent" />
-        <meta property="og:locale" content={router.locale === 'de' ? 'de_DE' : 'en_US'} />
-        <meta property="og:locale:alternate" content={router.locale === 'de' ? 'en_US' : 'de_DE'} />
+        <meta property="og:locale" content={ogLocale} />
+        {ogLocaleAlternates.map(alt => (
+          <meta key={alt} property="og:locale:alternate" content={alt} />
+        ))}
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content={`https://seo-agent.net${router.locale === 'de' ? '/de' : ''}/`} />
-        <meta name="twitter:title" content={t('seo.home.twitterTitle')} />
-        <meta name="twitter:description" content={t('seo.home.twitterDescription')} />
+        <meta name="twitter:url" content={canonicalUrl} />
+        <meta name="twitter:title" content={tSSR('seo.home.twitterTitle')} />
+        <meta name="twitter:description" content={tSSR('seo.home.twitterDescription')} />
         <meta name="twitter:image" content="https://seo-agent.net/twitter-image.png" />
         <meta name="twitter:creator" content="@DproGmbH" />
         <meta name="twitter:site" content="@SEOAgent" />
@@ -148,13 +126,21 @@ const Home: NextPage = () => {
         <meta name="geo.placename" content="Vienna" />
         <meta name="geo.position" content="48.208176;16.373819" />
         <meta name="ICBM" content="48.208176, 16.373819" />
-        <meta name="language" content={router.locale} />
-        <meta httpEquiv="content-language" content={router.locale} />
+        <meta name="language" content={ssrLocale} />
+        <meta httpEquiv="content-language" content={ssrLocale} />
 
         {/* Schema.org structured data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
 
         {/* Favicons */}
@@ -278,6 +264,14 @@ const Home: NextPage = () => {
       <Footer />
     </div>
   );
+};
+
+export const getStaticProps: GetStaticProps<HomeProps> = async ({ locale }) => {
+  const resolvedLocale = locale || 'en';
+  const ssrMessages = loadMessages(resolvedLocale);
+  return {
+    props: { ssrMessages, ssrLocale: resolvedLocale },
+  };
 };
 
 export default Home;

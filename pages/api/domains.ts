@@ -7,6 +7,7 @@ import User from '../../database/models/user';
 import { getPlanLimits } from '../../utils/planLimits';
 import getdomainStats from '../../utils/domains';
 import verifyUser from '../../utils/verifyUser';
+import { verifyRequest, requireScope } from '../../utils/verifyRequest';
 import { getWorkspaceContext } from '../../utils/workspaceContext';
 import { checkSerchConsoleIntegration, removeLocalSCData } from '../../utils/searchConsole';
 import refreshAndUpdateKeywords from '../../utils/refresh';
@@ -36,10 +37,21 @@ type DomainsUpdateRes = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
    await db.sync();
-   const { authorized, userId, isLegacy } = verifyUser(req, res);
-   if (!authorized) {
+   // Accept both dashboard (JWT) and OAuth Bearer tokens (WordPress plugin, MCP, …).
+   const auth = await verifyRequest(req, res);
+   if (!auth.authorized) {
       return res.status(401).json({ error: 'Not authorized' });
    }
+   const { userId, isLegacy } = auth;
+
+   // When called via OAuth, enforce scopes per method.
+   if (auth.source === 'oauth') {
+      const needed = req.method === 'GET' ? 'read:domains' : 'write:domains';
+      if (!requireScope(auth, needed)) {
+         return res.status(403).json({ error: 'insufficient_scope', required: needed });
+      }
+   }
+
    if (req.method === 'GET') {
       return getDomains(req, res, userId, isLegacy);
    }

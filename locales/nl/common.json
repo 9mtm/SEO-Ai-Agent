@@ -1474,12 +1474,23 @@
       "keywords": "mcp, seo agent, claude desktop, chatgpt, seo api, rank tracking, gsc",
       "ogTitle": "Geef je AI een boost met SEO-data",
       "ogDescription": "Verbind Claude Desktop direct met je SEO-metrieken, rankings en GSC-gegevens."
+    },
+    "home": {
+      "title": "SEO Agent — AI SEO-tracking, zoekwoordonderzoek en WordPress-publicatie",
+      "description": "Volg zoekwoordrankings in 200+ landen, genereer AI-geoptimaliseerde content met GPT-5 en Claude, en publiceer direct naar WordPress. Complete SEO-platform voor moderne bedrijven.",
+      "keywords": "seo-tracking, zoekwoordonderzoek, ai-contentgeneratie, wordpress seo, rank tracker, gpt-5 seo, claude seo",
+      "ogTitle": "SEO Agent — Alles-in-één AI SEO-platform",
+      "ogDescription": "Volg rankings in 200+ landen, genereer AI-content en publiceer naar WordPress — alles vanuit één dashboard."
     }
   },
   "seo": {
     "mcpSeo": {
       "twitterTitle": "SEO Agent MCP Integratie",
       "twitterDescription": "Verbind Claude & ChatGPT met je realtime SEO-gegevens."
+    },
+    "home": {
+      "twitterTitle": "SEO Agent — AI-gestuurde SEO voor moderne bedrijven",
+      "twitterDescription": "Volg zoekwoorden in 200+ landen, maak AI-content met GPT-5 en Claude, publiceer met één klik naar WordPress."
     }
   },
   "bing": {

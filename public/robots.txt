@@ -10,21 +10,18 @@ Disallow: /domain/
 Disallow: /domains/
 Disallow: /onboarding/
 Disallow: /auth/
+Disallow: /oauth/
+Disallow: /platform/
+Disallow: /platform-sso
+Disallow: /workspace/
+Disallow: /setup
+Disallow: /research
 Disallow: /login
 Disallow: /register
-
-# Allow specific pages
-Allow: /
-Allow: /mcp-seo
-Allow: /de/
-Allow: /de/mcp-seo
-
-# Crawl-delay
-Crawl-delay: 1
+Disallow: /unsubscribe
 
 # Sitemaps
 Sitemap: https://seo-agent.net/sitemap.xml
-Sitemap: https://seo-agent.net/sitemap-de.xml
 
 # Google
 User-agent: Googlebot
@@ -38,13 +35,24 @@ User-agent: Bingbot
 Allow: /
 Disallow: /api/
 Disallow: /admin/
+Disallow: /profile/
 
-# ChatGPT
+# AI crawlers — allow marketing pages
 User-agent: ChatGPT-User
 Allow: /
 Allow: /mcp-seo
 
-# Claude
+User-agent: GPTBot
+Allow: /
+Allow: /mcp-seo
+
 User-agent: Claude-Web
 Allow: /
 Allow: /mcp-seo
+
+User-agent: ClaudeBot
+Allow: /
+Allow: /mcp-seo
+
+User-agent: PerplexityBot
+Allow: /

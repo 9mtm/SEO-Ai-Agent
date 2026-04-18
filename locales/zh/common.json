@@ -1474,12 +1474,23 @@
       "keywords": "mcp, seo agent, claude desktop, chatgpt, seo api, 排名追踪, gsc",
       "ogTitle": "利用 SEO 数据强化您的 AI",
       "ogDescription": "将 Claude Desktop 直接连接到您的 SEO 指标、排名和 GSC 数据。"
+    },
+    "home": {
+      "title": "SEO Agent — AI SEO 追踪、关键词研究和 WordPress 发布",
+      "description": "在 200 多个国家/地区跟踪关键词排名，使用 GPT-5 和 Claude 生成 AI 优化内容，并直接发布到 WordPress。适用于现代企业的完整 SEO 平台。",
+      "keywords": "seo 追踪, 关键词研究, ai 内容生成, wordpress seo, 排名跟踪器, gpt-5 seo, claude seo",
+      "ogTitle": "SEO Agent — 一体化 AI SEO 平台",
+      "ogDescription": "在 200 多个国家/地区跟踪排名、生成 AI 内容并发布到 WordPress — 全部在一个仪表板中完成。"
     }
   },
   "seo": {
     "mcpSeo": {
       "twitterTitle": "SEO Agent MCP 集成",
       "twitterDescription": "将 Claude 和 ChatGPT 连接到您的实时 SEO 数据。"
+    },
+    "home": {
+      "twitterTitle": "SEO Agent — 面向现代企业的 AI 驱动 SEO",
+      "twitterDescription": "在 200 多个国家/地区跟踪关键词，使用 GPT-5 和 Claude 创建 AI 内容，一键发布到 WordPress。"
     }
   },
   "bing": {

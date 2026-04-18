@@ -34,6 +34,10 @@ export const OAUTH_SCOPES = {
     'read:analytics': {
         label: 'View analytics and reports',
         description: 'Access aggregated analytics, reports and trends.'
+    },
+    'write:integrations': {
+        label: 'Configure CMS integrations',
+        description: 'Save and update the credentials this app needs to publish content back to your CMS (e.g. a WordPress Application Password).'
     }
 } as const;
 

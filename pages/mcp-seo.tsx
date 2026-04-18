@@ -3,9 +3,12 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import type { GetStaticProps } from 'next';
 import { useLanguage } from '@/context/LanguageContext';
 import LandingHeader from '../components/common/LandingHeader';
 import Footer from '../components/common/Footer';
+import { tStatic, buildHreflangs, OG_LOCALE_MAP, SUPPORTED_LOCALES } from '../utils/i18nHelpers';
+import { loadMessages } from '../utils/serverTranslate';
 import {
   Sparkles,
   Bot,
@@ -21,9 +24,20 @@ import {
   Globe,
 } from 'lucide-react';
 
-const MCPSEOPage: React.FC = () => {
+type McpSeoProps = {
+  ssrMessages: Record<string, any>;
+  ssrLocale: string;
+};
+
+const MCPSEOPage: React.FC<McpSeoProps> = ({ ssrMessages, ssrLocale }) => {
   const router = useRouter();
   const { t, locale, setLocale } = useLanguage();
+  const tSSR = (key: string, vars?: Record<string, any>) => tStatic(ssrMessages, key, vars);
+  const canonicalPath = ssrLocale === 'en' ? '/mcp-seo' : `/${ssrLocale}/mcp-seo`;
+  const canonicalUrl = `https://seo-agent.net${canonicalPath}`;
+  const hreflangs = buildHreflangs('/mcp-seo');
+  const ogLocale = OG_LOCALE_MAP[ssrLocale] || 'en_US';
+  const ogLocaleAlternates = SUPPORTED_LOCALES.filter(l => l !== ssrLocale).map(l => OG_LOCALE_MAP[l]);
   const [activeTab, setActiveTab] = useState<'claude' | 'cursor' | 'chatgpt' | 'web' | 'windsurf' | 'zed' | 'api'>('claude');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
@@ -32,9 +46,9 @@ const MCPSEOPage: React.FC = () => {
   const pageSchema = {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
-    headline: t('mcp.hero.title'),
-    description: t('mcp.hero.description'),
-    articleBody: t('mcp.hero.description'),
+    headline: tSSR('mcp.hero.title'),
+    description: tSSR('mcp.hero.description'),
+    articleBody: tSSR('mcp.hero.description'),
     author: {
       '@type': 'Organization',
       name: 'Dpro GmbH',
@@ -155,32 +169,31 @@ curl -X POST https://seo-agent.net/api/mcp \\
     <div className="min-h-screen bg-white">
       <Head>
         {/* Primary Meta Tags */}
-        <title>{t('meta.mcpSeo.title')}</title>
-        <meta name="description" content={t('meta.mcpSeo.description')} />
-        <meta name="keywords" content={t('meta.mcpSeo.keywords')} />
-        <link rel="canonical" href={`https://seo-agent.net${router.locale === 'en' ? '' : '/' + router.locale}/mcp-seo`} />
+        <title>{tSSR('meta.mcpSeo.title')}</title>
+        <meta name="description" content={tSSR('meta.mcpSeo.description')} />
+        <meta name="keywords" content={tSSR('meta.mcpSeo.keywords')} />
+        <link rel="canonical" href={canonicalUrl} />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="author" content="Dpro GmbH" />
 
-        {/* Hreflang Tags for Multi-language Support */}
-        <link rel="alternate" hrefLang="en" href="https://seo-agent.net/mcp-seo" />
-        <link rel="alternate" hrefLang="de" href="https://seo-agent.net/de/mcp-seo" />
-        <link rel="alternate" hrefLang="fr" href="https://seo-agent.net/fr/mcp-seo" />
-        <link rel="alternate" hrefLang="x-default" href="https://seo-agent.net/mcp-seo" />
+        {/* Hreflang Tags for Multi-language Support (11 locales + x-default) */}
+        {hreflangs.map(h => (
+          <link key={h.hrefLang} rel="alternate" hrefLang={h.hrefLang} href={h.href} />
+        ))}
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={`https://seo-agent.net${router.locale === 'en' ? '' : '/' + router.locale}/mcp-seo`} />
-        <meta property="og:title" content={t('meta.mcpSeo.ogTitle')} />
-        <meta property="og:description" content={t('meta.mcpSeo.ogDescription')} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={tSSR('meta.mcpSeo.ogTitle')} />
+        <meta property="og:description" content={tSSR('meta.mcpSeo.ogDescription')} />
         <meta property="og:image" content="https://seo-agent.net/ogImage.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:site_name" content="SEO Agent" />
-        <meta property="og:locale" content={router.locale === 'de' ? 'de_DE' : 'en_US'} />
-        <meta property="og:locale:alternate" content={router.locale === 'de' ? 'en_US' : 'de_DE'} />
-        <meta property="article:published_time" content="2024-01-15T00:00:00Z" />
-        <meta property="article:modified_time" content="2024-01-16T00:00:00Z" />
+        <meta property="og:locale" content={ogLocale} />
+        {ogLocaleAlternates.map(alt => (
+          <meta key={alt} property="og:locale:alternate" content={alt} />
+        ))}
         <meta property="article:author" content="Dpro GmbH" />
         <meta property="article:section" content="Technology" />
         <meta property="article:tag" content="MCP" />
@@ -189,9 +202,9 @@ curl -X POST https://seo-agent.net/api/mcp \\
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content={`https://seo-agent.net${router.locale === 'de' ? '/de' : ''}/mcp-seo`} />
-        <meta name="twitter:title" content={t('seo.mcpSeo.twitterTitle')} />
-        <meta name="twitter:description" content={t('seo.mcpSeo.twitterDescription')} />
+        <meta name="twitter:url" content={canonicalUrl} />
+        <meta name="twitter:title" content={tSSR('seo.mcpSeo.twitterTitle')} />
+        <meta name="twitter:description" content={tSSR('seo.mcpSeo.twitterDescription')} />
         <meta name="twitter:image" content="https://seo-agent.net/twitter-image-mcp.png" />
         <meta name="twitter:creator" content="@DproGmbH" />
         <meta name="twitter:site" content="@SEOAgent" />
@@ -201,8 +214,8 @@ curl -X POST https://seo-agent.net/api/mcp \\
         <meta name="geo.placename" content="Vienna" />
         <meta name="geo.position" content="48.208176;16.373819" />
         <meta name="ICBM" content="48.208176, 16.373819" />
-        <meta name="language" content={router.locale} />
-        <meta httpEquiv="content-language" content={router.locale} />
+        <meta name="language" content={ssrLocale} />
+        <meta httpEquiv="content-language" content={ssrLocale} />
 
         {/* Schema.org */}
         <script
@@ -1158,6 +1171,14 @@ curl -X POST https://seo-agent.net/api/mcp \\
       <Footer />
     </div>
   );
+};
+
+export const getStaticProps: GetStaticProps<McpSeoProps> = async ({ locale }) => {
+  const resolvedLocale = locale || 'en';
+  const ssrMessages = loadMessages(resolvedLocale);
+  return {
+    props: { ssrMessages, ssrLocale: resolvedLocale },
+  };
 };
 
 export default MCPSEOPage;

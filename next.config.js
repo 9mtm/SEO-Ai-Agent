@@ -38,15 +38,24 @@ const nextConfig = {
   poweredByHeader: false,
 
   async headers() {
-    return [
-      {
-        source: '/platform-sso',
-        headers: [
-          { key: 'X-Frame-Options', value: 'ALLOWALL' },
-          { key: 'Content-Security-Policy', value: "frame-ancestors *" }
-        ]
-      }
+    // Routes that must render inside third-party admin UIs (WordPress plugin,
+    // Shopify embedded app, etc.). Every route listed here needs auth guards
+    // of its own — framing just widens the set of parent origins allowed to
+    // display the page.
+    const IFRAMABLE_SOURCES = [
+      '/platform-sso',
+      '/domain/:path*',
+      '/api/platform/iframe-login',
     ];
+    const iframeHeaders = [
+      // X-Frame-Options has no "from list" syntax in modern browsers; we rely
+      // on CSP frame-ancestors for the real policy. We still strip the default
+      // SAMEORIGIN behaviour that some hosts inject.
+      { key: 'X-Frame-Options', value: 'ALLOWALL' },
+      { key: 'Content-Security-Policy', value: 'frame-ancestors *' },
+    ];
+
+    return IFRAMABLE_SOURCES.map((source) => ({ source, headers: iframeHeaders }));
   },
 
   // Expose OAuth discovery documents at the standard RFC 8414 / RFC 9728 paths

@@ -1,9 +1,37 @@
 import axios from 'axios';
+import https from 'https';
 
 type WPConnectionSettings = {
     url: string;
     username: string;
     app_password: string;
+};
+
+/**
+ * For local development the WordPress target is often served with a
+ * self-signed certificate (MAMP, Laragon, Valet+). Relaxing SSL validation
+ * in production would be a footgun, so we only do it when:
+ *   - NODE_ENV !== 'production', AND
+ *   - the target host resolves to localhost / a private range / a hostname
+ *     that isn't publicly routable (no dot, or ends in .localhost / .test).
+ */
+const buildHttpsAgent = (targetUrl: string): https.Agent | undefined => {
+    if (process.env.NODE_ENV === 'production') return undefined;
+    try {
+        const host = new URL(targetUrl).hostname;
+        const isLocal =
+            host === 'localhost' ||
+            host === '127.0.0.1' ||
+            host === '::1' ||
+            !host.includes('.') ||           // bare hostname like "seo-agent-pc"
+            host.endsWith('.localhost') ||
+            host.endsWith('.test') ||
+            host.endsWith('.local');
+        if (!isLocal) return undefined;
+        return new https.Agent({ rejectUnauthorized: false });
+    } catch {
+        return undefined;
+    }
 };
 
 type WPPostData = {
@@ -52,7 +80,8 @@ export const verifyWordPressConnection = async (settings: WPConnectionSettings) 
         const response = await axios.get(`${baseUrl}/wp-json/wp/v2/users/me`, {
             headers: headers,
             maxRedirects: 0, // Don't follow redirects - they strip auth headers
-            validateStatus: (status) => status < 500 // Resolve promise for 4xx to handle logic below
+            validateStatus: (status) => status < 500, // Resolve promise for 4xx to handle logic below
+            httpsAgent: buildHttpsAgent(baseUrl),
         });
 
         if (response.status === 200) {
@@ -103,7 +132,7 @@ export const publishToWordPress = async (settings: WPConnectionSettings, postDat
             ...(postData.featured_media && { featured_media: postData.featured_media }),
         };
 
-        const response = await axios.post(`${baseUrl}/wp-json/wp/v2/posts`, payload, { headers });
+        const response = await axios.post(`${baseUrl}/wp-json/wp/v2/posts`, payload, { headers, httpsAgent: buildHttpsAgent(baseUrl) });
 
         return { success: true, data: response.data };
     } catch (error: any) {
@@ -121,7 +150,7 @@ export const getWordPressCategories = async (settings: WPConnectionSettings) => 
         const baseUrl = formatUrl(settings.url);
         const headers = getAuthHeaders(settings);
 
-        const response = await axios.get(`${baseUrl}/wp-json/wp/v2/categories?per_page=100`, { headers });
+        const response = await axios.get(`${baseUrl}/wp-json/wp/v2/categories?per_page=100`, { headers, httpsAgent: buildHttpsAgent(baseUrl) });
 
         return { success: true, data: response.data };
     } catch (error: any) {

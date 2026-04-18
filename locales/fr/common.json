@@ -1487,12 +1487,23 @@
       "keywords": "mcp, seo agent, claude desktop, chatgpt, seo api, rank tracking, gsc",
       "ogTitle": "Supercharge your AI with SEO Data",
       "ogDescription": "Connect Claude Desktop directly to your SEO metrics, rankings, and GSC data."
+    },
+    "home": {
+      "title": "SEO Agent — Suivi SEO par IA, Recherche de Mots-Clés et Publication WordPress",
+      "description": "Suivez le classement de vos mots-clés dans plus de 200 pays, générez du contenu optimisé par IA avec GPT-5 et Claude, et publiez directement sur WordPress. Plateforme SEO complète pour entreprises modernes.",
+      "keywords": "suivi seo, recherche de mots-clés, génération de contenu ia, seo wordpress, suivi de classement, gpt-5 seo, claude seo",
+      "ogTitle": "SEO Agent — Plateforme SEO IA Tout-en-Un",
+      "ogDescription": "Suivez vos classements dans plus de 200 pays, générez du contenu IA et publiez sur WordPress, le tout depuis un seul tableau de bord."
     }
   },
   "seo": {
     "mcpSeo": {
       "twitterTitle": "SEO Agent MCP Integration",
       "twitterDescription": "Connect Claude & ChatGPT to your real-time SEO data."
+    },
+    "home": {
+      "twitterTitle": "SEO Agent — SEO propulsé par l'IA pour entreprises modernes",
+      "twitterDescription": "Suivez les mots-clés dans plus de 200 pays, créez du contenu avec GPT-5 et Claude, publiez sur WordPress en un clic."
     }
   },
   "setupProgress": {

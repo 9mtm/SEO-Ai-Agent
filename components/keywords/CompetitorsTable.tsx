@@ -54,7 +54,8 @@ const CompetitorsTable = ({ domain, keywords, isPending, isConsoleIntegrated, se
     }, [titleColumnRef]);
 
     const allDomainTags: string[] = useMemo(() => {
-        return keywords.reduce((acc: string[], keyword) => [...acc, ...keyword.tags], [])
+        if (!keywords || !Array.isArray(keywords)) return [];
+        return keywords.reduce((acc: string[], keyword) => [...acc, ...(keyword.tags || [])], [])
             .filter((t) => t && t.trim() !== '')
             .filter((value, index, self) => self.indexOf(value) === index);
     }, [keywords]);

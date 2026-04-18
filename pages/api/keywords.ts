@@ -4,6 +4,7 @@ import db from '../../database/database';
 import Keyword from '../../database/models/keyword';
 import { getAppSettings } from './settings';
 import verifyUser from '../../utils/verifyUser';
+import { verifyRequest, requireScope } from '../../utils/verifyRequest';
 import parseKeywords from '../../utils/parseKeywords';
 import { integrateKeywordSCData, readLocalSCData } from '../../utils/searchConsole';
 import refreshAndUpdateKeywords from '../../utils/refresh';
@@ -25,9 +26,18 @@ type KeywordsDeleteRes = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
    await db.sync();
-   const { authorized, userId, isLegacy } = verifyUser(req, res);
-   if (!authorized) {
+   // Accept dashboard JWT and external OAuth Bearer (WordPress plugin, MCP).
+   const auth = await verifyRequest(req, res);
+   if (!auth.authorized) {
       return res.status(401).json({ error: 'Not authorized' });
+   }
+   const { userId, isLegacy } = auth;
+
+   if (auth.source === 'oauth') {
+      const needed = req.method === 'GET' ? 'read:keywords' : 'write:keywords';
+      if (!requireScope(auth, needed)) {
+         return res.status(403).json({ error: 'insufficient_scope', required: needed });
+      }
    }
 
    if (req.method === 'GET') {

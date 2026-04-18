@@ -1474,12 +1474,23 @@
       "keywords": "mcp, seo agent, claude desktop, chatgpt, seo api, rank tracking, gsc, SEO, 順位追跡",
       "ogTitle": "AI を SEO データで強化する",
       "ogDescription": "Claude Desktop を SEO メトリクス、順位、GSC データに直接接続します。"
+    },
+    "home": {
+      "title": "SEO Agent — AI SEO 追跡、キーワード調査、WordPress 公開",
+      "description": "200 以上の国でキーワード順位を追跡し、GPT-5 および Claude で AI 最適化されたコンテンツを生成し、WordPress に直接公開します。現代のビジネスのための完全な SEO プラットフォーム。",
+      "keywords": "seo 追跡, キーワード調査, ai コンテンツ生成, wordpress seo, 順位トラッカー, gpt-5 seo, claude seo",
+      "ogTitle": "SEO Agent — オールインワン AI SEO プラットフォーム",
+      "ogDescription": "200 以上の国で順位を追跡し、AI コンテンツを生成し、WordPress に公開 — すべて 1 つのダッシュボードから。"
     }
   },
   "seo": {
     "mcpSeo": {
       "twitterTitle": "SEO エージェント MCP 統合",
       "twitterDescription": "Claude や ChatGPT をリアルタイムの SEO データに接続します。"
+    },
+    "home": {
+      "twitterTitle": "SEO Agent — 現代のビジネスのための AI 駆動 SEO",
+      "twitterDescription": "200 以上の国でキーワードを追跡し、GPT-5 と Claude で AI コンテンツを作成し、ワンクリックで WordPress に公開します。"
     }
   },
   "bing": {

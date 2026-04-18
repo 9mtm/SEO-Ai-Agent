@@ -76,8 +76,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Auth check
     const auth = verifyUser(req, res);
     if (!auth.authorized || !auth.userId) {
+        // The login page reads `?redirect=` (not `?return=`); send it through
+        // Google's `returnUrl` state so the callback lands us back here after
+        // a successful sign-in and the OAuth flow resumes.
         const returnUrl = `/api/oauth/authorize?${new URLSearchParams(req.query as any).toString()}`;
-        return res.redirect(`/login?return=${encodeURIComponent(returnUrl)}`);
+        return res.redirect(`/login?redirect=${encodeURIComponent(returnUrl)}`);
     }
 
     // Check existing consent

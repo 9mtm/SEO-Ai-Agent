@@ -11,10 +11,23 @@
 
 - **Name:** SEO Agent (`seo-ai-agent` v2.1.0)
 - **Type:** Multi-Tenant SaaS for SEO research, tracking, and content
-- **Path:** `C:\MAMP\htdocs\flowxtra\hr_blogs\seo_ai_agent`
+- **Path:** `C:\MAMP\htdocs\dpro\seo-agent\agent`
 - **Website:** https://seo-agent.net
 - **Owner:** © 2026 Dpro GmbH — Flowxtra
 - **Sibling apps in monorepo:** `backend/` (Laravel API), `admin_dashboard/` (Filament), `landdingpage_flowxtra/` (Next.js), `company-jobs-page/` (Next.js), `angular_dashboard/` (Angular). **This guide only covers `seo_ai_agent`.**
+
+### Companion WordPress site (local only)
+
+A local WordPress install is used as the target/test site for building the **SEO Agent WordPress plugin**. The plugin will connect a WP site to the SEO Agent SaaS (auto-publish posts, sync keywords, push SERP insights, etc.).
+
+- **Path:** `C:\MAMP\htdocs\dpro\seo-agent\wordpress`
+- **URL:** `https://seo-agent-pc:17000/` (MAMP PRO host `seo-agent-pc`, Nginx on port 17000)
+- **Admin login:** `https://seo-agent-pc:17000/wp-login.php`
+- **DB:** `wordpress_seo_agent` on `localhost:8889` (root/root), prefix `wp_`
+- **Default admin:** `admin` / `Admin@12345` (reset 2026-04-18 from the typo-user `addmin`)
+- **Plugin target location (once started):** `C:\MAMP\htdocs\dpro\seo-agent\wordpress\wp-content\plugins\seo-agent\`
+
+This WordPress install is **not** part of the SEO Agent SaaS codebase — it's a sandbox for plugin development that talks to the Next.js app via the existing `/api/*` endpoints (and will likely use the MCP or an API-key-auth'd REST bridge).
 
 ---
 

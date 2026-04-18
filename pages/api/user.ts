@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Cookies from 'cookies';
 import verifyUser from '../../utils/verifyUser';
+import { verifyRequest, requireScope } from '../../utils/verifyRequest';
 import sequelize from '../../database/database';
 import User from '../../database/models/user';
 import Domain from '../../database/models/domain';
@@ -33,10 +34,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         // Initialize database connection
         await sequelize.sync();
 
-        const verifyResult = verifyUser(req, res);
+        // Dashboard (JWT) AND external OAuth clients (WordPress plugin, MCP) both land here.
+        const verifyResult = await verifyRequest(req, res);
 
         if (!verifyResult.authorized || !verifyResult.userId) {
             return res.status(401).json({ success: false, error: 'Unauthorized' });
+        }
+
+        // When called with an OAuth token, require the read:profile scope for GET.
+        if (req.method === 'GET' && !requireScope(verifyResult, 'read:profile')) {
+            return res.status(403).json({ success: false, error: 'insufficient_scope' });
         }
 
         const user = await User.findByPk(verifyResult.userId, {

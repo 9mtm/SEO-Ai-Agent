@@ -15,7 +15,12 @@ const LOCALES = [
     { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
     { code: 'fr', label: 'Français', flag: '🇫🇷' },
     { code: 'es', label: 'Español', flag: '🇪🇸' },
+    { code: 'it', label: 'Italiano', flag: '🇮🇹' },
     { code: 'pt', label: 'Português', flag: '🇧🇷' },
+    { code: 'nl', label: 'Nederlands', flag: '🇳🇱' },
+    { code: 'tr', label: 'Türkçe', flag: '🇹🇷' },
+    { code: 'ar', label: 'العربية', flag: '🇸🇦' },
+    { code: 'ja', label: '日本語', flag: '🇯🇵' },
     { code: 'zh', label: '中文', flag: '🇨🇳' },
 ];
 

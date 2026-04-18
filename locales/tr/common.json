@@ -349,6 +349,10 @@
     "mcpSeo": {
       "twitterTitle": "SEO Agent MCP - Yapay Zeka SEO Otomasyonu",
       "twitterDescription": "Gerçek SEO verilerinizi ChatGPT ve Claude'a bağlayın."
+    },
+    "home": {
+      "twitterTitle": "SEO Agent — Modern işletmeler için AI destekli SEO",
+      "twitterDescription": "200'den fazla ülkede anahtar kelimeleri takip edin, GPT-5 ve Claude ile AI içerik oluşturun, tek tıkla WordPress'e yayınlayın."
     }
   },
   "onboarding": {
@@ -1480,6 +1484,13 @@
       "keywords": "mcp, seo agent, claude desktop, chatgpt, seo api, rank tracking, gsc",
       "ogTitle": "Supercharge your AI with SEO Data",
       "ogDescription": "Connect Claude Desktop directly to your SEO metrics, rankings, and GSC data."
+    },
+    "home": {
+      "title": "SEO Agent — Yapay Zeka SEO Takibi, Anahtar Kelime Araştırması ve WordPress Yayınlama",
+      "description": "200'den fazla ülkede anahtar kelime sıralamalarını takip edin, GPT-5 ve Claude ile AI için optimize edilmiş içerik oluşturun ve doğrudan WordPress'e yayınlayın. Modern işletmeler için eksiksiz SEO platformu.",
+      "keywords": "seo takibi, anahtar kelime araştırması, yapay zeka içerik üretimi, wordpress seo, sıralama takipçisi, gpt-5 seo, claude seo",
+      "ogTitle": "SEO Agent — Hepsi Bir Arada AI SEO Platformu",
+      "ogDescription": "200'den fazla ülkede sıralamaları takip edin, AI içerik oluşturun ve WordPress'e yayınlayın — hepsi tek bir kontrol panelinden."
     }
   },
   "bing": {

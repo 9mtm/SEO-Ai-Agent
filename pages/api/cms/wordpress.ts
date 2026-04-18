@@ -1,20 +1,31 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../../database/database';
 import Domain from '../../../database/models/domain';
-import verifyUser from '../../../utils/verifyUser';
+import { verifyRequest, requireScope } from '../../../utils/verifyRequest';
 import { verifyWordPressConnection, publishToWordPress, getWordPressCategories } from '../../../utils/wordpress';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     await db.sync();
-    const { authorized, userId, isLegacy } = verifyUser(req, res);
-    if (!authorized) {
+    const auth = await verifyRequest(req, res);
+    if (!auth.authorized) {
         return res.status(401).json({ error: 'Not authorized' });
     }
+    const { userId, isLegacy } = auth;
 
     const { action, domain } = req.body;
 
     if (!domain) {
         return res.status(400).json({ error: 'Domain is required' });
+    }
+
+    // Scope enforcement for OAuth callers. auto_configure + verify_credentials
+    // are credential-write operations; publish is a content-write; the rest are reads.
+    if (auth.source === 'oauth') {
+        const writeActions = ['auto_configure', 'verify_credentials', 'publish'];
+        const needed = writeActions.includes(String(action)) ? 'write:integrations' : 'read:domains';
+        if (!requireScope(auth, needed)) {
+            return res.status(403).json({ error: 'insufficient_scope', required: needed });
+        }
     }
 
     // 1. Fetch Domain Settings
@@ -40,6 +51,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             } else {
                 return res.status(400).json({ success: false, error: result.error });
             }
+        }
+
+        // Auto-configure: the WordPress plugin just created an Application Password
+        // on its side and is sending it to us so we can publish back without the
+        // user ever touching credentials. Test the connection, then persist.
+        if (action === 'auto_configure') {
+            const { url, username, app_password } = req.body;
+            if (!url || !username || !app_password) {
+                return res.status(400).json({ error: 'url, username and app_password are required' });
+            }
+            const test = await verifyWordPressConnection({ url, username, app_password });
+            if (!test.success) {
+                return res.status(400).json({ success: false, error: test.error || 'Could not reach WordPress REST API' });
+            }
+            await domainData.update({
+                integration_settings: {
+                    type: 'wordpress',
+                    mode: 'plugin',             // upgraded flow — see docs/auto-bind.md §C
+                    url,
+                    username,
+                    app_password,
+                    configured_at: new Date().toISOString(),
+                },
+            });
+            return res.status(200).json({ success: true, user: test.user });
         }
 
         // For other actions, use stored settings
