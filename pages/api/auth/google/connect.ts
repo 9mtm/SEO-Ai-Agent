@@ -19,9 +19,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // Connect Scopes (Search Console, Ads)
     const scopes = [
-        'https://www.googleapis.com/auth/webmasters', // Full access (not readonly)
-        'https://www.googleapis.com/auth/adwords',
-        // We also need email usually to verify it matches (optional, but good practice)
+        'https://www.googleapis.com/auth/webmasters.readonly',
         'https://www.googleapis.com/auth/userinfo.email'
     ];
 

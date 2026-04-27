@@ -39,8 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     redirect_uri: redirectUri,
     response_type: 'code',
     scope: [
-      'https://www.googleapis.com/auth/webmasters', // Search Console (Full Access)
-      'https://www.googleapis.com/auth/adwords', // Google Ads
+      'https://www.googleapis.com/auth/webmasters.readonly',
     ].join(' '),
     access_type: 'offline', // Get refresh token
     prompt: 'consent', // Force consent to get refresh token
