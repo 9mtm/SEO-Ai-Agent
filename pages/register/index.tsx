@@ -3,14 +3,28 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
 import { useLanguage } from '../../context/LanguageContext';
 
 const Register: NextPage = () => {
   const { t, locale, setLocale } = useLanguage();
+  const router = useRouter();
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
+  const [refCode, setRefCode] = useState<string>('');
+
+  // Capture ?ref=CODE from URL → persist as cookie so Google OAuth callback can read it
+  useEffect(() => {
+    if (!router.isReady) return;
+    const ref = (router.query.ref as string || '').trim();
+    if (ref && /^[A-Za-z0-9]{6,10}$/.test(ref)) {
+      // 30-day cookie, lax samesite so it survives the OAuth redirect roundtrip
+      document.cookie = `ref_code=${encodeURIComponent(ref)}; Max-Age=${60 * 60 * 24 * 30}; Path=/; SameSite=Lax`;
+      setRefCode(ref);
+    }
+  }, [router.isReady, router.query.ref]);
 
   const handleGoogleSignUp = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!acceptTerms) {
@@ -22,6 +36,10 @@ const Register: NextPage = () => {
       localStorage.setItem('newsletter_subscription', 'true');
     }
   };
+
+  const googleHref = refCode
+    ? `/api/auth/google/login?returnUrl=/onboarding&ref=${encodeURIComponent(refCode)}`
+    : '/api/auth/google/login?returnUrl=/onboarding';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-neutral-100 flex items-center justify-center p-4">
@@ -122,7 +140,7 @@ const Register: NextPage = () => {
 
           {/* Google Sign Up */}
           <a
-            href="/api/auth/google/login?returnUrl=/onboarding"
+            href={googleHref}
             onClick={handleGoogleSignUp}
             className={`w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white border-2 rounded-xl font-medium transition-all shadow-sm ${acceptTerms
               ? 'border-neutral-200 text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 hover:shadow-md cursor-pointer'

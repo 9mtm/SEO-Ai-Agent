@@ -34,11 +34,14 @@ class BlogPost extends Model {
     @Column({ type: DataType.JSON, allowNull: true })
     declare tags?: string[];
 
-    @Column({ type: DataType.ENUM('draft', 'published'), allowNull: false, defaultValue: 'draft' })
-    declare status: 'draft' | 'published';
+    @Column({ type: DataType.ENUM('draft', 'published', 'scheduled'), allowNull: false, defaultValue: 'draft' })
+    declare status: 'draft' | 'published' | 'scheduled';
 
     @Column({ type: DataType.DATE, allowNull: true })
     declare published_at?: Date;
+
+    @Column({ type: DataType.DATE, allowNull: true })
+    declare scheduled_for?: Date;
 
     @Column({ type: DataType.STRING(70), allowNull: true })
     declare meta_title?: string;

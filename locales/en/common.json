@@ -1448,7 +1448,8 @@
     "contact": "Contact",
     "mcpIntegration": "MCP Integration",
     "signIn": "Sign In",
-    "getStarted": "Get Started"
+    "getStarted": "Get Started",
+    "howToUse": "How to Use"
   },
   "footerMenu": {
     "product": "Product",
@@ -1560,5 +1561,27 @@
     "updateVolumeTitle": "Update Keyword Volume Data",
     "updateVolumeDesc": "Update Volume data for all your Tracked Keywords.",
     "updateVolumeBtn": "Update Keywords Volume Data"
+  },
+  "referrals": {
+    "shareAndEarn": "Share & Earn",
+    "inviteFriends": "Invite friends"
+  },
+  "howToUse": {
+    "metaTitle": "How to Use",
+    "metaDescription": "Copy our official Claude Skill and paste it into Claude — get professional SEO audits powered by SEO Agent MCP.",
+    "eyebrow": "Pro SEO Skill",
+    "title": "Drop this skill into Claude",
+    "subtitle": "Copy the skill below, paste it into Claude (Code, Desktop, or Cursor), and ask for a full SEO audit. The skill knows our MCP and delivers a deep, actionable report.",
+    "quick": {
+      "title": "Three steps",
+      "s1": "Click Copy below to copy the entire skill.",
+      "s2": "Open Claude → create a new skill → paste.",
+      "s3": "Ask Claude: \"Run an SEO audit on my site\". You are done."
+    },
+    "copy": "Copy",
+    "copied": "Copied!",
+    "download": "Download",
+    "loading": "Loading skill…",
+    "setupCta": "Need to set up MCP first? →"
   }
 }

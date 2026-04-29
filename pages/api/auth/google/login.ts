@@ -19,7 +19,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         'https://www.googleapis.com/auth/webmasters.readonly'
     ];
 
-    const { returnUrl } = req.query;
+    const { returnUrl, ref } = req.query;
+
+    // Persist referral code as a server-side cookie so the OAuth callback can claim it.
+    // Belt-and-suspenders: the register page also sets this client-side, but if a user
+    // hits this endpoint directly with ?ref=CODE we still want to capture it.
+    if (typeof ref === 'string' && /^[A-Za-z0-9]{6,10}$/.test(ref)) {
+        const maxAge = 60 * 60 * 24 * 30; // 30 days
+        res.setHeader('Set-Cookie', `ref_code=${encodeURIComponent(ref)}; Max-Age=${maxAge}; Path=/; SameSite=Lax`);
+    }
 
     const stateObj = {
         flow: 'login_flow',

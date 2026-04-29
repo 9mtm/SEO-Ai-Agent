@@ -1448,7 +1448,8 @@
     "contact": "联系我们",
     "mcpIntegration": "MCP 集成",
     "signIn": "登录",
-    "getStarted": "立即开始"
+    "getStarted": "立即开始",
+    "howToUse": "使用指南"
   },
   "footerMenu": {
     "product": "产品",
@@ -1560,5 +1561,27 @@
     "updateVolumeTitle": "更新关键词搜索量数据",
     "updateVolumeDesc": "更新您跟踪的所有关键词的搜索量数据。",
     "updateVolumeBtn": "更新搜索量数据"
+  },
+  "referrals": {
+    "shareAndEarn": "分享赚钱",
+    "inviteFriends": "邀请朋友"
+  },
+  "howToUse": {
+    "metaTitle": "使用指南",
+    "metaDescription": "复制我们官方的 Claude Skill 并粘贴到 Claude — 通过 SEO Agent MCP 进行专业 SEO 审计。",
+    "eyebrow": "专业 SEO 技能",
+    "title": "把这个技能放进 Claude",
+    "subtitle": "复制下面的技能,粘贴到 Claude(Code、Desktop 或 Cursor),然后请求完整的 SEO 审计。",
+    "quick": {
+      "title": "三步搞定",
+      "s1": "点击下方\"复制\"以复制整个技能。",
+      "s2": "打开 Claude → 创建新技能 → 粘贴。",
+      "s3": "让 Claude:\"审计我的网站。\" 完成。"
+    },
+    "copy": "复制",
+    "copied": "已复制!",
+    "download": "下载",
+    "loading": "加载中…",
+    "setupCta": "先设置 MCP? →"
   }
 }

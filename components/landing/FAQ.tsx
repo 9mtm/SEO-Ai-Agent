@@ -49,19 +49,10 @@ const FAQ: React.FC = () => {
     },
   ];
 
-  // Schema.org FAQPage structured data - CRITICAL for Google Rich Results
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer,
-      },
-    })),
-  };
+  // NOTE: FAQPage JSON-LD schema lives on the home page (pages/index.tsx) where
+  // it can be SSR-rendered with server-side translations. Do NOT also emit it
+  // here — Google rejects pages with two FAQPage schemas as duplicate / invalid
+  // for Rich Results.
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -73,12 +64,6 @@ const FAQ: React.FC = () => {
       aria-labelledby="faq-heading"
       id="faq"
     >
-      {/* Schema.org structured data - IMPORTANT for SEO */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">

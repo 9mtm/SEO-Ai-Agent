@@ -343,7 +343,8 @@
     "contact": "İletişim",
     "mcpIntegration": "MCP Entegrasyonu",
     "signIn": "Giriş Yap",
-    "getStarted": "Başlayın"
+    "getStarted": "Başlayın",
+    "howToUse": "Nasıl kullanılır"
   },
   "seo": {
     "mcpSeo": {
@@ -1560,5 +1561,27 @@
     "updateVolumeTitle": "Anahtar Kelime Hacim Verilerini Güncelle",
     "updateVolumeDesc": "Takip ettiğiniz tüm anahtar kelimeler için hacim verilerini güncelleyin.",
     "updateVolumeBtn": "Hacim Verilerini Güncelle"
+  },
+  "referrals": {
+    "shareAndEarn": "Paylaş & Kazan",
+    "inviteFriends": "Arkadaşlarını davet et"
+  },
+  "howToUse": {
+    "metaTitle": "Nasıl kullanılır",
+    "metaDescription": "Resmi Claude Skill'imizi kopyalayın ve Claude'a yapıştırın — SEO Agent MCP ile profesyonel SEO denetimleri.",
+    "eyebrow": "Pro SEO Skill",
+    "title": "Bu skill'i Claude'a yapıştırın",
+    "subtitle": "Aşağıdaki skill'i kopyalayın, Claude'a (Code, Desktop veya Cursor) yapıştırın ve tam bir SEO denetimi isteyin.",
+    "quick": {
+      "title": "Üç adım",
+      "s1": "Aşağıdaki Kopyala'ya tıklayın.",
+      "s2": "Claude'u açın → yeni skill oluşturun → yapıştırın.",
+      "s3": "Claude'a sorun: \"Sitemi denetle.\" Tamam."
+    },
+    "copy": "Kopyala",
+    "copied": "Kopyalandı!",
+    "download": "İndir",
+    "loading": "Yükleniyor…",
+    "setupCta": "Önce MCP kurulumu mu? →"
   }
 }

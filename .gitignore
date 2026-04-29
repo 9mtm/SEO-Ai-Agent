@@ -55,3 +55,17 @@ TODO
 
 /docs/wp/*
 next-build.tar.gz
+
+# Build artifacts
+tsconfig.tsbuildinfo
+
+# Generated blog banner images (created by MCP at runtime)
+/public/blog-images/
+
+# Sitemap backups
+/public/sitemap.xml.bak.*
+/public/sitemap.xsl
+
+# Local test scripts that hard-code secret tokens — never commit
+/scripts/test-arabic-mcp.js
+/scripts/test-full-mcp-post.js

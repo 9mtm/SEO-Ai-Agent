@@ -68,6 +68,11 @@ const nextConfig = {
       {
         source: '/.well-known/oauth-protected-resource',
         destination: '/api/.well-known/oauth-protected-resource'
+      },
+      // Per-locale sitemaps: /sitemap-en.xml, /sitemap-de.xml, … → API handler
+      {
+        source: '/sitemap-:locale.xml',
+        destination: '/api/sitemap/:locale'
       }
     ];
   },

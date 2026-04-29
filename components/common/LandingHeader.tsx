@@ -8,7 +8,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useRouter } from 'next/router';
 
 interface LandingHeaderProps {
-    activePage?: 'blog' | 'contact' | 'home';
+    activePage?: 'blog' | 'contact' | 'home' | 'how-to-use';
 }
 
 export default function LandingHeader({ activePage }: LandingHeaderProps) {
@@ -54,6 +54,9 @@ export default function LandingHeader({ activePage }: LandingHeaderProps) {
                         </Link>
                         <Link href="/contact" className={linkClass('contact')}>
                             {t('nav.contact')}
+                        </Link>
+                        <Link href="/how-to-use" className={linkClass('how-to-use')}>
+                            {t('nav.howToUse')}
                         </Link>
                         <Link href="/mcp-seo" className={linkClass()}>
                             {t('nav.mcpIntegration')}
@@ -120,6 +123,9 @@ export default function LandingHeader({ activePage }: LandingHeaderProps) {
                         </Link>
                         <Link href="/contact" className={`block px-4 py-2 rounded-lg ${activePage === 'contact' ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-neutral-600 hover:bg-neutral-50'}`} onClick={() => setMobileMenuOpen(false)}>
                             {t('nav.contact')}
+                        </Link>
+                        <Link href="/how-to-use" className={`block px-4 py-2 rounded-lg ${activePage === 'how-to-use' ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-neutral-600 hover:bg-neutral-50'}`} onClick={() => setMobileMenuOpen(false)}>
+                            {t('nav.howToUse')}
                         </Link>
                         <Link href="/mcp-seo" className="block px-4 py-2 text-neutral-600 hover:bg-neutral-50 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
                             {t('nav.mcpIntegration')}

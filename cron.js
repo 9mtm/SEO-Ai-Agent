@@ -157,6 +157,19 @@ const runAppCronJobs = () => {
       });
    }, { scheduled: true });
 
+   // Publish Scheduled Blog Posts (Every 5 Minutes)
+   new Cron('*/5 * * * *', () => {
+      const fetchOpts = { method: 'POST', headers: { Authorization: `Bearer ${process.env.APIKEY}` } };
+      fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/cron/publish-scheduled`, fetchOpts)
+         .then((r) => r.json())
+         .then((data) => { if (data?.published > 0) console.log(`Published ${data.published} scheduled blog post(s):`, data.posts); })
+         .catch((err) => { console.log('ERROR publishing scheduled blog posts:', err); });
+   }, { scheduled: true });
+
+   // (Auto-blog: handled by Claude via the `schedule` skill — Claude writes the
+   // articles via MCP tools `get_pending_blog_topics` + `create_blog_post` +
+   // `mark_blog_topic_used`. No server-side cron needed.)
+
    // Run Google Search Console Scraper Daily
    if (process.env.SEARCH_CONSOLE_PRIVATE_KEY && process.env.SEARCH_CONSOLE_CLIENT_EMAIL) {
       const searchConsoleCRONTime = generateCronTime('daily');

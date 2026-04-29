@@ -164,6 +164,21 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               })}
             </nav>
 
+            {/* Invite friends CTA */}
+            <div className="px-4 mb-2">
+              <Link
+                href="/profile/referrals"
+                onClick={() => setSidebarOpen(false)}
+                className="flex items-center justify-between px-4 py-2.5 rounded-lg text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 transition-colors"
+              >
+                <span className="flex items-center gap-3">
+                  <Gift className="h-5 w-5 text-amber-600" />
+                  <span className="text-sm font-medium">{t('referrals.inviteFriends')}</span>
+                </span>
+                <span className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-100 rounded-full px-2 py-0.5">60€</span>
+              </Link>
+            </div>
+
             {/* Setup Progress Widget */}
             <div className="px-3 mb-2">
               <SetupProgress />

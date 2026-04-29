@@ -1448,7 +1448,8 @@
     "contact": "Contact",
     "mcpIntegration": "Intégration MCP",
     "signIn": "Se connecter",
-    "getStarted": "Commencer"
+    "getStarted": "Commencer",
+    "howToUse": "Guide"
   },
   "footerMenu": {
     "product": "Produit",
@@ -1560,5 +1561,27 @@
     "updateVolumeTitle": "Mettre à jour les données de volume des mots-clés",
     "updateVolumeDesc": "Mettez à jour les données de volume pour tous vos mots-clés suivis.",
     "updateVolumeBtn": "Mettre à jour les volumes"
+  },
+  "referrals": {
+    "shareAndEarn": "Partager & Gagner",
+    "inviteFriends": "Inviter des amis"
+  },
+  "howToUse": {
+    "metaTitle": "Comment utiliser",
+    "metaDescription": "Copiez notre Skill Claude officiel et collez-le dans Claude — audits SEO professionnels avec SEO Agent MCP.",
+    "eyebrow": "Skill SEO pro",
+    "title": "Déposez ce skill dans Claude",
+    "subtitle": "Copiez le skill ci-dessous, collez-le dans Claude (Code, Desktop ou Cursor) et demandez un audit SEO complet.",
+    "quick": {
+      "title": "Trois étapes",
+      "s1": "Cliquez sur Copier pour copier le skill entier.",
+      "s2": "Ouvrez Claude → créez un nouveau skill → collez.",
+      "s3": "Demandez à Claude : « Audite mon site ». C'est tout."
+    },
+    "copy": "Copier",
+    "copied": "Copié !",
+    "download": "Télécharger",
+    "loading": "Chargement…",
+    "setupCta": "Configurer MCP d'abord ? →"
   }
 }

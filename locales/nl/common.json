@@ -1448,7 +1448,8 @@
     "contact": "Contact",
     "mcpIntegration": "MCP-integratie",
     "signIn": "Inloggen",
-    "getStarted": "Aan de slag"
+    "getStarted": "Aan de slag",
+    "howToUse": "Hoe te gebruiken"
   },
   "footerMenu": {
     "product": "Product",
@@ -1560,5 +1561,27 @@
     "updateVolumeTitle": "Zoekwoordvolumegegevens bijwerken",
     "updateVolumeDesc": "Volumegegevens bijwerken voor al uw bijgehouden zoekwoorden.",
     "updateVolumeBtn": "Volumegegevens bijwerken"
+  },
+  "referrals": {
+    "shareAndEarn": "Delen & Verdienen",
+    "inviteFriends": "Vrienden uitnodigen"
+  },
+  "howToUse": {
+    "metaTitle": "Hoe te gebruiken",
+    "metaDescription": "Kopieer onze officiële Claude Skill en plak in Claude — professionele SEO-audits via SEO Agent MCP.",
+    "eyebrow": "Pro SEO Skill",
+    "title": "Zet deze skill in Claude",
+    "subtitle": "Kopieer de skill, plak in Claude (Code, Desktop of Cursor) en vraag om een volledige SEO-audit.",
+    "quick": {
+      "title": "Drie stappen",
+      "s1": "Klik op Kopiëren om de hele skill te kopiëren.",
+      "s2": "Open Claude → maak een nieuwe skill → plakken.",
+      "s3": "Vraag Claude: \"Audit mijn site\". Klaar."
+    },
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd!",
+    "download": "Downloaden",
+    "loading": "Laden…",
+    "setupCta": "Eerst MCP opzetten? →"
   }
 }

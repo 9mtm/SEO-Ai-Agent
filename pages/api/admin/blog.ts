@@ -21,10 +21,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (req.method === 'POST') {
-        const { title, content, excerpt, featured_image, category, tags, status, meta_title, meta_description, locale } = req.body;
+        const { title, content, excerpt, featured_image, category, tags, status, scheduled_for, meta_title, meta_description, locale } = req.body;
         const lang = locale || 'en';
 
         if (!title || !content) return res.status(400).json({ error: 'Title and content required' });
+        if (status === 'scheduled' && !scheduled_for) return res.status(400).json({ error: 'scheduled_for is required when status is scheduled' });
+        const scheduledDate = scheduled_for ? new Date(scheduled_for) : null;
+        if (status === 'scheduled' && scheduledDate && scheduledDate.getTime() <= Date.now()) {
+            return res.status(400).json({ error: 'scheduled_for must be a future date' });
+        }
 
         const slug = (req.body.slug || title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 200);
         const wordCount = content.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
@@ -39,6 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             tags: tags || [],
             status: status || 'draft',
             published_at: status === 'published' ? new Date() : null,
+            scheduled_for: status === 'scheduled' ? scheduledDate : null,
             meta_title: meta_title || title.slice(0, 70),
             meta_description: meta_description || autoExcerpt.slice(0, 160),
             reading_time: readingTime,
@@ -80,7 +86,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (updates.tags !== undefined) sharedUpdates.tags = updates.tags;
         if (updates.status !== undefined) {
             sharedUpdates.status = updates.status;
-            if (updates.status === 'published' && !post.published_at) sharedUpdates.published_at = new Date();
+            if (updates.status === 'published') {
+                if (!post.published_at) sharedUpdates.published_at = new Date();
+                sharedUpdates.scheduled_for = null;
+            } else if (updates.status === 'scheduled') {
+                if (!updates.scheduled_for) return res.status(400).json({ error: 'scheduled_for is required when status is scheduled' });
+                const dt = new Date(updates.scheduled_for);
+                if (dt.getTime() <= Date.now()) return res.status(400).json({ error: 'scheduled_for must be a future date' });
+                sharedUpdates.scheduled_for = dt;
+            } else if (updates.status === 'draft') {
+                sharedUpdates.scheduled_for = null;
+            }
+        } else if (updates.scheduled_for !== undefined && post.status === 'scheduled') {
+            const dt = new Date(updates.scheduled_for);
+            if (dt.getTime() <= Date.now()) return res.status(400).json({ error: 'scheduled_for must be a future date' });
+            sharedUpdates.scheduled_for = dt;
         }
         if (Object.keys(sharedUpdates).length > 0) {
             await post.update(sharedUpdates);

@@ -38,12 +38,15 @@ const connection = new Sequelize({
       idle: 10000,
       acquire: 30000,
    },
-   dialectOptions: (process.env.DB_HOST && process.env.DB_HOST.includes('tidbcloud')) ? {
-      ssl: {
-         require: true,
-         rejectUnauthorized: false
-      }
-   } : {},
+   dialectOptions: {
+      charset: 'utf8mb4',
+      ...((process.env.DB_HOST && process.env.DB_HOST.includes('tidbcloud')) ? {
+         ssl: {
+            require: true,
+            rejectUnauthorized: false
+         }
+      } : {}),
+   },
    logging: false,
    models: [User, Domain, Keyword, FailedJob, Post, ApiKey, ApiAuditLog, NotificationSetting, PlatformIntegration, PlatformIntegrationLog, InvoiceDetail, Workspace, WorkspaceMember, WorkspaceInvitation, BlogPost, BlogPostTranslation, Invoice, Referral, ReferralPayout],
 });

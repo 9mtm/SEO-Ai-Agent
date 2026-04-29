@@ -1421,7 +1421,8 @@
     "contact": "Kontakt",
     "mcpIntegration": "MCP Integration",
     "signIn": "Anmelden",
-    "getStarted": "Jetzt Starten"
+    "getStarted": "Jetzt Starten",
+    "howToUse": "Anleitung"
   },
   "footerMenu": {
     "product": "Produkt",
@@ -1560,5 +1561,27 @@
     "updateVolumeTitle": "Keyword-Volumendaten aktualisieren",
     "updateVolumeDesc": "Volumendaten für alle Ihre verfolgten Keywords aktualisieren.",
     "updateVolumeBtn": "Keyword-Volumendaten aktualisieren"
+  },
+  "referrals": {
+    "shareAndEarn": "Teilen & Verdienen",
+    "inviteFriends": "Freunde einladen"
+  },
+  "howToUse": {
+    "metaTitle": "Anleitung",
+    "metaDescription": "Kopieren Sie unseren offiziellen Claude-Skill und fügen Sie ihn in Claude ein — professionelle SEO-Audits mit SEO Agent MCP.",
+    "eyebrow": "Pro-SEO-Skill",
+    "title": "Diesen Skill in Claude einfügen",
+    "subtitle": "Kopieren Sie den Skill unten, fügen Sie ihn in Claude (Code, Desktop oder Cursor) ein und fordern Sie ein komplettes SEO-Audit an.",
+    "quick": {
+      "title": "Drei Schritte",
+      "s1": "Klicken Sie unten auf Kopieren, um den gesamten Skill zu kopieren.",
+      "s2": "Öffnen Sie Claude → neuen Skill erstellen → einfügen.",
+      "s3": "Fragen Sie Claude: „Mache ein SEO-Audit für meine Site\". Fertig."
+    },
+    "copy": "Kopieren",
+    "copied": "Kopiert!",
+    "download": "Herunterladen",
+    "loading": "Skill wird geladen…",
+    "setupCta": "Erst MCP einrichten? →"
   }
 }
